@@ -35,7 +35,7 @@ public class MyQuestion {
     private String answer;
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "BASIC_QUESTION_ID")
     private BasicQuestion basicQuestions;
 
 }
