@@ -18,7 +18,7 @@ public class Member {
 
     @Id
     @Column(name = "MEMBER_ID")
-    private String memberId;
+    private long memberId;
 
     @Column(name = "EMAIL", unique = true, nullable = false)
     private String email;

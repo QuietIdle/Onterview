@@ -26,7 +26,7 @@ public class MyQuestionList {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "MY_QUESTION_ID")
+    @Column(name = "MY_QUESTION_LIST_ID")
     private Long myQuestionListId;
 
     @ManyToOne(fetch = LAZY)
