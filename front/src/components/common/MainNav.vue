@@ -1,30 +1,46 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import logo from '@/assets/logo.png'
+import { RouterLink } from 'vue-router'
+</script>
 
 <template>
   <div>
     <v-card>
-      <v-tabs color="deep-purple-accent-4" align-tabs="center">
-        <v-tab :value="1">Landscape</v-tab>
-        <v-tab :value="2">City</v-tab>
-        <v-tab :value="3">Abstract</v-tab>
-      </v-tabs>
-      <v-window>
-        <v-window-item v-for="n in 3" :key="n" :value="n">
-          <v-container fluid>
-            <v-row>
-              <v-col v-for="i in 6" :key="i" cols="12" md="4">
-                <v-img
-                  :src="`https://picsum.photos/500/300?image=${i * n * 5 + 10}`"
-                  :lazy-src="`https://picsum.photos/10/6?image=${i * n * 5 + 10}`"
-                  aspect-ratio="1"
-                ></v-img>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-window-item>
-      </v-window>
+      <v-row>
+        <!-- 이미지 열 -->
+
+        <v-col cols="12" md="3" align-self="center">
+          <RouterLink to="/">
+            <v-img class="logo" :width="150" aspect-ratio="16/9" cover :src="logo"></v-img>
+          </RouterLink>
+        </v-col>
+
+        <!-- 탭 열 -->
+        <v-col cols="12" md="6" align-self="end">
+          <v-tabs color="deep-purple-accent-4" align-tabs="center">
+            <v-tab :value="1">셀프 스피치</v-tab>
+            <v-tab :value="2">모의 면접</v-tab>
+            <v-tab :value="3">보관함</v-tab>
+            <v-tab :value="4">커뮤니티</v-tab>
+          </v-tabs>
+        </v-col>
+
+        <v-col cols="12" md="3" align-self="center" class="d-flex justify-center">
+          <!-- 로그인 -->
+          <v-btn variant="tonal" color="deep-purple-accent-4">Logout</v-btn>
+        </v-col>
+      </v-row>
     </v-card>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.v-tab.v-tab.v-btn {
+  font-size: large;
+}
+
+.logo {
+  margin: 1%;
+  margin-left: 20%;
+}
+</style>

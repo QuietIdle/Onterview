@@ -6,9 +6,20 @@ const router = createRouter({
     {
       path: '/',
       name: 'main',
-      component: () => import('@/views/MainView.vue')
+      component: () => import('@/views/MainView.vue'),
+      meta: {layout: 'main'},
+    },
+    {
+      path: '/selfspeech',
+      name: 'selfspeech',
+      component: () => import('@/views/SelfSpeechRoomView.vue'),
+      meta: {layout: 'main'},
     }
   ]
 })
 
 export default router
+
+
+
+
