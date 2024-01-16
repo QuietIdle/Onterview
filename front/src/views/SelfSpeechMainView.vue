@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import TestImg from "@/assets/selfSpeech/SelfSpeechMainIcon.png";
+import testImg from "@/assets/selfSpeech/SelfSpeechMainIcon.png";
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-function StartSelfSpeech() {
+function startSelfSpeech() {
   router.push({ name: 'selfspeech-main' });
 }
-function GoStorage() {
+function goStorage() {
   router.push({ name: 'storage-question' });
 }
 </script>
@@ -15,21 +15,21 @@ function GoStorage() {
 <template>
 <div class="pa-10 w-100 h-50" style="background-color: #EED8E7;">
   <div class="container pa-10 d-flex justify-center align-center">
-    <div class="ImgContainer ml-16 w-25 h-100">
-      <v-img :src="TestImg" :width="200"></v-img>
+    <div class="img-container ml-16 w-25 h-100">
+      <v-img :src="testImg" :width="200"></v-img>
     </div>
-    <div class="ContentContainer w-75 h-100 text-center">
+    <div class="content-container w-75 h-100 text-center">
       <div class="pa-5 text-h3">
         1문 1답<br>셀프 스피치
       </div>
       <div class="pa-5">
         면접 문항과 답변을 등록하고 녹화해서<br>나의 답변 내용, 시간, 발음, 표정을 점검해보세요
       </div>
-      <div class="BtnContainer pa-5">
-        <v-btn variant="outlined" class="ma-3" @click="StartSelfSpeech">
+      <div class="btn-container pa-5">
+        <v-btn variant="outlined" class="ma-3" @click="startSelfSpeech">
           시작하기
         </v-btn>
-        <v-btn variant="outlined" class="ma-3" @click="GoStorage">
+        <v-btn variant="outlined" class="ma-3" @click="goStorage">
           면접 문항 관리
         </v-btn>
       </div>
