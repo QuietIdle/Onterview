@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(originPatterns = "*")
-public class FileController {
+public class ChunkFileController {
 
     private final ChunkUploadService chunkUploadService;
 
@@ -25,7 +25,7 @@ public class FileController {
             @RequestParam("chunkNumber") int chunkNumber,
             @RequestParam("totalChunks") int totalChunks) throws IOException {
         boolean isDone = chunkUploadService.chunkUpload(file, chunkNumber, totalChunks);
-        System.out.println(chunkNumber + " " + isDone);
+
         return isDone ?
                 ResponseEntity.ok("File uploaded successfully") :
                 ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).build();
