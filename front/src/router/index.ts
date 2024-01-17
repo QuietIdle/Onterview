@@ -10,11 +10,41 @@ const router = createRouter({
       meta: {layout: 'main'},
     },
     {
-      path: '/selfspeech',
-      name: 'selfspeech',
-      component: () => import('@/views/SelfSpeechRoomView.vue'),
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/UserLoginView.vue'),
       meta: {layout: 'main'},
-    }
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('@/views/UserRegisterView.vue'),
+      meta: {layout: 'main'},
+    },
+    {
+      path: '/selfspeech',
+      name: 'selfspeech-main',
+      component: () => import('@/views/SelfSpeechMainView.vue'),
+      meta: {layout: 'main'},
+    },
+    {
+      path: '/selfspeech/room',
+      name: 'selfspeech-room',
+      component: () => import('@/views/SelfSpeechRoomView.vue'),
+      meta: {layout: ''},
+    },
+    {
+      path: '/storage/question',
+      name: 'storage-question',
+      component: () => import('@/views/StorageQuestionView.vue'),
+      meta: {layout: 'main'},
+    },
+    {
+      path: '/storage/video',
+      name: 'storage-video',
+      component: () => import('@/views/StorageVideoView.vue'),
+      meta: {layout: 'main'},
+    },
   ]
 })
 

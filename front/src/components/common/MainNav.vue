@@ -18,7 +18,9 @@ import { RouterLink } from 'vue-router'
         <!-- 탭 열 -->
         <v-col cols="12" md="6" align-self="end">
           <v-tabs color="deep-purple-accent-4" align-tabs="center">
-            <v-tab :value="1">셀프 스피치</v-tab>
+            <RouterLink to="/selfspeech">
+              <v-tab :value="1">셀프 스피치</v-tab>
+            </RouterLink>
             <v-tab :value="2">모의 면접</v-tab>
             <v-tab :value="3">보관함</v-tab>
             <v-tab :value="4">커뮤니티</v-tab>
@@ -27,7 +29,7 @@ import { RouterLink } from 'vue-router'
 
         <v-col cols="12" md="3" align-self="center" class="d-flex justify-center">
           <!-- 로그인 -->
-          <v-btn variant="tonal" color="deep-purple-accent-4">Logout</v-btn>
+          <v-btn variant="tonal" color="deep-purple-accent-4">Login</v-btn>
         </v-col>
       </v-row>
     </v-card>
