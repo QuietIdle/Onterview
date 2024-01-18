@@ -26,7 +26,7 @@ public class JwtTokenProvider {
 
     public String generateToken(TokenType tokenType, Long userId) {
         Date now = new Date();
-        int duration = tokenType.equals(TokenType.Access) ? 1 : 20;
+        int duration = tokenType.equals(TokenType.Access) ? 1 : 21;
         Claims claims = Jwts.claims()
                 .setSubject(String.valueOf(userId))
                 .setIssuedAt(now)
@@ -42,7 +42,7 @@ public class JwtTokenProvider {
     public boolean isValidToken(String token) {
         try {
             Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
-            return claims.getExpiration().before(new Date());
+            return !claims.getExpiration().before(new Date());
         } catch(ExpiredJwtException expiredJwtException) {
             return false;
         }

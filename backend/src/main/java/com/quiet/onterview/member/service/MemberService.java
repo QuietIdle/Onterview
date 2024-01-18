@@ -7,6 +7,7 @@ import com.quiet.onterview.member.dto.MemberLoginRequest;
 import com.quiet.onterview.member.dto.MemberLoginResponse;
 import com.quiet.onterview.member.dto.MemberModifyPasswordRequest;
 import com.quiet.onterview.member.dto.MemberSignupRequest;
+import com.quiet.onterview.member.dto.MemberTokenResponse;
 import com.quiet.onterview.member.entity.Member;
 import com.quiet.onterview.member.exception.MemberException;
 import com.quiet.onterview.member.mapper.MemberMapper;
@@ -58,6 +59,27 @@ public class MemberService {
             throw new Exception(MemberException.PASSWORD_NOT_MATCHES.toString());
         }
         updatePassword(userId, memberModifyPasswordRequest.getPassword());
+    }
+
+    public MemberTokenResponse remakeMemberToken(String accessToken, String refreshToken) throws Exception {
+        if(jwtTokenProvider.isValidToken(accessToken)) {
+            throw new Exception("TOKEN NOT EXPIRED");
+        }
+        if(!jwtTokenProvider.isValidToken(refreshToken)) {
+            throw new Exception("REFRESH TOKEN ALSO EXPIRED");
+        }
+        Long memberId = jwtTokenProvider.getUserId(refreshToken);
+        String newAccessToken = jwtTokenProvider.generateToken(TokenType.Access, memberId);
+        String newRefreshToken = jwtTokenProvider.generateToken(TokenType.Refresh, memberId);
+        return MemberTokenResponse.builder()
+                .accessToken(newAccessToken)
+                .refreshToken(newRefreshToken)
+                .build();
+    }
+
+    public void withdrawUser(String accessToken) throws Exception {
+        Long memberId = jwtTokenProvider.getUserId(accessToken);
+        memberRepository.deleteById(memberId);
     }
 
     public boolean isEmailAvailable(String email) {
