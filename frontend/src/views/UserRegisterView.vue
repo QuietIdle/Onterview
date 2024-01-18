@@ -88,6 +88,13 @@ const passwordRules = [
 
 const passwordCheckRules = [
   (value) => {
+    if (value) {
+      return true
+    } else {
+      return '비밀번호 확인을 입력해주세요.'
+    }
+  },
+  (value) => {
     if (value === password.value) {
       return true
     } else {
@@ -101,7 +108,6 @@ const requestSignUp = function () {
   const isValid = formRef.value.validate()
 
   if (isValid.value) {
-
     const payload = {
       email: email.value,
       nickname: nickname.value,
@@ -110,13 +116,12 @@ const requestSignUp = function () {
     }
 
     const success = function (response) {
-
       if ( response.status === 201 ) {
         router.push({ name: login })
         return
+      } else {
+        alert(`알 수 없는 이유로 회원가입에 실패했습니다. \n관리자에게 문의해주세요.`)
       }
-
-      alert(`알 수 없는 이유로 회원가입에 실패했습니다. \n관리자에게 문의해주세요.`)
     }
 
     const error = function () {
