@@ -1,5 +1,6 @@
 package com.quiet.onterview.member.service;
 
+import com.quiet.onterview.common.BaseException;
 import com.quiet.onterview.common.JwtTokenProvider;
 import com.quiet.onterview.common.JwtTokenProvider.TokenType;
 import com.quiet.onterview.common.PasswordEncoder;
@@ -9,7 +10,7 @@ import com.quiet.onterview.member.dto.MemberModifyPasswordRequest;
 import com.quiet.onterview.member.dto.MemberSignupRequest;
 import com.quiet.onterview.member.dto.MemberTokenResponse;
 import com.quiet.onterview.member.entity.Member;
-import com.quiet.onterview.member.exception.MemberException;
+import com.quiet.onterview.common.ErrorCode;
 import com.quiet.onterview.member.mapper.MemberMapper;
 import com.quiet.onterview.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
@@ -26,47 +27,47 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public void signUpByEmail(MemberSignupRequest memberSignupRequest) throws Exception {
+    public void signUpByEmail(MemberSignupRequest memberSignupRequest) {
         if(!isEmailAvailable(memberSignupRequest.getEmail())) {
-            throw new Exception(MemberException.EMAIL_DUPLICATED.toString());
+            throw new BaseException(ErrorCode.EMAIL_DUPLICATED);
         }
         if(!isNicknameAvailable(memberSignupRequest.getNickname())) {
-            throw new Exception(MemberException.NICKNAME_DUPLICATED.toString());
+            throw new BaseException(ErrorCode.NICKNAME_DUPLICATED);
         }
         if(!isPasswordCorrespond(memberSignupRequest.getPassword(), memberSignupRequest.getConfirm())) {
-            throw new Exception(MemberException.PASSWORD_CANNOT_CONFIRM.toString());
+            throw new BaseException(ErrorCode.PASSWORD_CANNOT_CONFIRM);
         }
         Member member = memberRepository.save(memberMapper.memberSignupRequestToMember(memberSignupRequest));
         updatePassword(member.getMemberId(), member.getPassword());
     }
 
-    public MemberLoginResponse login(MemberLoginRequest memberLoginRequest) throws Exception {
+    public MemberLoginResponse login(MemberLoginRequest memberLoginRequest) {
         if(isEmailAvailable(memberLoginRequest.getEmail())) {
-            throw new Exception(MemberException.EMAIL_NOT_EXISTS.toString());
+            throw new BaseException(ErrorCode.EMAIL_NOT_EXISTS);
         }
         Member member = memberRepository.findByEmail(memberLoginRequest.getEmail()).get();
         if(!passwordEncoder.encrypt(member.getMemberId(), memberLoginRequest.getPassword()).equals(member.getPassword())) {
-            throw new Exception(MemberException.PASSWORD_NOT_MATCHES.toString());
+            throw new BaseException(ErrorCode.PASSWORD_NOT_MATCHES);
         }
         String accessToken = jwtTokenProvider.generateToken(TokenType.Access, member.getMemberId());
         String refreshToken = jwtTokenProvider.generateToken(TokenType.Refresh, member.getMemberId());
         return memberMapper.memberToMemberLoginResponse(member, accessToken, refreshToken);
     }
 
-    public void modifyPassword(String accessToken, MemberModifyPasswordRequest memberModifyPasswordRequest) throws Exception {
+    public void modifyPassword(String accessToken, MemberModifyPasswordRequest memberModifyPasswordRequest) {
         Long userId = jwtTokenProvider.getUserId(accessToken);
         if(!isPasswordCorrespond(memberModifyPasswordRequest.getPassword(), memberModifyPasswordRequest.getConfirm())) {
-            throw new Exception(MemberException.PASSWORD_NOT_MATCHES.toString());
+            throw new BaseException(ErrorCode.PASSWORD_CANNOT_CONFIRM);
         }
         updatePassword(userId, memberModifyPasswordRequest.getPassword());
     }
 
-    public MemberTokenResponse remakeMemberToken(String accessToken, String refreshToken) throws Exception {
+    public MemberTokenResponse remakeMemberToken(String accessToken, String refreshToken) {
         if(jwtTokenProvider.isValidToken(accessToken)) {
-            throw new Exception("TOKEN NOT EXPIRED");
+            throw new BaseException(ErrorCode.ACCESS_TOKEN_NOT_EXPIRED);
         }
         if(!jwtTokenProvider.isValidToken(refreshToken)) {
-            throw new Exception("REFRESH TOKEN ALSO EXPIRED");
+            throw new BaseException(ErrorCode.REFRESH_TOKEN_EXPIRED);
         }
         Long memberId = jwtTokenProvider.getUserId(refreshToken);
         String newAccessToken = jwtTokenProvider.generateToken(TokenType.Access, memberId);
@@ -77,7 +78,7 @@ public class MemberService {
                 .build();
     }
 
-    public void withdrawUser(String accessToken) throws Exception {
+    public void withdrawUser(String accessToken) {
         Long memberId = jwtTokenProvider.getUserId(accessToken);
         memberRepository.deleteById(memberId);
     }

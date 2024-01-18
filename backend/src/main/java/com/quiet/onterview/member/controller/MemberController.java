@@ -28,25 +28,25 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/signup")
-    public ResponseEntity signUpByEmail(@RequestBody MemberSignupRequest memberSignupRequest) throws Exception {
+    public ResponseEntity signUpByEmail(@RequestBody MemberSignupRequest memberSignupRequest) {
         memberService.signUpByEmail(memberSignupRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/login")
-    public ResponseEntity<MemberLoginResponse> login(@RequestBody MemberLoginRequest memberLoginRequest) throws Exception {
+    public ResponseEntity<MemberLoginResponse> login(@RequestBody MemberLoginRequest memberLoginRequest) {
         return ResponseEntity.ok(memberService.login(memberLoginRequest));
     }
 
     @PatchMapping("/password")
     public ResponseEntity modifyPassword(@RequestHeader("Authorization") String accessToken,
-            @RequestBody MemberModifyPasswordRequest memberModifyPasswordRequest) throws Exception {
+            @RequestBody MemberModifyPasswordRequest memberModifyPasswordRequest) {
         memberService.modifyPassword(accessToken, memberModifyPasswordRequest);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
-    public ResponseEntity withdrawMember(@RequestHeader("Authorization") String accessToken) throws Exception {
+    public ResponseEntity withdrawMember(@RequestHeader("Authorization") String accessToken) {
         memberService.withdrawUser(accessToken);
         return ResponseEntity.ok().build();
     }
@@ -63,7 +63,7 @@ public class MemberController {
 
     @GetMapping("/token")
     public ResponseEntity<MemberTokenResponse> remakeMemberToken(@RequestHeader("AccessToken") String accessToken,
-            @RequestHeader("RefreshToken") String refreshToken) throws Exception {
+            @RequestHeader("RefreshToken") String refreshToken) {
         return ResponseEntity.ok(memberService.remakeMemberToken(accessToken, refreshToken));
     }
 }
