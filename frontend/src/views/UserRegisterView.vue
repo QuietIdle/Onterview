@@ -1,7 +1,9 @@
 <script setup>
 import { ref } from "vue"
+import { useRouter } from "vue-router"
 import { postSignUp, getIsDuplicatedEmail, getIsDuplicatedNickname } from '@/api/user.js'
 
+const router = useRouter()
 const email = ref('')
 const nickname = ref('')
 const password = ref('')
@@ -73,6 +75,7 @@ const passwordCheckRules = [
 ]
 
 const requestSignUp = function () {
+  
   const isValid = formRef.value.validate()
 
   if (isValid.value) {
@@ -84,12 +87,19 @@ const requestSignUp = function () {
       confirm: confirm.value,
     }
 
-    const success = function () {
-      console.log(`성공`)
+    const success = function (response) {
+
+      if ( response.status === 201 ) {
+        router.push({ name: login })
+        return
+      }
+
+      alert(`알 수 없는 이유로 회원가입에 실패했습니다. \n관리자에게 문의해주세요.`)
     }
 
     const error = function () {
-      console.log(`에러`)
+      // 실패 사유에 따른 조건 분기 설정 필요
+      alert(`알 수 없는 이유로 회원가입에 실패했습니다. \n관리자에게 문의해주세요.`)
     }
 
     postSignUp(payload, success, error)
@@ -98,8 +108,15 @@ const requestSignUp = function () {
 }
 
 const requestDuplicatedEmail = function () {
-  const payload = {
-    email: email.value
+
+  for (const rule of emailRules) {
+    const validationResult = rule(email.value);
+
+    // 규칙을 만족하지 않으면 오류 메시지 출력 및 함수 종료
+    if (validationResult !== true) {
+      alert(validationResult)
+      return
+    }
   }
 
   const success = function () {
@@ -110,12 +127,20 @@ const requestDuplicatedEmail = function () {
     console.log(`실패`)
   }
 
-  getIsDuplicatedEmail(payload)
+  getIsDuplicatedEmail(email.value, success, error)
 }
 
 const requestDuplicatedNickname = function () {
-  const payload = {
-    nickname: nickname.value
+
+  
+  for (const rule of nicknameRules) {
+    const validationResult = rule(nickname.value);
+
+    // 규칙을 만족하지 않으면 오류 메시지 출력 및 함수 종료
+    if (validationResult !== true) {
+      alert(validationResult)
+      return
+    }
   }
 
   const success = function () {
@@ -126,7 +151,7 @@ const requestDuplicatedNickname = function () {
     console.log(`실패`)
   }
 
-  getIsDuplicatedNickname(payload)
+  getIsDuplicatedNickname(nickname.value, success, error)
 }
 
 

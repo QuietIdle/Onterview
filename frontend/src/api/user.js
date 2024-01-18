@@ -8,12 +8,14 @@ const postSignUp = function (payload, success, error) {
     api.post(`/api/signup`, payload).then(success).catch(error)
 }
 
-const getIsDuplicatedEmail = function (payload) {
+const getIsDuplicatedEmail = function (email, success, error) {
     console.log("request get is duplicated email")
+    api.get(`/api/user/check?email=${email}`).then(success).catch(error)
 }
 
-const getIsDuplicatedNickname = function (payload) {
+const getIsDuplicatedNickname = function (nickname, success, error) {
     console.log("request get is duplicated nickname")
+    api.get(`/api/user/check?nickname=${nickname}`).then(success).catch(error)
 }
 
 export { postSignUp, getIsDuplicatedEmail, getIsDuplicatedNickname }
