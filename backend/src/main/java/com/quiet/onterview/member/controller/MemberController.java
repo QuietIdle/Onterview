@@ -1,11 +1,11 @@
 package com.quiet.onterview.member.controller;
 
-import com.quiet.onterview.member.dto.MemberDuplicateResponse;
-import com.quiet.onterview.member.dto.MemberLoginRequest;
-import com.quiet.onterview.member.dto.MemberLoginResponse;
-import com.quiet.onterview.member.dto.MemberSignupRequest;
-import com.quiet.onterview.member.dto.MemberModifyPasswordRequest;
-import com.quiet.onterview.member.dto.MemberTokenResponse;
+import com.quiet.onterview.member.dto.response.MemberDuplicateResponse;
+import com.quiet.onterview.member.dto.request.MemberLoginRequest;
+import com.quiet.onterview.member.dto.response.MemberLoginResponse;
+import com.quiet.onterview.member.dto.request.MemberSignupRequest;
+import com.quiet.onterview.member.dto.request.MemberModifyPasswordRequest;
+import com.quiet.onterview.member.dto.response.MemberTokenResponse;
 import com.quiet.onterview.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

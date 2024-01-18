@@ -1,7 +1,7 @@
 package com.quiet.onterview.member.mapper;
 
-import com.quiet.onterview.member.dto.MemberLoginResponse;
-import com.quiet.onterview.member.dto.MemberSignupRequest;
+import com.quiet.onterview.member.dto.response.MemberLoginResponse;
+import com.quiet.onterview.member.dto.request.MemberSignupRequest;
 import com.quiet.onterview.member.entity.Member;
 import org.springframework.stereotype.Component;
 
