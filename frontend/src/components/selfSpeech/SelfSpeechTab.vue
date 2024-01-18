@@ -1,5 +1,8 @@
 <script setup>
 import { ref } from 'vue';
+import { useSelfSpeechStore } from '@/stores/selfSpeech.js';
+
+const pinia = useSelfSpeechStore();
 
 const text = ref("");
 const listIdx = ref(1);
@@ -18,8 +21,14 @@ const items = ref([
   },
 ])
 
-function switchDisplay(page) {
+function switchTab(page) {
   listIdx.value = page;
+  if (page === 2) {
+    pinia.display = false;
+  }
+  else {
+    pinia.display = true;
+  }
 }
 </script>
 
@@ -27,7 +36,7 @@ function switchDisplay(page) {
     <div class="d-flex align-center justify-center w-100 h-25">
       <v-card class="text-center" min-width="120" max-height="120" variant="text">
         <template v-for="item in items" :key="item.id">
-          <v-list-item @click="switchDisplay(item.id)">
+          <v-list-item @click="switchTab(item.id)">
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
           <!-- <v-list :items="items" item-title="title" item-value="id"  class="pa-0"></v-list> -->

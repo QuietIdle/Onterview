@@ -1,6 +1,11 @@
 <script setup>
 import SelfSpeechRecord from '../components/selfSpeech/SelfSpeechRecord.vue';
 import SelfSpeechTab from '../components/selfSpeech/SelfSpeechTab.vue';
+import VideoPlay from '../components/video/VideoPlay.vue';
+import { useSelfSpeechStore } from '@/stores/selfSpeech.js';
+
+const pinia = useSelfSpeechStore();
+
 </script>
 
 <template>
@@ -17,7 +22,12 @@ import SelfSpeechTab from '../components/selfSpeech/SelfSpeechTab.vue';
       </div>
     </div>
     <div class="w-75 ma-5">
-      <SelfSpeechRecord />
+      <div class="h-75" v-if="pinia.display">
+        <SelfSpeechRecord />
+      </div>
+      <div class="h-75" v-else>
+        <VideoPlay />
+      </div>
       <SelfSpeechTab />
     </div>
   </div>

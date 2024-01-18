@@ -6,12 +6,12 @@ const dialog = ref(false); // 모달 창
 const time = ref(0); // 타이머
 let timerId;
 
-let flag = 0;
+let flag = 0; // chunk 전송 완료 여부
 
 function startTimer() {
   time.value++;
   stopTimer();
-  timerId = setTimeout(startTimer, 1000);
+  timerId = setTimeout(startTimer, 1000); // 스탑워치 주기 1초
 }
 
 function stopTimer() {
@@ -21,7 +21,7 @@ function stopTimer() {
 }
 
 let recorder;
-let recordedChunks;
+let recordedChunks = [];
 
 function videoStart() {
     navigator.mediaDevices.getUserMedia({ video: true, audio: true })
@@ -34,7 +34,7 @@ function videoStart() {
 
 function startRecording(stream) {
   flag = 0;
-  let idx = 0;
+  let idx = 0; // chunk 갯수
   recordedChunks = [];
   recorder = new MediaRecorder(stream);
   recorder.ondataavailable = (e) => {
@@ -42,7 +42,11 @@ function startRecording(stream) {
       recordedChunks.push(e.data);
       // console.log(idx);
       // console.log(flag);
+      //console.log(e.data);
       idx++;
+      if (idx >= 100) { // 녹화시간 300초 제한
+        stopRecording();
+      }
     }
     sendToServer(e.data, idx);
   }
@@ -68,13 +72,8 @@ function stopRecording() {
   flag = 1;
   dialog.value = true;
   const previewPlayer = document.querySelector("#myVideo");
-  //const downloadButton = document.querySelector(".download-button");
   previewPlayer.srcObject.getTracks().forEach(track => track.stop());
   recorder.stop();
-  //const recordedBlob = new Blob(recordedChunks, { type: "video/webm" });
-  //downloadButton.href = URL.createObjectURL(recordedBlob);
-  //downloadButton.download = `recording_${new Date()}.webm`;
-  //console.log(recordedChunks);
   stopTimer();
   time.value = 0;
 }
@@ -100,36 +99,35 @@ function downloadRecording() {
 </script>
 
 <template>
-  <div class="h-75">
-    <div class="w-auto">
-      <div class="ma-3">질문을 선택하세요</div>
-    </div>
-    <div class="w-100 h-75 text-center">
-      <video id="myVideo" width="450" autoplay></video>
-    </div>
-    <div class="btn-container w-100 d-flex align-center">
-      <v-btn class="ma-3" @click="videoStart" variant="outlined">START</v-btn>
-      <v-btn class="ma-3" @click="stopRecording" variant="outlined">STOP</v-btn>
-      <!-- <v-btn @click="playRecording">PLAY</v-btn> -->
-      <div class="timer ml-10">{{ Math.floor(time/60) }}:{{ time%60 }}</div>
-    </div>
+<div class="w-auto">
+  <div class="ma-3">질문을 선택하세요</div>
+</div>
+<div class="w-100 h-75 text-center">
+  <video id="myVideo" width="450" autoplay></video>
+</div>
+<div class="btn-container w-100 d-flex align-center">
+  <v-btn class="ma-3" @click="videoStart" variant="outlined">START</v-btn>
+  <v-btn class="ma-3" @click="stopRecording" variant="outlined">STOP</v-btn>
+  <!-- <v-btn @click="playRecording">PLAY</v-btn> -->
+  <div class="timer ml-10" v-if="(time%60)>=10">{{ Math.floor(time/60) }}:{{ time%60 }}</div>
+  <div class="timer ml-10" v-else>{{ Math.floor(time/60) }}:0{{ time%60 }}</div>
+</div>
 
-    <v-dialog v-model="dialog" width="auto">
-      <v-card>
-        <v-card-text>
-          녹화 완료!
-        </v-card-text>
-        <div class="d-flex">
-          <v-card-actions>
-            <v-btn color="primary" block @click="downloadRecording"><a class="download-button">저장하기</a></v-btn>
-          </v-card-actions>
-          <v-card-actions>
-            <v-btn color="warning" block @click="dialog = false">다시 연습</v-btn>
-          </v-card-actions>
-        </div>
-      </v-card>
-    </v-dialog>
-  </div>
+<v-dialog v-model="dialog" width="auto">
+  <v-card>
+    <v-card-text>
+      녹화 완료!
+    </v-card-text>
+    <div class="d-flex">
+      <v-card-actions>
+        <v-btn color="primary" block @click="downloadRecording"><a class="download-button">저장하기</a></v-btn>
+      </v-card-actions>
+      <v-card-actions>
+        <v-btn color="warning" block @click="dialog = false">다시 연습</v-btn>
+      </v-card-actions>
+    </div>
+  </v-card>
+</v-dialog>
 </template>
 
 <style scoped></style>
