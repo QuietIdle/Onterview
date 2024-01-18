@@ -3,9 +3,8 @@ import { ref } from 'vue';
 import { useSelfSpeechStore } from '@/stores/selfSpeech.js';
 
 const pinia = useSelfSpeechStore();
+const model = ref(null);
 
-const text = ref("");
-const listIdx = ref(1);
 const items = ref([
   {
     title: '나의 답변',
@@ -22,13 +21,11 @@ const items = ref([
 ])
 
 function switchTab(page) {
-  listIdx.value = page;
-  if (page === 2) {
-    pinia.display = false;
-  }
-  else {
-    pinia.display = true;
-  }
+  pinia.listIdx = page;
+}
+
+function aaa() {
+  pinia.display = false;
 }
 </script>
 
@@ -36,10 +33,12 @@ function switchTab(page) {
     <div class="d-flex align-center justify-center w-100 h-25">
       <v-card class="text-center" min-width="120" max-height="120" variant="text">
         <template v-for="item in items" :key="item.id">
-          <v-list-item @click="switchTab(item.id)">
+          <v-list-item @click="switchTab(item.id)" v-if="item.id==3 && pinia.display" disabled>
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
-          <!-- <v-list :items="items" item-title="title" item-value="id"  class="pa-0"></v-list> -->
+          <v-list-item @click="switchTab(item.id)" v-else>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
         </template>
 
         <!-- <button><v-list v-for="item in items" :items="items" item-title="title" item-value="id" @click="dd(item)"></v-list></button> -->
@@ -48,14 +47,28 @@ function switchTab(page) {
           
         </v-list> -->
       </v-card>
+
       <div class="content-container w-100 h-100 bg-yellow pa-5">
-        <div v-if="listIdx==1">
+        <div v-if="pinia.listIdx==1">
           나의 답변 페이지
         </div>
-        <div v-else-if="listIdx==2">
-          영상 리스트~~~
+        <div v-else-if="pinia.listIdx==2">
+          <v-sheet class="mx-auto" elevation="8" min-width="200" max-width="800">
+            <v-slide-group v-model="model" show-arrows center-active>
+              <v-slide-group-item v-for="n in 15" :key="n" v-slot="{ isSelected, toggle }">
+                <v-card :color="isSelected ? 'primary' : 'grey-lighten-1'" class="ma-2" height="100" width="150" @click="toggle(), aaa()">
+                  <div class="d-flex fill-height align-center justify-center">
+                    {{ n }}
+                    <v-scale-transition>
+                      <v-icon v-if="isSelected" color="white" size="48" icon="mdi-close-circle-outline"></v-icon>
+                    </v-scale-transition>
+                  </div>
+                </v-card>
+              </v-slide-group-item>
+            </v-slide-group>
+          </v-sheet>
         </div>
-        <div v-else-if="listIdx==3">
+        <div v-else-if="pinia.listIdx==3">
           자가 진단진단진단
         </div>
       </div>

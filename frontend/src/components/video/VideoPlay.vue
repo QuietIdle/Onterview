@@ -6,6 +6,7 @@ const pinia = useSelfSpeechStore();
 
 function backToRecording() {
   pinia.display = true;
+  pinia.listIdx = 1;
 }
 
 // function playRecording() {
