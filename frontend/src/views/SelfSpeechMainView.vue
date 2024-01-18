@@ -5,7 +5,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 function startSelfSpeech() {
-  router.push({ name: 'selfspeech-main' })
+  router.push({ name: 'selfspeech-room' })
 }
 function goStorage() {
   router.push({ name: 'storage-question' })
