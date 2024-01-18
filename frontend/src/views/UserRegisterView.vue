@@ -1,7 +1,210 @@
-<script setup></script>
+<script setup>
+import { ref } from "vue"
+import { postSignUp, getIsDuplicatedEmail, getIsDuplicatedNickname } from '@/api/user.js'
+
+const email = ref('')
+const nickname = ref('')
+const password = ref('')
+const confirm = ref('')
+const formRef = ref(null)
+const isDuplicatedEmail = ref(null)
+const isDuplicatedNickname = ref(null)
+
+const emailRules = [
+  (value) => {
+    if (value) return true
+
+    return '이메일을 입력해주세요.'
+  },
+  (value) => {
+    if (/.+@.+\..+/.test(value)) return true
+
+    return '이메일 형식이 올바르지 않습니다.'
+  },
+  (value) => {
+    if (isDuplicatedEmail.value === null) return true
+    else if (isDuplicatedEmail.value === true) return '사용할 수 있는 이메일입니다.' 
+    return '이미 사용 중인 이메일입니다.'
+  }
+]
+
+const nicknameRules = [
+  (value) => {
+    if (value) return true
+
+    return '닉네임을 입력해주세요.'
+  },
+  (value) => {
+    const koreanRegex = /^[가-힣]{2,8}$/
+
+    if (koreanRegex.test(value)) return true
+
+    return '닉네임은 2~8자의 한글이어야 합니다.'
+  },
+  (value) => {
+    if (isDuplicatedNickname.value === null) return true
+    else if (isDuplicatedNickname.value === true) return '사용할 수 있는 닉네임입니다.' 
+    return '이미 사용 중인 닉네임입니다.'
+  }
+]
+
+const passwordRules = [
+  (value) => {
+    if (value) return true;
+
+    return '비밀번호를 입력해주세요.'
+  },
+  (value) => {
+    // 영문, 숫자, 특수문자 중 2가지 이상 포함
+    const complexityRegex = /^(?=.*[a-zA-Z])(?=.*\d|(?=.*\W)).{8,32}$/
+
+    if (complexityRegex.test(value)) return true
+
+    return '비밀번호는 영문/숫자/특수문자 중 2가지 이상을 포함하여 8자 이상 32자 이하로 입력해주세요.';
+  },
+]
+
+const passwordCheckRules = [
+  (value) => {
+    if (value === password.value) return true
+
+    return '비밀번호가 일치하지 않습니다.'
+  }
+]
+
+const requestSignUp = function () {
+  const isValid = formRef.value.validate()
+
+  if (isValid.value) {
+
+    const payload = {
+      email: email.value,
+      nickname: nickname.value,
+      password: password.value,
+      confirm: confirm.value,
+    }
+
+    const success = function () {
+      console.log(`성공`)
+    }
+
+    const error = function () {
+      console.log(`에러`)
+    }
+
+    postSignUp(payload, success, error)
+    }
+  
+}
+
+const requestDuplicatedEmail = function () {
+  const payload = {
+    email: email.value
+  }
+
+  const success = function () {
+    console.log(`성공`)
+  }
+
+  const error = function () {
+    console.log(`실패`)
+  }
+
+  getIsDuplicatedEmail(payload)
+}
+
+const requestDuplicatedNickname = function () {
+  const payload = {
+    nickname: nickname.value
+  }
+
+  const success = function () {
+    console.log(`성공`)
+  }
+
+  const error = function () {
+    console.log(`실패`)
+  }
+
+  getIsDuplicatedNickname(payload)
+}
+
+
+</script>
+
 
 <template>
-  <div></div>
+  <div class="offset-4 v-col-4 mt-10">
+    <div class="rounded-0">
+      <div class="text-center mb-10">
+        <img class="mb-5" src="@/assets/logo.png" width="200px">
+        <h2 class="mb-2">회원가입</h2>
+        <h4>면접 경험을 쌓고 싶을 때, 온터뷰</h4>
+      </div>
+      <v-sheet width="90%" class="mx-auto">
+        <v-form 
+          ref="formRef"
+          fast-fail 
+          @submit.prevent="requestSignUp"
+        >
+          
+          <label for="email">이메일</label>
+          <v-row justify="center">
+            <v-col cols="9">
+              <v-text-field
+                v-model="email"
+                label="example@onterview.com"
+                :rules="emailRules"
+                id="email"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3" class="mt-2">
+              <v-btn @click="requestDuplicatedEmail">중복 확인</v-btn>
+            </v-col>
+          </v-row>
+          
+          <label for="nickname">닉네임</label>
+          <v-row justify="center">
+            <v-col cols="9">
+              <v-text-field
+                v-model="nickname"
+                label="한글 닉네임"
+                :rules="nicknameRules"
+                id="nickname"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3" class="mt-2">
+              <v-btn @click="requestDuplicatedNickname">중복 확인</v-btn>
+            </v-col>
+          </v-row>
+          
+          <label for="password">비밀번호</label>
+          <v-text-field
+            v-model="password"
+            label="비밀번호"
+            :rules="passwordRules"
+            type="password"
+            id="password"
+          ></v-text-field>
+          
+          <label for="confirm">비밀번호 확인</label>
+          <v-text-field
+            v-model="confirm"
+            label="비밀번호 확인"
+            :rules="passwordCheckRules"
+            type="password"
+            id="confirm"
+          ></v-text-field>
+
+
+          <v-btn 
+            type="submit" 
+            block class="mt-10"
+          >가입하기</v-btn>
+        </v-form>
+      </v-sheet>
+    </div>
+  </div>
 </template>
 
 <style scoped></style>
