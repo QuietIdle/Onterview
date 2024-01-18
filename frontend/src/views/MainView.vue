@@ -6,11 +6,9 @@ import introduceImage3 from '@/assets/main/introduceImage3.png'
 
 <template>
   <div>
-    <v-carousel hide-delimiters>
+    <v-carousel>
       <v-carousel-item :src="introduceImage1" cover></v-carousel-item>
-
       <v-carousel-item :src="introduceImage2" cover></v-carousel-item>
-
       <v-carousel-item :src="introduceImage3" cover></v-carousel-item>
     </v-carousel>
   </div>
