@@ -117,7 +117,7 @@ const requestSignUp = function () {
 
     const success = function (response) {
       if ( response.status === 201 ) {
-        router.push({ name: login })
+        router.push({ name: "login" })
         return
       } else {
         alert(`알 수 없는 이유로 회원가입에 실패했습니다. \n관리자에게 문의해주세요.`)

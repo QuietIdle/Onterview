@@ -1,6 +1,13 @@
 <script setup>
 import logo from '@/assets/logo.png'
+import { useRouter } from 'vue-router'
 import { RouterLink } from 'vue-router'
+
+const router = useRouter()
+
+const toLoginPage = function () {
+  router.push({ name: "login" })
+}
 </script>
 
 <template>
@@ -29,7 +36,7 @@ import { RouterLink } from 'vue-router'
 
         <v-col cols="12" md="3" align-self="center" class="d-flex justify-center">
           <!-- 로그인 -->
-          <v-btn variant="tonal" color="deep-purple-accent-4">Login</v-btn>
+          <v-btn variant="tonal" color="deep-purple-accent-4" @click="toLoginPage">Login</v-btn>
         </v-col>
       </v-row>
     </v-card>
