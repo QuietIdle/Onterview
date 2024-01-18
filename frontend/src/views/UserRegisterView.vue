@@ -14,63 +14,85 @@ const isDuplicatedNickname = ref(null)
 
 const emailRules = [
   (value) => {
-    if (value) return true
-
-    return '이메일을 입력해주세요.'
+    if (value) { 
+      return true
+    } else {
+      return '이메일을 입력해주세요.'
+    }
   },
   (value) => {
-    if (/.+@.+\..+/.test(value)) return true
-
-    return '이메일 형식이 올바르지 않습니다.'
+    if (/.+@.+\..+/.test(value)) {
+      return true
+    } else {
+      return '이메일 형식이 올바르지 않습니다.'
+    }
   },
   (value) => {
-    if (isDuplicatedEmail.value === null) return true
-    else if (isDuplicatedEmail.value === true) return '사용할 수 있는 이메일입니다.' 
-    return '이미 사용 중인 이메일입니다.'
+    if (isDuplicatedEmail.value === null) {
+      return true
+    } else if (isDuplicatedEmail.value === true) {
+      return '사용할 수 있는 이메일입니다.'
+    } else {
+      return '이미 사용 중인 이메일입니다.'
+    }
   }
 ]
 
 const nicknameRules = [
   (value) => {
-    if (value) return true
-
-    return '닉네임을 입력해주세요.'
+    if (value) {
+      return true
+    } else {
+      return '닉네임을 입력해주세요.'
+    }
   },
   (value) => {
     const koreanRegex = /^[가-힣]{2,8}$/
 
-    if (koreanRegex.test(value)) return true
-
-    return '닉네임은 2~8자의 한글이어야 합니다.'
+    if (koreanRegex.test(value)) {
+      return true
+    } else {
+      return '닉네임은 2~8자의 한글이어야 합니다.'
+    }
   },
   (value) => {
-    if (isDuplicatedNickname.value === null) return true
-    else if (isDuplicatedNickname.value === true) return '사용할 수 있는 닉네임입니다.' 
-    return '이미 사용 중인 닉네임입니다.'
+    if (isDuplicatedNickname.value === null) {
+      return true
+    } else if (isDuplicatedNickname.value === true) {
+      return '사용할 수 있는 닉네임입니다.'
+    } else {
+      return '이미 사용 중인 닉네임입니다.'
+    } 
   }
 ]
 
 const passwordRules = [
   (value) => {
-    if (value) return true;
-
-    return '비밀번호를 입력해주세요.'
+    if (value) {
+      return true
+    } else {
+      return '비밀번호를 입력해주세요.'
+    }
   },
   (value) => {
     // 영문, 숫자, 특수문자 중 2가지 이상 포함
     const complexityRegex = /^(?=.*[a-zA-Z])(?=.*\d|(?=.*\W)).{8,32}$/
 
-    if (complexityRegex.test(value)) return true
-
-    return '비밀번호는 영문/숫자/특수문자 중 2가지 이상을 포함하여 8자 이상 32자 이하로 입력해주세요.';
+    if (complexityRegex.test(value)) {
+      return true
+    } else {
+      return '비밀번호는 영문/숫자/특수문자 중 2가지 이상을 포함하여 8자 이상 32자 이하로 입력해주세요.'
+    }
   },
 ]
 
 const passwordCheckRules = [
   (value) => {
-    if (value === password.value) return true
-
-    return '비밀번호가 일치하지 않습니다.'
+    if (value === password.value) {
+      return true
+    } else {
+      return '비밀번호가 일치하지 않습니다.'
+    }
   }
 ]
 
@@ -110,7 +132,7 @@ const requestSignUp = function () {
 const requestDuplicatedEmail = function () {
 
   for (const rule of emailRules) {
-    const validationResult = rule(email.value);
+    const validationResult = rule(email.value)
 
     // 규칙을 만족하지 않으면 오류 메시지 출력 및 함수 종료
     if (validationResult !== true) {
@@ -134,7 +156,7 @@ const requestDuplicatedNickname = function () {
 
   
   for (const rule of nicknameRules) {
-    const validationResult = rule(nickname.value);
+    const validationResult = rule(nickname.value)
 
     // 규칙을 만족하지 않으면 오류 메시지 출력 및 함수 종료
     if (validationResult !== true) {
