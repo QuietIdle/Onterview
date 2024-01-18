@@ -2,6 +2,8 @@ package com.quiet.onterview.member.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -18,7 +20,8 @@ public class Member {
 
     @Id
     @Column(name = "MEMBER_ID")
-    private long memberId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long memberId;
 
     @Column(name = "EMAIL", unique = true, nullable = false)
     private String email;
@@ -26,7 +29,7 @@ public class Member {
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
-    @Column(name = "NICKNAME", nullable = true)
+    @Column(name = "NICKNAME", unique = true, nullable = true)
     private String nickname;
 
     @Column(name = "IMAGE_URL", nullable = true)
