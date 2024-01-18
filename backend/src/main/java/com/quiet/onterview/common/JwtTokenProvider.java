@@ -48,7 +48,10 @@ public class JwtTokenProvider {
         }
     }
 
-    public Long getUserId(String accessToken) {
+    public Long getUserId(String accessToken) throws Exception {
+        if(!isValidToken(accessToken)) {
+            throw new Exception("TOKEN EXPIRED");
+        }
         String userId = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(accessToken).getBody().getSubject();
         return Long.parseLong(userId);
     }
