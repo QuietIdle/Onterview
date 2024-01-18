@@ -5,7 +5,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 function startSelfSpeech() {
-  router.push({ name: 'selfspeech-main' });
+  router.push({ name: 'selfspeech-room' });
 }
 function goStorage() {
   router.push({ name: 'storage-question' });
@@ -13,8 +13,8 @@ function goStorage() {
 </script>
 
 <template>
-<div class="pa-10 w-100 h-50" style="background-color: #EED8E7;">
-  <div class="container pa-10 d-flex justify-center align-center">
+<div class="pa-10 w-100" style="background-color: #EED8E7;">
+  <div class="container pa-5 d-flex justify-center align-center">
     <div class="img-container ml-16 w-25 h-100">
       <v-img :src="testImg" :width="200"></v-img>
     </div>

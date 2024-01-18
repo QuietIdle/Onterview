@@ -17,12 +17,8 @@ import SelfSpeechTab from '../components/selfSpeech/SelfSpeechTab.vue';
       </div>
     </div>
     <div class="w-75 ma-5">
-      <div class="streaming h-75">
-        <SelfSpeechRecord />
-      </div>
-      <div class="script h-25 d-flex align-center">
-        <SelfSpeechTab />
-      </div>
+      <SelfSpeechRecord />
+      <SelfSpeechTab />
     </div>
   </div>
 </template>

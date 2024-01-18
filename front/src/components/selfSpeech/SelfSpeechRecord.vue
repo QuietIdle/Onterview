@@ -75,18 +75,19 @@ function downloadRecording() {
 </script>
 
 <template>
-  <div class="">
-    <div class="ma-3">질문을 선택하세요</div>
-  </div>
-  <div class="w-100 h-75 text-center">
-    <video id="myVideo" width="450" autoplay></video>
-  </div>
-  <div class="btn-container w-100 d-flex align-center">
-    <v-btn class="ma-3" @click="videoStart" variant="outlined">START</v-btn>
-    <v-btn class="ma-3" @click="stopRecording" variant="outlined">STOP</v-btn>
-    <!-- <v-btn @click="playRecording">PLAY</v-btn> -->
-    <div class="timer ml-10">{{ Math.floor(time/60) }}:{{ time%60 }}</div>
-  </div>
+  <div class="h-75">
+    <div class="w-auto">
+      <div class="ma-3">질문을 선택하세요</div>
+    </div>
+    <div class="w-100 h-75 text-center">
+      <video id="myVideo" width="450" autoplay></video>
+    </div>
+    <div class="btn-container w-100 d-flex align-center">
+      <v-btn class="ma-3" @click="videoStart" variant="outlined">START</v-btn>
+      <v-btn class="ma-3" @click="stopRecording" variant="outlined">STOP</v-btn>
+      <!-- <v-btn @click="playRecording">PLAY</v-btn> -->
+      <div class="timer ml-10">{{ Math.floor(time/60) }}:{{ time%60 }}</div>
+    </div>
 
     <v-dialog v-model="dialog" width="auto">
       <v-card>
@@ -103,6 +104,7 @@ function downloadRecording() {
         </div>
       </v-card>
     </v-dialog>
+  </div>
 </template>
 
 <style scoped></style>
