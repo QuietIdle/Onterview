@@ -39,6 +39,18 @@ public class FileController {
                 .body(body);
     }
 
+    @DeleteMapping("/file")
+    public ResponseEntity<?> deleteFile(@RequestParam("filePath") String filePath) {
+        File file = new File(filePath);
+
+        if (file.exists()) {
+            file.delete();
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
     private String createUUIDFileName(String extension) {
         return String.format("%s.%s", UUID.randomUUID(), extension);
     }
