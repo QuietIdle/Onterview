@@ -2,6 +2,7 @@ package com.quiet.onterviewstorage.file.controller;
 
 import com.quiet.onterviewstorage.file.FileDto;
 import com.quiet.onterviewstorage.file.FileDto.FileResponse;
+import com.quiet.onterviewstorage.file.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,9 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 public class FileController {
 
-    private final String DEFAULT_IMAGE_PATH = "image";
-    private final String DEFAULT_VIDEO_PATH = "video";
-
     @PostMapping("/file")
     public ResponseEntity<FileDto.FileResponse> imageUpload(
             @RequestPart("file") MultipartFile image
@@ -28,8 +26,8 @@ public class FileController {
         // TODO: 확장자명에 따라 영상/이미지로 나눠 저장
         log.info(image.getOriginalFilename());
         String uuidFileName = createUUIDFileName(image.getOriginalFilename().split("\\.")[1]);
-        image.transferTo(Path.of(DEFAULT_IMAGE_PATH + "/" + uuidFileName));
-        return ResponseEntity.ok(new FileResponse(DEFAULT_IMAGE_PATH, uuidFileName));
+        image.transferTo(Path.of(FileUtils.DEFAULT_IMAGE_PATH + "/" + uuidFileName));
+        return ResponseEntity.ok(new FileResponse(FileUtils.DEFAULT_IMAGE_PATH, uuidFileName));
     }
 
     @GetMapping("/file")

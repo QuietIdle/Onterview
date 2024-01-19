@@ -15,6 +15,8 @@ import org.jcodec.scale.AWTUtil;
 public class FileUtils {
 
     private static final String EXTENSION = "png";
+    public static final String DEFAULT_IMAGE_PATH = "image";
+    public static final String DEFAULT_VIDEO_PATH = "video";
 
     public static String getThumbnail(File source) throws IOException, JCodecException {
         File thumbnail = new File(source.getParent(),
