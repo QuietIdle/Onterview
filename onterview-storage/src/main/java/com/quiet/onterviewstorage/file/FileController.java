@@ -25,6 +25,20 @@ public class FileController {
         return ResponseEntity.ok(uuidFileName);
     }
 
+    @GetMapping("/file")
+    public ResponseEntity<?> sendFile(@RequestParam("fileName") String fileName)
+            throws IOException {
+        File file = new File("video/" + fileName);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.add("Content-Disposition", "attachment" + file.getName());
+        String path = file.getPath();
+        byte[] body = Files.readAllBytes(Path.of(path));
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(body);
+    }
+
     private String createUUIDFileName(String extension) {
         return String.format("%s.%s", UUID.randomUUID(), extension);
     }
