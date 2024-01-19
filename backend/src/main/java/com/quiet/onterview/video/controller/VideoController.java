@@ -1,7 +1,9 @@
 package com.quiet.onterview.video.controller;
 
 import com.quiet.onterview.video.dto.response.VideoDetailResponse;
+import com.quiet.onterview.video.dto.response.VideoInformationResponse;
 import com.quiet.onterview.video.service.VideoService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,5 +26,12 @@ public class VideoController {
     @GetMapping("/{videoId}")
     public ResponseEntity<VideoDetailResponse> getVideoInformation(@PathVariable Long videoId) {
         return ResponseEntity.ok(videoService.loadVideoInformation(videoId));
+    }
+
+    @GetMapping("/all/{myQuestionId}")
+    public ResponseEntity<List<VideoInformationResponse>> getAllVideoInformationByMyQuestion(
+            @PathVariable Long myQuestionId
+    ) {
+        return ResponseEntity.ok(videoService.loadVideoInformationByMyQuestion(myQuestionId));
     }
 }
