@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
-public class ChunkUploadService {
+public class ChunkService {
 
     public boolean chunkUpload(MultipartFile file, int chunkNumber, int totalChunks) throws IOException {
         // 파일 업로드 위치

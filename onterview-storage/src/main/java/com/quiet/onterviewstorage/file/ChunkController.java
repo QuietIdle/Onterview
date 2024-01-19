@@ -10,9 +10,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(originPatterns = "*")
-public class ChunkFileController {
+public class ChunkController {
 
-    private final ChunkUploadService chunkUploadService;
+    private final ChunkService chunkService;
 
     @GetMapping("/chunk")
     public String chunkUploadPage() {
@@ -24,7 +24,7 @@ public class ChunkFileController {
     public ResponseEntity<String> chunkUpload(@RequestParam("chunk") MultipartFile file,
             @RequestParam("chunkNumber") int chunkNumber,
             @RequestParam("totalChunks") int totalChunks) throws IOException {
-        boolean isDone = chunkUploadService.chunkUpload(file, chunkNumber, totalChunks);
+        boolean isDone = chunkService.chunkUpload(file, chunkNumber, totalChunks);
 
         return isDone ?
                 ResponseEntity.ok("File uploaded successfully") :
