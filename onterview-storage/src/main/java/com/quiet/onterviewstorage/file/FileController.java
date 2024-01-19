@@ -26,9 +26,9 @@ public class FileController {
     }
 
     @GetMapping("/file")
-    public ResponseEntity<?> sendFile(@RequestParam("fileName") String fileName)
+    public ResponseEntity<?> sendFile(@RequestParam("filePath") String filePath)
             throws IOException {
-        File file = new File("video/" + fileName);
+        File file = new File("video/" + filePath);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.add("Content-Disposition", "attachment" + file.getName());
