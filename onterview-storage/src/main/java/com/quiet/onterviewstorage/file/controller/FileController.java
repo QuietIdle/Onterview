@@ -1,7 +1,7 @@
 package com.quiet.onterviewstorage.file.controller;
 
-import com.quiet.onterviewstorage.file.FileDto;
-import com.quiet.onterviewstorage.file.FileDto.FileResponse;
+import com.quiet.onterviewstorage.file.dto.FileDto;
+import com.quiet.onterviewstorage.file.dto.FileDto.FileResponse;
 import com.quiet.onterviewstorage.file.FileUtils;
 import java.io.File;
 import java.io.IOException;

@@ -1,7 +1,7 @@
 package com.quiet.onterviewstorage.file.controller;
 
-import com.quiet.onterviewstorage.file.ChunkService;
-import com.quiet.onterviewstorage.file.FileDto.VideoResponse;
+import com.quiet.onterviewstorage.file.service.ChunkService;
+import com.quiet.onterviewstorage.file.dto.FileDto.VideoResponse;
 import com.quiet.onterviewstorage.file.FileUtils;
 import java.io.IOException;
 import java.nio.file.Files;

@@ -1,6 +1,7 @@
-package com.quiet.onterviewstorage.file;
+package com.quiet.onterviewstorage.file.service;
 
-import com.quiet.onterviewstorage.file.FileDto.VideoResponse;
+import com.quiet.onterviewstorage.file.dto.FileDto.VideoResponse;
+import com.quiet.onterviewstorage.file.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;

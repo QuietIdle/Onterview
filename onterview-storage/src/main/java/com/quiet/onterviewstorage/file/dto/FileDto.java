@@ -1,4 +1,4 @@
-package com.quiet.onterviewstorage.file;
+package com.quiet.onterviewstorage.file.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
