@@ -14,7 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(originPatterns = "*")
-@RequestMapping("/chunk")
+@RequestMapping("/api/chunk")
+@Slf4j
 public class ChunkController {
 
     private final ChunkService chunkService;
