@@ -1,4 +1,4 @@
-package com.quiet.onterviewstorage.file;
+package com.quiet.onterviewstorage.file.controller;
 
 import java.io.File;
 import java.io.IOException;

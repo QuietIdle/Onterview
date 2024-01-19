@@ -1,5 +1,7 @@
-package com.quiet.onterviewstorage.file;
+package com.quiet.onterviewstorage.file.controller;
 
+import com.quiet.onterviewstorage.file.ChunkService;
+import com.quiet.onterviewstorage.file.FileDto.VideoResponse;
 import java.io.IOException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +26,7 @@ public class ChunkController {
             @RequestParam("chunkNumber") int chunkNumber,
             @RequestParam("endOfChunk") int endOfChunk
     ) throws IOException, JCodecException {
-        Optional<FileDto.VideoResponse> isDone = chunkService.chunkUpload(file, chunkNumber,
+        Optional<VideoResponse> isDone = chunkService.chunkUpload(file, chunkNumber,
                 endOfChunk);
 
         return isDone.isEmpty() ?
