@@ -31,4 +31,11 @@ public class FileUtils {
 
         return thumbnail.getName();
     }
+
+    public static double getVideoLength(File source) throws IOException, JCodecException {
+        FrameGrab frameGrab = FrameGrab.createFrameGrab(NIOUtils.readableChannel(source));
+        double durationInSeconds = frameGrab.getVideoTrack().getMeta().getTotalDuration();
+        log.info("Video length: {} seconds", durationInSeconds);
+        return durationInSeconds;
+    }
 }
