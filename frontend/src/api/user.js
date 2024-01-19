@@ -24,7 +24,3 @@ const getIsDuplicatedNickname = function (nickname, success, error) {
 }
 
 export { postSignUp, postLogin, getIsDuplicatedEmail, getIsDuplicatedNickname }
-
-// async function userConfirm(param, success, fail) {
-//     await api.post(`/login`, param).then(success).catch(fail);
-//   }
