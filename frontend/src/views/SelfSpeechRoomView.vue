@@ -3,9 +3,14 @@ import SelfSpeechRecord from '../components/selfSpeech/SelfSpeechRecord.vue';
 import SelfSpeechTab from '../components/selfSpeech/SelfSpeechTab.vue';
 import VideoPlay from '../components/video/VideoPlay.vue';
 import { useSelfSpeechStore } from '@/stores/selfSpeech.js';
+import { useRouter } from 'vue-router';
 
 const pinia = useSelfSpeechStore();
+const router = useRouter();
 
+function goSelfSpeechMain() {
+  router.push({name: 'selfspeech-main'})
+}
 </script>
 
 <template>
@@ -22,6 +27,7 @@ const pinia = useSelfSpeechStore();
       </div>
     </div>
     <div class="w-75 ma-5">
+      <v-icon class="exit-btn" color="black" size="32" icon="mdi-close-circle-outline" @click="goSelfSpeechMain"></v-icon>
       <div class="h-75" v-if="pinia.display">
         <SelfSpeechRecord />
       </div>
@@ -36,5 +42,9 @@ const pinia = useSelfSpeechStore();
 <style scoped>
 *{
   border: 1px solid black;
+}
+.exit-btn{
+  position: fixed;
+  right: 20px;
 }
 </style>

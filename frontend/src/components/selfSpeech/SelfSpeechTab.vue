@@ -5,6 +5,8 @@ import { useSelfSpeechStore } from '@/stores/selfSpeech.js';
 const pinia = useSelfSpeechStore();
 const model = ref(null);
 
+const test = ref("A");
+
 const items = ref([
   {
     title: '나의 답변',
@@ -24,8 +26,14 @@ function switchTab(page) {
   pinia.listIdx = page;
 }
 
-function aaa() {
+function aaa(temp) {
   pinia.display = false;
+  if (!temp) {
+    test.value = "B";
+  } 
+  else {
+    test.value = "A";
+  }
 }
 </script>
 
@@ -40,12 +48,6 @@ function aaa() {
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
         </template>
-
-        <!-- <button><v-list v-for="item in items" :items="items" item-title="title" item-value="id" @click="dd(item)"></v-list></button> -->
-        
-        <!-- <v-list :items="items" item-title="title" item-value="id" @click="dd" class="pa-0">
-          
-        </v-list> -->
       </v-card>
 
       <div class="content-container w-100 h-100 bg-yellow pa-5">
@@ -56,9 +58,9 @@ function aaa() {
           <v-sheet class="mx-auto" elevation="8" min-width="200" max-width="800">
             <v-slide-group v-model="model" show-arrows center-active>
               <v-slide-group-item v-for="n in 15" :key="n" v-slot="{ isSelected, toggle }">
-                <v-card :color="isSelected ? 'primary' : 'grey-lighten-1'" class="ma-2" height="100" width="150" @click="toggle(), aaa()">
+                <v-card :color="isSelected ? 'primary' : 'grey-lighten-1'" class="ma-2" height="100" width="150" @click="toggle(), aaa(isSelected)">
                   <div class="d-flex fill-height align-center justify-center">
-                    {{ n }}
+                    {{ n }}-{{ test }}
                     <v-scale-transition>
                       <v-icon v-if="isSelected" color="white" size="48" icon="mdi-close-circle-outline"></v-icon>
                     </v-scale-transition>
