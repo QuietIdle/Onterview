@@ -97,9 +97,10 @@ const requestLogin = function () {
 
           <v-btn 
             type="submit" 
-            block class="mt-5 py-5"
+            block class="mt-2 py-5"
           ><h3>로그인</h3></v-btn>
         </v-form>
+
         <v-btn
           type="submit" 
           block class="kakao mt-5 py-5"
@@ -109,10 +110,13 @@ const requestLogin = function () {
           <h3 class="mx-2">카카오 로그인</h3>
         </div>
         </v-btn>
+
         <p class="text-center mt-5">
-          <span class="text-grey">비밀번호를 잊으셨나요? </span>
-          <a class="ma-2 find-password" href="#"> 비밀번호 찾기 </a>
+          <a href="#"> 비밀번호 찾기 </a>
+          <span class="text-grey">|</span>
+          <a href="#"> 회원가입 </a>
         </p>
+
       </v-sheet>
       
     </div>
@@ -123,6 +127,12 @@ const requestLogin = function () {
 html {
     height: 100%;
 }
+
+a {
+  color: #BB66FF;
+  text-decoration: none;
+}
+
 .body {
     min-height: 100vh;
 }
@@ -132,8 +142,4 @@ html {
   color: #191919;
 }
 
-.find-password {
-  color: #BB66FF;
-  text-decoration: none;
-}
 </style>
