@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { useSelfSpeechStore } from '@/stores/selfSpeech.js';
 
 const pinia = useSelfSpeechStore();
-const model = ref(null);
+const model = ref(null); // 썸네일
 
 const test = ref("A");
 
@@ -22,11 +22,11 @@ const items = ref([
   },
 ])
 
-function switchTab(page) {
+const switchTab = function(page) {
   pinia.listIdx = page;
 }
 
-function aaa(temp) {
+const aaa = function(temp) {
   pinia.display = false;
   if (!temp) {
     test.value = "B";
@@ -39,7 +39,7 @@ function aaa(temp) {
 
 <template>
     <div class="d-flex align-center justify-center w-100 h-25">
-      <v-card class="text-center" min-width="120" max-height="120" variant="text">
+      <v-card class="text-center" width="120" max-height="120" variant="text">
         <template v-for="item in items" :key="item.id">
           <v-list-item @click="switchTab(item.id)" v-if="item.id==3 && pinia.display" disabled>
             <v-list-item-title>{{ item.title }}</v-list-item-title>

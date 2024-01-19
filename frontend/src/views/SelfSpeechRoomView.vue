@@ -4,12 +4,27 @@ import SelfSpeechTab from '../components/selfSpeech/SelfSpeechTab.vue';
 import VideoPlay from '../components/video/VideoPlay.vue';
 import { useSelfSpeechStore } from '@/stores/selfSpeech.js';
 import { useRouter } from 'vue-router';
+import { apiMethods } from '@/api/video.js';
 
 const pinia = useSelfSpeechStore();
 const router = useRouter();
 
-function goSelfSpeechMain() {
+const goSelfSpeechMain = function () {
   router.push({name: 'selfspeech-main'})
+}
+
+const logData = {
+  ss: function () {
+    console.log('성공');
+  },
+  err: function () {
+    console.warn('에러');
+  },
+}
+const ttt = function () {
+  pinia.selectedQuestion = 1;
+  const response = apiMethods.getVideo(pinia.selectedQuestion, logData.ss, logData.err);
+  console.log(response);
 }
 </script>
 
@@ -23,7 +38,7 @@ function goSelfSpeechMain() {
         2
       </div>
       <div class="question-list ma-3">
-        3
+        <button @click="ttt">질문1</button>
       </div>
     </div>
     <div class="w-75 ma-5">
