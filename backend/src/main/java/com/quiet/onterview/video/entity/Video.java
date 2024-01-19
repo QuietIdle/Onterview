@@ -31,6 +31,9 @@ public class Video extends BaseEntity {
     @Column(name = "VIDEO_ID")
     private Long videoId;
 
+    @Column(name = "TITLE")
+    private String title;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "MY_QUESTION_ID")
     private MyQuestion myQuestion;
@@ -44,7 +47,7 @@ public class Video extends BaseEntity {
     @Column(name = "TUNBNAIL_URL", nullable = false)
     private String thumbnailUrl;
 
-    @Column(name = "BOOKMARK", nullable = false)
+    @Column(name = "BOOKMARK")
     private Boolean bookmark = Boolean.FALSE;
 
     @Column(name = "feedback", nullable = false)
