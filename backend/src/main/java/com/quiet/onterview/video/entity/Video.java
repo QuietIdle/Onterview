@@ -5,6 +5,7 @@ import static jakarta.persistence.FetchType.LAZY;
 import com.quiet.onterview.common.BaseEntity;
 import com.quiet.onterview.question.entity.MyQuestion;
 import com.quiet.onterview.question.entity.RecordQuestion;
+import com.quiet.onterview.video.dto.request.VideoUpdateRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +23,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 @Entity
+@Builder
 @Table(name = "VIDEO")
 public class Video extends BaseEntity {
 
@@ -28,6 +31,9 @@ public class Video extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "VIDEO_ID")
     private Long videoId;
+
+    @Column(name = "TITLE")
+    private String title;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "MY_QUESTION_ID")
@@ -42,7 +48,7 @@ public class Video extends BaseEntity {
     @Column(name = "TUNBNAIL_URL", nullable = false)
     private String thumbnailUrl;
 
-    @Column(name = "BOOKMARK", nullable = false)
+    @Column(name = "BOOKMARK")
     private Boolean bookmark = Boolean.FALSE;
 
     @Column(name = "feedback", nullable = false)
@@ -51,4 +57,10 @@ public class Video extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "RECORD_QUESTION_ID")
     private RecordQuestion recordQuestion;
+
+    public void updateEntity(VideoUpdateRequest videoUpdateRequest) {
+        this.title = videoUpdateRequest.getTitle();
+        this.bookmark = videoUpdateRequest.getBookmark();
+        this.feedback = videoUpdateRequest.getFeedback();
+    }
 }
