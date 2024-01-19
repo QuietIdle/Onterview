@@ -5,7 +5,12 @@ const api = localAxios()
 
 const postSignUp = function (payload, success, error) {
     console.log("request post sign up")
-    api.post(`/api/signup`, payload).then(success).catch(error)
+    api.post(`/api/user/signup`, payload).then(success).catch(error)
+}
+
+const postLogin = function (payload, success, error) {
+    console.log("request post login")
+    api.post(`/api/user/login`, payload).then(success).catch(error)
 }
 
 const getIsDuplicatedEmail = function (email, success, error) {
@@ -18,8 +23,4 @@ const getIsDuplicatedNickname = function (nickname, success, error) {
     api.get(`/api/user/check?nickname=${nickname}`).then(success).catch(error)
 }
 
-export { postSignUp, getIsDuplicatedEmail, getIsDuplicatedNickname }
-
-// async function userConfirm(param, success, fail) {
-//     await api.post(`/login`, param).then(success).catch(fail);
-//   }
+export { postSignUp, postLogin, getIsDuplicatedEmail, getIsDuplicatedNickname }
