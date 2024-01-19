@@ -1,5 +1,7 @@
 package com.quiet.onterviewstorage.file.controller;
 
+import com.quiet.onterviewstorage.file.FileDto;
+import com.quiet.onterviewstorage.file.FileDto.FileResponse;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,19 +18,26 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 public class FileController {
 
+    private final String DEFAULT_IMAGE_PATH = "image";
+    private final String DEFAULT_VIDEO_PATH = "video";
+
     @PostMapping("/file")
-    public ResponseEntity<String> imageUpload(@RequestPart("file") MultipartFile image)
-            throws IOException {
+    public ResponseEntity<FileDto.FileResponse> imageUpload(
+            @RequestPart("file") MultipartFile image
+    ) throws IOException {
+        // TODO: 확장자명에 따라 영상/이미지로 나눠 저장
         log.info(image.getOriginalFilename());
         String uuidFileName = createUUIDFileName(image.getOriginalFilename().split("\\.")[1]);
-        image.transferTo(Path.of("image/" + uuidFileName));
-        return ResponseEntity.ok(uuidFileName);
+        image.transferTo(Path.of(DEFAULT_IMAGE_PATH + "/" + uuidFileName));
+        return ResponseEntity.ok(new FileResponse(DEFAULT_IMAGE_PATH, uuidFileName));
     }
 
     @GetMapping("/file")
-    public ResponseEntity<?> sendFile(@RequestParam("filePath") String filePath)
-            throws IOException {
-        File file = new File("video/" + filePath);
+    public ResponseEntity<?> sendFile(
+            @RequestParam("filePath") String filePath,
+            @RequestParam("fileName") String fileName
+    ) throws IOException {
+        File file = new File(filePath + "/" + fileName);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.add("Content-Disposition", "attachment" + file.getName());
@@ -40,8 +49,12 @@ public class FileController {
     }
 
     @DeleteMapping("/file")
-    public ResponseEntity<?> deleteFile(@RequestParam("filePath") String filePath) {
-        File file = new File(filePath);
+    public ResponseEntity<?> deleteFile(
+            @RequestParam("filePath") String filePath,
+            @RequestParam("fileName") String fileName
+    ) {
+        log.info(filePath);
+        File file = new File(filePath + "/" + fileName);
 
         if (file.exists()) {
             file.delete();
