@@ -1,5 +1,7 @@
 package com.quiet.onterview.video.mapper;
 
+import com.quiet.onterview.question.entity.MyQuestion;
+import com.quiet.onterview.video.dto.request.VideoInformationRequest;
 import com.quiet.onterview.video.dto.response.VideoDetailResponse;
 import com.quiet.onterview.video.dto.response.VideoInformationResponse;
 import com.quiet.onterview.video.entity.Video;
@@ -36,5 +38,19 @@ public class VideoMapper {
                         .bookmark(video.getBookmark())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    public Video videoInformationRequestToVideo(
+            MyQuestion myQuestion,
+            VideoInformationRequest videoInformationRequest
+    ) {
+        return Video.builder()
+                .title(videoInformationRequest.getTitle())
+                .videoUrl(videoInformationRequest.getVideoUrl())
+                .thumbnailUrl(videoInformationRequest.getThumbnailUrl())
+                .videoLength(videoInformationRequest.getVideoLength())
+                .feedback(videoInformationRequest.getFeedback())
+                .myQuestion(myQuestion)
+                .build();
     }
 }

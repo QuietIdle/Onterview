@@ -2,6 +2,7 @@ package com.quiet.onterview.video.service;
 
 import com.quiet.onterview.question.entity.MyQuestion;
 import com.quiet.onterview.question.repository.MyQuestionRepository;
+import com.quiet.onterview.video.dto.request.VideoInformationRequest;
 import com.quiet.onterview.video.dto.response.VideoDetailResponse;
 import com.quiet.onterview.video.dto.response.VideoInformationResponse;
 import com.quiet.onterview.video.entity.Video;
@@ -34,5 +35,15 @@ public class VideoServiceImpl implements VideoService {
                 myQuestion.getMyQuestionList().getMember().getMemberId(), myQuestionId);
 
         return videoMapper.videoListToVideoInformationResponseList(myQuestionId, allByMyQuestion);
+    }
+
+    @Override
+    public void registerVideo(VideoInformationRequest videoInformationRequest) {
+        MyQuestion myQuestion = myQuestionRepository.findById(videoInformationRequest.getQuestionId())
+                .orElseThrow(IllegalArgumentException::new);
+
+        Video video = videoMapper.videoInformationRequestToVideo(myQuestion, videoInformationRequest);
+
+        videoRepository.save(video);
     }
 }
