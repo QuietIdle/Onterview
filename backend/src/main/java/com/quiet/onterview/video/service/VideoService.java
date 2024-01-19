@@ -11,4 +11,5 @@ public interface VideoService {
     List<VideoInformationResponse> loadVideoInformationByMyQuestion(Long myQuestionId);
     void registerVideo(VideoInformationRequest videoInformationRequest);
     void updateVideo(Long videoId, VideoUpdateRequest videoUpdateRequest);
+    void deleteVideo(Long videoId);
 }

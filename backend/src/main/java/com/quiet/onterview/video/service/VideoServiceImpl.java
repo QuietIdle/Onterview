@@ -54,4 +54,9 @@ public class VideoServiceImpl implements VideoService {
         video.updateEntity(videoUpdateRequest);
     }
 
+    @Override
+    public void deleteVideo(Long videoId) {
+        Video video = videoRepository.findById(videoId).orElseThrow(VideoNotFoundException::new);
+        videoRepository.delete(video);
+    }
 }
