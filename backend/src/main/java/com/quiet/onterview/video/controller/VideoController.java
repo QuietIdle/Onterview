@@ -1,6 +1,7 @@
 package com.quiet.onterview.video.controller;
 
 import com.quiet.onterview.video.dto.request.VideoInformationRequest;
+import com.quiet.onterview.video.dto.request.VideoUpdateRequest;
 import com.quiet.onterview.video.dto.response.VideoDetailResponse;
 import com.quiet.onterview.video.dto.response.VideoInformationResponse;
 import com.quiet.onterview.video.service.VideoService;
@@ -8,6 +9,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,6 +43,15 @@ public class VideoController {
     @PostMapping
     public ResponseEntity<Void> registerVideo(@RequestBody VideoInformationRequest videoInformationRequest) {
         videoService.registerVideo(videoInformationRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("{videoId}")
+    public ResponseEntity<Void> updateVideo(
+            @PathVariable Long videoId,
+            @RequestBody VideoUpdateRequest videoUpdateRequest
+    ) {
+        videoService.updateVideo(videoId, videoUpdateRequest);
         return ResponseEntity.ok().build();
     }
 }

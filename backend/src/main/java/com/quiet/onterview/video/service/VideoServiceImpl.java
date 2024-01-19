@@ -3,6 +3,7 @@ package com.quiet.onterview.video.service;
 import com.quiet.onterview.question.entity.MyQuestion;
 import com.quiet.onterview.question.repository.MyQuestionRepository;
 import com.quiet.onterview.video.dto.request.VideoInformationRequest;
+import com.quiet.onterview.video.dto.request.VideoUpdateRequest;
 import com.quiet.onterview.video.dto.response.VideoDetailResponse;
 import com.quiet.onterview.video.dto.response.VideoInformationResponse;
 import com.quiet.onterview.video.entity.Video;
@@ -46,4 +47,11 @@ public class VideoServiceImpl implements VideoService {
 
         videoRepository.save(video);
     }
+
+    @Override
+    public void updateVideo(Long videoId, VideoUpdateRequest videoUpdateRequest) {
+        Video video = videoRepository.findById(videoId).orElseThrow(VideoNotFoundException::new);
+        video.updateEntity(videoUpdateRequest);
+    }
+
 }

@@ -5,6 +5,7 @@ import static jakarta.persistence.FetchType.LAZY;
 import com.quiet.onterview.common.BaseEntity;
 import com.quiet.onterview.question.entity.MyQuestion;
 import com.quiet.onterview.question.entity.RecordQuestion;
+import com.quiet.onterview.video.dto.request.VideoUpdateRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -56,4 +57,10 @@ public class Video extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "RECORD_QUESTION_ID")
     private RecordQuestion recordQuestion;
+
+    public void updateEntity(VideoUpdateRequest videoUpdateRequest) {
+        this.title = videoUpdateRequest.getTitle();
+        this.bookmark = videoUpdateRequest.getBookmark();
+        this.feedback = videoUpdateRequest.getFeedback();
+    }
 }
