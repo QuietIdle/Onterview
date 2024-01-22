@@ -22,17 +22,34 @@ const dropdownMenu = ref(null)
         </RouterLink>
       </TheDropDownNavbarLogo>
     </template>
-    <TheDropDownItem>셀프 스피치</TheDropDownItem>
-    <TheDropDownItem>모의 면접</TheDropDownItem>
-    <TheDropDownItem>커뮤니티</TheDropDownItem>
+    <TheDropDownItem>
+      <RouterLink to="/selfspeech"> 셀프 스피치 </RouterLink>
+    </TheDropDownItem>
+    <TheDropDownItem>
+      <RouterLink to="/"> 모의 면접 </RouterLink>
+    </TheDropDownItem>
+    <TheDropDownItem>
+      <RouterLink to="/"> 커뮤니티 </RouterLink>
+    </TheDropDownItem>
     <TheDropDownMenu text="보관함" ref="dropdownMenu">
-      <TheDropDownItem>면접 문항 목록</TheDropDownItem>
+      <TheDropDownItem>
+        <RouterLink to="/storage/question"> 면접 문항 목록 </RouterLink>
+      </TheDropDownItem>
       <TheDropDownMenu text="녹화 영상 목록">
-        <TheDropDownItem>셀프 스피치</TheDropDownItem>
-        <TheDropDownItem>1인 모의 면접</TheDropDownItem>
-        <TheDropDownItem>다인 모의 면접</TheDropDownItem>
+        <TheDropDownItem>
+          <RouterLink to="/storage/video"> 셀프 스피치 </RouterLink>
+        </TheDropDownItem>
+        <TheDropDownItem>
+          <RouterLink to="/"> 1인 모의 면접 </RouterLink>
+        </TheDropDownItem>
+        <TheDropDownItem>
+          <RouterLink to="/"> 다인 모의 면접 </RouterLink>
+        </TheDropDownItem>
       </TheDropDownMenu>
     </TheDropDownMenu>
+    <v-btn variant="tonal" color="deep-purple-accent-4">
+      <RouterLink to="/login"> Login </RouterLink>
+    </v-btn>
     <TheDropDownMenu text="마이페이지" ref="dropdownMenu">
       <v-list>
         <v-list-item :prepend-avatar="logo" title="관리자님" subtitle="환영합니다"> </v-list-item>
@@ -41,7 +58,7 @@ const dropdownMenu = ref(null)
       <TheDropDownItem>Sign out</TheDropDownItem>
     </TheDropDownMenu>
 
-    <div class="mr-3"></div>
+    <div class="mr-4"></div>
   </TheDropDownNavbar>
 </template>
 
@@ -58,5 +75,9 @@ ul {
 a {
   text-decoration: none; /* 링크 밑줄 제거 */
   color: black; /* 링크 색상, 필요에 따라 조정 */
+}
+
+.dd-nav-p-4 {
+  padding: 0.5rem !important;
 }
 </style>
