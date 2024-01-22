@@ -23,6 +23,11 @@ const getIsDuplicatedNickname = function (nickname, success, error) {
     api.get(`/api/user/check?nickname=${nickname}`).then(success).catch(error)
 }
 
+const patchUpdateUser = function (payload, success, error) {
+    console.log("request patch, update user")
+    api.patch(`/api/user`, payload).then(success).catch(error)
+}
+
 const patchChangeUserPwd = function (payload, success, error) {
     console.log("request patch, change user password")
     api.patch(`/api/user/password`, payload).then(success).catch(error)
@@ -33,4 +38,4 @@ const deleteDeleteUser = function (payload, success, error) {
     api.delete(`/api/user`, payload).then(success).catch(error)
 }
 
-export { postSignUp, postLogin, getIsDuplicatedEmail, getIsDuplicatedNickname, patchChangeUserPwd, deleteDeleteUser }
+export { postSignUp, postLogin, getIsDuplicatedEmail, getIsDuplicatedNickname, patchUpdateUser, patchChangeUserPwd, deleteDeleteUser }
