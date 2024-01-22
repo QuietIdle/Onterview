@@ -23,9 +23,13 @@ public enum ErrorCode {
     /**
      * Video
      */
-    VIDEO_NOT_FOUND(HttpStatus.BAD_REQUEST, "VIDEO_NOT_FOUND");
+    VIDEO_NOT_FOUND(HttpStatus.BAD_REQUEST, "VIDEO_NOT_FOUND"),
 
 
+    /**
+     * File
+     */
+    FILE_NOT_EXIST(HttpStatus.BAD_REQUEST, "FILE_NOT_EXIST");
     HttpStatus statusCode;
     String message;
 }
