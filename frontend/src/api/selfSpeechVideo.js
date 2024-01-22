@@ -22,7 +22,7 @@ export const fileServer = {
         return api2.post(`/api/chunk/upload?&chunkNumber=${idx}&endOfChunk=${flag}`, formData)
     },
     playVideo: function (filename) {
-        return api2.get(`http://70.12.247.60:8080/api/chunk/stream/${filename}`, {
+        return api2.get(`/api/chunk/stream/${filename}`, {
             responseType: 'arraybuffer'
         });
     },
