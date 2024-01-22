@@ -14,7 +14,7 @@ const isDuplicatedNickname = ref(null)
 
 const emailRules = [
   (value) => {
-    if (value) { 
+    if (value) {
       return true
     } else {
       return '이메일을 입력해주세요.'
@@ -62,7 +62,7 @@ const nicknameRules = [
       return '사용할 수 있는 닉네임입니다.'
     } else {
       return '이미 사용 중인 닉네임입니다.'
-    } 
+    }
   }
 ]
 
@@ -104,34 +104,36 @@ const passwordCheckRules = [
 ]
 
 const requestSignUp = function () {
-  
+
   const isValid = formRef.value.validate()
 
-  if (isValid.value) {
-    const payload = {
-      email: email.value,
-      nickname: nickname.value,
-      password: password.value,
-      confirm: confirm.value,
-    }
+  isValid.then((response) => {
+    if (response.valid) {
+      const payload = {
+        email: email.value,
+        nickname: nickname.value,
+        password: password.value,
+        confirm: confirm.value,
+      }
 
-    const success = function (response) {
-      if ( response.status === 201 ) {
-        router.push({ name: "login" })
-        return
-      } else {
+      const success = function (response) {
+        if (response.status === 201) {
+          router.push({ name: "login" })
+          return
+        } else {
+          alert(`알 수 없는 이유로 회원가입에 실패했습니다. \n관리자에게 문의해주세요.`)
+        }
+      }
+
+      const error = function () {
+        // 실패 사유에 따른 조건 분기 설정 필요
         alert(`알 수 없는 이유로 회원가입에 실패했습니다. \n관리자에게 문의해주세요.`)
       }
-    }
 
-    const error = function () {
-      // 실패 사유에 따른 조건 분기 설정 필요
-      alert(`알 수 없는 이유로 회원가입에 실패했습니다. \n관리자에게 문의해주세요.`)
+      postSignUp(payload, success, error)
     }
+  })
 
-    postSignUp(payload, success, error)
-    }
-  
 }
 
 const requestDuplicatedEmail = function () {
@@ -159,7 +161,7 @@ const requestDuplicatedEmail = function () {
 
 const requestDuplicatedNickname = function () {
 
-  
+
   for (const rule of nicknameRules) {
     const validationResult = rule(nickname.value)
 
@@ -194,65 +196,38 @@ const requestDuplicatedNickname = function () {
         <h4>면접 경험을 쌓고 싶을 때, 온터뷰</h4>
       </div>
       <v-sheet width="90%" class="mx-auto">
-        <v-form 
-          ref="formRef"
-          fast-fail 
-          @submit.prevent="requestSignUp"
-        >
-          
+        <v-form ref="formRef" fast-fail @submit.prevent="requestSignUp">
+
           <label for="email">이메일</label>
           <v-row justify="center">
             <v-col cols="9">
-              <v-text-field
-                v-model="email"
-                label="example@onterview.com"
-                :rules="emailRules"
-                id="email"
-              ></v-text-field>
+              <v-text-field v-model="email" label="example@onterview.com" :rules="emailRules" id="email"></v-text-field>
             </v-col>
             <v-col cols="3" class="mt-2">
               <v-btn @click="requestDuplicatedEmail">중복 확인</v-btn>
             </v-col>
           </v-row>
-          
+
           <label for="nickname">닉네임</label>
           <v-row justify="center">
             <v-col cols="9">
-              <v-text-field
-                v-model="nickname"
-                label="한글 닉네임"
-                :rules="nicknameRules"
-                id="nickname"
-              ></v-text-field>
+              <v-text-field v-model="nickname" label="한글 닉네임" :rules="nicknameRules" id="nickname"></v-text-field>
             </v-col>
             <v-col cols="3" class="mt-2">
               <v-btn @click="requestDuplicatedNickname">중복 확인</v-btn>
             </v-col>
           </v-row>
-          
+
           <label for="password">비밀번호</label>
-          <v-text-field
-            v-model="password"
-            label="비밀번호"
-            :rules="passwordRules"
-            type="password"
-            id="password"
-          ></v-text-field>
-          
+          <v-text-field v-model="password" label="비밀번호" :rules="passwordRules" type="password"
+            id="password"></v-text-field>
+
           <label for="confirm">비밀번호 확인</label>
-          <v-text-field
-            v-model="confirm"
-            label="비밀번호 확인"
-            :rules="passwordCheckRules"
-            type="password"
-            id="confirm"
-          ></v-text-field>
+          <v-text-field v-model="confirm" label="비밀번호 확인" :rules="passwordCheckRules" type="password"
+            id="confirm"></v-text-field>
 
 
-          <v-btn 
-            type="submit" 
-            block class="mt-10"
-          >가입하기</v-btn>
+          <v-btn type="submit" block class="mt-10">가입하기</v-btn>
         </v-form>
       </v-sheet>
     </div>
