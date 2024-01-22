@@ -1,7 +1,7 @@
 <script setup>
-import SelfSpeechRecord from '../components/selfSpeech/SelfSpeechRecord.vue';
-import SelfSpeechTab from '../components/selfSpeech/SelfSpeechTab.vue';
-import VideoPlay from '../components/video/VideoPlay.vue';
+import SelfSpeechRecord from '@/components/selfSpeech/SelfSpeechRecord.vue';
+import SelfSpeechTab from '@/components/selfSpeech/SelfSpeechTab.vue';
+import VideoPlay from '@/components/video/VideoPlay.vue';
 import { useSelfSpeechStore } from '@/stores/selfSpeech.js';
 import { useRouter } from 'vue-router';
 import { apiMethods } from '@/api/selfSpeechVideo.js';
@@ -13,7 +13,7 @@ const goSelfSpeechMain = function () {
   router.push({name: 'selfspeech-main'})
 }
 
-const ttt = async function () {
+const selectQuestion = async function () {
   pinia.selectedQuestion = 5;
   const result = await apiMethods.getVideoAll(pinia.selectedQuestion);
   pinia.questionData = result.data;
@@ -31,7 +31,7 @@ const ttt = async function () {
         2
       </div>
       <div class="question-list ma-3">
-        <button @click="ttt">질문1</button>
+        <button @click="selectQuestion">질문1</button>
       </div>
     </div>
 

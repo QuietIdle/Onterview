@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { useSelfSpeechStore } from '@/stores/selfSpeech.js';
 import videoFeedback from '@/components/video/VideoFeedback.vue';
-import VideoThumbnail from "../video/VideoThumbnail.vue";
+import VideoThumbnail from "@/components/video/VideoThumbnail.vue";
 
 const pinia = useSelfSpeechStore();
 

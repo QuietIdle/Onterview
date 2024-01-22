@@ -1,8 +1,8 @@
 <script setup>
-import axios from 'axios';
 import { useSelfSpeechStore } from '@/stores/selfSpeech.js';
 import videojs from "video.js";
-import {onBeforeUnmount, onMounted, ref} from "vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
+import { fileServer } from "@/api/selfSpeechVideo"; 
 
 const pinia = useSelfSpeechStore();
 
@@ -15,7 +15,7 @@ let player;
 const videoPlayer = ref(null);
 const videoLoaded = ref(false);
 
-const getVideo = async function () {
+const requestVideo = async function () {
   videoLoaded.value = true;
   try {
     // const response = await axios.get(`http://70.12.247.60:8080/api/chunk/stream/${pinia.videoData.videoUrl.saveFilename}`);
@@ -24,14 +24,9 @@ const getVideo = async function () {
     // recordingPlayer.src = 'http://70.12.247.60:8080/stream?filePath=f7e694f9-6f83-4e52-9ac3-712a055df47d.mp4';
     //recordingPlayer.play();
     
-    // const response = await axios.get(`http://70.12.247.60:8080/api/chunk/stream/${pinia.videoData.videoUrl.saveFilename}`, {
-    //   responseType: 'arraybuffer'
-    // });
-    const response = await axios.get('http://70.12.247.60:8080/api/chunk/stream/test.mp4', {
-      responseType: 'arraybuffer'
-    });
+    const response = await fileServer.playVideo(pinia.videoData.videoUrl.saveFilename);
 
-    console.log(response);
+    console.log(response.data);
     const blob = new Blob([response.data], { type: 'video/mp4' });
     const url = URL.createObjectURL(blob);
 
@@ -68,13 +63,13 @@ onBeforeUnmount(() => {
 
 <template>
   <div v-if="!videoLoaded" class="empty-player-container ma-auto">
-    <button @click="getVideo" class="play-button">Play</button>
+    <button @click="requestVideo" class="play-button">Play</button>
   </div>
   <div v-else class="d-flex justify-center">
     <video ref="videoPlayer" class="video-js vjs-big-play-centered vjs-layout-medium" data-setup='{}' autoplay controls preload="auto" width="640" height="360"></video>
   </div>
   <div class="btn-container w-100 d-flex align-center">
-    <v-btn class="ma-3" @click="getVideo" variant="outlined">북마크</v-btn>
+    <v-btn class="ma-3" @click="requestVideo" variant="outlined">북마크</v-btn>
     <v-btn class="ma-3" variant="outlined">삭제</v-btn>
     <v-btn class="ma-3 ml-auto bg-red" @click="backToRecording" variant="outlined">녹화하러가기</v-btn>
   </div>

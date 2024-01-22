@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import axios from 'axios';
+import { fileServer } from "@/api/selfSpeechVideo";
 import { useSelfSpeechStore } from '@/stores/selfSpeech.js';
 
 const pinia = useSelfSpeechStore();
@@ -29,7 +29,7 @@ let recordedChunks = [];
 const videoStart = function() {
   navigator.mediaDevices.getUserMedia({ video: true, audio: true })
     .then(stream => {
-      const previewPlayer = document.querySelector("#myVideo");
+      const previewPlayer = document.querySelector("#my-video");
       previewPlayer.srcObject = stream;
       previewPlayer.width = 640;
       previewPlayer.height = 360;
@@ -67,7 +67,8 @@ const sendToServer = async function(chunk, idx) {
     formData.append('chunk', chunk);
 
     // axios를 사용하여 POST 요청을 서버로 보냄
-    const response = await axios.post(`http://70.12.247.60:8080/api/chunk/upload?&chunkNumber=${idx}&endOfChunk=${flag.value}`, formData);
+    const response = await fileServer.uploadVideo(idx, flag.value, formData);
+    //const response = await axios.post(`http://70.12.247.60:8080/api/chunk/upload?&chunkNumber=${idx}&endOfChunk=${flag.value}`, formData);
     console.log('Chunk sent successfully!', response);
   } catch (error) {
     console.error('Error sending chunk to server:', error);
@@ -77,31 +78,20 @@ const sendToServer = async function(chunk, idx) {
 const stopRecording = function() {
   flag.value = 1;
   dialog.value = true;
-  const previewPlayer = document.querySelector("#myVideo");
+  const previewPlayer = document.querySelector("#my-video");
   previewPlayer.srcObject.getTracks().forEach(track => track.stop());
   recorder.stop();
   stopTimer();
   time.value = 0;
 }
 
-// function playRecording() {
-//     const recordingPlayer = document.querySelector("#recordedVideo");
-//     const downloadButton = document.querySelector(".download-button");
-//     const recordedBlob = new Blob(recordedChunks, { type: "video/webm" });
-//     recordingPlayer.src = URL.createObjectURL(recordedBlob);
-//     recordingPlayer.play();
-//     downloadButton.href = recordingPlayer.src;
-//     downloadButton.download = `recording_${new Date()}.webm`;
-//     console.log(recordedChunks);
+// const downloadRecording = function() {
+//   const downloadButton = document.querySelector(".download-button");
+//   const recordedBlob = new Blob(recordedChunks, { type: "video/webm" });
+//   downloadButton.href = URL.createObjectURL(recordedBlob);
+//   downloadButton.download = `recording_${new Date()}.webm`;
+//   dialog.value = false;
 // }
-
-const downloadRecording = function() {
-  const downloadButton = document.querySelector(".download-button");
-  const recordedBlob = new Blob(recordedChunks, { type: "video/webm" });
-  downloadButton.href = URL.createObjectURL(recordedBlob);
-  downloadButton.download = `recording_${new Date()}.webm`;
-  dialog.value = false;
-}
 
 </script>
 
@@ -110,7 +100,7 @@ const downloadRecording = function() {
   <div class="ma-3">{{ pinia.questionData.question }}</div>
 </div> -->
 <div class="w-100 h-75 text-center">
-  <video id="myVideo" width="480" autoplay></video>
+  <video id="my-video" width="480" autoplay></video>
 </div>
 <div class="btn-container w-100 d-flex align-center">
   <v-btn class="ma-3" @click="videoStart" variant="outlined">START</v-btn>
@@ -138,7 +128,7 @@ const downloadRecording = function() {
 </template>
 
 <style scoped>
-#myVideo{
+#my-video{
   width: 640px;
   height: 360px;
   background-color: black;
