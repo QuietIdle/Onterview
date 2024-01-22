@@ -1,12 +1,12 @@
 package com.quiet.onterview.video.controller;
 
+import com.quiet.onterview.file.service.FileService;
 import com.quiet.onterview.video.dto.request.VideoInformationRequest;
 import com.quiet.onterview.video.dto.request.VideoUpdateRequest;
 import com.quiet.onterview.video.dto.response.VideoDetailResponse;
-import com.quiet.onterview.video.dto.response.VideoInformationResponse;
 import com.quiet.onterview.video.service.VideoService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/video")
 @RequiredArgsConstructor
@@ -34,16 +35,9 @@ public class VideoController {
         return ResponseEntity.ok(videoService.loadVideoInformation(videoId));
     }
 
-    @GetMapping("/all/{myQuestionId}")
-    public ResponseEntity<List<VideoInformationResponse>> getAllVideoInformationByMyQuestion(
-            @PathVariable Long myQuestionId
-    ) {
-        return ResponseEntity.ok(videoService.loadVideoInformationByMyQuestion(myQuestionId));
-    }
-
     @PostMapping
     public ResponseEntity<Void> registerVideo(@RequestBody VideoInformationRequest videoInformationRequest) {
-        videoService.registerVideo(videoInformationRequest);
+        videoService.createVideoInformation(videoInformationRequest);
         return ResponseEntity.ok().build();
     }
 
