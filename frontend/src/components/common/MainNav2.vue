@@ -1,10 +1,9 @@
 <script setup>
-import 'vue3-dropdown-navbar/preflight.css'
+// import 'vue3-dropdown-navbar/preflight.css'
 import {
   TheDropDownNavbar,
   TheDropDownMenu,
   TheDropDownItem,
-  TheDropDownDivideBlock,
   TheDropDownNavbarLogo
 } from 'vue3-dropdown-navbar'
 import { ref } from 'vue'
@@ -35,16 +34,29 @@ const dropdownMenu = ref(null)
       </TheDropDownMenu>
     </TheDropDownMenu>
     <TheDropDownMenu text="마이페이지" ref="dropdownMenu">
-      <TheDropDownItem>내 정보 수정</TheDropDownItem>
-      <TheDropDownDivideBlock>
-        <TheDropDownItem>Sign out</TheDropDownItem>
-      </TheDropDownDivideBlock>
+      <v-list>
+        <v-list-item :prepend-avatar="logo" title="관리자님" subtitle="환영합니다"> </v-list-item>
+      </v-list>
+      <TheDropDownItem>나의 정보 수정 </TheDropDownItem>
+      <TheDropDownItem>Sign out</TheDropDownItem>
     </TheDropDownMenu>
+
+    <div class="mr-3"></div>
   </TheDropDownNavbar>
 </template>
 
-<style scoped>
+<style>
 .logo {
   margin-left: 20%;
+}
+
+ul {
+  list-style-type: none; /* 불릿 제거 */
+  /* padding: 0; 일부 브라우저에서 기본적으로 적용된 패딩 제거 */
+}
+
+a {
+  text-decoration: none; /* 링크 밑줄 제거 */
+  color: black; /* 링크 색상, 필요에 따라 조정 */
 }
 </style>
