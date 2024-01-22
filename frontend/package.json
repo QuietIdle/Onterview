@@ -17,6 +17,7 @@
     "sass": "^1.69.7",
     "vue": "^3.3.11",
     "vue-router": "^4.2.5",
+    "vue3-dropdown-navbar": "^0.1.4",
     "vuetify": "^3.4.10"
   },
   "devDependencies": {
