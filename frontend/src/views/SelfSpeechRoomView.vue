@@ -4,7 +4,7 @@ import SelfSpeechTab from '../components/selfSpeech/SelfSpeechTab.vue';
 import VideoPlay from '../components/video/VideoPlay.vue';
 import { useSelfSpeechStore } from '@/stores/selfSpeech.js';
 import { useRouter } from 'vue-router';
-import { apiMethods } from '@/api/video.js';
+import { apiMethods } from '@/api/selfSpeechVideo.js';
 
 const pinia = useSelfSpeechStore();
 const router = useRouter();
@@ -13,18 +13,11 @@ const goSelfSpeechMain = function () {
   router.push({name: 'selfspeech-main'})
 }
 
-const logData = {
-  ss: function () {
-    console.log('성공');
-  },
-  err: function () {
-    console.warn('에러');
-  },
-}
-const ttt = function () {
+const ttt = async function () {
   pinia.selectedQuestion = 1;
-  const response = apiMethods.getVideo(pinia.selectedQuestion, logData.ss, logData.err);
-  console.log(response);
+  const result = await apiMethods.getVideoAll(pinia.selectedQuestion);
+  pinia.questionData = result.data;
+  console.log(result.data)
 }
 </script>
 
@@ -34,7 +27,7 @@ const ttt = function () {
       <div class="nav-bar ma-3">
         1
       </div>
-      <div class="seach-box ma-3">
+      <div class="search-box ma-3">
         2
       </div>
       <div class="question-list ma-3">

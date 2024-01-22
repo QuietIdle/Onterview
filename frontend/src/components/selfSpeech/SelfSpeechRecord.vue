@@ -1,7 +1,9 @@
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
+import { useSelfSpeechStore } from '@/stores/selfSpeech.js';
 
+const pinia = useSelfSpeechStore();
 const dialog = ref(false); // 모달 창
 const time = ref(0); // 타이머
 let timerId;
@@ -100,7 +102,7 @@ const downloadRecording = function() {
 
 <template>
 <div class="w-auto">
-  <div class="ma-3">질문을 선택하세요</div>
+  <div class="ma-3">{{ pinia.questionData.question }}</div>
 </div>
 <div class="w-100 h-75 text-center">
   <video id="myVideo" width="450" autoplay></video>
