@@ -18,28 +18,26 @@ const cloneList = function (data) {
 </script>
 
 <template>
-  <div>
-    <div class="question-title pa-3">빈출 면접 문항 목록</div>
-    <div style="max-height: 80%; overflow-y: auto">
-      <v-expansion-panels
-        variant="accordion"
-        v-for="folder in commonQuestionList"
-        :key="folder.common_question_folder_id"
-      >
-        <v-expansion-panel :title="folder.folder" :value="folder.common_question_folder_id">
-          <draggable
-            :list="folder.question"
-            :group="{ name: 'question', pull: 'clone', put: false }"
-            :clone="cloneList"
-            item-key="common_question_id"
-          >
-            <template #item="{ element }">
-              <v-expansion-panel-text>{{ element.question }}</v-expansion-panel-text>
-            </template>
-          </draggable>
-        </v-expansion-panel>
-      </v-expansion-panels>
-    </div>
+  <div class="question-title pa-3">빈출 면접 문항 목록</div>
+  <div style="max-height: 80%; overflow-y: auto">
+    <v-expansion-panels
+      variant="accordion"
+      v-for="folder in commonQuestionList"
+      :key="folder.common_question_folder_id"
+    >
+      <v-expansion-panel :title="folder.folder" :value="folder.common_question_folder_id">
+        <draggable
+          :list="folder.question"
+          :group="{ name: 'question', pull: 'clone', put: false }"
+          :clone="cloneList"
+          item-key="common_question_id"
+        >
+          <template #item="{ element }">
+            <v-expansion-panel-text>{{ element.question }}</v-expansion-panel-text>
+          </template>
+        </draggable>
+      </v-expansion-panel>
+    </v-expansion-panels>
   </div>
 </template>
 
