@@ -1,5 +1,6 @@
 <script setup>
 import MainNav from '@/components/common/MainNav.vue'
+import MainNav2 from '@/components/common/MainNav2.vue'
 import MainFooter from '@/components/common/MainFooter.vue'
 import { useRoute } from 'vue-router'
 
@@ -8,7 +9,7 @@ const route = useRoute()
 
 <template>
   <div>
-    <MainNav v-if="route.meta.layout == 'main'" />
+    <MainNav2 v-if="route.meta.layout == 'main'" />
     <RouterView />
     <MainFooter v-if="route.meta.layout == 'main'" />
   </div>
