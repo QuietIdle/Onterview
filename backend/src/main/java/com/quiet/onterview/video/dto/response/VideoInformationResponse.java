@@ -1,18 +1,17 @@
 package com.quiet.onterview.video.dto.response;
 
-import lombok.AllArgsConstructor;
+import com.quiet.onterview.file.dto.response.FileInformationResponse;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
 public class VideoInformationResponse {
 
     private Long videoId;
     private Long myQuestionId;
     private String title;
-    private String thumbnailUrl;
+    private FileInformationResponse thumbnailUrl;
     private String feedback;
     private Boolean bookmark;
 }
