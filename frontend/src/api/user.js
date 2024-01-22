@@ -4,23 +4,28 @@ const api = localAxios()
 
 
 const postSignUp = function (payload, success, error) {
-    console.log("request post sign up")
+    console.log("request post, sign up")
     api.post(`/api/user/signup`, payload).then(success).catch(error)
 }
 
 const postLogin = function (payload, success, error) {
-    console.log("request post login")
+    console.log("request post, login")
     api.post(`/api/user/login`, payload).then(success).catch(error)
 }
 
 const getIsDuplicatedEmail = function (email, success, error) {
-    console.log("request get is duplicated email")
+    console.log("request get, is duplicated email")
     api.get(`/api/user/check?email=${email}`).then(success).catch(error)
 }
 
 const getIsDuplicatedNickname = function (nickname, success, error) {
-    console.log("request get is duplicated nickname")
+    console.log("request get, is duplicated nickname")
     api.get(`/api/user/check?nickname=${nickname}`).then(success).catch(error)
 }
 
-export { postSignUp, postLogin, getIsDuplicatedEmail, getIsDuplicatedNickname }
+const patchChangeUserPwd = function (payload, success, error) {
+    console.log("request patch, change user password")
+    api.patch(`/api/user/password`, payload).then(success).catch(error)
+}
+
+export { postSignUp, postLogin, getIsDuplicatedEmail, getIsDuplicatedNickname, patchChangeUserPwd }
