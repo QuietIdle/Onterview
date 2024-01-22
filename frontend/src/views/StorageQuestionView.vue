@@ -7,8 +7,18 @@ import { useQuestionStore } from '@/stores/question.js'
 const questionStore = useQuestionStore()
 const { commonQuestionList, myQuestionList } = storeToRefs(questionStore)
 
-const log = () => {
-  console.log('change')
+const cloneQuestion = function (data) {
+  const questionObject = {
+    common_question_id: data.common_question_id,
+    my_question_id: data.common_question_id + 1,
+    question: data.question
+  }
+  return questionObject
+}
+
+const log = function () {
+  console.log('drag n drop my question list')
+  console.log(myQuestionList.value)
 }
 </script>
 
@@ -26,6 +36,7 @@ const log = () => {
             <draggable
               :list="folder.question"
               :group="{ name: 'question', pull: 'clone', put: false }"
+              :clone="cloneQuestion"
               @change="log"
               item-key="common_question_id"
             >
@@ -40,15 +51,15 @@ const log = () => {
 
     <v-col cols="8" class="my-question-list my-5">
       <div class="question-title pa-3">나의 면접 문항 목록</div>
-      <div style="max-height: 80%; overflow-y: auto">
-        <div class="bg-white pa-3 d-flex">
-          <div class="me-auto d-flex align-center">
-            <v-btn class="mr-3" variant="elevated" color="purple-accent-4">전체 선택</v-btn>
-            <div style="color: gray">질문 *개 선택됨</div>
-          </div>
-          <v-btn variant="elevated" color="red-accent-2">삭제</v-btn>
-          <v-btn class="ml-3" variant="elevated" color="blue-accent-2">폴더 추가</v-btn>
+      <div class="bg-white pa-3 d-flex">
+        <div class="me-auto d-flex align-center">
+          <v-btn class="mr-3" variant="elevated" color="purple-accent-4">전체 선택</v-btn>
+          <div style="color: gray">질문 *개 선택됨</div>
         </div>
+        <v-btn variant="elevated" color="red-accent-2">삭제</v-btn>
+        <v-btn class="ml-3" variant="elevated" color="blue-accent-2">폴더 추가</v-btn>
+      </div>
+      <div style="max-height: 80%; overflow-y: auto">
         <v-expansion-panels
           variant="accordion"
           v-for="folder in myQuestionList"

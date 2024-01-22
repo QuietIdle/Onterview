@@ -14,7 +14,7 @@ export const useQuestionStore = defineStore('question', () => {
       folder: '기술 질문',
       question: [
         { common_question_id: 600, question: 'OOP 정의' },
-        { common_question_id: 601, question: '클래스와 객체의 차이점' }
+        { common_question_id: 601, question: '클래스와 객체의 차이점' },
       ]
     }
   ]) 
@@ -32,33 +32,6 @@ export const useQuestionStore = defineStore('question', () => {
         { common_question_id: 600, my_question_id: 200, question: 'OOP 정의' },
         { common_question_id: 601, my_question_id: 201, question: '클래스와 객체의 차이점' },
         { common_question_id: 0, my_question_id: 202, question: '내가 만든 질문' },
-        { common_question_id: 600, my_question_id: 200, question: 'OOP 정의' },
-        { common_question_id: 601, my_question_id: 201, question: '클래스와 객체의 차이점' },
-        { common_question_id: 0, my_question_id: 202, question: '내가 만든 질문' },
-        { common_question_id: 600, my_question_id: 200, question: 'OOP 정의' },
-        { common_question_id: 601, my_question_id: 201, question: '클래스와 객체의 차이점' },
-        { common_question_id: 0, my_question_id: 202, question: '내가 만든 질문' },
-        { common_question_id: 600, my_question_id: 200, question: 'OOP 정의' },
-        { common_question_id: 601, my_question_id: 201, question: '클래스와 객체의 차이점' },
-        { common_question_id: 0, my_question_id: 202, question: '내가 만든 질문' },
-        { common_question_id: 600, my_question_id: 200, question: 'OOP 정의' },
-        { common_question_id: 601, my_question_id: 201, question: '클래스와 객체의 차이점' },
-        { common_question_id: 0, my_question_id: 202, question: '내가 만든 질문' },
-        { common_question_id: 600, my_question_id: 200, question: 'OOP 정의' },
-        { common_question_id: 601, my_question_id: 201, question: '클래스와 객체의 차이점' },
-        { common_question_id: 0, my_question_id: 202, question: '내가 만든 질문' },
-        { common_question_id: 600, my_question_id: 200, question: 'OOP 정의' },
-        { common_question_id: 601, my_question_id: 201, question: '클래스와 객체의 차이점' },
-        { common_question_id: 0, my_question_id: 202, question: '내가 만든 질문' },
-        { common_question_id: 600, my_question_id: 200, question: 'OOP 정의' },
-        { common_question_id: 601, my_question_id: 201, question: '클래스와 객체의 차이점' },
-        { common_question_id: 0, my_question_id: 202, question: '내가 만든 질문' },
-        { common_question_id: 600, my_question_id: 200, question: 'OOP 정의' },
-        { common_question_id: 601, my_question_id: 201, question: '클래스와 객체의 차이점' },
-        { common_question_id: 0, my_question_id: 202, question: '내가 만든 질문' },
-        { common_question_id: 600, my_question_id: 200, question: 'OOP 정의' },
-        { common_question_id: 601, my_question_id: 201, question: '클래스와 객체의 차이점' },
-        { common_question_id: 0, my_question_id: 202, question: '내가 만든 질문' }
       ]
     }
   ])
