@@ -14,10 +14,10 @@ const goSelfSpeechMain = function () {
 }
 
 const ttt = async function () {
-  pinia.selectedQuestion = 1;
+  pinia.selectedQuestion = 5;
   const result = await apiMethods.getVideoAll(pinia.selectedQuestion);
   pinia.questionData = result.data;
-  console.log(result.data)
+  console.log(result.data);
 }
 </script>
 
@@ -34,25 +34,31 @@ const ttt = async function () {
         <button @click="ttt">질문1</button>
       </div>
     </div>
+
     <div class="w-75 ma-5">
-      <v-icon class="exit-btn" color="black" size="32" icon="mdi-close-circle-outline" @click="goSelfSpeechMain"></v-icon>
-      <div class="h-75" v-if="pinia.display">
-        <SelfSpeechRecord />
+      <div class="h-75">
+        <div class="d-flex align-center">
+          <div class="ma-1">{{ pinia.questionData.question }}</div>
+          <v-icon class="exit-btn ma-1 ml-auto" color="black" size="32" icon="mdi-close-circle-outline" @click="goSelfSpeechMain"></v-icon>
+        </div>
+        <div v-if="pinia.display">
+          <SelfSpeechRecord />
+        </div>
+        <div v-else>
+          <VideoPlay />
+        </div>
       </div>
-      <div class="h-75" v-else>
-        <VideoPlay />
-      </div>
+
       <SelfSpeechTab />
     </div>
   </div>
 </template>
 
 <style scoped>
-*{
+.main-container>*{
   border: 1px solid black;
 }
-.exit-btn{
-  position: fixed;
-  right: 20px;
+*{
+  border: 1px solid black;
 }
 </style>

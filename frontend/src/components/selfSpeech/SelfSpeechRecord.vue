@@ -8,7 +8,7 @@ const dialog = ref(false); // 모달 창
 const time = ref(0); // 타이머
 let timerId;
 
-let flag = 0; // chunk 전송 완료 여부
+const flag = ref(0); // chunk 전송 완료 여부
 
 const startTimer = function() {
   time.value++;
@@ -25,25 +25,29 @@ const stopTimer = function() {
 let recorder;
 let recordedChunks = [];
 
+
 const videoStart = function() {
-    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-        .then(stream => {
-            const previewPlayer = document.querySelector("#myVideo");
-            previewPlayer.srcObject = stream;
-            startRecording(previewPlayer.captureStream())
-        })
+  navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+    .then(stream => {
+      const previewPlayer = document.querySelector("#myVideo");
+      previewPlayer.srcObject = stream;
+      previewPlayer.width = 640;
+      previewPlayer.height = 360;
+
+      startRecording(previewPlayer.captureStream())
+    })
 }
 
 const startRecording = function(stream) {
-  flag = 0;
+  flag.value = 0;
   let idx = 0; // chunk 갯수
   recordedChunks = [];
   recorder = new MediaRecorder(stream);
   recorder.ondataavailable = (e) => {
     if (e.data.size > 0) {
       recordedChunks.push(e.data);
-      // console.log(idx);
-      // console.log(flag);
+      //console.log(idx);
+      //console.log(flag);
       //console.log(e.data);
       idx++;
       if (idx >= 100) { // 녹화시간 300초 제한
@@ -56,14 +60,14 @@ const startRecording = function(stream) {
   startTimer();
 }
 
-const sendToServer=  async function(chunk, idx) {
+const sendToServer = async function(chunk, idx) {
   try {
     // FormData를 생성하고 녹화된 데이터를 추가
     const formData = new FormData();
     formData.append('chunk', chunk);
 
     // axios를 사용하여 POST 요청을 서버로 보냄
-    const response = await axios.post(`http://70.12.247.60:8080/api/chunk/upload?&chunkNumber=${idx}&endOfChunk=${flag}`, formData);
+    const response = await axios.post(`http://70.12.247.60:8080/api/chunk/upload?&chunkNumber=${idx}&endOfChunk=${flag.value}`, formData);
     console.log('Chunk sent successfully!', response);
   } catch (error) {
     console.error('Error sending chunk to server:', error);
@@ -71,7 +75,7 @@ const sendToServer=  async function(chunk, idx) {
 }
 
 const stopRecording = function() {
-  flag = 1;
+  flag.value = 1;
   dialog.value = true;
   const previewPlayer = document.querySelector("#myVideo");
   previewPlayer.srcObject.getTracks().forEach(track => track.stop());
@@ -98,14 +102,15 @@ const downloadRecording = function() {
   downloadButton.download = `recording_${new Date()}.webm`;
   dialog.value = false;
 }
+
 </script>
 
 <template>
-<div class="w-auto">
+<!-- <div class="w-auto">
   <div class="ma-3">{{ pinia.questionData.question }}</div>
-</div>
+</div> -->
 <div class="w-100 h-75 text-center">
-  <video id="myVideo" width="450" autoplay></video>
+  <video id="myVideo" width="480" autoplay></video>
 </div>
 <div class="btn-container w-100 d-flex align-center">
   <v-btn class="ma-3" @click="videoStart" variant="outlined">START</v-btn>
@@ -132,4 +137,10 @@ const downloadRecording = function() {
 </v-dialog>
 </template>
 
-<style scoped></style>
+<style scoped>
+#myVideo{
+  width: 640px;
+  height: 360px;
+  background-color: black;
+}
+</style>

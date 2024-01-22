@@ -3,7 +3,7 @@ import { localAxios } from "@/api/index.js"
 const api = localAxios()
 
 export const apiMethods = {
-    getVideo: (v_id) => {
+    getVideo: function (v_id) {
         //console.log('request get video')
         return api.get(`/api/video/${v_id}`)
     },
