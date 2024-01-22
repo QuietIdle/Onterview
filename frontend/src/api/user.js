@@ -28,4 +28,9 @@ const patchChangeUserPwd = function (payload, success, error) {
     api.patch(`/api/user/password`, payload).then(success).catch(error)
 }
 
-export { postSignUp, postLogin, getIsDuplicatedEmail, getIsDuplicatedNickname, patchChangeUserPwd }
+const deleteDeleteUser = function (payload, success, error) {
+    console.log("request delete, delete user")
+    api.delete(`/api/user`, payload).then(success).catch(error)
+}
+
+export { postSignUp, postLogin, getIsDuplicatedEmail, getIsDuplicatedNickname, patchChangeUserPwd, deleteDeleteUser }
