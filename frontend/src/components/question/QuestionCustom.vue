@@ -16,8 +16,20 @@ const log = function () {
 const selectFolder = ref([])
 const selectQuestion = ref([])
 
-const checkFolderQuestion = function (folder) {
+const checkFolder = function (folder) {
   console.log(folder)
+}
+
+const checkAll = function () {}
+
+const enableEditing = function (element) {
+  element.isEditing = true
+  element.editableQuestion = element.question
+}
+
+const disableEditing = function (element) {
+  element.isEditing = false
+  element.question = element.editableQuestion
 }
 </script>
 
@@ -42,8 +54,7 @@ const checkFolderQuestion = function (folder) {
           <v-row>
             <v-col cols="auto">
               <v-checkbox
-                @click.stop
-                @click="checkFolderQuestion(folder)"
+                @click.stop="checkFolder(folder)"
                 v-model="selectFolder"
                 :value="folder.my_question_folder_id"
               ></v-checkbox>
@@ -61,8 +72,17 @@ const checkFolderQuestion = function (folder) {
                 <v-col cols="auto">
                   <v-checkbox v-model="selectQuestion" :value="element.my_question_id"></v-checkbox>
                 </v-col>
-                <v-col class="d-flex align-center">
-                  {{ element.question }}
+                <v-col class="d-flex align-center" @dblclick="enableEditing(element)">
+                  <template v-if="element.isEditing">
+                    <v-text-field
+                      v-model="element.editableQuestion"
+                      @blur="disableEditing(element)"
+                      @keyup.enter="disableEditing(element)"
+                    ></v-text-field>
+                  </template>
+                  <template v-else>
+                    {{ element.question }}
+                  </template>
                 </v-col>
               </v-row>
             </v-expansion-panel-text>
