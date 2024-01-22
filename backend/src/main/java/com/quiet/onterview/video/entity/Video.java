@@ -1,11 +1,12 @@
 package com.quiet.onterview.video.entity;
 
+import static jakarta.persistence.CascadeType.PERSIST;
+import static jakarta.persistence.CascadeType.REMOVE;
 import static jakarta.persistence.FetchType.LAZY;
 
 import com.quiet.onterview.common.BaseEntity;
+import com.quiet.onterview.file.entity.FileInformation;
 import com.quiet.onterview.question.entity.MyQuestion;
-import com.quiet.onterview.question.entity.RecordQuestion;
-import com.quiet.onterview.video.dto.request.VideoUpdateRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,32 +37,37 @@ public class Video extends BaseEntity {
     @Column(name = "TITLE")
     private String title;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "MY_QUESTION_ID")
-    private MyQuestion myQuestion;
 
-    @Column(name = "VIDEO_URL", nullable = false)
-    private String videoUrl;
-
-    @Column(name = "VIDEO_LENGTH", nullable = false)
+    @Column(name = "VIDEO_LENGTH")
     private Long videoLength;
-
-    @Column(name = "TUNBNAIL_URL", nullable = false)
-    private String thumbnailUrl;
 
     @Column(name = "BOOKMARK")
     private Boolean bookmark = Boolean.FALSE;
 
-    @Column(name = "feedback", nullable = false)
+    @Column(name = "feedback")
     private String feedback;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "RECORD_QUESTION_ID")
-    private RecordQuestion recordQuestion;
+    @ManyToOne
+    @JoinColumn(name = "MY_QUESTION_ID")
+    private MyQuestion myQuestion;
 
-    public void updateEntity(VideoUpdateRequest videoUpdateRequest) {
-        this.title = videoUpdateRequest.getTitle();
-        this.bookmark = videoUpdateRequest.getBookmark();
-        this.feedback = videoUpdateRequest.getFeedback();
+    @OneToOne(fetch = LAZY, cascade = {PERSIST, REMOVE}, orphanRemoval = true)
+    @JoinColumn(name = "VIDEO_URL")
+    private FileInformation videoUrl;
+
+    @OneToOne(fetch = LAZY, cascade = {PERSIST, REMOVE}, orphanRemoval = true)
+    @JoinColumn(name = "THUMBNAIL_URL")
+    private FileInformation thumbnailUrl;
+
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
+    public void updateBookmark(Boolean bookmark) {
+        this.bookmark = bookmark;
+    }
+
+    public void updateFeedback(String feedback) {
+        this.feedback = feedback;
     }
 }
