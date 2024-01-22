@@ -22,6 +22,12 @@ const router = createRouter({
       meta: {layout: 'main'},
     },
     {
+      path: '/mypage',
+      name: 'mypage',
+      component: () => import('@/views/UserMyPageView.vue'),
+      meta: {layout: 'main'},
+    },
+    {
       path: '/selfspeech',
       name: 'selfspeech-main',
       component: () => import('@/views/SelfSpeechMainView.vue'),
