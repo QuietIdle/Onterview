@@ -8,7 +8,7 @@ const tab = ref(1)
 </script>
 
 <template>
-  <div class="offset-2 v-col-8">
+  <div class="body offset-2 v-col-8">
 
     <v-tabs class="mb-5" v-model="tab" color="deep-purple-accent-4">
       <v-tab :value="1">회원 정보</v-tab>
@@ -30,12 +30,18 @@ const tab = ref(1)
         <UserDelete />
       </v-window-item>
     </v-window>
-
-    <div>Remove Member</div>
   </div>
 </template>
 
 <style scoped>
+html {
+  height: 100%;
+}
+
+.body {
+  min-height: 100vh;
+}
+
 .profile {
   border: 1px solid #BB66FF;
   padding: 10px;
