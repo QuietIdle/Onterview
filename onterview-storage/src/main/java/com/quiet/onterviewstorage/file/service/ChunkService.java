@@ -26,7 +26,7 @@ public class ChunkService {
     private final FFmpegManager fFmpegManager;
     private final FileUtils fileUtils;
 
-    public Optional<VideoResponse> chunkUpload(MultipartFile file, int chunkNumber, int totalChunks)
+    public Optional<VideoResponse> chunkUpload(MultipartFile file, int chunkNumber, int endOfChunk)
             throws IOException {
         File dir = new File(fileUtils.VIDEO_PATH);
         if (!dir.exists()) {
@@ -34,13 +34,13 @@ public class ChunkService {
         }
 
         // 임시 저장 파일 이름
-        String filename = file.getOriginalFilename() + ".part" + chunkNumber;
-        Path filePath = Paths.get(fileUtils.VIDEO_PATH, filename);
+        String tempFilename = file.getOriginalFilename() + ".part" + chunkNumber;
+        Path tempFilePath = Paths.get(fileUtils.VIDEO_PATH, tempFilename);
         // 임시 저장
-        Files.write(filePath, file.getBytes());
+        Files.write(tempFilePath, file.getBytes());
 
         // 파일이 전송중인 경우
-        if (totalChunks == 0) {
+        if (endOfChunk == 0) {
             return Optional.empty();
         }
 
