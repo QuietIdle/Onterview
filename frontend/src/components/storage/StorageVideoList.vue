@@ -1,26 +1,17 @@
 <script setup>
 import { ref } from 'vue';
 import { apiMethods } from "@/api/video.js";
-import { useSelfSpeechStore } from '@/stores/selfSpeech.js';
-import identity from "bue/lib/utility/identity";
+import { useStorageStore } from '@/stores/storage.js';
 
-const pinia = useSelfSpeechStore();
-const storageData = ref([]);
-const selectedVideoId = ref([]);
+const pinia = useStorageStore();
+const selectedId = ref([]);
 
-const storageDisplay = async function() {
+const deleteVideo = async function () {
   try {
-    const result = await apiMethods.getUserVideoAll();
-    storageData.value = result.data;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-const del = async function () {
-  try {
-    const result = await apiMethods.deleteVideos({videos:selectedVideoId.value});
-    storageDisplay();
+    const result = await apiMethods.deleteVideos({
+      videos: selectedId.value
+    });
+    console.log(result.data);
   } catch (error) {
     console.log(error);
   }
@@ -32,25 +23,36 @@ const markVideo = async function (id, bool) {
       bookmark: !bool
     }
     const result = await apiMethods.patchVideo(id, req_body)
-    storageDisplay();
+
+    console.log(result.data);
   } catch (error) {
     console.log(error);
   }
 }
 
-storageDisplay();
+const selectAll = function () {
+  for (const item of pinia.storageData.value) {
+    if (!selectedId.value.includes(item.videoId)) {
+      selectedId.value.push(item.videoId)
+    }
+  }
+}
 </script>
 
 <template>
-  <!-- list -->
+  <!-- list (추후에 vuetify data tables 컴포넌트 변경?)-->
   <div class="pa-10 d-flex justify-center bg-green w-screen">
     <div class="w-75 bg-white">
-      <div class="tool-bar">
-        <v-btn variant="tonal">
+      <div class="tool-bar d-flex align-center">
+        <v-btn variant="tonal" @click="selectAll">
           전체 선택
         </v-btn>
-        <v-btn variant="tonal" @click="del">
+        <v-btn variant="tonal" @click="deleteVideo">
           삭제
+        </v-btn>
+
+        <v-btn class="ml-auto" variant="outlined" @click="pinia.switchDisplay">
+          그리드 보기
         </v-btn>
       </div>
 
@@ -83,31 +85,31 @@ storageDisplay();
           </thead>
           <tbody>
             <tr
-              v-for="dt in storageData"
-              :key="dt.videoId"
+              v-for="(dt, n) in pinia.storageData.value"
+              :key="n"
             >
               <td><v-checkbox
-                v-model="selectedVideoId"
+                v-model="selectedId"
                 :value="dt.videoId"
                 ></v-checkbox></td>
-              <td>{{ dt.videoId }}</td>
+              <td>{{ n+1 }}</td>
               <td>{{ dt.title }}</td>
               <td></td>
               <td></td>
               <td><v-icon 
-                v-if="!dt.bookmark" 
+                v-show="!dt.bookmark" 
                 color="purple" 
                 size="32" 
                 icon="mdi-bookmark-outline"
-                @click="markVideo(dt.videoId, dt.bookmark)"
+                @click="markVideo(dt.videoId, dt.bookmark), dt.bookmark=!dt.bookmark"
                 >
               </v-icon>
               <v-icon 
-                v-else 
+                v-show="dt.bookmark" 
                 color="purple" 
                 size="32" 
                 icon="mdi-bookmark-check"
-                @click="markVideo(dt.videoId, dt.bookmark)"
+                @click="markVideo(dt.videoId, dt.bookmark), dt.bookmark=!dt.bookmark"
                 >
               </v-icon></td>
             </tr>
@@ -115,10 +117,6 @@ storageDisplay();
         </v-table>
       </div>
     </div>
-  </div>
-
-  <div>
-    
   </div>
 </template>
 
