@@ -1,48 +1,73 @@
 <script setup>
+// import 'vue3-dropdown-navbar/preflight.css'
+import {
+  TheDropDownNavbar,
+  TheDropDownMenu,
+  TheDropDownItem,
+  TheDropDownNavbarLogo
+} from 'vue3-dropdown-navbar'
+import { ref } from 'vue'
+
 import logo from '@/assets/logo.png'
-import { RouterLink } from 'vue-router'
+
+const dropdownMenu = ref(null)
 </script>
 
 <template>
-  <div>
-    <v-card>
-      <v-row>
-        <!-- 이미지 열 -->
+  <TheDropDownNavbar>
+    <template #logo>
+      <TheDropDownNavbarLogo>
+        <RouterLink to="/">
+          <v-img class="logo" :width="150" aspect-ratio="16/9" cover :src="logo"></v-img>
+        </RouterLink>
+      </TheDropDownNavbarLogo>
+    </template>
+    <TheDropDownItem link="/selfspeech"> 셀프 스피치 </TheDropDownItem>
+    <TheDropDownItem link="/"> 모의 면접 </TheDropDownItem>
+    <TheDropDownItem link="/"> 커뮤니티 </TheDropDownItem>
+    <TheDropDownMenu text="보관함" ref="dropdownMenu">
+      <TheDropDownItem link="/storage/question"> 면접 문항 목록 </TheDropDownItem>
+      <TheDropDownMenu text="녹화 영상 목록">
+        <TheDropDownItem link="/storage/video"> 셀프 스피치 </TheDropDownItem>
+        <TheDropDownItem link="/"> 1인 모의 면접 </TheDropDownItem>
+        <TheDropDownItem link="/"> 다인 모의 면접 </TheDropDownItem>
+      </TheDropDownMenu>
+    </TheDropDownMenu>
 
-        <v-col cols="12" md="3" align-self="center">
-          <RouterLink to="/">
-            <v-img class="logo" :width="150" aspect-ratio="16/9" cover :src="logo"></v-img>
-          </RouterLink>
-        </v-col>
+    <RouterLink to="/login">
+      <v-btn variant="tonal" color="deep-purple-accent-4">로그인</v-btn>
+    </RouterLink>
+    <TheDropDownMenu text="마이페이지" ref="dropdownMenu">
+      <v-list>
+        <v-list-item :prepend-avatar="logo" title="관리자님" subtitle="환영합니다"> </v-list-item>
+      </v-list>
+      <TheDropDownItem link="/mypage">나의 정보 수정</TheDropDownItem>
+      <TheDropDownItem link="/">Sign out</TheDropDownItem>
+    </TheDropDownMenu>
 
-        <!-- 탭 열 -->
-        <v-col cols="12" md="6" align-self="end">
-          <v-tabs color="deep-purple-accent-4" align-tabs="center">
-            <RouterLink to="/selfspeech">
-              <v-tab :value="1">셀프 스피치</v-tab>
-            </RouterLink>
-            <v-tab :value="2">모의 면접</v-tab>
-            <v-tab :value="3">보관함</v-tab>
-            <v-tab :value="4">커뮤니티</v-tab>
-          </v-tabs>
-        </v-col>
-
-        <v-col cols="12" md="3" align-self="center" class="d-flex justify-center">
-          <!-- 로그인 -->
-          <v-btn variant="tonal" color="deep-purple-accent-4">Login</v-btn>
-        </v-col>
-      </v-row>
-    </v-card>
-  </div>
+    <div class="mr-4"></div>
+  </TheDropDownNavbar>
 </template>
 
-<style scoped>
-.v-tab.v-tab.v-btn {
-  font-size: large;
+<style>
+.logo {
+  margin-left: 20%;
 }
 
-.logo {
-  margin: 1%;
-  margin-left: 20%;
+ul {
+  list-style-type: none;
+  /* 불릿 제거 */
+  /* padding: 0; 일부 브라우저에서 기본적으로 적용된 패딩 제거 */
+}
+
+a {
+  text-decoration: none;
+  /* 링크 밑줄 제거 */
+  color: black;
+  /* 링크 색상, 필요에 따라 조정 */
+}
+
+.dd-nav-p-4 {
+  padding: 0.5rem !important;
 }
 </style>
