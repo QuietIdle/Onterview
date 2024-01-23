@@ -1,18 +1,18 @@
 package com.quiet.onterview.question.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.quiet.onterview.video.entity.Video;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
+import java.util.ArrayList;
+import java.util.List;
+
+import static jakarta.persistence.FetchType.LAZY;
+
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
 @Entity
@@ -24,9 +24,9 @@ public class MyQuestion {
     @Column(name = "MY_QUESTION_ID")
     private Long myQuestionId;
 
-    @ManyToOne
-    @JoinColumn(name = "MY_QUESETION_LIST_ID")
-    private MyQuestionList myQuestionList;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "MY_QUESTION_FOLDER_ID")
+    private MyQuestionFolder myQuestionFolder;
 
     @Column(name = "QUESTION", nullable = false)
     private String question;
@@ -34,8 +34,15 @@ public class MyQuestion {
     @Column(name = "ANSWER", nullable = true)
     private String answer;
 
-    @ManyToOne
-    @JoinColumn(name = "BASIC_QUESTION_ID")
-    private BasicQuestion basicQuestions;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "COMMON_QUESTION_ID")
+    private CommonQuestion commonQuestion;
 
+    @OneToMany(mappedBy = "myQuestion")
+    List<Video> videoList = new ArrayList<>();
+
+    public void changeMyQuestionFolder(MyQuestionFolder myQuestionFolder) {
+        this.myQuestionFolder = myQuestionFolder;
+        myQuestionFolder.getMyQuestionList().add(this);
+    }
 }
