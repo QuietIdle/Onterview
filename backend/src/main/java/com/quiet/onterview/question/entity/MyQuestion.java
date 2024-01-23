@@ -47,4 +47,5 @@ public class MyQuestion {
     public void saveCommonQuestion(CommonQuestion commonQuestion) {
         this.commonQuestion = commonQuestion;
     }
+    public void updateMyQuestion(String question) { this.question = question; }
 }

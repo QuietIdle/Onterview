@@ -34,7 +34,7 @@ public class MyQuestionFolderController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "PATCH", description = "PATCH 방식으로 나의 면접 질문 수정")
+    @Operation(summary = "PATCH", description = "PATCH 방식으로 나의 면접 질문 폴더명 수정")
     @PatchMapping("/my-question-folder/{my_question_folder_id}")
     public ResponseEntity<Void> updateMyQuestion(
             @PathVariable("my_question_folder_id") Long myQuestionFolderId,

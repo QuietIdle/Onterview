@@ -1,14 +1,13 @@
 package com.quiet.onterview.question.entity;
 
-import static jakarta.persistence.FetchType.LAZY;
-
 import com.quiet.onterview.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+
+import static jakarta.persistence.FetchType.LAZY;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor

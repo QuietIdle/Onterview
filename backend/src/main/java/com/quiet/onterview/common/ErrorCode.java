@@ -24,6 +24,7 @@ public enum ErrorCode {
      * Question
      */
     MY_QUESTION_FOLDER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MY_QUESTION_FOLDER_NOT_FOUND"),
+    MY_QUESTION_NOT_FOUND(HttpStatus.BAD_REQUEST, "MY_QUESTION_NOT_FOUND"),
 
     /**
      * Video

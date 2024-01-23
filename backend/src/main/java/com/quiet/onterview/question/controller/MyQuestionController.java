@@ -1,6 +1,7 @@
 package com.quiet.onterview.question.controller;
 
 import com.quiet.onterview.question.dto.request.MyQuestionRequest;
+import com.quiet.onterview.question.dto.request.MyQuestionUpdateRequest;
 import com.quiet.onterview.question.dto.response.MyAnswerAndVideoResponse;
 import com.quiet.onterview.question.service.MyQuestionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,5 +35,16 @@ public class MyQuestionController {
         myQuestionService.createMyQuestion(myQuestionRequest);
         return ResponseEntity.ok().build();
     }
+
+    @Operation(summary = "PATCH", description = "PATCH 방식으로 나의 면접 질문 수정")
+    @PatchMapping("/my-question/{my_question_id}")
+    public ResponseEntity<Void> updateMyQuestion(
+            @PathVariable("my_question_id") Long myQuestionId,
+            @RequestBody MyQuestionUpdateRequest myQuestionUpdateRequest
+    ) {
+        myQuestionService.updateMyQuestion(myQuestionId, myQuestionUpdateRequest);
+        return ResponseEntity.ok().build();
+    }
+
 
 }
