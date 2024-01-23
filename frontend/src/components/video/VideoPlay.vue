@@ -2,7 +2,7 @@
 import { useSelfSpeechStore } from '@/stores/selfSpeech.js';
 import videojs from "video.js";
 import { onBeforeUnmount, onMounted, ref } from "vue";
-import { fileServer } from "@/api/selfSpeechVideo"; 
+import { fileServer } from "@/api/video.js"; 
 
 const pinia = useSelfSpeechStore();
 

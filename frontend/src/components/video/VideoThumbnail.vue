@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useSelfSpeechStore } from '@/stores/selfSpeech.js';
-import { apiMethods } from '@/api/selfSpeechVideo.js';
+import { apiMethods } from '@/api/video.js';
 
 const pinia = useSelfSpeechStore();
 const model = ref(null); // 썸네일
