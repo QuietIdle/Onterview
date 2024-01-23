@@ -46,7 +46,7 @@ public class FFmpegManager {
 
     public double getDuration(String sourcePath) throws IOException {
         // 영상 경로
-        Path videoPath = Paths.get(sourcePath);
+        Path videoPath = Paths.get(fileUtils.DEFAULT_URL + sourcePath);
 
         // 영상 메타데이터 조회
         FFmpegProbeResult probeResult = ffprobe.probe(videoPath.toString());
