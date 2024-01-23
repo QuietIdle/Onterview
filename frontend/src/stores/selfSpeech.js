@@ -10,7 +10,9 @@ export const useSelfSpeechStore = defineStore('selfSpeech', () => {
     question: "질문을 선택하세요",
     videos: [],
   });
-  const videoData = ref({});
+  const videoData = ref({
+    feedback: "자가진단진단",
+  });
 
   return { display,listIdx,selectedQuestion,questionData,videoData }
 })
