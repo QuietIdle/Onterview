@@ -1,7 +1,8 @@
 package com.quiet.onterviewstorage.file.service;
 
-import com.quiet.onterviewstorage.file.dto.FileDto.VideoResponse;
 import com.quiet.onterviewstorage.file.FileUtils;
+import com.quiet.onterviewstorage.file.dto.FileDto.VideoResponse;
+import com.quiet.onterviewstorage.file.dto.ResourceDto;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
@@ -10,6 +11,10 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jcodec.api.JCodecException;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourceRegion;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -61,5 +66,33 @@ public class ChunkService {
                 duration,
                 thumbnailName
         ));
+    }
+
+    public ResourceDto getStreamResource(HttpHeaders headers, String filename) throws IOException {
+        Path path = Paths.get(fileUtils.VIDEO_PATH, filename);
+
+        Resource resource = new FileSystemResource(path);
+
+        long chunkSize = 1024 * 1024;
+        long contentLength = resource.contentLength();
+
+        HttpRange httpRange = headers.getRange().stream().findFirst()
+                .orElse(HttpRange.createByteRange(0, contentLength - 1));
+
+        long rangeLength = calculateRangeLength(httpRange, contentLength, chunkSize);
+        ResourceRegion region = new ResourceRegion(resource, httpRange.getRangeStart(contentLength),
+                rangeLength);
+
+        return new ResourceDto(
+                MediaTypeFactory.getMediaType(resource).orElse(MediaType.APPLICATION_OCTET_STREAM),
+                String.valueOf(path),
+                region
+        );
+    }
+
+    private long calculateRangeLength(HttpRange httpRange, long contentLength, long chunkSize) {
+        long start = httpRange.getRangeStart(contentLength);
+        long end = httpRange.getRangeEnd(contentLength);
+        return Long.min(chunkSize, end - start + 1);
     }
 }
