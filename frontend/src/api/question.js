@@ -7,9 +7,9 @@ const getCommonQuestionList = function (success, error) {
     api.get(`/api/common-question`).then(success).catch(error)
 }
 
-const getMyQuestionList = function (success, error) {
-    console.log("request get my question list")
-    api.get(`/api/my-question`).then(success).catch(error)
+const getMyQuestionList = function () {
+    console.log("get myQuestionList")
+    return api.get(`/api/my-question`)
 }
 
 export { getCommonQuestionList, getMyQuestionList }

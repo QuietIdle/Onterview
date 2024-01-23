@@ -1,12 +1,17 @@
 <script setup>
 import draggable from 'vuedraggable'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 // store
 import { storeToRefs } from 'pinia'
 import { useQuestionStore } from '@/stores/question.js'
 const questionStore = useQuestionStore()
 const { myQuestionList } = storeToRefs(questionStore)
+
+onMounted(() => {
+  const questionStore = useQuestionStore()
+  questionStore.requestMyQuestionList()
+})
 
 const log = function () {
   console.log('drag n drop my question list')

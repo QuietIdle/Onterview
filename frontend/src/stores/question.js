@@ -36,20 +36,15 @@ export const useQuestionStore = defineStore('question', () => {
     getCommonQuestionList(success, error)
   }
   
-  const requestMyQuestionList = function () {
-    const success = function (response) {
-      if (response.status === 200) {
-        myQuestionList.value = response.data
-        return
-      }
-    }
-  
-    const error = function () {
+  const requestMyQuestionList = async function () {
+    try {
+      const response = await getMyQuestionList()
+      myQuestionList.value = response.data
+      console.log('response myQuestionList', response)
+    } catch (error) {
       alert(`나의 면접 문항 목록을 불러오지 못했습니다. `)
-      return
+      console.log('error myQuestionList', error)
     }
-
-    getMyQuestionList(success, error)
   }
   
   return {
