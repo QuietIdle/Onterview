@@ -1,6 +1,5 @@
 package com.quiet.onterview.question.entity;
 
-import com.quiet.onterview.question.dto.request.MyQuestionRequest;
 import com.quiet.onterview.video.entity.Video;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,10 +26,10 @@ public class MyQuestion {
     @JoinColumn(name = "MY_QUESTION_FOLDER_ID")
     private MyQuestionFolder myQuestionFolder;
 
-    @Column(name = "QUESTION", nullable = false)
+    @Column(name = "QUESTION")
     private String question;
 
-    @Column(name = "ANSWER", nullable = true)
+    @Column(name = "ANSWER")
     private String answer;
 
     @ManyToOne(fetch = LAZY)

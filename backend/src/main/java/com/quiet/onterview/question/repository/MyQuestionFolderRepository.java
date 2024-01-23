@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface MyQuestionFolderRepository extends JpaRepository<MyQuestionFolder, Long> {
 
-    @Query("SELECT mqf FROM MyQuestionFolder mqf where mqf.member = :memberId")
-    List<MyQuestionFolder> findMyQuestionFolder(@Param("memberId") Member member);
+    @Query("SELECT mqf FROM MyQuestionFolder mqf where mqf.member.memberId = :memberId")
+    List<MyQuestionFolder> findMyQuestionFolder(@Param("memberId") Long memberId);
+
 }
