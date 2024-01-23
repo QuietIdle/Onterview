@@ -18,6 +18,6 @@ public class CommonQuestionFolder {
     @Column(name = "COMMON_QUESTION_FOLDER_ID")
     private Long commonQuestionFolderId;
 
-    @Column(name = "FOLDER", nullable = false)
-    private String folder;
+    @Column(name = "COMMON_QUESTION_FOLDER", nullable = false)
+    private String commonQuestionFolder;
 }

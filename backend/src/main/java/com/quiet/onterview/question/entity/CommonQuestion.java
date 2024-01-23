@@ -26,9 +26,6 @@ public class CommonQuestion {
     @JoinColumn(name = "COMMON_QUESTION_FOLDER_ID")
     private CommonQuestionFolder commonQuestionFolder;
 
-    @Column(name = "ORIGIN_FILENAME")
-    private String originFilename;
-
-    @Column(name = "SAVE_FILENAME", unique = true)
-    private String saveFilename;
+    @Column(name = "QUESTION", nullable = false)
+    private String commonQuestion;
 }

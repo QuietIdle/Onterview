@@ -1,5 +1,6 @@
 package com.quiet.onterview.question.controller;
 
+import com.quiet.onterview.question.dto.request.MyQuestionRequest;
 import com.quiet.onterview.question.dto.response.MyAnswerAndVideoResponse;
 import com.quiet.onterview.question.service.MyQuestionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,9 +9,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import javax.swing.plaf.PanelUI;
 
 @Tag(name = "my-question-controller", description = "My Question Controller")
 @Controller
@@ -25,6 +26,13 @@ public class MyQuestionController {
     @GetMapping("/my-question/{my_question_id}")
     public ResponseEntity<MyAnswerAndVideoResponse> getMyAnswerAndVideo(@PathVariable("my_question_id") Long myQuestionId) {
         return ResponseEntity.ok(myQuestionService.getMyAnswerAndVideo(myQuestionId));
+    }
+
+    @Operation(summary = "POST", description = "POST 방식으로 나의 면접 질문 생성")
+    @PostMapping("/my-question")
+    public ResponseEntity<Void> registerMyQuestion(@RequestBody MyQuestionRequest myQuestionRequest) {
+        myQuestionService.createMyQuestion(myQuestionRequest);
+        return ResponseEntity.ok().build();
     }
 
 }

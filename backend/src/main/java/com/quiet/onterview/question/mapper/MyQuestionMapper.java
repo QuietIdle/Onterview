@@ -1,5 +1,6 @@
 package com.quiet.onterview.question.mapper;
 
+import com.quiet.onterview.question.dto.request.MyQuestionRequest;
 import com.quiet.onterview.question.dto.response.MyAnswerAndVideoResponse;
 import com.quiet.onterview.question.dto.response.MyQuestionResponse;
 import com.quiet.onterview.question.entity.CommonQuestion;
@@ -33,5 +34,12 @@ public class MyQuestionMapper {
                 .answer(myQuestion.getAnswer())
                 .videoInformationResponseList(videoMapper.allVideoToInformationResponse(myQuestion.getVideoList()))
                 .build();
+    }
+
+    public MyQuestion myQuestionRequestToEntity(MyQuestionRequest myQuestionRequest) {
+        return MyQuestion.builder()
+                .question(myQuestionRequest.getQuestion())
+                .build();
+
     }
 }

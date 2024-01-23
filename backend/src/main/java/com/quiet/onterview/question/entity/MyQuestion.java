@@ -1,11 +1,9 @@
 package com.quiet.onterview.question.entity;
 
+import com.quiet.onterview.question.dto.request.MyQuestionRequest;
 import com.quiet.onterview.video.entity.Video;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +14,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @AllArgsConstructor
 @Getter
 @Entity
+@Builder
 @Table(name = "MY_QUESTION")
 public class MyQuestion {
 
@@ -44,5 +43,9 @@ public class MyQuestion {
     public void changeMyQuestionFolder(MyQuestionFolder myQuestionFolder) {
         this.myQuestionFolder = myQuestionFolder;
         myQuestionFolder.getMyQuestionList().add(this);
+    }
+
+    public void saveCommonQuestion(CommonQuestion commonQuestion) {
+        this.commonQuestion = commonQuestion;
     }
 }
