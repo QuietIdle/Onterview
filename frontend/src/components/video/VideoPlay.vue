@@ -1,14 +1,14 @@
 <script setup>
-import { useSelfSpeechStore } from '@/stores/selfSpeech.js';
+import { useSelfSpeechStore } from '@/stores/selfSpeech';
 import videojs from "video.js";
-import { onBeforeUnmount, onMounted, ref } from "vue";
-import { fileServer } from "@/api/video.js"; 
+import { onBeforeUnmount, ref } from "vue";
+import { fileServer } from "@/api/video"; 
 
-const pinia = useSelfSpeechStore();
+const selfSpeechStore = useSelfSpeechStore();
 
 const backToRecording = function() {
-  pinia.display = true;
-  pinia.listIdx = 1;
+  selfSpeechStore.display = true;
+  selfSpeechStore.listIdx = 1;
 }
 
 let player;
@@ -24,7 +24,7 @@ const requestVideo = async function () {
     // recordingPlayer.src = 'http://70.12.247.60:8080/stream?filePath=f7e694f9-6f83-4e52-9ac3-712a055df47d.mp4';
     //recordingPlayer.play();
     
-    const response = await fileServer.playVideo(pinia.videoData.videoUrl.saveFilename);
+    const response = await fileServer.playVideo(selfSpeechStore.videoData.videoUrl.saveFilename);
 
     console.log(response.data);
     const blob = new Blob([response.data], { type: 'video/mp4' });

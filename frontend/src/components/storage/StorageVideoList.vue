@@ -1,9 +1,9 @@
 <script setup>
 import { ref } from 'vue';
-import { apiMethods } from "@/api/video.js";
-import { useStorageStore } from '@/stores/storage.js';
+import { apiMethods } from "@/api/video";
+import { useStorageStore } from '@/stores/storage';
 
-const pinia = useStorageStore();
+const storageStore = useStorageStore();
 const selectedId = ref([]);
 
 const deleteVideo = async function () {
@@ -31,7 +31,7 @@ const markVideo = async function (id, bool) {
 }
 
 const selectAll = function () {
-  for (const item of pinia.storageData.value) {
+  for (const item of storageStore.storageData.value) {
     if (!selectedId.value.includes(item.videoId)) {
       selectedId.value.push(item.videoId)
     }
@@ -51,7 +51,7 @@ const selectAll = function () {
           삭제
         </v-btn>
 
-        <v-btn class="ml-auto" variant="outlined" @click="pinia.switchDisplay">
+        <v-btn class="ml-auto" variant="outlined" @click="storageStore.switchDisplay">
           그리드 보기
         </v-btn>
       </div>
@@ -85,7 +85,7 @@ const selectAll = function () {
           </thead>
           <tbody>
             <tr
-              v-for="(dt, n) in pinia.storageData.value"
+              v-for="(dt, n) in storageStore.storageData.value"
               :key="n"
             >
               <td><v-checkbox

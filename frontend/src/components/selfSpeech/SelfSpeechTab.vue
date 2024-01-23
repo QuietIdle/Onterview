@@ -1,10 +1,10 @@
 <script setup>
 import { ref } from 'vue';
-import { useSelfSpeechStore } from '@/stores/selfSpeech.js';
+import { useSelfSpeechStore } from '@/stores/selfSpeech';
 import videoFeedback from '@/components/video/VideoFeedback.vue';
 import VideoThumbnail from "@/components/video/VideoThumbnail.vue";
 
-const pinia = useSelfSpeechStore();
+const selfSpeechStore = useSelfSpeechStore();
 
 const items = ref([
   {
@@ -22,7 +22,7 @@ const items = ref([
 ])
 
 const switchTab = function(page) {
-  pinia.listIdx = page;
+  selfSpeechStore.listIdx = page;
 }
 
 </script>
@@ -31,7 +31,7 @@ const switchTab = function(page) {
     <div class="d-flex align-center justify-center w-100 h-25">
       <v-card class="text-center" min-width="120" max-height="120" variant="text">
         <template v-for="item in items" :key="item.id">
-          <v-list-item @click="switchTab(item.id)" v-if="item.id==3 && pinia.display" disabled>
+          <v-list-item @click="switchTab(item.id)" v-if="item.id==3 && selfSpeechStore.display" disabled>
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
           <v-list-item @click="switchTab(item.id)" v-else>
@@ -41,13 +41,13 @@ const switchTab = function(page) {
       </v-card>
 
       <div class="content-container w-100 h-100 bg-yellow pa-5">
-        <div v-if="pinia.listIdx==1">
-          {{pinia.questionData.answer}}
+        <div v-if="selfSpeechStore.listIdx==1">
+          {{selfSpeechStore.questionData.answer}}
         </div>
-        <div v-else-if="pinia.listIdx==2">
+        <div v-else-if="selfSpeechStore.listIdx==2">
           <VideoThumbnail />
         </div>
-        <div v-else-if="pinia.listIdx==3">
+        <div v-else-if="selfSpeechStore.listIdx==3">
           <videoFeedback />
         </div>
       </div>

@@ -2,11 +2,11 @@
 import SelfSpeechRecord from '@/components/selfSpeech/SelfSpeechRecord.vue';
 import SelfSpeechTab from '@/components/selfSpeech/SelfSpeechTab.vue';
 import VideoPlay from '@/components/video/VideoPlay.vue';
-import { useSelfSpeechStore } from '@/stores/selfSpeech.js';
+import { useSelfSpeechStore } from '@/stores/selfSpeech';
 import { useRouter } from 'vue-router';
-import { apiMethods } from '@/api/video.js';
+import { apiMethods } from '@/api/video';
 
-const pinia = useSelfSpeechStore();
+const selfSpeechStore = useSelfSpeechStore();
 const router = useRouter();
 
 const goSelfSpeechMain = function () {
@@ -14,9 +14,9 @@ const goSelfSpeechMain = function () {
 }
 
 const selectQuestion = async function () {
-  pinia.selectedQuestion = 5;
-  const result = await apiMethods.getVideoAll(pinia.selectedQuestion);
-  pinia.questionData = result.data;
+  selfSpeechStore.selectedQuestion = 9;
+  const result = await apiMethods.getVideoAll(selfSpeechStore.selectedQuestion);
+  selfSpeechStore.questionData = result.data;
   console.log(result.data);
 }
 </script>
@@ -38,10 +38,10 @@ const selectQuestion = async function () {
     <div class="w-75 ma-5">
       <div class="h-75">
         <div class="d-flex align-center">
-          <div class="ma-1">{{ pinia.questionData.question }}</div>
+          <div class="ma-1">{{ selfSpeechStore.questionData.question }}</div>
           <v-icon class="exit-btn ma-1 ml-auto" color="black" size="32" icon="mdi-close-circle-outline" @click="goSelfSpeechMain"></v-icon>
         </div>
-        <div v-if="pinia.display">
+        <div v-if="selfSpeechStore.display">
           <SelfSpeechRecord />
         </div>
         <div v-else>

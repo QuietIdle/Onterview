@@ -1,12 +1,12 @@
 <script setup>
 import { ref } from 'vue';
-import { fileServer } from "@/api/video.js";
-import { useSelfSpeechStore } from '@/stores/selfSpeech.js';
+import { fileServer } from "@/api/video";
 
-const pinia = useSelfSpeechStore();
 const dialog = ref(false); // 모달 창
 const time = ref(0); // 타이머
 let timerId;
+
+const uploadData = ref(null);
 
 const flag = ref(0); // chunk 전송 완료 여부
 
@@ -69,7 +69,11 @@ const sendToServer = async function(chunk, idx) {
     // axios를 사용하여 POST 요청을 서버로 보냄
     const response = await fileServer.uploadVideo(idx, flag.value, formData);
     //const response = await axios.post(`http://70.12.247.60:8080/api/chunk/upload?&chunkNumber=${idx}&endOfChunk=${flag.value}`, formData);
-    console.log('Chunk sent successfully!', response);
+    //console.log('Chunk sent successfully!', response);
+    if (response.status === 200) {
+      console.log(response.data);
+      uploadData.value = response.data;
+    }
   } catch (error) {
     console.error('Error sending chunk to server:', error);
   }

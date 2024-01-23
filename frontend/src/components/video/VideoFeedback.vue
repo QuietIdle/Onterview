@@ -1,12 +1,11 @@
 <script setup>
-import { ref } from 'vue';
-import { useSelfSpeechStore } from '@/stores/selfSpeech.js';
+import { useSelfSpeechStore } from '@/stores/selfSpeech';
 
-const pinia = useSelfSpeechStore();
+const selfSpeechStore = useSelfSpeechStore();
 </script>
 
 <template>
-  <div>{{ pinia.videoData.feedback }}</div>
+  <div>{{ selfSpeechStore.videoData.feedback }}</div>
 </template>
 
 <style scoped></style>
