@@ -6,6 +6,7 @@ import com.quiet.onterview.file.exception.FileNotExistException;
 import com.quiet.onterview.file.mapper.FileInformationMapper;
 import com.quiet.onterview.file.repository.FileInformationRepository;
 import java.util.Arrays;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +22,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service
 @Slf4j
 public class FileServiceImpl implements FileService {
+
+    private final FileInformationRepository fileInformationRepository;
+    private final FileInformationMapper fileInformationMapper;
+
     @Value("${file.base-url}")
     private String baseUrl;
     @Value("${file.file-key}")
@@ -32,8 +37,6 @@ public class FileServiceImpl implements FileService {
     @Value("${file.file-path}")
     private String filePath;
 
-    private final FileInformationRepository fileInformationRepository;
-    private final FileInformationMapper fileInformationMapper;
 
     @Override
     public void saveFileInformation(FileInformationRequest... fileInformationRequests) {
@@ -69,14 +72,14 @@ public class FileServiceImpl implements FileService {
     public String transToFileServer(MultipartFile file) {
         MultiValueMap<String, Object> multipartData = new LinkedMultiValueMap<>();
         multipartData.add(fileKey, file.getResource());
-        String saveFilename = WebClient.create(baseUrl)
+        Map result = WebClient.create(baseUrl)
                 .post()
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .body(BodyInserters.fromMultipartData(multipartData))
                 .retrieve()
-                .bodyToMono(String.class)
+                .bodyToMono(Map.class)
                 .block();
-        return saveFilename;
+        return (String) result.get(fileNameQuery);
     }
 
     @Override
