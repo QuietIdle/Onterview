@@ -21,10 +21,14 @@ public enum ErrorCode {
     REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "REFRESH_TOKEN_EXPIRED"),
 
     /**
+     * Question
+     */
+    MY_QUESTION_FOLDER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MY_QUESTION_FOLDER_NOT_FOUND"),
+
+    /**
      * Video
      */
     VIDEO_NOT_FOUND(HttpStatus.BAD_REQUEST, "VIDEO_NOT_FOUND"),
-
 
     /**
      * File

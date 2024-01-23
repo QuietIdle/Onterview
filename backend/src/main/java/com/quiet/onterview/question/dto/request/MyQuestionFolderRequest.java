@@ -1,13 +1,15 @@
 package com.quiet.onterview.question.dto.request;
 
-import com.quiet.onterview.question.entity.CommonQuestion;
-import com.quiet.onterview.question.entity.MyQuestionFolder;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MyQuestionFolderRequest {
 
-    Long myQuestionFolderId;
-    Long memberId;
-    String folder;
+    String myQuestionFolder;
 }

@@ -34,4 +34,8 @@ public class MyQuestionFolder {
 
     @Column(name = "MY_QUESTION_FOLDER", nullable = false)
     private String myQuestionFolder;
+
+    public void updateMyQuestionFolder(String myQuestionFolder) {
+        this.myQuestionFolder = myQuestionFolder;
+    }
 }

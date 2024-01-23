@@ -1,6 +1,7 @@
 package com.quiet.onterview.question.controller;
 
 import com.quiet.onterview.member.entity.Member;
+import com.quiet.onterview.question.dto.request.MyQuestionFolderRequest;
 import com.quiet.onterview.question.dto.response.MyQuestionFolderResponse;
 import com.quiet.onterview.question.dto.response.MyQuestionResponse;
 import com.quiet.onterview.question.entity.MyQuestion;
@@ -13,8 +14,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,6 +30,16 @@ public class MyQuestionFolderController {
     @GetMapping("/my-question")
     public ResponseEntity<List<MyQuestionFolderResponse>> getMyQuestionList(Member member) {
         return ResponseEntity.ok(myQuestionFolderService.getMyQuestionFolder(member));
+    }
+
+    @Operation(summary = "PATCH", description = "PATCH 방식으로 나의 면접 질문 수정")
+    @PatchMapping("/my-question-folder/{my_question_folder_id}")
+    public ResponseEntity<Void> updateMyQuestion(
+            @PathVariable("my_question_folder_id") Long myQuestionFolderId,
+            @RequestBody MyQuestionFolderRequest myQuestionFolderRequest
+    ) {
+        myQuestionFolderService.updateMyQuestionFolder(myQuestionFolderId, myQuestionFolderRequest);
+        return ResponseEntity.ok().build();
     }
 
 }
