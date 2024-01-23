@@ -1,17 +1,17 @@
-<script setup></script>
+<script setup>
+import StorageVideoList from "@/components/storage/StorageVideoList.vue";
+
+
+</script>
 
 <template>
-  <div class="pa-10 d-flex justify-center bg-green w-screen h-screen">
-    <div class="w-75 bg-white">
-      <div class="tool-bar">
-        툴-바
-      </div>
+  <div>
+    <StorageVideoList />
+  </div>
+  <div>
 
-      <div>
-        
-      </div>
-    </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+</style>
