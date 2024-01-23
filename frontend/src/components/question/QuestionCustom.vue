@@ -44,12 +44,8 @@ const disableEditing = function (element) {
     <v-btn class="ml-3" variant="elevated" color="blue-accent-2">폴더 추가</v-btn>
   </div>
   <div style="max-height: 80%; overflow-y: auto">
-    <v-expansion-panels
-      variant="accordion"
-      v-for="folder in myQuestionList"
-      :key="folder.my_question_folder_id"
-    >
-      <v-expansion-panel>
+    <v-expansion-panels variant="accordion" multiple>
+      <v-expansion-panel v-for="folder in myQuestionList" :key="folder.my_question_folder_id">
         <v-expansion-panel-title>
           <v-row>
             <v-col cols="auto">
@@ -69,6 +65,7 @@ const disableEditing = function (element) {
           <template #item="{ element }">
             <v-expansion-panel-text>
               <v-row>
+                <v-col cols="auto"></v-col>
                 <v-col cols="auto">
                   <v-checkbox v-model="selectQuestion" :value="element.my_question_id"></v-checkbox>
                 </v-col>
@@ -88,6 +85,9 @@ const disableEditing = function (element) {
             </v-expansion-panel-text>
           </template>
         </draggable>
+      </v-expansion-panel>
+      <v-expansion-panel>
+        <v-expansion-panel-title>폴더 추가</v-expansion-panel-title>
       </v-expansion-panel>
     </v-expansion-panels>
   </div>
