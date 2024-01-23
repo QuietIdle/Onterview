@@ -1,5 +1,6 @@
 package com.quiet.onterview.question.controller;
 
+import com.quiet.onterview.question.dto.request.MyAnswerUpdateRequest;
 import com.quiet.onterview.question.dto.request.MyQuestionRequest;
 import com.quiet.onterview.question.dto.request.MyQuestionUpdateRequest;
 import com.quiet.onterview.question.dto.response.MyAnswerAndVideoResponse;
@@ -43,6 +44,16 @@ public class MyQuestionController {
             @RequestBody MyQuestionUpdateRequest myQuestionUpdateRequest
     ) {
         myQuestionService.updateMyQuestion(myQuestionId, myQuestionUpdateRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "PATCH", description = "PATCH 방식으로 특정 면접 문항에 대한 답변 수정")
+    @PatchMapping("/my-question/answer/{my_question_id}")
+    public ResponseEntity<Void> updateMyAnswer(
+            @PathVariable("my_question_id") Long myQuestionId,
+            @RequestBody MyAnswerUpdateRequest myAnswerUpdateRequest
+    ) {
+        myQuestionService.updateMyAnswer(myQuestionId, myAnswerUpdateRequest);
         return ResponseEntity.ok().build();
     }
 

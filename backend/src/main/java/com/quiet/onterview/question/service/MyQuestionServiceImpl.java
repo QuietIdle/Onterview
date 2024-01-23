@@ -1,5 +1,6 @@
 package com.quiet.onterview.question.service;
 
+import com.quiet.onterview.question.dto.request.MyAnswerUpdateRequest;
 import com.quiet.onterview.question.dto.request.MyQuestionRequest;
 import com.quiet.onterview.question.dto.request.MyQuestionUpdateRequest;
 import com.quiet.onterview.question.dto.response.MyAnswerAndVideoResponse;
@@ -52,5 +53,13 @@ public class MyQuestionServiceImpl implements MyQuestionService{
                 .orElseThrow(MyQuestionNotFoundException::new);
         Optional.ofNullable(myQuestionUpdateRequest.getQuestion())
                 .ifPresent(myQuestion::updateMyQuestion);
+    }
+
+    @Override
+    public void updateMyAnswer(Long myQuestionId, MyAnswerUpdateRequest myAnswerUpdateRequest) {
+        MyQuestion myQuestion = myQuestionRepository.findById(myQuestionId)
+                .orElseThrow(MyQuestionNotFoundException::new);
+        Optional.ofNullable(myAnswerUpdateRequest.getAnswer())
+                .ifPresent(myQuestion::updateMyAnswer);
     }
 }

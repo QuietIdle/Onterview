@@ -48,4 +48,6 @@ public class MyQuestion {
         this.commonQuestion = commonQuestion;
     }
     public void updateMyQuestion(String question) { this.question = question; }
+    public void updateMyAnswer(String answer) { this.answer = answer; }
+
 }
