@@ -10,13 +10,20 @@ import org.jcodec.api.JCodecException;
 import org.jcodec.common.io.NIOUtils;
 import org.jcodec.common.model.Picture;
 import org.jcodec.scale.AWTUtil;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
 public class FileUtils {
 
     private static final String EXTENSION = "png";
     public static final String DEFAULT_IMAGE_PATH = "image";
     public static final String DEFAULT_VIDEO_PATH = "video";
+    @Value("${root.path}")
+    public String DEFAULT_URL;
+    @Value("${default-image.path}")
+    public String DEFAULT_IMAGE;
 
     public static String getThumbnail(File source) throws IOException, JCodecException {
         File thumbnail = new File(source.getParent(),
