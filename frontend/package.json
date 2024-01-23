@@ -19,6 +19,7 @@
     "videojs": "^1.0.0",
     "vue": "^3.3.11",
     "vue-router": "^4.2.5",
+    "vuedraggable": "^4.1.0",
     "vue3-dropdown-navbar": "^0.1.4",
     "vuetify": "^3.4.10"
   },
