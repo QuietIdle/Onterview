@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class FileUtils {
 
-    private static final String EXTENSION = "png";
     @Value("${image.path}")
     public String IMAGE_PATH;
     @Value("${video.path}")

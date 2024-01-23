@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jcodec.api.JCodecException;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +28,7 @@ public class ChunkController {
             @RequestPart("chunk") MultipartFile file,
             @RequestParam("chunkNumber") int chunkNumber,
             @RequestParam("endOfChunk") int endOfChunk
-    ) throws IOException, JCodecException {
+    ) throws IOException {
         Optional<VideoResponse> isDone = chunkService.chunkUpload(file, chunkNumber,
                 endOfChunk);
 
