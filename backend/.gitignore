@@ -6,6 +6,7 @@ build/
 !**/src/test/**/build/
 
 *.yml
+build.gradle
 
 ### STS ###
 .apt_generated
