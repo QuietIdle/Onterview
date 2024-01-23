@@ -1,10 +1,16 @@
 package com.quiet.onterviewstorage.util;
 
 import com.quiet.onterviewstorage.file.FileUtils;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.bramp.ffmpeg.FFmpeg;
+import net.bramp.ffmpeg.FFprobe;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
+import net.bramp.ffmpeg.probe.FFmpegProbeResult;
+import net.bramp.ffmpeg.probe.FFmpegStream;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -13,6 +19,7 @@ import org.springframework.stereotype.Component;
 public class FFmpegManager {
 
     private final FFmpeg ffmpeg;
+    private final FFprobe ffprobe;
     private final FileUtils fileUtils;
 
     public String getThumbnail(String sourcePath) {
@@ -36,5 +43,17 @@ public class FFmpegManager {
         } catch (Exception e) {
             return fileUtils.DEFAULT_IMAGE;
         }
+    }
+
+    public double getDuration(String sourcePath) throws IOException {
+        // 영상 경로
+        Path videoPath = Paths.get(sourcePath);
+
+        // 영상 메타데이터 조회
+        FFmpegProbeResult probeResult = ffprobe.probe(videoPath.toString());
+
+        // 영상 길이 추출
+        FFmpegStream videoStream = probeResult.getStreams().get(0);
+        return videoStream.duration;
     }
 }
