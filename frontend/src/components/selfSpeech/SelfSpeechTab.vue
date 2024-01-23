@@ -48,7 +48,7 @@ const switchTab = function(page) {
           <VideoThumbnail />
         </div>
         <div v-else-if="pinia.listIdx==3">
-          자가 진단진단진단
+          <videoFeedback />
         </div>
       </div>
     </div>
