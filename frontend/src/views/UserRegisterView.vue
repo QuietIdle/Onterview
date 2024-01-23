@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue"
+import { ref, watch } from "vue"
 import { useRouter } from "vue-router"
 import { postSignUp, getIsDuplicatedEmail, getIsDuplicatedNickname } from '@/api/user.js'
 
@@ -11,6 +11,11 @@ const confirm = ref('')
 const formRef = ref(null)
 const isDuplicatedEmail = ref(null)
 const isDuplicatedNickname = ref(null)
+const emailError = ref(false)
+
+const emailWatch = watch(email, () => {
+  emailError.value = false
+})
 
 const emailRules = [
   (value) => {
@@ -121,13 +126,24 @@ const requestSignUp = function () {
           router.push({ name: "login" })
           return
         } else {
+          console.log(response)
           alert(`알 수 없는 이유로 회원가입에 실패했습니다. \n관리자에게 문의해주세요.`)
         }
       }
 
-      const error = function () {
-        // 실패 사유에 따른 조건 분기 설정 필요
-        alert(`알 수 없는 이유로 회원가입에 실패했습니다. \n관리자에게 문의해주세요.`)
+      const error = function (error) {
+        // 실패 사유에 따른 조건 분기
+        const reason = error.response.data
+        if (reason === "EMAIL_DUPLICATED") {
+          emailError.value = true
+          alert(`이미 존재하는 이메일 계정입니다!`)
+        } else if (reason === "NICKNAME_DUPLICATED") {
+          alert(`이미 존재하는 닉네임입니다!`)
+        } else if (reason === "PASSWORD_CANNOT_CONFIRM") {
+          alert(`비밀번호 확인이 일치하지 않습니다!`)
+        } else {
+          alert(`알 수 없는 이유로 회원가입에 실패했습니다. \n관리자에게 문의해주세요.`)
+        }
       }
 
       postSignUp(payload, success, error)
@@ -201,7 +217,8 @@ const requestDuplicatedNickname = function () {
           <label for="email">이메일</label>
           <v-row justify="center">
             <v-col cols="9">
-              <v-text-field v-model="email" label="example@onterview.com" :rules="emailRules" id="email"></v-text-field>
+              <v-text-field v-model="email" label="example@onterview.com" :rules="emailRules" :error="emailError"
+                :hint="emailError ? '중복된 메일입니다!' : null" id="email"></v-text-field>
             </v-col>
             <v-col cols="3" class="mt-2">
               <v-btn @click="requestDuplicatedEmail">중복 확인</v-btn>
