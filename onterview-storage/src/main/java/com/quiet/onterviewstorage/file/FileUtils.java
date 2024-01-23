@@ -20,6 +20,8 @@ public class FileUtils {
     private static final String EXTENSION = "png";
     public static final String DEFAULT_IMAGE_PATH = "image";
     public static final String DEFAULT_VIDEO_PATH = "video";
+    @Value("${video.path}")
+    public String VIDEO_PATH;
     @Value("${root.path}")
     public String DEFAULT_URL;
     @Value("${default-image.path}")
