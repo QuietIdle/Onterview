@@ -9,6 +9,7 @@ import com.quiet.onterview.video.entity.Video;
 import com.quiet.onterview.video.exception.VideoNotFoundException;
 import com.quiet.onterview.video.mapper.VideoMapper;
 import com.quiet.onterview.video.repository.VideoRepository;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +46,10 @@ public class VideoServiceImpl implements VideoService {
         video.updateTitle(videoUpdateRequest.getTitle());
         video.updateBookmark(videoUpdateRequest.getBookmark());
         video.updateFeedback(videoUpdateRequest.getFeedback());
+        Optional.ofNullable(videoUpdateRequest.getTitle())
+                .ifPresent(video::updateTitle);
+        Optional.ofNullable(videoUpdateRequest.getFeedback()).ifPresent(video::updateFeedback);
+        Optional.ofNullable(videoUpdateRequest.getBookmark()).ifPresent(video::updateBookmark);
     }
 
     @Override

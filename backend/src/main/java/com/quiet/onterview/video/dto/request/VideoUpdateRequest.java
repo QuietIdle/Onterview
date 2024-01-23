@@ -1,5 +1,6 @@
 package com.quiet.onterview.video.dto.request;
 
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,5 +14,5 @@ public class VideoUpdateRequest {
 
     String title;
     String feedback;
-    Boolean bookmark = Boolean.FALSE;
+    Boolean bookmark;
 }
