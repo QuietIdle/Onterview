@@ -19,22 +19,7 @@ export const useQuestionStore = defineStore('question', () => {
     }
   ]) 
   
-  const myQuestionList = ref([
-    {
-      my_question_folder_id: 1,
-      folder: '인성 질문',
-      question: [{ common_question_id: 500, my_question_id: 100, question: '성격의 장단점' }]
-    },
-    {
-      my_question_folder_id: 2,
-      folder: '기술 질문',
-      question: [
-        { common_question_id: 600, my_question_id: 200, question: 'OOP 정의' },
-        { common_question_id: 601, my_question_id: 201, question: '클래스와 객체의 차이점' },
-        { common_question_id: 0, my_question_id: 202, question: '내가 만든 질문' },
-      ]
-    }
-  ])
+  const myQuestionList = ref([])
 
   const requestCommonQuestionList = function () {
     const success = function (response) {
@@ -53,7 +38,8 @@ export const useQuestionStore = defineStore('question', () => {
   
   const requestMyQuestionList = function () {
     const success = function (response) {
-      if (response.status === 201) {
+      if (response.status === 200) {
+        myQuestionList.value = response.data
         return
       }
     }

@@ -45,29 +45,34 @@ const disableEditing = function (element) {
   </div>
   <div style="max-height: 80%; overflow-y: auto">
     <v-expansion-panels variant="accordion" multiple>
-      <v-expansion-panel v-for="folder in myQuestionList" :key="folder.my_question_folder_id">
+      <v-expansion-panel v-for="folder in myQuestionList" :key="folder.myQuestionFolderId">
         <v-expansion-panel-title>
           <v-row>
             <v-col cols="auto">
               <v-checkbox
                 @click.stop="checkFolder(folder)"
                 v-model="selectFolder"
-                :value="folder.my_question_folder_id"
+                :value="folder.myQuestionFolderId"
               ></v-checkbox>
             </v-col>
             <v-col class="d-flex align-center">
-              {{ folder.folder }}
+              {{ folder.myQuestionFolder }}
             </v-col>
           </v-row>
         </v-expansion-panel-title>
 
-        <draggable :list="folder.question" group="question" @change="log" item-key="my_question_id">
+        <draggable
+          :list="folder.myQuestionList"
+          group="question"
+          @change="log"
+          item-key="myQuestionId"
+        >
           <template #item="{ element }">
             <v-expansion-panel-text>
               <v-row>
                 <v-col cols="auto"></v-col>
                 <v-col cols="auto">
-                  <v-checkbox v-model="selectQuestion" :value="element.my_question_id"></v-checkbox>
+                  <v-checkbox v-model="selectQuestion" :value="element.myQuestionId"></v-checkbox>
                 </v-col>
                 <v-col class="d-flex align-center" @dblclick="enableEditing(element)">
                   <template v-if="element.isEditing">
