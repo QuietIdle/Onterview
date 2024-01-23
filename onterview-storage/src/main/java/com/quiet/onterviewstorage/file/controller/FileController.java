@@ -1,13 +1,13 @@
 package com.quiet.onterviewstorage.file.controller;
 
+import com.quiet.onterviewstorage.file.FileUtils;
 import com.quiet.onterviewstorage.file.dto.FileDto;
 import com.quiet.onterviewstorage.file.dto.FileDto.FileResponse;
-import com.quiet.onterviewstorage.file.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 @CrossOrigin("*")
 @RequestMapping("/api")
 @Slf4j
+@RequiredArgsConstructor
 public class FileController {
+
+    private final FileUtils fileUtils;
 
     @PostMapping("/file")
     public ResponseEntity<FileDto.FileResponse> imageUpload(
@@ -25,9 +28,10 @@ public class FileController {
     ) throws IOException {
         // TODO: 확장자명에 따라 영상/이미지로 나눠 저장
         log.info(image.getOriginalFilename());
-        String uuidFileName = createUUIDFileName(image.getOriginalFilename().split("\\.")[1]);
-        image.transferTo(Path.of(FileUtils.DEFAULT_IMAGE_PATH + "/" + uuidFileName));
-        return ResponseEntity.ok(new FileResponse(FileUtils.DEFAULT_IMAGE_PATH, uuidFileName));
+        String uuidFileName = fileUtils.createUUIDFileName(
+                image.getOriginalFilename().split("\\.")[1]);
+        image.transferTo(Path.of(fileUtils.IMAGE_PATH + "/" + uuidFileName));
+        return ResponseEntity.ok(new FileResponse(fileUtils.IMAGE_PATH, uuidFileName));
     }
 
     @GetMapping("/file")
@@ -60,9 +64,5 @@ public class FileController {
         }
 
         return ResponseEntity.notFound().build();
-    }
-
-    private String createUUIDFileName(String extension) {
-        return String.format("%s.%s", UUID.randomUUID(), extension);
     }
 }
