@@ -15,6 +15,15 @@ export const apiMethods = {
         console.log('request get all videos')
         return api.get(`/api/my-question/${q_id}`)
     },
+    getUserVideoAll: function () {
+        return api.get(`/api/video/all`)
+    },
+    deleteVideos: function (v_ids) {
+        return api.post('/api/video/delete', v_ids)
+    },
+    patchVideo: function (v_id, req_body) {
+        return api.patch(`/api/video/${v_id}`, req_body)
+    },
 }
 
 export const fileServer = {

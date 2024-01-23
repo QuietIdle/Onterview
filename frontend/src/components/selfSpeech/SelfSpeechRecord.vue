@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { fileServer } from "@/api/selfSpeechVideo";
+import { fileServer } from "@/api/video.js";
 import { useSelfSpeechStore } from '@/stores/selfSpeech.js';
 
 const pinia = useSelfSpeechStore();

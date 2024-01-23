@@ -4,7 +4,7 @@ import SelfSpeechTab from '@/components/selfSpeech/SelfSpeechTab.vue';
 import VideoPlay from '@/components/video/VideoPlay.vue';
 import { useSelfSpeechStore } from '@/stores/selfSpeech.js';
 import { useRouter } from 'vue-router';
-import { apiMethods } from '@/api/selfSpeechVideo.js';
+import { apiMethods } from '@/api/video.js';
 
 const pinia = useSelfSpeechStore();
 const router = useRouter();
