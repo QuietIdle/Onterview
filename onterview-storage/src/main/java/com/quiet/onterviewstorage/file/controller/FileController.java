@@ -1,6 +1,6 @@
 package com.quiet.onterviewstorage.file.controller;
 
-import com.quiet.onterviewstorage.file.FileUtils;
+import com.quiet.onterviewstorage.util.FileUtils;
 import com.quiet.onterviewstorage.file.dto.FileDto;
 import com.quiet.onterviewstorage.file.dto.FileDto.FileResponse;
 import java.io.File;

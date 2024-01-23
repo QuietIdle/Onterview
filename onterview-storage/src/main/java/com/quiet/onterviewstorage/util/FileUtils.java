@@ -1,4 +1,4 @@
-package com.quiet.onterviewstorage.file;
+package com.quiet.onterviewstorage.util;
 
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
