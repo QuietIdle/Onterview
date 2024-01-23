@@ -4,10 +4,7 @@ import static jakarta.persistence.FetchType.LAZY;
 
 import com.quiet.onterview.member.entity.Member;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Entity
+@Builder
 @Table(name = "MY_QUESTION_FOLDER")
 public class MyQuestionFolder {
 

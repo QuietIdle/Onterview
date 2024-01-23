@@ -26,6 +26,6 @@ public class CommonQuestion {
     @JoinColumn(name = "COMMON_QUESTION_FOLDER_ID")
     private CommonQuestionFolder commonQuestionFolder;
 
-    @Column(name = "QUESTION", nullable = false)
+    @Column(name = "QUESTION")
     private String commonQuestion;
 }

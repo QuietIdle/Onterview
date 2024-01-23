@@ -36,8 +36,9 @@ public class MyQuestionServiceImpl implements MyQuestionService{
         Optional<MyQuestionFolder> myQuesitonFolder = myQuestionFolderRepository.findById(myQuestionRequest.getMyQuestionFolderId());
         myQuesitonFolder.ifPresent(myQuestion::changeMyQuestionFolder);
 
-        Optional<CommonQuestion> commonQuestion = commonQuestionRepository.findById(myQuestionRequest.getCommonQuestionId());
-        commonQuestion.ifPresent(myQuestion::saveCommonQuestion);
+        Optional.ofNullable(myQuestionRequest.getCommonQuestionId())
+                .flatMap(commonQuestionRepository::findById)
+                .ifPresent(myQuestion::saveCommonQuestion);
 
         myQuestionRepository.save(myQuestion);
     }

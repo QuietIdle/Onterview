@@ -1,5 +1,6 @@
 package com.quiet.onterview.question.mapper;
 
+import com.quiet.onterview.question.dto.request.MyQuestionFolderRequest;
 import com.quiet.onterview.question.dto.request.MyQuestionRequest;
 import com.quiet.onterview.question.dto.response.MyQuestionFolderResponse;
 import com.quiet.onterview.question.dto.response.MyQuestionResponse;
@@ -31,6 +32,13 @@ public class MyQuestionFolderMapper {
                 .myQuestionFolder(myQuestionFolder.getMyQuestionFolder())
                 .myQuestionList(myQuestionResponsesList)
                 .build();
+    }
+
+    public MyQuestionFolder myQuestionFolderRequestToEntity(MyQuestionFolderRequest myQuestionFolderRequest) {
+        return MyQuestionFolder.builder()
+                .myQuestionFolder(myQuestionFolderRequest.getMyQuestionFolder())
+                .build();
+
     }
 
 }

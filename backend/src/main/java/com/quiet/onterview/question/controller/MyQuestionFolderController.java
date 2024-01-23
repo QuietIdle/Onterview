@@ -1,6 +1,8 @@
 package com.quiet.onterview.question.controller;
 
 import com.quiet.onterview.member.entity.Member;
+import com.quiet.onterview.question.dto.request.MyQuestionFolderRequest;
+import com.quiet.onterview.question.dto.request.MyQuestionRequest;
 import com.quiet.onterview.question.dto.response.MyQuestionFolderResponse;
 import com.quiet.onterview.question.dto.response.MyQuestionResponse;
 import com.quiet.onterview.question.entity.MyQuestion;
@@ -13,13 +15,13 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Tag(name = "my-question-folder-controller", description = "My Question Folder Controller")
 @Controller
+@CrossOrigin("*")
 @Log4j2
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -28,8 +30,15 @@ public class MyQuestionFolderController {
 
     @Operation(summary = "GET", description = "GET 방식으로 나의 면접 질문 전체 조회")
     @GetMapping("/my-question")
-    public ResponseEntity<List<MyQuestionFolderResponse>> getMyQuestionList(Member member) {
-        return ResponseEntity.ok(myQuestionFolderService.getMyQuestionFolder(member));
+    public ResponseEntity<List<MyQuestionFolderResponse>> getMyQuestionList(Long memberId) {
+        return ResponseEntity.ok(myQuestionFolderService.getMyQuestionFolder(memberId));
+    }
+
+    @Operation(summary = "POST", description = "POST 방식으로 나의 면접 질문 폴더 생성")
+    @PostMapping("/my-question-folder")
+    public ResponseEntity<Void> registerMyQuestionFolder(@RequestBody MyQuestionFolderRequest myQuestionFolderRequest) {
+        myQuestionFolderService.createMyQuestionFolder(myQuestionFolderRequest);
+        return ResponseEntity.ok().build();
     }
 
 }

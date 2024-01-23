@@ -1,6 +1,7 @@
 package com.quiet.onterview.question.service;
 
 import com.quiet.onterview.member.entity.Member;
+import com.quiet.onterview.question.dto.request.MyQuestionFolderRequest;
 import com.quiet.onterview.question.dto.response.MyQuestionFolderResponse;
 import com.quiet.onterview.question.dto.response.MyQuestionResponse;
 import com.quiet.onterview.question.entity.MyQuestion;
@@ -17,5 +18,6 @@ import java.util.stream.Collectors;
 
 public interface MyQuestionFolderService {
 
-    List<MyQuestionFolderResponse> getMyQuestionFolder(Member member);
+    List<MyQuestionFolderResponse> getMyQuestionFolder(Long memberId);
+    void createMyQuestionFolder(MyQuestionFolderRequest myQuestionFolderRequest);
 }

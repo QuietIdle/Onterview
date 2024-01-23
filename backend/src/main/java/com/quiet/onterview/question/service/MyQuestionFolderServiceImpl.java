@@ -1,6 +1,7 @@
 package com.quiet.onterview.question.service;
 
 import com.quiet.onterview.member.entity.Member;
+import com.quiet.onterview.question.dto.request.MyQuestionFolderRequest;
 import com.quiet.onterview.question.dto.response.MyQuestionFolderResponse;
 import com.quiet.onterview.question.dto.response.MyQuestionResponse;
 import com.quiet.onterview.question.entity.MyQuestion;
@@ -21,12 +22,18 @@ public class MyQuestionFolderServiceImpl implements MyQuestionFolderService {
     private final MyQuestionFolderRepository myQuestionFolderRepository;
     private final MyQuestionFolderMapper myQuestionFolderMapper;
 
-    @Override
-    public List<MyQuestionFolderResponse> getMyQuestionFolder(Member member) {
-        List<MyQuestionFolder> myQuestionFolderList = myQuestionFolderRepository.findMyQuestionFolder(member);
+
+    public List<MyQuestionFolderResponse> getMyQuestionFolder(Long memberId) {
+        List<MyQuestionFolder> myQuestionFolderList = myQuestionFolderRepository.findMyQuestionFolder(memberId);
         return myQuestionFolderList.stream()
                 .map(myQuestionFolderMapper::myQuestionFolderToMyQuestionFolderResponse)
                 .toList();
+    }
+
+    @Override
+    public void createMyQuestionFolder(MyQuestionFolderRequest myQuestionFolderRequest) {
+        MyQuestionFolder myQuestionFolder = myQuestionFolderMapper.myQuestionFolderRequestToEntity(myQuestionFolderRequest);
+        myQuestionFolderRepository.save(myQuestionFolder);
     }
 
 }

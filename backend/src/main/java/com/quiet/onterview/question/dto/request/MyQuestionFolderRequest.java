@@ -7,7 +7,5 @@ import lombok.Getter;
 @Getter
 public class MyQuestionFolderRequest {
 
-    Long myQuestionFolderId;
-    Long memberId;
-    String folder;
+    String myQuestionFolder;
 }
