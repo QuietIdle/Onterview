@@ -2,6 +2,7 @@ package com.quiet.onterview.video.service;
 
 import com.quiet.onterview.question.entity.MyQuestion;
 import com.quiet.onterview.question.repository.MyQuestionRepository;
+import com.quiet.onterview.video.dto.request.VideoDeleteRequest;
 import com.quiet.onterview.video.dto.request.VideoInformationRequest;
 import com.quiet.onterview.video.dto.request.VideoUpdateRequest;
 import com.quiet.onterview.video.dto.response.VideoDetailResponse;
@@ -51,9 +52,6 @@ public class VideoServiceImpl implements VideoService {
     @Override
     public void updateVideo(Long videoId, VideoUpdateRequest videoUpdateRequest) {
         Video video = videoRepository.findById(videoId).orElseThrow(VideoNotFoundException::new);
-        video.updateTitle(videoUpdateRequest.getTitle());
-        video.updateBookmark(videoUpdateRequest.getBookmark());
-        video.updateFeedback(videoUpdateRequest.getFeedback());
         Optional.ofNullable(videoUpdateRequest.getTitle())
                 .ifPresent(video::updateTitle);
         Optional.ofNullable(videoUpdateRequest.getFeedback()).ifPresent(video::updateFeedback);
@@ -61,8 +59,9 @@ public class VideoServiceImpl implements VideoService {
     }
 
     @Override
-    public void deleteVideo(Long videoId) {
-        Video video = videoRepository.findById(videoId).orElseThrow(VideoNotFoundException::new);
-        videoRepository.delete(video);
+    public void deleteVideo(VideoDeleteRequest videos) {
+        videos.getVideos().forEach(v -> videoRepository.delete(
+                videoRepository.findById(v).orElseThrow(VideoNotFoundException::new)
+        ));
     }
 }

@@ -1,7 +1,7 @@
 package com.quiet.onterview.video.controller;
 
-import com.quiet.onterview.file.service.FileService;
 import com.quiet.onterview.security.SecurityUser;
+import com.quiet.onterview.video.dto.request.VideoDeleteRequest;
 import com.quiet.onterview.video.dto.request.VideoInformationRequest;
 import com.quiet.onterview.video.dto.request.VideoUpdateRequest;
 import com.quiet.onterview.video.dto.response.VideoDetailResponse;
@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -61,9 +60,9 @@ public class VideoController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("{videoId}")
-    public ResponseEntity<Void> deleteVideo(@PathVariable Long videoId) {
-        videoService.deleteVideo(videoId);
+    @PostMapping("/delete")
+    public ResponseEntity<Void> deleteVideo(@RequestBody VideoDeleteRequest videos) {
+        videoService.deleteVideo(videos);
         return ResponseEntity.ok().build();
     }
 }
