@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue"
+import { ref, watch, computed } from "vue"
 import { useRouter } from "vue-router"
 import { postSignUp, getIsDuplicatedEmail, getIsDuplicatedNickname } from '@/api/user.js'
 
@@ -11,6 +11,39 @@ const confirm = ref('')
 const formRef = ref(null)
 const isDuplicatedEmail = ref(null)
 const isDuplicatedNickname = ref(null)
+const emailSuccess = ref(false)
+const emailError = ref(false)
+const nicknameSuccess = ref(false)
+const nicknameError = ref(false)
+
+const emailWatch = watch(email, () => {
+  emailError.value = false
+  emailSuccess.value = false
+})
+
+const nicknameWatch = watch(nickname, () => {
+  nicknameError.value = false
+})
+
+const emailHintComputed = computed(() => {
+  if (emailSuccess.value) {
+    return '사용 가능한 이메일입니다!'
+  } else if (emailError.value) {
+    return '사용 중인 이메일입니다!'
+  } else {
+    return null
+  }
+})
+
+const nicknameHintComputed = computed(() => {
+  if (nicknameSuccess.value) {
+    return '사용 가능한 닉네임입니다!'
+  } else if (nicknameError.value) {
+    return '사용 중인 닉네임입니다!'
+  } else {
+    return null
+  }
+})
 
 const emailRules = [
   (value) => {
@@ -27,15 +60,6 @@ const emailRules = [
       return '이메일 형식이 올바르지 않습니다.'
     }
   },
-  (value) => {
-    if (isDuplicatedEmail.value === null) {
-      return true
-    } else if (isDuplicatedEmail.value === true) {
-      return '사용할 수 있는 이메일입니다.'
-    } else {
-      return '이미 사용 중인 이메일입니다.'
-    }
-  }
 ]
 
 const nicknameRules = [
@@ -55,15 +79,6 @@ const nicknameRules = [
       return '닉네임은 2~8자의 한글이어야 합니다.'
     }
   },
-  (value) => {
-    if (isDuplicatedNickname.value === null) {
-      return true
-    } else if (isDuplicatedNickname.value === true) {
-      return '사용할 수 있는 닉네임입니다.'
-    } else {
-      return '이미 사용 중인 닉네임입니다.'
-    }
-  }
 ]
 
 const passwordRules = [
@@ -117,17 +132,29 @@ const requestSignUp = function () {
       }
 
       const success = function (response) {
+        console.log(response)
         if (response.status === 201) {
           router.push({ name: "login" })
           return
         } else {
+          console.log(response)
           alert(`알 수 없는 이유로 회원가입에 실패했습니다. \n관리자에게 문의해주세요.`)
         }
       }
 
-      const error = function () {
-        // 실패 사유에 따른 조건 분기 설정 필요
-        alert(`알 수 없는 이유로 회원가입에 실패했습니다. \n관리자에게 문의해주세요.`)
+      const error = function (error) {
+        // 실패 사유에 따른 조건 분기
+        const reason = error.response.data
+        if (reason === "EMAIL_DUPLICATED") {
+          emailError.value = true
+          alert(`이미 존재하는 이메일 계정입니다!`)
+        } else if (reason === "NICKNAME_DUPLICATED") {
+          alert(`이미 존재하는 닉네임입니다!`)
+        } else if (reason === "PASSWORD_CANNOT_CONFIRM") {
+          alert(`비밀번호 확인이 일치하지 않습니다!`)
+        } else {
+          alert(`알 수 없는 이유로 회원가입에 실패했습니다. \n관리자에게 문의해주세요.`)
+        }
       }
 
       postSignUp(payload, success, error)
@@ -136,7 +163,7 @@ const requestSignUp = function () {
 
 }
 
-const requestDuplicatedEmail = function () {
+const requestIsDuplicatedEmail = function () {
 
   for (const rule of emailRules) {
     const validationResult = rule(email.value)
@@ -148,18 +175,20 @@ const requestDuplicatedEmail = function () {
     }
   }
 
-  const success = function () {
-    console.log(`성공`)
+  const success = function (response) {
+    emailSuccess.value = true
+    console.log(response)
   }
 
-  const error = function () {
+  const error = function (error) {
+    emailError.value = true
     console.log(`실패`)
   }
 
   getIsDuplicatedEmail(email.value, success, error)
 }
 
-const requestDuplicatedNickname = function () {
+const requestIsDuplicatedNickname = function () {
 
 
   for (const rule of nicknameRules) {
@@ -173,10 +202,12 @@ const requestDuplicatedNickname = function () {
   }
 
   const success = function () {
+    nicknameSuccess.value = true
     console.log(`성공`)
   }
 
   const error = function () {
+    nicknameError.value = true
     console.log(`실패`)
   }
 
@@ -201,20 +232,22 @@ const requestDuplicatedNickname = function () {
           <label for="email">이메일</label>
           <v-row justify="center">
             <v-col cols="9">
-              <v-text-field v-model="email" label="example@onterview.com" :rules="emailRules" id="email"></v-text-field>
+              <v-text-field v-model="email" :class="{ success: emailSuccess }" label="example@onterview.com"
+                :rules="emailRules" :error="emailError" :hint="emailHintComputed" id="email"></v-text-field>
             </v-col>
             <v-col cols="3" class="mt-2">
-              <v-btn @click="requestDuplicatedEmail">중복 확인</v-btn>
+              <v-btn @click="requestIsDuplicatedEmail">중복 확인</v-btn>
             </v-col>
           </v-row>
 
           <label for="nickname">닉네임</label>
           <v-row justify="center">
             <v-col cols="9">
-              <v-text-field v-model="nickname" label="한글 닉네임" :rules="nicknameRules" id="nickname"></v-text-field>
+              <v-text-field v-model="nickname" :class="{ success: nicknameSuccess }" label="한글 닉네임" :rules="nicknameRules"
+                :error="nicknameError" :hint="nicknameHintComputed" id="nickname"></v-text-field>
             </v-col>
             <v-col cols="3" class="mt-2">
-              <v-btn @click="requestDuplicatedNickname">중복 확인</v-btn>
+              <v-btn @click="requestIsDuplicatedNickname">중복 확인</v-btn>
             </v-col>
           </v-row>
 
@@ -234,4 +267,8 @@ const requestDuplicatedNickname = function () {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.success {
+  color: green;
+}
+</style>

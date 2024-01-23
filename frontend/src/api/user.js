@@ -15,12 +15,12 @@ const postLogin = function (payload, success, error) {
 
 const getIsDuplicatedEmail = function (email, success, error) {
     console.log("request get, is duplicated email")
-    api.get(`/api/user/check?email=${email}`).then(success).catch(error)
+    api.get(`/api/user/check/email?email=${email}`).then(success).catch(error)
 }
 
 const getIsDuplicatedNickname = function (nickname, success, error) {
     console.log("request get, is duplicated nickname")
-    api.get(`/api/user/check?nickname=${nickname}`).then(success).catch(error)
+    api.get(`/api/user/check/nickname?nickname=${nickname}`).then(success).catch(error)
 }
 
 const patchUpdateUser = function (payload, success, error) {
