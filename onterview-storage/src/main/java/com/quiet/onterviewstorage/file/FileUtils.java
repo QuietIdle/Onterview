@@ -18,8 +18,8 @@ import org.springframework.stereotype.Component;
 public class FileUtils {
 
     private static final String EXTENSION = "png";
-    public static final String DEFAULT_IMAGE_PATH = "image";
-    public static final String DEFAULT_VIDEO_PATH = "video";
+    @Value("${image.path}")
+    public String IMAGE_PATH;
     @Value("${video.path}")
     public String VIDEO_PATH;
     @Value("${root.path}")
