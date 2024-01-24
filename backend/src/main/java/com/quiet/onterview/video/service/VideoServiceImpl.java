@@ -1,5 +1,6 @@
 package com.quiet.onterview.video.service;
 
+import com.quiet.onterview.file.service.FileService;
 import com.quiet.onterview.question.entity.MyQuestion;
 import com.quiet.onterview.question.repository.MyQuestionRepository;
 import com.quiet.onterview.video.dto.request.VideoDeleteRequest;
@@ -25,6 +26,7 @@ public class VideoServiceImpl implements VideoService {
     private final VideoRepository videoRepository;
     private final MyQuestionRepository myQuestionRepository;
     private final VideoMapper videoMapper;
+    private final FileService fileService;
 
     @Override
     @Transactional(readOnly = true)
@@ -60,6 +62,7 @@ public class VideoServiceImpl implements VideoService {
 
     @Override
     public void deleteVideo(VideoDeleteRequest videos) {
+        fileService.deleteFilesOnFileServer(videos.getVideos().toArray(Long[]::new));
         videos.getVideos().forEach(v -> videoRepository.delete(
                 videoRepository.findById(v).orElseThrow(VideoNotFoundException::new)
         ));
