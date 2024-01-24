@@ -2,9 +2,14 @@ package com.quiet.onterview.security.jwt;
 
 import com.quiet.onterview.member.entity.Member;
 import com.quiet.onterview.member.repository.MemberRepository;
+import com.quiet.onterview.security.SecurityMemberAuthentication;
 import com.quiet.onterview.security.SecurityMemberDetail;
 import java.util.Collection;
+
+import com.quiet.onterview.security.SecurityUser;
+import com.quiet.onterview.security.exception.SecurityException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -17,66 +22,30 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
-//    private final SecurityMemberDetailService securityMemberDetailService;
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public Authentication authenticate(Authentication authentication)
-            throws AuthenticationException {
-        System.out.println("JwtAuthenticationProvider autenticate");
-        System.out.println("GET PRINCIPAL -> " + authentication.getPrincipal());
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+//        System.out.println("JwtAuthenticationProvider autenticate");
+//        System.out.println("GET PRINCIPAL -> " + authentication.getPrincipal());
 
         String username = (String) authentication.getPrincipal();
         String password = (String) authentication.getCredentials();
 
         Member member = memberRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("유저없음~~~"));
+                .orElseThrow(() -> new SecurityException(HttpStatus.BAD_GATEWAY, "입력하신 이메일에 해당하는 유저가 없습니다."));
 
-        System.out.println("RECEIVED PASDSWORD -> " + password + "\n ENCODED " + passwordEncoder.encode(password));
-        System.out.println("ORIGINAL PASSWORD ! -> " + member.getPassword());
+//        System.out.println("RECEIVED PASDSWORD -> " + password + "\n ENCODED " + passwordEncoder.encode(password));
+//        System.out.println("ORIGINAL PASSWORD ! -> " + member.getPassword());
         if(!passwordEncoder.matches(password, member.getPassword())) {
-            throw new UsernameNotFoundException("비번ㅇ 트림~~~");
+            throw new SecurityException(HttpStatus.BAD_REQUEST, "비밀번호가 맞지 않습니다.");
         }
 
-        SecurityMemberDetail securityMemberDetail = new SecurityMemberDetail(member);
-        return new Authentication() {
+//        SecurityUser securityUser = new SecurityUser(member);
 
-            @Override
-            public String getName() {
-                return null;
-            }
-
-            @Override
-            public Collection<? extends GrantedAuthority> getAuthorities() {
-                return null;
-            }
-
-            @Override
-            public Object getCredentials() {
-                return null;
-            }
-
-            @Override
-            public Object getDetails() {
-                return null;
-            }
-
-            @Override
-            public Object getPrincipal() {
-                return securityMemberDetail;
-            }
-
-            @Override
-            public boolean isAuthenticated() {
-                return false;
-            }
-
-            @Override
-            public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-
-            }
-        };
+//        SecurityMemberDetail securityMemberDetail = new SecurityMemberDetail(securityUser);
+        return new SecurityMemberAuthentication(new SecurityUser(member));
     }
 
     @Override

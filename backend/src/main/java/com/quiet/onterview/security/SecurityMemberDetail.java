@@ -9,10 +9,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Data
 public class SecurityMemberDetail implements UserDetails {
 
-    private Member member;
+    private SecurityUser securityUser;
 
-    public SecurityMemberDetail(Member member) {
-        this.member = member;
+    public SecurityMemberDetail(SecurityUser securityUser) {
+        this.securityUser = securityUser;
     }
 
     @Override
@@ -22,12 +22,12 @@ public class SecurityMemberDetail implements UserDetails {
 
     @Override
     public String getPassword() {
-        return member.getPassword();
+        return securityUser.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return member.getEmail();
+        return securityUser.getEmail();
     }
 
     @Override

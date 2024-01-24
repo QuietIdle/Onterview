@@ -2,7 +2,6 @@ package com.quiet.onterview.member.service;
 
 import com.quiet.onterview.common.BaseException;
 import com.quiet.onterview.security.jwt.JwtTokenProvider;
-import com.quiet.onterview.security.jwt.JwtTokenProvider.TokenType;
 import com.quiet.onterview.member.dto.request.MemberLoginRequest;
 import com.quiet.onterview.member.dto.response.MemberLoginResponse;
 import com.quiet.onterview.member.dto.request.MemberModifyPasswordRequest;
@@ -49,8 +48,8 @@ public class MemberService {
         if(!passwordEncoder.encode(memberLoginRequest.getPassword()).equals(member.getPassword())) {
             throw new BaseException(ErrorCode.PASSWORD_NOT_MATCHES);
         }
-        String accessToken = jwtTokenProvider.generateToken(TokenType.Access, member.getMemberId());
-        String refreshToken = jwtTokenProvider.generateToken(TokenType.Refresh, member.getMemberId());
+        String accessToken = jwtTokenProvider.generateAccessToken(memberLoginRequest.getEmail());
+        String refreshToken = jwtTokenProvider.generateRefreshToken(memberLoginRequest.getEmail());
         return memberMapper.memberToMemberLoginResponse(member, accessToken, refreshToken);
     }
 

@@ -9,10 +9,10 @@ import org.springframework.security.core.GrantedAuthority;
 @Getter
 public class SecurityMemberAuthentication implements Authentication {
 
-    Member member;
+    SecurityUser securityUser;
 
-    public SecurityMemberAuthentication(Member member) {
-        this.member = member;
+    public SecurityMemberAuthentication(SecurityUser securityUser) {
+        this.securityUser = securityUser;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class SecurityMemberAuthentication implements Authentication {
 
     @Override
     public Object getPrincipal() {
-        return member;
+        return securityUser;
     }
 
     @Override
