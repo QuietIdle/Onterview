@@ -12,4 +12,5 @@ public interface MyQuestionFolderService {
     void createMyQuestionFolder(MyQuestionFolderRequest myQuestionFolderRequest);
     List<MyQuestionFolderResponse> getMyQuestionFolder(Member member);
     void updateMyQuestionFolder(Long myQuestionFolderId, MyQuestionFolderRequest myQuestionFolderRequest);
+    void deleteMyQuestionFolder(Long myQuestionFolderId);
 }

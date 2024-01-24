@@ -7,6 +7,7 @@ import com.quiet.onterview.question.dto.response.MyQuestionResponse;
 import com.quiet.onterview.question.entity.MyQuestion;
 import com.quiet.onterview.question.entity.MyQuestionFolder;
 import com.quiet.onterview.question.exception.MyQuestionFolderNotFoundException;
+import com.quiet.onterview.question.exception.MyQuestionNotFoundException;
 import com.quiet.onterview.question.mapper.MyQuestionFolderMapper;
 import com.quiet.onterview.question.repository.MyQuestionFolderRepository;
 import com.quiet.onterview.question.repository.MyQuestionRepository;
@@ -51,6 +52,13 @@ public class MyQuestionFolderServiceImpl implements MyQuestionFolderService {
                 .orElseThrow(MyQuestionFolderNotFoundException::new);
         Optional.ofNullable(myQuestionFolderRequest.getMyQuestionFolder())
                 .ifPresent(myQuestionFolder::updateMyQuestionFolder);
+    }
+
+    @Override
+    public void deleteMyQuestionFolder(Long myQuestionFolderId) {
+        myQuestionFolderRepository.delete(
+                myQuestionFolderRepository.findById(myQuestionFolderId)
+                        .orElseThrow(MyQuestionFolderNotFoundException::new));
     }
 
 }

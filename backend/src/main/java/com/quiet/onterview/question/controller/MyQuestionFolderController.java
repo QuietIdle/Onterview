@@ -45,4 +45,11 @@ public class MyQuestionFolderController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "DELETE", description = "DELETE 방식으로 나의 면접 질문 폴더 삭제")
+    @DeleteMapping("/my-question-folder/{my_question_folder_id}")
+    public ResponseEntity<Void> deleteMyQuestionFolder(@PathVariable("my_question_folder_id") Long myQuestionFolderId) {
+        myQuestionFolderService.deleteMyQuestionFolder(myQuestionFolderId);
+        return ResponseEntity.ok().build();
+    }
+
 }
