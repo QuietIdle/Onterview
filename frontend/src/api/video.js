@@ -24,6 +24,9 @@ export const apiMethods = {
     patchVideo: function (v_id, req_body) {
         return api.patch(`/api/video/${v_id}`, req_body)
     },
+    saveVideo: function (req_body) {
+        return api.post(`/api/video`, req_body)
+    }
 }
 
 export const fileServer = {
@@ -34,5 +37,8 @@ export const fileServer = {
         return api2.get(`/api/chunk/stream/${filename}`, {
             responseType: 'arraybuffer'
         });
+    },
+    cancelUpload: function (filePath) {
+        return api2.delete(`/api/chunk?fileName=${filePath}`)
     },
 }

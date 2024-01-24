@@ -1,12 +1,16 @@
 <script setup>
 import { ref } from 'vue';
-import { fileServer } from "@/api/video";
+import { apiMethods, fileServer } from "@/api/video";
+import { useSelfSpeechStore } from "@/stores/selfSpeech";
 
 const dialog = ref(false); // 모달 창
+const dialog2 = ref(false); // 저장 모달 창
 const time = ref(0); // 타이머
 let timerId;
 
+const selfSpeechStore = useSelfSpeechStore();
 const uploadData = ref(null);
+const videoTitle = ref("");
 
 const flag = ref(0); // chunk 전송 완료 여부
 
@@ -48,7 +52,7 @@ const startRecording = function(stream) {
       recordedChunks.push(e.data);
       //console.log(idx);
       //console.log(flag);
-      //console.log(e.data);
+      //console.log(e.data.type);
       idx++;
       if (idx >= 100) { // 녹화시간 300초 제한
         stopRecording();
@@ -97,6 +101,38 @@ const stopRecording = function() {
 //   dialog.value = false;
 // }
 
+const submitTitle = function () {
+  dialog.value = false
+  dialog2.value = true
+}
+
+const saveRecording = async function () {
+  const req_body = {
+    questionId : selfSpeechStore.selectedQuestion,
+    videoLength : time.value,
+    title : videoTitle.value,
+    videoInformation : {
+        saveFilename: uploadData.value.videoUrl,
+        originFilename: uploadData.value.videoUrl
+    },
+    thumbnailInformation : {
+        saveFilename: uploadData.value.thumbnailUrl,
+        originFilename: uploadData.value.thumbnailUrl
+    }
+  }
+  try {
+    const response = await apiMethods.saveVideo(req_body)
+    console.log('save successfully!', response.data)
+  } catch (error) {
+    console.log(error)
+  }
+  dialog2.value = false
+}
+
+const cancelRecording = async function () {
+  dialog.value = false
+  await fileServer.cancelUpload(uploadData.value.videoUrl)
+}
 </script>
 
 <template>
@@ -121,12 +157,37 @@ const stopRecording = function() {
     </v-card-text>
     <div class="d-flex">
       <v-card-actions>
-        <v-btn color="primary" block @click="downloadRecording"><a class="download-button">저장하기</a></v-btn>
+        <v-btn color="primary" block @click="submitTitle"><a class="download-button">저장하기</a></v-btn>
       </v-card-actions>
       <v-card-actions>
-        <v-btn color="warning" block @click="dialog = false">다시 연습</v-btn>
+        <v-btn color="warning" block @click="cancelRecording">다시 연습</v-btn>
       </v-card-actions>
     </div>
+  </v-card>
+</v-dialog>
+
+<v-dialog v-model="dialog2" width="auto">
+  <v-card>
+    <v-sheet width="500px" class="mx-auto">
+      <v-form validate-on="submit lazy">
+        <v-text-field
+          v-model="videoTitle"
+          :rules="rules"
+          label="영상 제목을 입력하세요"
+        ></v-text-field>
+
+        <v-card-actions>
+          <v-btn
+            :loading="loading"
+            type="submit"
+            block
+            class="mt-2"
+            text="저장"
+            @click="saveRecording"
+          ></v-btn>
+        </v-card-actions>
+      </v-form>
+    </v-sheet>
   </v-card>
 </v-dialog>
 </template>

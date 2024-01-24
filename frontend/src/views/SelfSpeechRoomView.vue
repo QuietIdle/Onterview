@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from 'vue';
 import SelfSpeechRecord from '@/components/selfSpeech/SelfSpeechRecord.vue';
 import SelfSpeechTab from '@/components/selfSpeech/SelfSpeechTab.vue';
 import VideoPlay from '@/components/video/VideoPlay.vue';
@@ -9,15 +10,16 @@ import { apiMethods } from '@/api/video';
 const selfSpeechStore = useSelfSpeechStore();
 const router = useRouter();
 
+const q_id = ref(-1);
+
 const goSelfSpeechMain = function () {
   router.push({name: 'selfspeech-main'})
 }
 
 const selectQuestion = async function () {
-  selfSpeechStore.selectedQuestion = 9;
+  selfSpeechStore.selectedQuestion = q_id.value;
   const result = await apiMethods.getVideoAll(selfSpeechStore.selectedQuestion);
   selfSpeechStore.questionData = result.data;
-  console.log(result.data);
 }
 </script>
 
@@ -31,6 +33,7 @@ const selectQuestion = async function () {
         2
       </div>
       <div class="question-list ma-3">
+        <input type="number" v-model="q_id">
         <button @click="selectQuestion">질문1</button>
       </div>
     </div>
