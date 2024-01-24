@@ -14,9 +14,7 @@ public class JwtAuthenticationManager implements AuthenticationManager {
     private final AuthenticationProvider jwtAuthenticationProvider;
 
     @Override
-    public Authentication authenticate(
-            Authentication authentication) throws AuthenticationException {
-        return jwtAuthenticationProvider.authenticate(authentication
-        );
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        return jwtAuthenticationProvider.authenticate(authentication);
     }
 }

@@ -3,7 +3,6 @@ package com.quiet.onterview.member.service;
 import com.quiet.onterview.common.BaseException;
 import com.quiet.onterview.security.jwt.JwtTokenProvider;
 import com.quiet.onterview.security.jwt.JwtTokenProvider.TokenType;
-import com.quiet.onterview.common.CustomPasswordEncoder;
 import com.quiet.onterview.member.dto.request.MemberLoginRequest;
 import com.quiet.onterview.member.dto.response.MemberLoginResponse;
 import com.quiet.onterview.member.dto.request.MemberModifyPasswordRequest;
@@ -15,6 +14,7 @@ import com.quiet.onterview.member.mapper.MemberMapper;
 import com.quiet.onterview.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,7 +24,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final MemberMapper memberMapper;
-    private final CustomPasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
     public void signUpByEmail(MemberSignupRequest memberSignupRequest) {
@@ -46,7 +46,7 @@ public class MemberService {
             throw new BaseException(ErrorCode.EMAIL_NOT_EXISTS);
         }
         Member member = memberRepository.findByEmail(memberLoginRequest.getEmail()).get();
-        if(!passwordEncoder.encrypt(member.getMemberId(), memberLoginRequest.getPassword()).equals(member.getPassword())) {
+        if(!passwordEncoder.encode(memberLoginRequest.getPassword()).equals(member.getPassword())) {
             throw new BaseException(ErrorCode.PASSWORD_NOT_MATCHES);
         }
         String accessToken = jwtTokenProvider.generateToken(TokenType.Access, member.getMemberId());
@@ -94,6 +94,6 @@ public class MemberService {
     }
 
     public int updatePassword(Long userId, String password) {
-        return memberRepository.updatePassword(userId, passwordEncoder.encrypt(userId, password));
+        return memberRepository.updatePassword(userId, passwordEncoder.encode(password));
     }
 }
