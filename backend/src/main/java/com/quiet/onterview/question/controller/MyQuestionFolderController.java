@@ -16,6 +16,7 @@ import java.util.List;
 @Tag(name = "my-question-folder-controller", description = "My Question Folder Controller")
 @Controller
 @Log4j2
+@CrossOrigin("*")
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class MyQuestionFolderController {

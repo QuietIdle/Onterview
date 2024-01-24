@@ -11,4 +11,5 @@ public interface MyQuestionService {
     void createMyQuestion(MyQuestionRequest myQuestionRequest);
     void updateMyQuestion(Long myQuestionId, MyQuestionUpdateRequest myQuestionUpdateRequest);
     void updateMyAnswer(Long myQuestionId, MyAnswerUpdateRequest myAnswerUpdateRequest);
+    void deleteMyQuestion(Long myQuestionId);
 }

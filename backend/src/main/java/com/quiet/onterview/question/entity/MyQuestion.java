@@ -36,7 +36,7 @@ public class MyQuestion {
     @JoinColumn(name = "COMMON_QUESTION_ID")
     private CommonQuestion commonQuestion;
 
-    @OneToMany(mappedBy = "myQuestion")
+    @OneToMany(mappedBy = "myQuestion", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Video> videoList = new ArrayList<>();
 
     public void changeMyQuestionFolder(MyQuestionFolder myQuestionFolder) {

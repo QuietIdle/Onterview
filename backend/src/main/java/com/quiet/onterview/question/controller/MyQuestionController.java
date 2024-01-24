@@ -57,5 +57,10 @@ public class MyQuestionController {
         return ResponseEntity.ok().build();
     }
 
-
+    @Operation(summary = "DELETE", description = "DELETE 방식으로 나의 면접 문항 삭제")
+    @DeleteMapping("/my-question/{my_question_id}")
+    public ResponseEntity<Void> deleteMyQuestion(@PathVariable("my_question_id") Long myQuestionId) {
+        myQuestionService.deleteMyQuestion(myQuestionId);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -62,4 +62,11 @@ public class MyQuestionServiceImpl implements MyQuestionService{
         Optional.ofNullable(myAnswerUpdateRequest.getAnswer())
                 .ifPresent(myQuestion::updateMyAnswer);
     }
+
+    @Override
+    public void deleteMyQuestion(Long myQuestionId) {
+        myQuestionRepository.delete(
+                myQuestionRepository.findById(myQuestionId)
+                .orElseThrow(MyQuestionNotFoundException::new));
+    }
 }
