@@ -1,17 +1,14 @@
 package com.quiet.onterview.question.mapper;
 
 import com.quiet.onterview.question.dto.request.MyQuestionFolderRequest;
-import com.quiet.onterview.question.dto.request.MyQuestionRequest;
 import com.quiet.onterview.question.dto.response.MyQuestionFolderResponse;
 import com.quiet.onterview.question.dto.response.MyQuestionResponse;
-import com.quiet.onterview.question.entity.CommonQuestion;
 import com.quiet.onterview.question.entity.MyQuestion;
 import com.quiet.onterview.question.entity.MyQuestionFolder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component

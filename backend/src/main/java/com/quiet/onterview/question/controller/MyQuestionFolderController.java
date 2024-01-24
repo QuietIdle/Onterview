@@ -22,20 +22,20 @@ import java.util.List;
 public class MyQuestionFolderController {
     private final MyQuestionFolderService myQuestionFolderService;
 
-    @Operation(summary = "GET", description = "GET 방식으로 나의 면접 질문 전체 조회")
+    @Operation(summary = "GET 방식으로 나의 면접 질문 전체 조회")
     @GetMapping("/my-question")
     public ResponseEntity<List<MyQuestionFolderResponse>> getMyQuestionList(Long memberId) {
         return ResponseEntity.ok(myQuestionFolderService.getMyQuestionFolder(memberId));
     }
 
-    @Operation(summary = "POST", description = "POST 방식으로 나의 면접 질문 폴더 생성")
+    @Operation(summary = "POST 방식으로 나의 면접 질문 폴더 생성")
     @PostMapping("/my-question-folder")
     public ResponseEntity<Void> registerMyQuestionFolder(@RequestBody MyQuestionFolderRequest myQuestionFolderRequest) {
         myQuestionFolderService.createMyQuestionFolder(myQuestionFolderRequest);
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "PATCH", description = "PATCH 방식으로 나의 면접 질문 폴더명 수정")
+    @Operation(summary = "PATCH 방식으로 나의 면접 질문 폴더명 수정")
     @PatchMapping("/my-question-folder/{my_question_folder_id}")
     public ResponseEntity<Void> updateMyQuestion(
             @PathVariable("my_question_folder_id") Long myQuestionFolderId,
@@ -45,7 +45,7 @@ public class MyQuestionFolderController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "DELETE", description = "DELETE 방식으로 나의 면접 질문 폴더 삭제")
+    @Operation(summary = "DELETE 방식으로 나의 면접 질문 폴더 삭제")
     @DeleteMapping("/my-question-folder/{my_question_folder_id}")
     public ResponseEntity<Void> deleteMyQuestionFolder(@PathVariable("my_question_folder_id") Long myQuestionFolderId) {
         myQuestionFolderService.deleteMyQuestionFolder(myQuestionFolderId);
