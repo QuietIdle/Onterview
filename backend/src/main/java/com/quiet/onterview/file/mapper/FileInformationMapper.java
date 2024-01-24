@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class FileInformationMapper {
+
     @Value("${file.base-url}")
     private String baseUrl;
     @Value("${file.file-key}")
@@ -22,12 +23,8 @@ public class FileInformationMapper {
     public FileInformation fileInformationRequestToEntity(FileInformationRequest fileInformationRequest) {
         return FileInformation.builder()
                 .originFilename(fileInformationRequest.getOriginFilename())
-                .saveFilename(getUrl(fileInformationRequest.getSaveFilename()))
+                .saveFilename(fileInformationRequest.getSaveFilename())
                 .build();
-    }
-
-    private String getUrl(String filename) {
-        return baseUrl + "/" + fileKey + "?" + filePathQuery + "=" + filePath + "&" + fileNameQuery + "=" + filename;
     }
 
     public FileInformationResponse fileInformationToResponse(FileInformation fileInformation) {
@@ -35,5 +32,16 @@ public class FileInformationMapper {
                 .originFilename(fileInformation.getOriginFilename())
                 .saveFilename(fileInformation.getSaveFilename())
                 .build();
+    }
+
+    public FileInformationResponse imageInformationToResponse(FileInformation fileInformation) {
+        return FileInformationResponse.builder()
+                .originFilename(fileInformation.getOriginFilename())
+                .saveFilename(thumbnailUrl(fileInformation.getSaveFilename()))
+                .build();
+    }
+
+    private String thumbnailUrl(String filename) {
+        return baseUrl + "/" + fileKey + "?" + filePathQuery + "=" + filePath + "&" + fileNameQuery + "=" + filename;
     }
 }

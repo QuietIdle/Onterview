@@ -49,7 +49,7 @@ public class VideoMapper {
                 .videoId(video.getVideoId())
                 .myQuestionId(video.getMyQuestion().getMyQuestionId())
                 .title(video.getTitle())
-                .thumbnailUrl(fileInformationMapper.fileInformationToResponse(video.getThumbnailUrl()))
+                .thumbnailUrl(fileInformationMapper.imageInformationToResponse(video.getThumbnailUrl()))
                 .feedback(video.getFeedback())
                 .bookmark(video.getBookmark())
                 .build();

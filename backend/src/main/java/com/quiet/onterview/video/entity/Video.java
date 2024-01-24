@@ -51,11 +51,11 @@ public class Video extends BaseEntity {
     @JoinColumn(name = "MY_QUESTION_ID")
     private MyQuestion myQuestion;
 
-    @OneToOne(fetch = LAZY, cascade = {PERSIST, REMOVE}, orphanRemoval = true)
+    @OneToOne(fetch = LAZY, cascade = PERSIST, orphanRemoval = true)
     @JoinColumn(name = "VIDEO_URL")
     private FileInformation videoUrl;
 
-    @OneToOne(fetch = LAZY, cascade = {PERSIST, REMOVE}, orphanRemoval = true)
+    @OneToOne(fetch = LAZY, cascade = PERSIST, orphanRemoval = true)
     @JoinColumn(name = "THUMBNAIL_URL")
     private FileInformation thumbnailUrl;
 
