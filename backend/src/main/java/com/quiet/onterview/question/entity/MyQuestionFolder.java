@@ -27,7 +27,7 @@ public class MyQuestionFolder extends BaseEntity {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @OneToMany(mappedBy = "myQuestionFolder", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "myQuestionFolder", cascade = CascadeType.PERSIST, orphanRemoval = true)
     List<MyQuestion> myQuestionList = new ArrayList<>();
 
     @Column(name = "MY_QUESTION_FOLDER", nullable = false)

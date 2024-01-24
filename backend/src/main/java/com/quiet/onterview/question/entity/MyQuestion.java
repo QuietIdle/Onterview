@@ -37,7 +37,7 @@ public class MyQuestion extends BaseEntity {
     @JoinColumn(name = "COMMON_QUESTION_ID")
     private CommonQuestion commonQuestion;
 
-    @OneToMany(mappedBy = "myQuestion", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "myQuestion", cascade = CascadeType.PERSIST, orphanRemoval = true)
     List<Video> videoList = new ArrayList<>();
 
     public void changeMyQuestionFolder(MyQuestionFolder myQuestionFolder) {
