@@ -1,5 +1,8 @@
 package com.quiet.onterview.security.config;
 
+import com.quiet.onterview.common.JwtTokenProvider;
+import com.quiet.onterview.security.jwt.JwtAuthenticationFilter;
+import com.quiet.onterview.security.jwt.JwtAuthenticationManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +20,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
+    private final JwtAuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -26,6 +32,8 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
         http.sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilter(new CorsFilterConfiguration().corsFilter())
+                .addFilter(new JwtAuthenticationFilter(authenticationManager, jwtTokenProvider))
                 .formLogin(configurer -> configurer.disable())
                 .httpBasic(configurer -> configurer.disable())
                 .authorizeHttpRequests(request ->
