@@ -41,6 +41,34 @@ public class JwtTokenProvider {
         return jwt;
     }
 
+    public String generateAccessToken(String email) {
+        Date now = new Date();
+        Claims claims = Jwts.claims()
+                .setSubject(email)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + Duration.ofSeconds(1).toMillis()));
+        String jwt = Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setClaims(claims)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+        return jwt;
+    }
+
+    public String generateRefreshToken(String email) {
+        Date now = new Date();
+        Claims claims = Jwts.claims()
+                .setSubject(email)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + Duration.ofSeconds(10000).toMillis()));
+        String jwt = Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setClaims(claims)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+        return jwt;
+    }
+
     public boolean isValidToken(String token) {
         try {
             Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
@@ -56,5 +84,13 @@ public class JwtTokenProvider {
         }
         String userId = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(accessToken).getBody().getSubject();
         return Long.parseLong(userId);
+    }
+
+    public String getEmail(String accessToken) {
+        if (!isValidToken(accessToken)) {
+            throw new BaseException(ErrorCode.ACCESS_TOKEN_EXPIRED);
+        }
+        String email = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(accessToken).getBody().getSubject();
+        return email;
     }
 }

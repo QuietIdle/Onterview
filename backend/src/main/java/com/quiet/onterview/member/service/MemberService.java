@@ -1,9 +1,9 @@
 package com.quiet.onterview.member.service;
 
 import com.quiet.onterview.common.BaseException;
-import com.quiet.onterview.common.JwtTokenProvider;
-import com.quiet.onterview.common.JwtTokenProvider.TokenType;
-import com.quiet.onterview.common.PasswordEncoder;
+import com.quiet.onterview.security.jwt.JwtTokenProvider;
+import com.quiet.onterview.security.jwt.JwtTokenProvider.TokenType;
+import com.quiet.onterview.common.CustomPasswordEncoder;
 import com.quiet.onterview.member.dto.request.MemberLoginRequest;
 import com.quiet.onterview.member.dto.response.MemberLoginResponse;
 import com.quiet.onterview.member.dto.request.MemberModifyPasswordRequest;
@@ -24,7 +24,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final MemberMapper memberMapper;
-    private final PasswordEncoder passwordEncoder;
+    private final CustomPasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
     public void signUpByEmail(MemberSignupRequest memberSignupRequest) {
@@ -54,8 +54,7 @@ public class MemberService {
         return memberMapper.memberToMemberLoginResponse(member, accessToken, refreshToken);
     }
 
-    public void modifyPassword(String accessToken, MemberModifyPasswordRequest memberModifyPasswordRequest) {
-        Long userId = jwtTokenProvider.getUserId(accessToken);
+    public void modifyPassword(Long userId, MemberModifyPasswordRequest memberModifyPasswordRequest) {
         if(!isPasswordCorrespond(memberModifyPasswordRequest.getPassword(), memberModifyPasswordRequest.getConfirm())) {
             throw new BaseException(ErrorCode.PASSWORD_CANNOT_CONFIRM);
         }
@@ -69,17 +68,16 @@ public class MemberService {
         if(!jwtTokenProvider.isValidToken(refreshToken)) {
             throw new BaseException(ErrorCode.REFRESH_TOKEN_EXPIRED);
         }
-        Long memberId = jwtTokenProvider.getUserId(refreshToken);
-        String newAccessToken = jwtTokenProvider.generateToken(TokenType.Access, memberId);
-        String newRefreshToken = jwtTokenProvider.generateToken(TokenType.Refresh, memberId);
+        String email = jwtTokenProvider.getEmail(refreshToken);
+        String newAccessToken = jwtTokenProvider.generateAccessToken(email);
+        String newRefreshToken = jwtTokenProvider.generateRefreshToken(email);
         return MemberTokenResponse.builder()
                 .accessToken(newAccessToken)
                 .refreshToken(newRefreshToken)
                 .build();
     }
 
-    public void withdrawUser(String accessToken) {
-        Long memberId = jwtTokenProvider.getUserId(accessToken);
+    public void withdrawUser(Long memberId) {
         memberRepository.deleteById(memberId);
     }
 

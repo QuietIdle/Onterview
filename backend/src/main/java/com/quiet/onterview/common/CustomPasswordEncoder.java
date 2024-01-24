@@ -10,7 +10,7 @@ import javax.crypto.spec.PBEKeySpec;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PasswordEncoder {
+public class CustomPasswordEncoder {
 
     public String encrypt(Long userId, String password) {
         try {
