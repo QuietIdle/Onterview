@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +21,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 @Slf4j
 public class FileServiceImpl implements FileService {
@@ -47,16 +49,20 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public FileInformationResponse loadFileInformationByFileInformationId(Long fileInformationId) {
         return fileInformationMapper.fileInformationToResponse(
-                fileInformationRepository.findById(fileInformationId).orElseThrow(FileNotExistException::new)
+                fileInformationRepository.findById(fileInformationId)
+                        .orElseThrow(FileNotExistException::new)
         );
     }
 
     @Override
+    @Transactional(readOnly = true)
     public FileInformationResponse loadFileInformationBySaveFilename(String saveFilename) {
         return fileInformationMapper.fileInformationToResponse(
-                fileInformationRepository.findBySaveFilename(saveFilename).orElseThrow(FileNotExistException::new)
+                fileInformationRepository.findBySaveFilename(saveFilename)
+                        .orElseThrow(FileNotExistException::new)
         );
     }
 
