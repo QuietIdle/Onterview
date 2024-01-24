@@ -1,6 +1,5 @@
 package com.quiet.onterview.security.jwt;
 
-import com.quiet.onterview.common.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

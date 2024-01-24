@@ -1,6 +1,6 @@
 package com.quiet.onterview.security.config;
 
-import com.quiet.onterview.common.JwtTokenProvider;
+import com.quiet.onterview.security.jwt.JwtTokenProvider;
 import com.quiet.onterview.member.repository.MemberRepository;
 import com.quiet.onterview.security.jwt.JwtDecoderFilter;
 import lombok.RequiredArgsConstructor;

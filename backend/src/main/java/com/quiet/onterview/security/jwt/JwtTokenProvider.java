@@ -1,5 +1,7 @@
-package com.quiet.onterview.common;
+package com.quiet.onterview.security.jwt;
 
+import com.quiet.onterview.common.BaseException;
+import com.quiet.onterview.common.ErrorCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Header;
