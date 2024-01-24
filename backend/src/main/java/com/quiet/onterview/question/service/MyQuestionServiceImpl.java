@@ -11,9 +11,9 @@ import com.quiet.onterview.question.mapper.MyQuestionMapper;
 import com.quiet.onterview.question.repository.CommonQuestionRepository;
 import com.quiet.onterview.question.repository.MyQuestionFolderRepository;
 import com.quiet.onterview.question.repository.MyQuestionRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -28,6 +28,7 @@ public class MyQuestionServiceImpl implements MyQuestionService{
     private final MyQuestionMapper myQuestionMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public MyAnswerAndVideoResponse getMyAnswerAndVideo(Long myQuestionId) {
         MyQuestion myQuestion = myQuestionRepository.findMyAnswerAndVideo(myQuestionId);
         return myQuestionMapper.myQuestionToMyAnswerAndVideoResponse(myQuestion);

@@ -1,6 +1,5 @@
 package com.quiet.onterview.question.service;
 
-import com.quiet.onterview.member.entity.Member;
 import com.quiet.onterview.question.dto.request.MyQuestionFolderRequest;
 import com.quiet.onterview.question.dto.response.MyQuestionFolderResponse;
 

@@ -6,17 +6,13 @@ import com.quiet.onterview.question.service.MyQuestionFolderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "my-question-folder-controller", description = "My Question Folder Controller")
-@Controller
-@Log4j2
-@CrossOrigin("*")
+@Tag(name = "my-question-folder-controller", description = "나의 면접 문항 폴더 컨트롤러")
+@RestController
 @RequestMapping("/api/my-question-folder")
 @RequiredArgsConstructor
 public class MyQuestionFolderController {
