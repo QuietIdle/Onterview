@@ -7,6 +7,7 @@ import com.quiet.onterview.file.mapper.FileInformationMapper;
 import com.quiet.onterview.file.repository.FileInformationRepository;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,7 +41,8 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void saveFileInformation(FileInformationRequest... fileInformationRequests) {
-        Arrays.stream(fileInformationRequests).map(fileInformationMapper::fileInformationRequestToEntity)
+        Arrays.stream(fileInformationRequests)
+                .map(fileInformationMapper::fileInformationRequestToEntity)
                 .forEach(fileInformationRepository::save);
     }
 
@@ -80,6 +82,17 @@ public class FileServiceImpl implements FileService {
                 .bodyToMono(Map.class)
                 .block();
         return (String) result.get(fileNameQuery);
+    }
+
+    @Override
+    public void deleteFilesOnFileServer(Long... fileId) {
+        Arrays.stream(fileId)
+                .map(fileInformationRepository::findById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .forEach(fileInformation -> deleteFileOnFileServer(
+                        fileInformation.getSaveFilename())
+                );
     }
 
     @Override

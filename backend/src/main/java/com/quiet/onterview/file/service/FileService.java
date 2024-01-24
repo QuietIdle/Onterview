@@ -13,4 +13,5 @@ public interface FileService {
     void deleteFileInformationBySaveName(String saveFilename);
     String transToFileServer(MultipartFile file) throws IOException;
     void deleteFileOnFileServer(String filename);
+    void deleteFilesOnFileServer(Long... fileId);
 }
