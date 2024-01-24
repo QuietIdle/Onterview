@@ -2,6 +2,10 @@
 import draggable from 'vuedraggable'
 import { ref, onMounted } from 'vue'
 
+import createButton from '@/assets/question/createButton.svg'
+import deleteButton from '@/assets/question/deleteButton.svg'
+import folderImage from '@/assets/question/folderImage.svg'
+
 // store
 import { storeToRefs } from 'pinia'
 import { useQuestionStore } from '@/stores/question.js'
@@ -36,34 +40,30 @@ const disableEditing = function (element) {
   element.isEditing = false
   element.question = element.editableQuestion
 }
+
+const panel = ref([])
 </script>
 
 <template>
   <div class="question-title pa-3">나의 면접 문항 목록</div>
   <div class="bg-white pa-3 d-flex">
-    <div class="me-auto d-flex align-center">
-      <v-btn class="mr-3" variant="elevated" color="purple-accent-4">전체 선택</v-btn>
-      <div style="color: gray">질문 *개 선택됨</div>
-    </div>
-    <v-btn variant="elevated" color="red-accent-2">삭제</v-btn>
+    <div class="me-auto d-flex align-center"></div>
     <v-btn class="ml-3" variant="elevated" color="blue-accent-2">폴더 추가</v-btn>
   </div>
   <div style="max-height: 80%; overflow-y: auto">
     <v-expansion-panels variant="accordion" multiple>
       <v-expansion-panel v-for="folder in myQuestionList" :key="folder.myQuestionFolderId">
         <v-expansion-panel-title>
-          <v-row>
-            <v-col cols="auto">
-              <v-checkbox
-                @click.stop="checkFolder(folder)"
-                v-model="selectFolder"
-                :value="folder.myQuestionFolderId"
-              ></v-checkbox>
-            </v-col>
-            <v-col class="d-flex align-center">
-              {{ folder.myQuestionFolder }}
-            </v-col>
-          </v-row>
+          <v-col cols="auto">
+            <v-img width="20" :src="folderImage"></v-img>
+          </v-col>
+          <v-col>
+            {{ folder.myQuestionFolder }}
+          </v-col>
+          <v-col cols="auto" class="d-flex align-center">
+            <v-img @click.stop width="30" :src="createButton"></v-img>
+            <v-img @click.stop width="30" :src="deleteButton"></v-img>
+          </v-col>
         </v-expansion-panel-title>
 
         <draggable
@@ -74,11 +74,8 @@ const disableEditing = function (element) {
         >
           <template #item="{ element }">
             <v-expansion-panel-text>
-              <v-row>
+              <v-row class="d-flex">
                 <v-col cols="auto"></v-col>
-                <v-col cols="auto">
-                  <v-checkbox v-model="selectQuestion" :value="element.myQuestionId"></v-checkbox>
-                </v-col>
                 <v-col class="d-flex align-center" @dblclick="enableEditing(element)">
                   <template v-if="element.isEditing">
                     <v-text-field
@@ -91,13 +88,13 @@ const disableEditing = function (element) {
                     {{ element.question }}
                   </template>
                 </v-col>
+                <v-col cols="auto">
+                  <v-img width="30" :src="deleteButton"></v-img>
+                </v-col>
               </v-row>
             </v-expansion-panel-text>
           </template>
         </draggable>
-      </v-expansion-panel>
-      <v-expansion-panel>
-        <v-expansion-panel-title>폴더 추가</v-expansion-panel-title>
       </v-expansion-panel>
     </v-expansion-panels>
   </div>
@@ -115,5 +112,15 @@ const disableEditing = function (element) {
 
 .v-input__details {
   display: none !important;
+}
+
+.v-expansion-panel-title__icon {
+  /* display: none !important; */
+}
+
+.v-expansion-panel-title {
+  padding: 0 !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
 }
 </style>
