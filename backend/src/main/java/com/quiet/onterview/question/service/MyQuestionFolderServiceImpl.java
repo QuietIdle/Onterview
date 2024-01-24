@@ -22,12 +22,7 @@ public class MyQuestionFolderServiceImpl implements MyQuestionFolderService {
     private final MyQuestionFolderRepository myQuestionFolderRepository;
     private final MyQuestionFolderMapper myQuestionFolderMapper;
 
-
     @Override
-    public List<MyQuestionFolderResponse> getMyQuestionFolder(Member member) {
-        return null;
-    }
-
     public List<MyQuestionFolderResponse> getMyQuestionFolder(Long memberId) {
         List<MyQuestionFolder> myQuestionFolderList = myQuestionFolderRepository.findMyQuestionFolder(memberId);
         return myQuestionFolderList.stream()

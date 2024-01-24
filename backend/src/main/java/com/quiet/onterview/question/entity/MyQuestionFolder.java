@@ -1,5 +1,6 @@
 package com.quiet.onterview.question.entity;
 
+import com.quiet.onterview.common.BaseEntity;
 import com.quiet.onterview.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,7 +16,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Entity
 @Builder
 @Table(name = "MY_QUESTION_FOLDER")
-public class MyQuestionFolder {
+public class MyQuestionFolder extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

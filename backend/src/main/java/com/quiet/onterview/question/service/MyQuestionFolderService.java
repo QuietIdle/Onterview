@@ -10,7 +10,6 @@ public interface MyQuestionFolderService {
 
     List<MyQuestionFolderResponse> getMyQuestionFolder(Long memberId);
     void createMyQuestionFolder(MyQuestionFolderRequest myQuestionFolderRequest);
-    List<MyQuestionFolderResponse> getMyQuestionFolder(Member member);
     void updateMyQuestionFolder(Long myQuestionFolderId, MyQuestionFolderRequest myQuestionFolderRequest);
     void deleteMyQuestionFolder(Long myQuestionFolderId);
 }

@@ -1,5 +1,6 @@
 package com.quiet.onterview.question.entity;
 
+import com.quiet.onterview.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -13,7 +14,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Getter
 @Entity
 @Table(name = "RECORD_QUESTION")
-public class RecordQuestion {
+public class RecordQuestion extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

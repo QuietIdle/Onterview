@@ -1,5 +1,6 @@
 package com.quiet.onterview.question.entity;
 
+import com.quiet.onterview.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +12,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Entity
 @Builder
 @Table(name = "COMMON_QUESTION")
-public class CommonQuestion {
+public class CommonQuestion extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

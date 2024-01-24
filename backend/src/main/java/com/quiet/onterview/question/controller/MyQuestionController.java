@@ -16,27 +16,27 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "my-question-controller", description = "My Question Controller")
 @Controller
 @Log4j2
-@RequestMapping("/api")
+@RequestMapping("/api/my-question")
 @RequiredArgsConstructor
 public class MyQuestionController {
 
     private final MyQuestionService myQuestionService;
 
     @Operation(summary = "GET 방식으로 특정 면접 문항에 대한 답변과 영상 조회")
-    @GetMapping("/my-question/{my_question_id}")
+    @GetMapping("/{my_question_id}")
     public ResponseEntity<MyAnswerAndVideoResponse> getMyAnswerAndVideo(@PathVariable("my_question_id") Long myQuestionId) {
         return ResponseEntity.ok(myQuestionService.getMyAnswerAndVideo(myQuestionId));
     }
 
     @Operation(summary = "POST 방식으로 나의 면접 질문 생성")
-    @PostMapping("/my-question")
+    @PostMapping
     public ResponseEntity<Void> registerMyQuestion(@RequestBody MyQuestionRequest myQuestionRequest) {
         myQuestionService.createMyQuestion(myQuestionRequest);
         return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "PATCH 방식으로 나의 면접 질문 수정")
-    @PatchMapping("/my-question/{my_question_id}")
+    @PatchMapping("/{my_question_id}")
     public ResponseEntity<Void> updateMyQuestion(
             @PathVariable("my_question_id") Long myQuestionId,
             @RequestBody MyQuestionUpdateRequest myQuestionUpdateRequest
@@ -46,7 +46,7 @@ public class MyQuestionController {
     }
 
     @Operation(summary = "PATCH 방식으로 특정 면접 문항에 대한 답변 수정")
-    @PatchMapping("/my-question/answer/{my_question_id}")
+    @PatchMapping("/answer/{my_question_id}")
     public ResponseEntity<Void> updateMyAnswer(
             @PathVariable("my_question_id") Long myQuestionId,
             @RequestBody MyAnswerUpdateRequest myAnswerUpdateRequest
@@ -56,7 +56,7 @@ public class MyQuestionController {
     }
 
     @Operation(summary = "DELETE 방식으로 나의 면접 문항 삭제")
-    @DeleteMapping("/my-question/{my_question_id}")
+    @DeleteMapping("/{my_question_id}")
     public ResponseEntity<Void> deleteMyQuestion(@PathVariable("my_question_id") Long myQuestionId) {
         myQuestionService.deleteMyQuestion(myQuestionId);
         return ResponseEntity.ok().build();

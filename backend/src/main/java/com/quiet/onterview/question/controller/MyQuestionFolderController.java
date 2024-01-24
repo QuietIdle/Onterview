@@ -17,26 +17,26 @@ import java.util.List;
 @Controller
 @Log4j2
 @CrossOrigin("*")
-@RequestMapping("/api")
+@RequestMapping("/api/my-question-folder")
 @RequiredArgsConstructor
 public class MyQuestionFolderController {
     private final MyQuestionFolderService myQuestionFolderService;
 
     @Operation(summary = "GET 방식으로 나의 면접 질문 전체 조회")
-    @GetMapping("/my-question")
+    @GetMapping
     public ResponseEntity<List<MyQuestionFolderResponse>> getMyQuestionList(Long memberId) {
         return ResponseEntity.ok(myQuestionFolderService.getMyQuestionFolder(memberId));
     }
 
     @Operation(summary = "POST 방식으로 나의 면접 질문 폴더 생성")
-    @PostMapping("/my-question-folder")
+    @PostMapping
     public ResponseEntity<Void> registerMyQuestionFolder(@RequestBody MyQuestionFolderRequest myQuestionFolderRequest) {
         myQuestionFolderService.createMyQuestionFolder(myQuestionFolderRequest);
         return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "PATCH 방식으로 나의 면접 질문 폴더명 수정")
-    @PatchMapping("/my-question-folder/{my_question_folder_id}")
+    @PatchMapping("/{my_question_folder_id}")
     public ResponseEntity<Void> updateMyQuestion(
             @PathVariable("my_question_folder_id") Long myQuestionFolderId,
             @RequestBody MyQuestionFolderRequest myQuestionFolderRequest
@@ -46,7 +46,7 @@ public class MyQuestionFolderController {
     }
 
     @Operation(summary = "DELETE 방식으로 나의 면접 질문 폴더 삭제")
-    @DeleteMapping("/my-question-folder/{my_question_folder_id}")
+    @DeleteMapping("/{my_question_folder_id}")
     public ResponseEntity<Void> deleteMyQuestionFolder(@PathVariable("my_question_folder_id") Long myQuestionFolderId) {
         myQuestionFolderService.deleteMyQuestionFolder(myQuestionFolderId);
         return ResponseEntity.ok().build();
