@@ -17,7 +17,7 @@ public class CorsFilterConfiguration {
         configuration.addAllowedOrigin("*");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
-        source.registerCorsConfiguration("/**", configuration); // 모든 주소가 이 configuration 설정을 따름
+        source.registerCorsConfiguration("/**", configuration);
         return new CorsFilter(source);
     }
 }

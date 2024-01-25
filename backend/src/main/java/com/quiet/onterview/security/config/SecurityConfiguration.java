@@ -1,10 +1,8 @@
 package com.quiet.onterview.security.config;
 
-import com.quiet.onterview.security.exception.SecurityExceptionHandlerFilter;
 import com.quiet.onterview.security.jwt.JwtTokenProvider;
 import com.quiet.onterview.security.jwt.JwtAuthenticationFilter;
 import com.quiet.onterview.security.jwt.JwtAuthenticationManager;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,10 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -31,7 +26,6 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
         http.sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .addFilterBefore(new SecurityExceptionHandlerFilter(), SecurityContextPersistenceFilter.class)
                 .addFilter(new CorsFilterConfiguration().corsFilter())
                 .addFilter(new JwtAuthenticationFilter(authenticationManager, jwtTokenProvider))
                 .formLogin(configurer -> configurer.disable())
@@ -40,12 +34,4 @@ public class SecurityConfiguration {
                         request.anyRequest().permitAll());
         return http.build();
     }
-
-//    @Bean
-//    public AuthenticationEntryPoint authenticationEntryPoint() {
-//        return ((request, response, authException) -> {
-//            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-//            response.getWriter().write(authException.getMessage());
-//        });
-//    }
 }

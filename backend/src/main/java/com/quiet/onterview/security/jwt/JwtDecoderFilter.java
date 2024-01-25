@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quiet.onterview.member.entity.Member;
 import com.quiet.onterview.member.repository.MemberRepository;
 import com.quiet.onterview.security.SecurityMemberAuthentication;
-import com.quiet.onterview.security.SecurityMemberDetail;
 import com.quiet.onterview.security.SecurityUser;
 import com.quiet.onterview.security.exception.SecurityException;
 import jakarta.servlet.Filter;
@@ -20,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @RequiredArgsConstructor
 public class JwtDecoderFilter implements Filter {
@@ -52,10 +50,8 @@ public class JwtDecoderFilter implements Filter {
         String email = jwtTokenProvider.getEmail(receivedToken);
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new SecurityException(HttpStatus.BAD_REQUEST, "해당하는 유저를 찾을 수 없습니다."));
-//        SecurityUser user = new SecurityUser(member);
         SecurityContextHolder.getContext().setAuthentication(new SecurityMemberAuthentication(new SecurityUser(member)));
 
-//        System.out.println("HOLDER VALUE - > " + SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         filterChain.doFilter(request,response);
     }
 

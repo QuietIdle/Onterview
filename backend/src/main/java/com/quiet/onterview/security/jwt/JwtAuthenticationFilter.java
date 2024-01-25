@@ -2,7 +2,7 @@ package com.quiet.onterview.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quiet.onterview.member.dto.request.MemberLoginRequest;
-import com.quiet.onterview.security.SecurityMemberDetail;
+import com.quiet.onterview.member.dto.response.MemberLoginResponse;
 import com.quiet.onterview.security.SecurityUser;
 import com.quiet.onterview.security.exception.SecurityException;
 import jakarta.servlet.FilterChain;
@@ -33,23 +33,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(
             HttpServletRequest request,
             HttpServletResponse response) throws AuthenticationException {
-//        System.out.println("==========================================");
-//        System.out.println(this.getClass().getCanonicalName() + "attemptAuthentication() called");
-//        System.out.println("JWT Authentication Filter : trying Login");
-
         ObjectMapper objectMapper = new ObjectMapper();
         MemberLoginRequest memberLoginRequest;
 
         try {
             memberLoginRequest = objectMapper.readValue(request.getInputStream(), MemberLoginRequest.class);
-//            System.out.println("USER LOGIN REQUEST INFO -> " + memberLoginRequest.toString());
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(memberLoginRequest.getEmail(), memberLoginRequest.getPassword());
-
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(memberLoginRequest.getEmail(), memberLoginRequest.getPassword());
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
-//            System.out.println("is authentication null? -> " + (authentication==null));
-//
-//            System.out.println("attemptAuthentication ended\n========================================");
-            System.out.println(authentication.getPrincipal().toString());
             return authentication;
         } catch(AuthenticationException e) {
             handleSecurityError(response,e);
@@ -66,22 +57,30 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             FilterChain chain,
             Authentication authResult)
             throws IOException, ServletException {
-//        System.out.println("SUCCESS BEFORE");
         SecurityUser securityMemberDetail = (SecurityUser) authResult.getPrincipal();
         String accessToken = jwtTokenProvider.generateAccessToken(securityMemberDetail.getEmail());
         String refreshToken = jwtTokenProvider.generateRefreshToken(securityMemberDetail.getEmail());
 
-        Map<String, Object> memberResponse = new LinkedHashMap<>();
-        memberResponse.put("memberId", securityMemberDetail.getMemberId());
-        memberResponse.put("nickname", securityMemberDetail.getNickname());
-        memberResponse.put("email", securityMemberDetail.getEmail());
-        memberResponse.put("accessToken",accessToken);
-        memberResponse.put("refreshToken", refreshToken);
+        MemberLoginResponse.builder()
+                .memberId(securityMemberDetail.getMemberId())
+                .nickname(securityMemberDetail.getNickname())
+                .email(securityMemberDetail.getEmail())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
 
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        String jsonResponse = new ObjectMapper().writeValueAsString(memberResponse);
+
+        String jsonResponse = new ObjectMapper().writeValueAsString(
+                MemberLoginResponse.builder()
+                        .memberId(securityMemberDetail.getMemberId())
+                        .nickname(securityMemberDetail.getNickname())
+                        .email(securityMemberDetail.getEmail())
+                        .accessToken(accessToken)
+                        .refreshToken(refreshToken)
+                        .build());
         response.getWriter().write(jsonResponse);
     }
 

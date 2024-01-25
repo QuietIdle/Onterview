@@ -1,6 +1,5 @@
 package com.quiet.onterview.security;
 
-import com.quiet.onterview.member.entity.Member;
 import java.util.Collection;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
