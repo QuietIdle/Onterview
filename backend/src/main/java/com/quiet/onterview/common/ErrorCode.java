@@ -11,14 +11,14 @@ public enum ErrorCode {
     /**
      * MEMBER
      */
-    EMAIL_DUPLICATED(HttpStatus.BAD_REQUEST, "EMAIL_DUPLICATED"),
-    NICKNAME_DUPLICATED(HttpStatus.BAD_REQUEST, "NICKNAME_DUPLICATED"),
-    PASSWORD_CANNOT_CONFIRM(HttpStatus.BAD_REQUEST, "PASSWORD_CANNOT_CONFIRM"),
-    PASSWORD_NOT_MATCHES(HttpStatus.BAD_REQUEST, "PASSWORD_NOT_MATCHES"),
-    EMAIL_NOT_EXISTS(HttpStatus.BAD_REQUEST, "EMAIL_NOT_EXISTS"),
-    ACCESS_TOKEN_NOT_EXPIRED(HttpStatus.UNAUTHORIZED, "ACCESS_TOKEN_NOT_EXPIRED"),
-    ACCESS_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "ACCESS_TOKEN_EXPIRED"),
-    REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "REFRESH_TOKEN_EXPIRED"),
+    EMAIL_DUPLICATED(HttpStatus.BAD_REQUEST, "이메일이 중복되었습니다"),
+    NICKNAME_DUPLICATED(HttpStatus.BAD_REQUEST, "닉네임이 중복되었습니다"),
+    PASSWORD_CANNOT_CONFIRM(HttpStatus.BAD_REQUEST, "비밀번호와 비밀번호 확인이 일치하지 않습니다"),
+    PASSWORD_NOT_MATCHES(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다"),
+    EMAIL_NOT_EXISTS(HttpStatus.BAD_REQUEST, "해당 이메일을 가진 유저가 없습니다"),
+    ACCESS_TOKEN_NOT_EXPIRED(HttpStatus.UNAUTHORIZED, "ACCESS TOKEN이 만료되지 않았습니다"),
+    ACCESS_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "ACCESS TOKEN이 만료되었습니다"),
+    REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "REFRESH TOKEN이 만료되었습니다"),
 
     /**
      * Question
@@ -35,6 +35,9 @@ public enum ErrorCode {
      * File
      */
     FILE_NOT_EXIST(HttpStatus.BAD_REQUEST, "FILE_NOT_EXIST");
+
+
     HttpStatus statusCode;
     String message;
+
 }

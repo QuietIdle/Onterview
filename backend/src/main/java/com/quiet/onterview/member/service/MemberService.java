@@ -1,9 +1,7 @@
 package com.quiet.onterview.member.service;
 
 import com.quiet.onterview.common.BaseException;
-import com.quiet.onterview.common.JwtTokenProvider;
-import com.quiet.onterview.common.JwtTokenProvider.TokenType;
-import com.quiet.onterview.common.PasswordEncoder;
+import com.quiet.onterview.security.jwt.JwtTokenProvider;
 import com.quiet.onterview.member.dto.request.MemberLoginRequest;
 import com.quiet.onterview.member.dto.response.MemberLoginResponse;
 import com.quiet.onterview.member.dto.request.MemberModifyPasswordRequest;
@@ -15,6 +13,7 @@ import com.quiet.onterview.member.mapper.MemberMapper;
 import com.quiet.onterview.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,7 +23,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final MemberMapper memberMapper;
-    private final PasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
     public void signUpByEmail(MemberSignupRequest memberSignupRequest) {
@@ -46,16 +45,15 @@ public class MemberService {
             throw new BaseException(ErrorCode.EMAIL_NOT_EXISTS);
         }
         Member member = memberRepository.findByEmail(memberLoginRequest.getEmail()).get();
-        if(!passwordEncoder.encrypt(member.getMemberId(), memberLoginRequest.getPassword()).equals(member.getPassword())) {
+        if(!passwordEncoder.encode(memberLoginRequest.getPassword()).equals(member.getPassword())) {
             throw new BaseException(ErrorCode.PASSWORD_NOT_MATCHES);
         }
-        String accessToken = jwtTokenProvider.generateToken(TokenType.Access, member.getMemberId());
-        String refreshToken = jwtTokenProvider.generateToken(TokenType.Refresh, member.getMemberId());
+        String accessToken = jwtTokenProvider.generateAccessToken(memberLoginRequest.getEmail());
+        String refreshToken = jwtTokenProvider.generateRefreshToken(memberLoginRequest.getEmail());
         return memberMapper.memberToMemberLoginResponse(member, accessToken, refreshToken);
     }
 
-    public void modifyPassword(String accessToken, MemberModifyPasswordRequest memberModifyPasswordRequest) {
-        Long userId = jwtTokenProvider.getUserId(accessToken);
+    public void modifyPassword(Long userId, MemberModifyPasswordRequest memberModifyPasswordRequest) {
         if(!isPasswordCorrespond(memberModifyPasswordRequest.getPassword(), memberModifyPasswordRequest.getConfirm())) {
             throw new BaseException(ErrorCode.PASSWORD_CANNOT_CONFIRM);
         }
@@ -69,17 +67,16 @@ public class MemberService {
         if(!jwtTokenProvider.isValidToken(refreshToken)) {
             throw new BaseException(ErrorCode.REFRESH_TOKEN_EXPIRED);
         }
-        Long memberId = jwtTokenProvider.getUserId(refreshToken);
-        String newAccessToken = jwtTokenProvider.generateToken(TokenType.Access, memberId);
-        String newRefreshToken = jwtTokenProvider.generateToken(TokenType.Refresh, memberId);
+        String email = jwtTokenProvider.getEmail(refreshToken);
+        String newAccessToken = jwtTokenProvider.generateAccessToken(email);
+        String newRefreshToken = jwtTokenProvider.generateRefreshToken(email);
         return MemberTokenResponse.builder()
                 .accessToken(newAccessToken)
                 .refreshToken(newRefreshToken)
                 .build();
     }
 
-    public void withdrawUser(String accessToken) {
-        Long memberId = jwtTokenProvider.getUserId(accessToken);
+    public void withdrawUser(Long memberId) {
         memberRepository.deleteById(memberId);
     }
 
@@ -96,6 +93,6 @@ public class MemberService {
     }
 
     public int updatePassword(Long userId, String password) {
-        return memberRepository.updatePassword(userId, passwordEncoder.encrypt(userId, password));
+        return memberRepository.updatePassword(userId, passwordEncoder.encode(password));
     }
 }
