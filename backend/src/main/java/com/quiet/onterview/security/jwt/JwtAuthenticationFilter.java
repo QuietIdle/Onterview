@@ -91,7 +91,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         try {
-            String json = new ObjectMapper().writeValueAsString(securityException.getExceptionMessage());
+            String json = new ObjectMapper().writeValueAsString(securityException.getMessage());
             response.getWriter().write(json);
         } catch (Exception e) {
             e.printStackTrace();

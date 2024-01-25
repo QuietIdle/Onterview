@@ -1,5 +1,6 @@
 package com.quiet.onterview.security.jwt;
 
+import com.quiet.onterview.common.ErrorCode;
 import com.quiet.onterview.security.exception.SecurityException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -62,7 +63,7 @@ public class JwtTokenProvider {
     public String getEmail(String accessToken) throws SecurityException {
         if (!isValidToken(accessToken)) {
             // TODO : TOKEN 만료 시 Exception Handling
-            throw new SecurityException(HttpStatus.UNAUTHORIZED, "ACCESS_TOKEN_EXPIRED");
+            throw new SecurityException(ErrorCode.ACCESS_TOKEN_EXPIRED);
         }
         String email = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(accessToken).getBody().getSubject();
         return email;

@@ -2,6 +2,7 @@ package com.quiet.onterview.security.jwt;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.quiet.onterview.common.ErrorCode;
 import com.quiet.onterview.member.entity.Member;
 import com.quiet.onterview.member.repository.MemberRepository;
 import com.quiet.onterview.security.SecurityMemberAuthentication;
@@ -49,7 +50,7 @@ public class JwtDecoderFilter implements Filter {
 
         String email = jwtTokenProvider.getEmail(receivedToken);
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new SecurityException(HttpStatus.BAD_REQUEST, "해당하는 유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new SecurityException(ErrorCode.EMAIL_NOT_EXISTS));
         SecurityContextHolder.getContext().setAuthentication(new SecurityMemberAuthentication(new SecurityUser(member)));
 
         filterChain.doFilter(request,response);
@@ -58,11 +59,11 @@ public class JwtDecoderFilter implements Filter {
     public void handleSecurityError(HttpServletResponse response,
                                     AuthenticationException exception) {
         SecurityException securityException = (SecurityException) exception;
-        response.setStatus(securityException.getHttpStatus().value());
+        response.setStatus(securityException.getErrorCode().getStatusCode().value());
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         try {
-            String json = new ObjectMapper().writeValueAsString(securityException.getExceptionMessage());
+            String json = new ObjectMapper().writeValueAsString(securityException.getMessage());
             response.getWriter().write(json);
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,5 +1,6 @@
 package com.quiet.onterview.security.jwt;
 
+import com.quiet.onterview.common.ErrorCode;
 import com.quiet.onterview.member.entity.Member;
 import com.quiet.onterview.member.repository.MemberRepository;
 import com.quiet.onterview.security.SecurityMemberAuthentication;
@@ -27,9 +28,9 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         String password = (String) authentication.getCredentials();
 
         Member member = memberRepository.findByEmail(username)
-                .orElseThrow(() -> new SecurityException(HttpStatus.BAD_GATEWAY, "입력하신 이메일에 해당하는 유저가 없습니다."));
+                .orElseThrow(() -> new SecurityException(ErrorCode.EMAIL_NOT_EXISTS));
         if(!passwordEncoder.matches(password, member.getPassword())) {
-            throw new SecurityException(HttpStatus.BAD_REQUEST, "비밀번호가 맞지 않습니다.");
+            throw new SecurityException(ErrorCode.PASSWORD_NOT_MATCHES);
         }
         return new SecurityMemberAuthentication(new SecurityUser(member));
     }
