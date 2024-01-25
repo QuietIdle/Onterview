@@ -6,6 +6,8 @@ import createButton from '@/assets/question/createButton.svg'
 import deleteButton from '@/assets/question/deleteButton.svg'
 import folderImage from '@/assets/question/folderImage.svg'
 
+import QuestionModalCreate from '@/components/question/QuestionModalCreate.vue'
+
 // store
 import { storeToRefs } from 'pinia'
 import { useQuestionStore } from '@/stores/question.js'
@@ -48,7 +50,7 @@ const panel = ref([])
   <div class="question-title pa-3">나의 면접 문항 목록</div>
   <div class="bg-white pa-3 d-flex">
     <div class="me-auto d-flex align-center"></div>
-    <v-btn class="ml-3" variant="elevated" color="blue-accent-2">폴더 추가</v-btn>
+    <QuestionModalCreate />
   </div>
   <div style="max-height: 80%; overflow-y: auto">
     <v-expansion-panels variant="accordion" multiple>
