@@ -1,6 +1,7 @@
 package com.quiet.onterview.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.quiet.onterview.common.BaseExceptionResponse;
 import com.quiet.onterview.member.dto.request.MemberLoginRequest;
 import com.quiet.onterview.member.dto.response.MemberLoginResponse;
 import com.quiet.onterview.security.SecurityUser;
@@ -91,7 +92,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         try {
-            String json = new ObjectMapper().writeValueAsString(securityException.getMessage());
+            String json = new ObjectMapper().writeValueAsString(BaseExceptionResponse.builder()
+                    .errorCode(securityException.getHttpStatus().value())
+                    .errorMessage(securityException.getMessage())
+                    .build());
             response.getWriter().write(json);
         } catch (Exception e) {
             e.printStackTrace();
