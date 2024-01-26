@@ -12,4 +12,14 @@ const getMyQuestionList = function () {
     return api.get(`/api/my-question`)
 }
 
-export { getCommonQuestionList, getMyQuestionList }
+const postMyQuestionFolder = function (payload) {
+    console.log("post myQuestionFolder")
+    return api.post(`/api/my-question-folder`, payload)
+}
+
+const postMyQuestion = function (payload) {
+    console.log("post myQuestion")
+    return api.post(`/api/my-question`, payload)
+}
+
+export { getCommonQuestionList, getMyQuestionList, postMyQuestionFolder, postMyQuestion }

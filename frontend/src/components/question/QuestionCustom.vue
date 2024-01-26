@@ -2,11 +2,10 @@
 import draggable from 'vuedraggable'
 import { ref, onMounted } from 'vue'
 
-import createButton from '@/assets/question/createButton.svg'
 import deleteButton from '@/assets/question/deleteButton.svg'
-import folderImage from '@/assets/question/folderImage.svg'
+import editImage from '@/assets/question/editImage.png'
 
-import QuestionModalCreate from '@/components/question/QuestionModalCreate.vue'
+import QuestionModalCreate from '@/components/question/modal/QuestionModalCreate.vue'
 
 // store
 import { storeToRefs } from 'pinia'
@@ -50,53 +49,59 @@ const panel = ref([])
   <div class="question-title pa-3">나의 면접 문항 목록</div>
   <div class="bg-white pa-3 d-flex">
     <div class="me-auto d-flex align-center"></div>
-    <QuestionModalCreate />
+    <QuestionModalCreate content="폴더" />
   </div>
   <div style="max-height: 80%; overflow-y: auto">
     <v-expansion-panels variant="accordion" multiple>
       <v-expansion-panel v-for="folder in myQuestionList" :key="folder.myQuestionFolderId">
-        <v-expansion-panel-title>
-          <v-col cols="auto">
-            <v-img width="20" :src="folderImage"></v-img>
-          </v-col>
-          <v-col>
-            {{ folder.myQuestionFolder }}
-          </v-col>
-          <v-col cols="auto" class="d-flex align-center">
-            <v-img @click.stop width="30" :src="createButton"></v-img>
-            <v-img @click.stop width="30" :src="deleteButton"></v-img>
-          </v-col>
-        </v-expansion-panel-title>
+        <v-hover v-slot="{ isHovering, props }">
+          <v-expansion-panel-title v-bind="props">
+            <v-col cols="auto">
+              <v-img v-if="isHovering" width="20" :src="editImage" @click.stop></v-img>
+              <v-img width="20"></v-img>
+            </v-col>
+            <v-col>
+              {{ folder.myQuestionFolder }}
+            </v-col>
+            <v-col cols="auto" class="d-flex align-center">
+              <QuestionModalCreate
+                content="파일"
+                :my-question-folder-id="folder.myQuestionFolderId"
+              />
+              <v-img @click.stop width="30" :src="deleteButton"></v-img>
+            </v-col>
+          </v-expansion-panel-title>
 
-        <draggable
-          :list="folder.myQuestionList"
-          group="question"
-          @change="log"
-          item-key="myQuestionId"
-        >
-          <template #item="{ element }">
-            <v-expansion-panel-text>
-              <v-row class="d-flex">
-                <v-col cols="auto"></v-col>
-                <v-col class="d-flex align-center" @dblclick="enableEditing(element)">
-                  <template v-if="element.isEditing">
-                    <v-text-field
-                      v-model="element.editableQuestion"
-                      @blur="disableEditing(element)"
-                      @keyup.enter="disableEditing(element)"
-                    ></v-text-field>
-                  </template>
-                  <template v-else>
-                    {{ element.question }}
-                  </template>
-                </v-col>
-                <v-col cols="auto">
-                  <v-img width="30" :src="deleteButton"></v-img>
-                </v-col>
-              </v-row>
-            </v-expansion-panel-text>
-          </template>
-        </draggable>
+          <draggable
+            :list="folder.myQuestionList"
+            group="question"
+            @change="log"
+            item-key="myQuestionId"
+          >
+            <template #item="{ element }">
+              <v-expansion-panel-text>
+                <v-row class="d-flex">
+                  <v-col cols="auto"></v-col>
+                  <v-col class="d-flex align-center" @dblclick="enableEditing(element)">
+                    <template v-if="element.isEditing">
+                      <v-text-field
+                        v-model="element.editableQuestion"
+                        @blur="disableEditing(element)"
+                        @keyup.enter="disableEditing(element)"
+                      ></v-text-field>
+                    </template>
+                    <template v-else>
+                      {{ element.question }}
+                    </template>
+                  </v-col>
+                  <v-col cols="auto">
+                    <v-img width="30" :src="deleteButton"></v-img>
+                  </v-col>
+                </v-row>
+              </v-expansion-panel-text>
+            </template>
+          </draggable>
+        </v-hover>
       </v-expansion-panel>
     </v-expansion-panels>
   </div>

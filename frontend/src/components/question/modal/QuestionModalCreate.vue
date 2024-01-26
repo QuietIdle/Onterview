@@ -1,0 +1,87 @@
+<script setup>
+import { ref } from 'vue'
+import { postMyQuestionFolder, postMyQuestion } from '@/api/question'
+import createButton from '@/assets/question/createButton.svg'
+
+const props = defineProps({
+  content: String,
+  myQuestionFolderId: Number
+})
+
+const dialog = ref(false)
+
+const requestCreateMyQuestionFolder = async function () {
+  try {
+    const payload = {
+      myQuestionFolder: valueTextField
+    }
+    const response = await postMyQuestionFolder(payload)
+    console.log('response create myQuestionFolder', response)
+  } catch (error) {
+    console.log('error create myQuestionFolder', error)
+  }
+}
+
+const requestCreateMyQuestion = async function () {
+  try {
+    const payload = {
+      myQuestionFolderId: props.myQuestionFolderId,
+      commonQuestionId: '',
+      question: valueTextField
+    }
+    const response = await postMyQuestion(payload)
+    console.log('response create myQuestion', response)
+  } catch (error) {
+    console.log('error create myQuestion')
+  }
+}
+
+const valueTextField = ref('')
+</script>
+
+<template>
+  <div>
+    <v-dialog v-model="dialog" width="auto">
+      <template v-slot:activator="{ props }">
+        <v-btn
+          v-show="content === '폴더'"
+          v-bind="props"
+          class="ml-3"
+          variant="elevated"
+          color="blue-accent-2"
+          >새 {{ content }}</v-btn
+        >
+        <v-img
+          v-show="content === '파일'"
+          @click.stop
+          v-bind="props"
+          width="30"
+          :src="createButton"
+        ></v-img>
+      </template>
+      <v-card class="px-6 pt-3" width="1000">
+        <v-card-text>새 {{ content }} 추가</v-card-text>
+        <v-text-field
+          variant="solo"
+          :placeholder="`추가할 ${content}명을 작성해주세요`"
+          class="pb-6"
+          v-model="valueTextField"
+        ></v-text-field>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn variant="text" color="grey-darken-1" @click="dialog = false">취소</v-btn>
+          <v-btn
+            variant="text"
+            color="deep-purple-accent-4"
+            @click="
+              content === '폴더' ? requestCreateMyQuestionFolder() : requestCreateMyQuestion()
+            "
+            >추가</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
+</template>
+
+<style scoped></style>
