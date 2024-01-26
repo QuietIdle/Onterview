@@ -28,7 +28,7 @@ public class JwtTokenProvider {
         Claims claims = Jwts.claims()
                 .setSubject(email)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + Duration.ofDays(1).toMillis()));
+                .setExpiration(new Date(now.getTime() + Duration.ofDays(30).toMillis()));
         String jwt = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(claims)
@@ -42,7 +42,7 @@ public class JwtTokenProvider {
         Claims claims = Jwts.claims()
                 .setSubject(email)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + Duration.ofDays(21).toMillis()));
+                .setExpiration(new Date(now.getTime() + Duration.ofDays(60).toMillis()));
         String jwt = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(claims)
