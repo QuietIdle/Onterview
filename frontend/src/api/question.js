@@ -2,8 +2,8 @@ import { localAxios } from "@/api/index.js"
 
 const api = localAxios();
 
-const getCommonQuestionList = function (success, error) {
-    api.get(`/api/common-question`).then(success).catch(error)
+const getCommonQuestionList = function () {
+    return api.get(`/api/common-question-folder`)
 }
 
 const getMyQuestionList = function () {

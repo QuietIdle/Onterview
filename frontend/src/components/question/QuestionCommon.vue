@@ -1,11 +1,16 @@
 <script setup>
 import draggable from 'vuedraggable'
+import { onMounted } from 'vue'
 
 // store
 import { storeToRefs } from 'pinia'
 import { useQuestionStore } from '@/stores/question.js'
 const questionStore = useQuestionStore()
 const { commonQuestionList } = storeToRefs(questionStore)
+
+onMounted(() => {
+  questionStore.requestCommonQuestionList()
+})
 
 const cloneList = function (data) {
   const questionObject = {
