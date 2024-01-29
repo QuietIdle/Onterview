@@ -3,23 +3,34 @@ import { localAxios } from "@/api/index.js"
 const api = localAxios();
 
 const getCommonQuestionList = function (success, error) {
-    console.log("request get common question list")
     api.get(`/api/common-question`).then(success).catch(error)
 }
 
 const getMyQuestionList = function () {
-    console.log("get myQuestionList")
-    return api.get(`/api/my-question`)
+    return api.get(`/api/my-question-folder?memberId=${1}`) // 추후 member_id 삭제 후 user token 추가
 }
 
-const postMyQuestionFolder = function (payload) {
-    console.log("post myQuestionFolder")
+const postCreateMyQuestionFolder = function (payload) {
     return api.post(`/api/my-question-folder`, payload)
 }
 
-const postMyQuestion = function (payload) {
-    console.log("post myQuestion")
+const postCreateMyQuestion = function (payload) {
     return api.post(`/api/my-question`, payload)
 }
 
-export { getCommonQuestionList, getMyQuestionList, postMyQuestionFolder, postMyQuestion }
+const deleteDeleteMyQuestionFolder = function (myQuestionFolderId) {
+    return api.delete(`/api/my-question-folder/${myQuestionFolderId}`)
+}
+
+const deleteDeleteMyQuestion = function (myQuestionId) {
+    return api.delete(`/api/my-question/${myQuestionId}`)
+}
+
+export {
+    getCommonQuestionList,
+    getMyQuestionList,
+    postCreateMyQuestionFolder,
+    postCreateMyQuestion,
+    deleteDeleteMyQuestionFolder,
+    deleteDeleteMyQuestion,
+}

@@ -1,11 +1,12 @@
 <script setup>
+// lib
 import draggable from 'vuedraggable'
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 
-import deleteButton from '@/assets/question/deleteButton.svg'
-import editImage from '@/assets/question/editImage.png'
-
+// assets
 import QuestionModalCreate from '@/components/question/modal/QuestionModalCreate.vue'
+import QuestionModalDelete from '@/components/question/modal/QuestionModalDelete.vue'
+import editImage from '@/assets/question/editImage.png'
 
 // store
 import { storeToRefs } from 'pinia'
@@ -14,23 +15,12 @@ const questionStore = useQuestionStore()
 const { myQuestionList } = storeToRefs(questionStore)
 
 onMounted(() => {
-  const questionStore = useQuestionStore()
   questionStore.requestMyQuestionList()
 })
 
 const log = function () {
   console.log('drag n drop my question list')
-  console.log(myQuestionList.value)
 }
-
-const selectFolder = ref([])
-const selectQuestion = ref([])
-
-const checkFolder = function (folder) {
-  console.log(folder)
-}
-
-const checkAll = function () {}
 
 const enableEditing = function (element) {
   element.isEditing = true
@@ -41,8 +31,6 @@ const disableEditing = function (element) {
   element.isEditing = false
   element.question = element.editableQuestion
 }
-
-const panel = ref([])
 </script>
 
 <template>
@@ -65,10 +53,14 @@ const panel = ref([])
             </v-col>
             <v-col cols="auto" class="d-flex align-center">
               <QuestionModalCreate
-                content="파일"
+                content="질문"
                 :my-question-folder-id="folder.myQuestionFolderId"
               />
-              <v-img @click.stop width="30" :src="deleteButton"></v-img>
+              <QuestionModalDelete
+                content="폴더"
+                :my-question-folder-id="folder.myQuestionFolderId"
+                :my-question-folder="folder.myQuestionFolder"
+              />
             </v-col>
           </v-expansion-panel-title>
 
@@ -95,7 +87,7 @@ const panel = ref([])
                     </template>
                   </v-col>
                   <v-col cols="auto">
-                    <v-img width="30" :src="deleteButton"></v-img>
+                    <QuestionModalDelete content="파일" :my-question="element" />
                   </v-col>
                 </v-row>
               </v-expansion-panel-text>
@@ -119,10 +111,6 @@ const panel = ref([])
 
 .v-input__details {
   display: none !important;
-}
-
-.v-expansion-panel-title__icon {
-  /* display: none !important; */
 }
 
 .v-expansion-panel-title {
