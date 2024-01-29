@@ -26,6 +26,14 @@ const deleteDeleteMyQuestion = function (myQuestionId) {
     return api.delete(`/api/my-question/${myQuestionId}`)
 }
 
+const patchUpdateMyQuestionFolder = function (myQuestionFolderId, payload) {
+    return api.patch(`/api/my-question-folder/${myQuestionFolderId}`, payload) // myQuestionFolder
+}
+
+const patchUpdateMyQuestion = function (myQuestionId, payload) {
+    return api.patch(`/api/my-question/${myQuestionId}`, payload) // myQuestion
+}
+
 export {
     getCommonQuestionList,
     getMyQuestionList,
@@ -33,4 +41,6 @@ export {
     postCreateMyQuestion,
     deleteDeleteMyQuestionFolder,
     deleteDeleteMyQuestion,
+    patchUpdateMyQuestionFolder,
+    patchUpdateMyQuestion
 }
