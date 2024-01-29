@@ -1,6 +1,7 @@
 package com.quiet.onterview.question.service;
 
 import com.quiet.onterview.question.dto.request.CommonQuestionFolderRequest;
+import com.quiet.onterview.question.dto.response.CommonQuestionFolderResponse;
 import com.quiet.onterview.question.entity.CommonQuestionFolder;
 import com.quiet.onterview.question.exception.CommonQuestionFolderNotFoundException;
 import com.quiet.onterview.question.mapper.CommonQuestionFolderMapper;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,6 +20,15 @@ public class CommonQuestionFolderServiceImpl implements CommonQuestionFolderServ
 
     private final CommonQuestionFolderRepository commonQuestionFolderRepository;
     private final CommonQuestionFolderMapper commonQuestionFolderMapper;
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CommonQuestionFolderResponse> getCommonQuestionFolder() {
+        List<CommonQuestionFolder> commonQuestionFolderList = commonQuestionFolderRepository.findCommonQuestionFolder();
+        return commonQuestionFolderList.stream()
+                .map(commonQuestionFolderMapper::commonQuestionFolderToCommonQuestionFolderResponse)
+                .toList();
+    }
 
     @Override
     public void createCommonQuestionFolder(CommonQuestionFolderRequest commonQuestionFolderRequest) {
