@@ -4,7 +4,12 @@ import draggable from 'vuedraggable'
 import { onMounted } from 'vue'
 
 // api
-import { patchUpdateMyQuestionFolder, patchUpdateMyQuestion } from '@/api/question'
+import {
+  patchUpdateMyQuestionFolder,
+  patchUpdateMyQuestion,
+  postCreateMyQuestion,
+  deleteDeleteMyQuestion
+} from '@/api/question'
 
 // assets
 import QuestionModalCreate from '@/components/question/modal/QuestionModalCreate.vue'
@@ -21,8 +26,33 @@ onMounted(() => {
   questionStore.requestMyQuestionList()
 })
 
-const log = function () {
-  console.log('drag n drop my question list')
+const log = async function (event, folder) {
+  if (event.added) {
+    try {
+      const payload = {
+        myQuestionFolderId: folder.myQuestionFolderId,
+        commonQuestionId: event.added.element.commonQuestionId,
+        question: event.added.element.question
+          ? event.added.element.question
+          : event.added.element.commonQuestion
+      }
+
+      const response = await postCreateMyQuestion(payload)
+      console.log('response create my question', response)
+    } catch (error) {
+      console.log('error create my question', error)
+    }
+  }
+  if (event.removed) {
+    try {
+      const response = await deleteDeleteMyQuestion(event.removed.element.myQuestionId)
+      console.log('reponse delete my question', response)
+    } catch (error) {
+      console.log('error delete my question', error)
+    }
+  }
+
+  questionStore.requestMyQuestionList()
 }
 
 const enableEditingMyQuestion = function (element) {
@@ -114,7 +144,7 @@ const requestUpdateMyQuestionFolder = async function (folder) {
           <draggable
             :list="folder.myQuestionList"
             group="question"
-            @change="log"
+            @change="(event) => log(event, folder)"
             item-key="myQuestionId"
           >
             <template #item="{ element }">

@@ -9,11 +9,14 @@ const { commonQuestionList } = storeToRefs(questionStore)
 
 const cloneList = function (data) {
   const questionObject = {
-    common_question_id: data.common_question_id,
-    my_question_id: data.common_question_id + 1,
-    question: data.question
+    commonQuestionId: data.commonQuestionId,
+    commonQuestion: data.commonQuestion
   }
   return questionObject
+}
+
+const log = function () {
+  // questionStore.requestCommonQuestionList()
 }
 </script>
 
@@ -23,17 +26,21 @@ const cloneList = function (data) {
     <v-expansion-panels
       variant="accordion"
       v-for="folder in commonQuestionList"
-      :key="folder.common_question_folder_id"
+      :key="folder.commonQuestionFolderId"
     >
-      <v-expansion-panel :title="folder.folder" :value="folder.common_question_folder_id">
+      <v-expansion-panel
+        :title="folder.commonQuestionFolder"
+        :value="folder.commonQuestionFolderId"
+      >
         <draggable
-          :list="folder.question"
+          :list="folder.commonQuestionList"
           :group="{ name: 'question', pull: 'clone', put: false }"
           :clone="cloneList"
           item-key="common_question_id"
+          @change="log"
         >
           <template #item="{ element }">
-            <v-expansion-panel-text>{{ element.question }}</v-expansion-panel-text>
+            <v-expansion-panel-text>{{ element.commonQuestion }}</v-expansion-panel-text>
           </template>
         </draggable>
       </v-expansion-panel>
