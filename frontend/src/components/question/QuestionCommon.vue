@@ -21,7 +21,7 @@ const cloneList = function (data) {
 }
 
 const log = function () {
-  // questionStore.requestCommonQuestionList()
+  questionStore.requestCommonQuestionList()
 }
 </script>
 
