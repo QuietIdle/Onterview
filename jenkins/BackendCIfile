@@ -1,6 +1,18 @@
 pipeline {
 	agent any
 		stages {
+		  stage('copy yml before build') {
+		     steps{
+                withCredentials([file(credentialsId: 'datasource-credentials', variable: 'dbConfigFile'),
+                                file(credentialsId: 'file-credentials', variable: 'fileConfigFile')]) {
+                    script {
+                        sh 'cp $dbConfigFile backend/src/main/resources/application-datasource.yml'
+                        sh 'cp $fileConfigFile backend/src/main/resources/application-file.yml'
+                    }
+                }
+		     }
+		  }
+
 			stage('Build Gradle') {
         steps {
 				  echo 'Build Gradle'
