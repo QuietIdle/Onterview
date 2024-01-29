@@ -13,6 +13,7 @@ export const useSelfSpeechStore = defineStore('selfSpeech', () => {
   });
   const videoData = ref({
     feedback: "자가진단진단",
+    bookmark: false,
   });
 
   return { display,listIdx,selectedQuestion,questionData,videoData }

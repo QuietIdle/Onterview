@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useSelfSpeechStore } from '@/stores/selfSpeech';
 import VideoThumbnail from "@/components/video/VideoThumbnail.vue";
+import { apiMethods } from "@/api/video";
 
 const selfSpeechStore = useSelfSpeechStore();
 const maxCounter = ref(20);
@@ -30,6 +31,17 @@ const rules = ref([
     return v.length <= maxCounter.value || `${maxCounter.value}글자 이하로 작성해주세요`
   }
 ])
+
+const saveFeedback = async function () {
+  try {
+    const result = await apiMethods.patchVideo(selfSpeechStore.videoData.videoId, {
+      feedback: selfSpeechStore.videoData.feedback,
+    })
+    console.log(result.data)
+  } catch (error) {
+    console.log(error)
+  }
+}
 </script>
 
 <template>
@@ -47,7 +59,7 @@ const rules = ref([
       </v-card>
 
       <!-- 답변 스크립트 -->
-      <div class="content-container w-100 h-100 bg-yellow">
+      <div class="content-container w-100 h-100">
         <div v-if="selfSpeechStore.listIdx===1">
           <v-container fluid>
             <v-textarea
@@ -56,6 +68,7 @@ const rules = ref([
               label="답변"
               :rules="rules"
               v-model="selfSpeechStore.questionData.answer"
+              no-resize
               @blur="console.log(selfSpeechStore.questionData.answer)"
             >
             {{ selfSpeechStore.questionData.answer }}
@@ -77,7 +90,8 @@ const rules = ref([
               label="자가진단"
               :rules="rules"
               v-model="selfSpeechStore.videoData.feedback"
-              @blur="console.log(selfSpeechStore.videoData.feedback)"
+              no-resize
+              @blur="saveFeedback"
             >
             {{ selfSpeechStore.videoData.feedback }}
             </v-textarea>

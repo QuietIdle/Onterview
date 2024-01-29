@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { apiMethods, fileServer } from "@/api/video";
 import { useSelfSpeechStore } from "@/stores/selfSpeech";
-import {useRouter} from 'vue-router'
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
@@ -172,8 +172,8 @@ const controlMedia = function (a) {
 </script>
 
 <template>
-<div class="h-100 d-flex flex-column justify-space-between bg-black">
-  <div class="d-flex align-center">
+<div class="container h-100 d-flex flex-column justify-space-between">
+  <div class="nav-bar d-flex align-center">
     <div class="ma-1">{{ selfSpeechStore.questionData.question }}</div>
     <v-icon class="exit-btn ma-1 ml-auto" color="black" size="32" icon="mdi-close-circle-outline" @click="goSelfSpeechMain"></v-icon>
   </div>
@@ -183,8 +183,6 @@ const controlMedia = function (a) {
   </div>
 
   <div class="btn-container w-100 d-flex align-center">
-    <!-- <v-btn class="ma-3" @click="videoStart" variant="outlined">START</v-btn>
-    <v-btn class="ma-3" @click="stopRecording" variant="outlined">STOP</v-btn> -->
     <v-btn class="ma-3" @click="controlMedia(0)" v-if="mediaToggle.video" icon="mdi-video"></v-btn>
     <v-btn class="ma-3" @click="controlMedia(0)" v-else icon="mdi-video-off" color="blue"></v-btn>
     <v-btn class="ma-3" @click="controlMedia(1)" v-if="mediaToggle.audio" icon="mdi-microphone"></v-btn>
@@ -240,9 +238,16 @@ const controlMedia = function (a) {
 </template>
 
 <style scoped>
+.nav-bar{
+  border: 1px solid black;
+  background-color: #f0f0f0;
+}
+.container{
+  background-color: #bb66ff;
+}
 #my-video{
   width: 100%;
   height: 360px;
-  background-color: #eae9e9;
+  background-color: #f0f0f0;
 }
 </style>
