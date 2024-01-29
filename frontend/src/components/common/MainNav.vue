@@ -44,7 +44,7 @@ const userStore = useUserStore()
         <v-list-item :prepend-avatar="logo" title="관리자님" subtitle="환영합니다"> </v-list-item>
       </v-list>
       <TheDropDownItem link="/mypage">나의 정보 수정</TheDropDownItem>
-      <TheDropDownItem link="/" @click="userStore.logout">로그아웃</TheDropDownItem>
+      <TheDropDownItem @click="userStore.logout">로그아웃</TheDropDownItem>
     </TheDropDownMenu>
 
     <div class="mr-4"></div>
