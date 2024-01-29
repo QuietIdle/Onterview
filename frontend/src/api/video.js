@@ -31,7 +31,7 @@ export const apiMethods = {
 
 export const fileServer = {
     uploadVideo: function (idx, flag, formData) {
-        return api2.post(`/api/chunk/upload?&chunkNumber=${idx}&endOfChunk=${flag}`, formData)
+        return api2.post(`/api/chunk/upload?chunkNumber=${idx}&endOfChunk=${flag}`, formData)
     },
     playVideo: function (filename, st, ed) {
         return api2.get(`/api/chunk/stream/${filename}`, {
