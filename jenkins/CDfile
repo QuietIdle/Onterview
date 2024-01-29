@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+
+    environment {
+	    registryCredential = 'docker-hub'
+    }
+
+    stages {
+	    stage('Docker push') {
+		    steps {
+			    echo 'Docker push'
+				  script {
+    				def backImage = docker.image("${BACKEND_DOCKER_IMAGE}")
+						def frontImage = docker.image("${FRONTEND_DOCKER_IMAGE"})
+	    			docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
+              backImage.push("${env.BUILD_NUMBER}")
+							backImage.push("latest")
+							frontImage.push("${env.BUILD_NUMBER}")
+							frontImage.push("latest")
+					  }
+				  }
+			  }
+
+			  post {
+          success {
+            echo "docker push success"
+          }
+          failure {
+            error 'Docker compose failed....'
+        	}
+        }
+		  }
+
+	    stage('Docker Compose'){
+		    steps{
+			    script{
+					  sh 'docker volume prune -f' // 안쓰는 이미지 볼륨 제거
+    			  sh 'docker-compose down' // 구성된 compose에 있는 이미지 중단 및 삭제
+    			  sh 'docker-compose pull' // 구성된 compose에 있는 이미지 pull
+         		sh 'docker-compose build' // 구성된 compose에 있는 이미지 build
+         		sh 'docker-compose up -d' // 구성된 compose에 있는 이미지 run
+		    	}
+		    }
+
+		    post {
+			    success {
+            echo "docker compose success"
+            // 배포 성공했을 때 GitLab에 성공 상태를 알립니다.
+            updateGitlabCommitStatus name: 'build', state: 'success'
+          }
+			    failure {
+				    error 'Docker compose failed....'
+			    }
+		    }
+	    }
+	  }
+}
