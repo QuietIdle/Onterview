@@ -1,24 +1,31 @@
 <script setup>
 import { ref } from 'vue'
-import { postMyQuestionFolder, postMyQuestion } from '@/api/question'
+import { postCreateMyQuestionFolder, postCreateMyQuestion } from '@/api/question'
 import createButton from '@/assets/question/createButton.svg'
+
+// store
+import { useQuestionStore } from '@/stores/question'
+const questionStore = useQuestionStore()
 
 const props = defineProps({
   content: String,
   myQuestionFolderId: Number
 })
 
-const dialog = ref(false)
-
 const requestCreateMyQuestionFolder = async function () {
   try {
     const payload = {
-      myQuestionFolder: valueTextField
+      myQuestionFolder: valueTextField.value
     }
-    const response = await postMyQuestionFolder(payload)
-    console.log('response create myQuestionFolder', response)
+
+    const response = await postCreateMyQuestionFolder(payload)
+    console.log('response create my question folder', response)
+
+    questionStore.requestMyQuestionList()
+    dialog.value = false
+    valueTextField.value = ''
   } catch (error) {
-    console.log('error create myQuestionFolder', error)
+    console.log('error create my question folder', error)
   }
 }
 
@@ -26,16 +33,21 @@ const requestCreateMyQuestion = async function () {
   try {
     const payload = {
       myQuestionFolderId: props.myQuestionFolderId,
-      commonQuestionId: '',
-      question: valueTextField
+      question: valueTextField.value
     }
-    const response = await postMyQuestion(payload)
-    console.log('response create myQuestion', response)
+
+    const response = await postCreateMyQuestion(payload)
+    console.log('response create my question', response)
+
+    questionStore.requestMyQuestionList()
+    dialog.value = false
+    valueTextField.value = ''
   } catch (error) {
-    console.log('error create myQuestion')
+    console.log('error create my question', error)
   }
 }
 
+const dialog = ref(false)
 const valueTextField = ref('')
 </script>
 
@@ -52,7 +64,7 @@ const valueTextField = ref('')
           >새 {{ content }}</v-btn
         >
         <v-img
-          v-show="content === '파일'"
+          v-show="content === '질문'"
           @click.stop
           v-bind="props"
           width="30"
