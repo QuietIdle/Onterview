@@ -1,10 +1,19 @@
 <script setup>
+import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
 import { deleteDeleteUser } from '@/api/user.js'
 
 const router = useRouter()
-const password = ref(null)
+const password = ref('')
+const deleteBtnActivated = ref(true)
+
+const watchPassword = watch(password, () => {
+  if (password.value !== '') {
+    deleteBtnActivated.value = false
+  } else {
+    deleteBtnActivated.value = true
+  }
+})
 
 const requestDeleteUser = function () {
   const payload = {
@@ -13,7 +22,7 @@ const requestDeleteUser = function () {
 
   const success = function () {
     password.value = null
-    router.push({ name: "home" })
+    router.push({ name: "main" })
   }
 
   const error = function () {
@@ -35,7 +44,7 @@ const requestDeleteUser = function () {
       <v-form class="mt-5" ref="formRef" fast-fail @submit.prevent="requestDeleteUser">
         <v-text-field v-model="password" type="password" label="비밀번호"></v-text-field>
         <div class="d-flex justify-center">
-          <v-btn type="submit" class="d-flex justify-center mt-2 px-15" color="red">
+          <v-btn type="submit" class="d-flex justify-center mt-2 px-15" :disabled="deleteBtnActivated" color="red">
             <h3>회원 탈퇴</h3>
           </v-btn>
         </div>
