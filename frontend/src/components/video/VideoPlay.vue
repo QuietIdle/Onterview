@@ -2,9 +2,16 @@
 import { useSelfSpeechStore } from '@/stores/selfSpeech';
 import videojs from "video.js";
 import { onBeforeUnmount, ref } from "vue";
-import { fileServer } from "@/api/video"; 
+import { fileServer } from "@/api/video";
+import {useRouter} from 'vue-router'
+
+const router = useRouter()
 
 const selfSpeechStore = useSelfSpeechStore();
+
+const goSelfSpeechMain = function () {
+  router.push({name: 'selfspeech-main'})
+}
 
 const backToRecording = function() {
   selfSpeechStore.display = true;
@@ -62,6 +69,10 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
+  <div class="d-flex align-center">
+    <div class="ma-1">{{ selfSpeechStore.questionData.question }}</div>
+    <v-icon class="exit-btn ma-1 ml-auto" color="black" size="32" icon="mdi-close-circle-outline" @click="goSelfSpeechMain"></v-icon>
+  </div>
   <div v-if="!videoLoaded" class="empty-player-container ma-auto">
     <button @click="requestVideo" class="play-button">Play</button>
   </div>

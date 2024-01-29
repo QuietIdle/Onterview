@@ -4,17 +4,11 @@ import SelfSpeechRecord from '@/components/selfSpeech/SelfSpeechRecord.vue';
 import SelfSpeechTab from '@/components/selfSpeech/SelfSpeechTab.vue';
 import VideoPlay from '@/components/video/VideoPlay.vue';
 import { useSelfSpeechStore } from '@/stores/selfSpeech';
-import { useRouter } from 'vue-router';
 import { apiMethods } from '@/api/video';
 
 const selfSpeechStore = useSelfSpeechStore();
-const router = useRouter();
 
 const q_id = ref(-1);
-
-const goSelfSpeechMain = function () {
-  router.push({name: 'selfspeech-main'})
-}
 
 const selectQuestion = async function () {
   selfSpeechStore.selectedQuestion = q_id.value;
@@ -40,14 +34,10 @@ const selectQuestion = async function () {
 
     <div class="w-75 ma-5">
       <div class="h-75">
-        <div class="d-flex align-center">
-          <div class="ma-1">{{ selfSpeechStore.questionData.question }}</div>
-          <v-icon class="exit-btn ma-1 ml-auto" color="black" size="32" icon="mdi-close-circle-outline" @click="goSelfSpeechMain"></v-icon>
-        </div>
-        <div v-if="selfSpeechStore.display">
+        <div v-if="selfSpeechStore.display" class="h-100">
           <SelfSpeechRecord />
         </div>
-        <div v-else>
+        <div v-else class="h-100">
           <VideoPlay />
         </div>
       </div>

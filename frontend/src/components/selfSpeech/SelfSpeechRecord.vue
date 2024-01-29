@@ -2,6 +2,9 @@
 import { ref } from 'vue';
 import { apiMethods, fileServer } from "@/api/video";
 import { useSelfSpeechStore } from "@/stores/selfSpeech";
+import {useRouter} from 'vue-router'
+
+const router = useRouter()
 
 const dialog = ref(false); // 모달 창
 const dialog2 = ref(false); // 저장 모달 창
@@ -13,6 +16,10 @@ const uploadData = ref(null);
 const videoTitle = ref("");
 
 const flag = ref(0); // chunk 전송 완료 여부
+
+const goSelfSpeechMain = function () {
+  router.push({name: 'selfspeech-main'})
+}
 
 const startTimer = function() {
   time.value++;
@@ -35,8 +42,8 @@ const videoStart = function() {
     .then(stream => {
       const previewPlayer = document.querySelector("#my-video");
       previewPlayer.srcObject = stream;
-      previewPlayer.width = 640;
-      previewPlayer.height = 360;
+      // previewPlayer.width = 640;
+      // previewPlayer.height = 360;
 
       startRecording(previewPlayer.captureStream())
     })
@@ -136,18 +143,23 @@ const cancelRecording = async function () {
 </script>
 
 <template>
-<!-- <div class="w-auto">
-  <div class="ma-3">{{ pinia.questionData.question }}</div>
-</div> -->
-<div class="w-100 h-75 text-center">
-  <video id="my-video" width="480" autoplay></video>
-</div>
-<div class="btn-container w-100 d-flex align-center">
-  <v-btn class="ma-3" @click="videoStart" variant="outlined">START</v-btn>
-  <v-btn class="ma-3" @click="stopRecording" variant="outlined">STOP</v-btn>
-  <!-- <v-btn @click="playRecording">PLAY</v-btn> -->
-  <div class="timer ml-10" v-if="(time%60)>=10">{{ Math.floor(time/60) }}:{{ time%60 }}</div>
-  <div class="timer ml-10" v-else>{{ Math.floor(time/60) }}:0{{ time%60 }}</div>
+<div class="h-100 d-flex flex-column justify-space-between">
+  <div class="d-flex align-center">
+    <div class="ma-1">{{ selfSpeechStore.questionData.question }}</div>
+    <v-icon class="exit-btn ma-1 ml-auto" color="black" size="32" icon="mdi-close-circle-outline" @click="goSelfSpeechMain"></v-icon>
+  </div>
+
+  <div class="w-100 text-center">
+    <video id="my-video" autoplay></video>
+  </div>
+
+  <div class="btn-container w-100 d-flex align-center">
+    <v-btn class="ma-3" @click="videoStart" variant="outlined">START</v-btn>
+    <v-btn class="ma-3" @click="stopRecording" variant="outlined">STOP</v-btn>
+    <!-- <v-btn @click="playRecording">PLAY</v-btn> -->
+    <div class="timer ml-10" v-if="(time%60)>=10">{{ Math.floor(time/60) }}:{{ time%60 }}</div>
+    <div class="timer ml-10" v-else>{{ Math.floor(time/60) }}:0{{ time%60 }}</div>
+  </div>
 </div>
 
 <v-dialog v-model="dialog" width="auto">
