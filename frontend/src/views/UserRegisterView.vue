@@ -176,13 +176,18 @@ const requestIsDuplicatedEmail = function () {
   }
 
   const success = function (response) {
-    emailSuccess.value = true
+    if (response.data.isAvaliable) {
+      emailSuccess.value = true
+      alert(`사용 가능한 이메일입니다!`)
+    } else {
+      emailError.value = true
+      alert(`이미 사용 중인 이메일입니다!`)
+    }
     console.log(response)
   }
 
   const error = function (error) {
-    emailError.value = true
-    console.log(`실패`)
+    alert(`알 수 없는 이유로 이메일 중복 조회를 실패했습니다. \n관리자에게 문의해주세요.`)
   }
 
   getIsDuplicatedEmail(email.value, success, error)
@@ -201,14 +206,18 @@ const requestIsDuplicatedNickname = function () {
     }
   }
 
-  const success = function () {
-    nicknameSuccess.value = true
-    console.log(`성공`)
+  const success = function (response) {
+    if (response.data.isAvaliable) {
+      nicknameSuccess.value = true
+      alert(`사용 가능한 닉네임입니다!`)
+    } else {
+      nicknameError.value = true
+      alert(`이미 사용 중인 닉네임입니다!`)
+    }
   }
 
-  const error = function () {
-    nicknameError.value = true
-    console.log(`실패`)
+  const error = function (error) {
+    alert(`알 수 없는 이유로 닉네임 중복 조회를 실패했습니다. \n관리자에게 문의해주세요.`)
   }
 
   getIsDuplicatedNickname(nickname.value, success, error)
