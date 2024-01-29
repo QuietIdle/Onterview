@@ -21,10 +21,18 @@ import java.util.List;
 public class CommonQuestionFolderController {
     private final CommonQuestionFolderService commonQuestionFolderService;
 
-    @Operation(summary = "GET 방식으로 빈출 면접 질문 전체 조회")
+    @Operation(summary = "GET 방식으로 모든 빈출 면접 폴더별 질문 리스트 조회")
     @GetMapping
-    public ResponseEntity<List<CommonQuestionFolderResponse>> getCommonQuestionList() {
-        return ResponseEntity.ok(commonQuestionFolderService.getCommonQuestionFolder());
+    public ResponseEntity<List<CommonQuestionFolderResponse>> getAllCommonQuestionFolderInfo() {
+        return ResponseEntity.ok(commonQuestionFolderService.getAllCommonQuestionFolderInfo());
+    }
+
+    @Operation(summary = "GET 방식으로 특정 빈출 면접 폴더의 질문 리스트 조회")
+    @GetMapping("/{common_question_folder_id}")
+    public ResponseEntity<CommonQuestionFolderResponse> getOneCommonQuestionFolderInfo(
+            @PathVariable("common_question_folder_id") Long commonQuestionFolderId
+    ) {
+        return ResponseEntity.ok(commonQuestionFolderService.getOneCommonQuestionFolderInfo(commonQuestionFolderId));
     }
 
     @Operation(summary = "POST 방식으로 빈출 면접 질문 폴더 생성")

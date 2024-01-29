@@ -23,12 +23,19 @@ public class CommonQuestionFolderServiceImpl implements CommonQuestionFolderServ
 
     @Override
     @Transactional(readOnly = true)
-    public List<CommonQuestionFolderResponse> getCommonQuestionFolder() {
-        List<CommonQuestionFolder> commonQuestionFolderList = commonQuestionFolderRepository.findCommonQuestionFolder();
+    public List<CommonQuestionFolderResponse> getAllCommonQuestionFolderInfo() {
+        List<CommonQuestionFolder> commonQuestionFolderList = commonQuestionFolderRepository.findAllCommonQuestionFolderInfo();
         return commonQuestionFolderList.stream()
                 .map(commonQuestionFolderMapper::commonQuestionFolderToCommonQuestionFolderResponse)
                 .toList();
     }
+
+    @Override
+    public CommonQuestionFolderResponse getOneCommonQuestionFolderInfo(Long commonQuestionFolderId) {
+        CommonQuestionFolder commonQuestionFolder = commonQuestionFolderRepository.findOneCommonQuestionFolderInfo(commonQuestionFolderId);
+        return commonQuestionFolderMapper.commonQuestionFolderToCommonQuestionFolderResponse(commonQuestionFolder);
+    }
+
 
     @Override
     public void createCommonQuestionFolder(CommonQuestionFolderRequest commonQuestionFolderRequest) {

@@ -7,7 +7,8 @@ import java.util.List;
 
 public interface CommonQuestionFolderService {
 
-    List<CommonQuestionFolderResponse> getCommonQuestionFolder();
+    List<CommonQuestionFolderResponse> getAllCommonQuestionFolderInfo();
+    CommonQuestionFolderResponse getOneCommonQuestionFolderInfo(Long commonQuestionFolderId);
     void createCommonQuestionFolder(CommonQuestionFolderRequest commonQuestionFolderRequest);
     void updateCommonQuestionFolder(Long commonQuestionFolderId, CommonQuestionFolderRequest commonQuestionFolderRequest);
     void deleteCommonQuestionFolder(Long commonQuestionFolderId);
