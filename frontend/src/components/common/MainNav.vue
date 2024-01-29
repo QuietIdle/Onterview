@@ -9,8 +9,10 @@ import {
 import { ref } from 'vue'
 
 import logo from '@/assets/logo.png'
+import { useUserStore } from "@/stores/user"
 
 const dropdownMenu = ref(null)
+const userStore = useUserStore()
 </script>
 
 <template>
@@ -42,7 +44,7 @@ const dropdownMenu = ref(null)
         <v-list-item :prepend-avatar="logo" title="관리자님" subtitle="환영합니다"> </v-list-item>
       </v-list>
       <TheDropDownItem link="/mypage">나의 정보 수정</TheDropDownItem>
-      <TheDropDownItem link="/">Sign out</TheDropDownItem>
+      <TheDropDownItem link="/" @click="userStore.logout">로그아웃</TheDropDownItem>
     </TheDropDownMenu>
 
     <div class="mr-4"></div>
