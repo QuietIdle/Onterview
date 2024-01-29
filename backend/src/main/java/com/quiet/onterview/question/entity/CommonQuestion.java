@@ -23,6 +23,14 @@ public class CommonQuestion extends BaseEntity {
     @JoinColumn(name = "COMMON_QUESTION_FOLDER_ID")
     private CommonQuestionFolder commonQuestionFolder;
 
-    @Column(name = "QUESTION")
+    @Column(name = "COMMON_QUESTION")
     private String commonQuestion;
+
+    public void changeCommonQuestionFolder(CommonQuestionFolder commonQuestionFolder) {
+        this.commonQuestionFolder = commonQuestionFolder;
+        commonQuestionFolder.getCommonQuestionList().add(this);
+    }
+
+    public void updateCommonQuestion(String commonQuestion) { this.commonQuestion = commonQuestion; }
+
 }
