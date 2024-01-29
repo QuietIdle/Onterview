@@ -3,7 +3,7 @@ import { useSelfSpeechStore } from '@/stores/selfSpeech';
 import videojs from "video.js";
 import { onBeforeUnmount, ref } from "vue";
 import { fileServer } from "@/api/video";
-import {useRouter} from 'vue-router'
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
@@ -69,20 +69,22 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="d-flex align-center">
-    <div class="ma-1">{{ selfSpeechStore.questionData.question }}</div>
-    <v-icon class="exit-btn ma-1 ml-auto" color="black" size="32" icon="mdi-close-circle-outline" @click="goSelfSpeechMain"></v-icon>
-  </div>
-  <div v-if="!videoLoaded" class="empty-player-container ma-auto">
-    <button @click="requestVideo" class="play-button">Play</button>
-  </div>
-  <div v-else class="d-flex justify-center">
-    <video ref="videoPlayer" class="video-js vjs-big-play-centered vjs-layout-medium" data-setup='{}' autoplay controls preload="auto" width="640" height="360"></video>
-  </div>
-  <div class="btn-container w-100 d-flex align-center">
-    <v-btn class="ma-3" @click="requestVideo" variant="outlined">북마크</v-btn>
-    <v-btn class="ma-3" variant="outlined">삭제</v-btn>
-    <v-btn class="ma-3 ml-auto bg-red" @click="backToRecording" variant="outlined">녹화하러가기</v-btn>
+  <div class="h-100 d-flex flex-column justify-space-between">
+    <div class="d-flex align-center">
+      <div class="ma-1">{{ selfSpeechStore.questionData.question }}</div>
+      <v-icon class="exit-btn ma-1 ml-auto" color="black" size="32" icon="mdi-close-circle-outline" @click="goSelfSpeechMain"></v-icon>
+    </div>
+    <div v-if="!videoLoaded" class="empty-player-container ma-auto">
+      <button @click="requestVideo" class="play-button">Play</button>
+    </div>
+    <div v-else class="d-flex justify-center">
+      <video ref="videoPlayer" class="video-js vjs-big-play-centered vjs-layout-medium" data-setup='{}' autoplay controls preload="auto" width="640" height="360"></video>
+    </div>
+    <div class="btn-container w-100 d-flex align-center">
+      <v-btn class="ma-3" @click="requestVideo" variant="outlined">북마크</v-btn>
+      <v-btn class="ma-3" variant="outlined">삭제</v-btn>
+      <v-btn class="ma-3 ml-auto bg-red" @click="backToRecording" variant="outlined">녹화하러가기</v-btn>
+    </div>
   </div>
 </template>
 
