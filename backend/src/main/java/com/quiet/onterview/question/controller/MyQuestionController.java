@@ -1,6 +1,7 @@
 package com.quiet.onterview.question.controller;
 
 import com.quiet.onterview.question.dto.request.MyAnswerUpdateRequest;
+import com.quiet.onterview.question.dto.request.MyQuestionMoveRequest;
 import com.quiet.onterview.question.dto.request.MyQuestionRequest;
 import com.quiet.onterview.question.dto.request.MyQuestionUpdateRequest;
 import com.quiet.onterview.question.dto.response.MyAnswerAndVideoResponse;
@@ -56,6 +57,13 @@ public class MyQuestionController {
     @DeleteMapping("/{my_question_id}")
     public ResponseEntity<Void> deleteMyQuestion(@PathVariable("my_question_id") Long myQuestionId) {
         myQuestionService.deleteMyQuestion(myQuestionId);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "PATCH 방식으로 나의 면접 질문 폴더간 이동")
+    @PatchMapping("/move")
+    public ResponseEntity<Void> moveMyQuestion(@RequestBody MyQuestionMoveRequest myQuestionMoveRequest) {
+        myQuestionService.moveMyQuestion(myQuestionMoveRequest);
         return ResponseEntity.ok().build();
     }
 }

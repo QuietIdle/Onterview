@@ -1,11 +1,14 @@
 package com.quiet.onterview.question.service;
 
 import com.quiet.onterview.question.dto.request.MyAnswerUpdateRequest;
+import com.quiet.onterview.question.dto.request.MyQuestionMoveRequest;
 import com.quiet.onterview.question.dto.request.MyQuestionRequest;
 import com.quiet.onterview.question.dto.request.MyQuestionUpdateRequest;
 import com.quiet.onterview.question.dto.response.MyAnswerAndVideoResponse;
 import com.quiet.onterview.question.entity.MyQuestion;
 import com.quiet.onterview.question.entity.MyQuestionFolder;
+import com.quiet.onterview.question.exception.MyQuestionFolderNotFoundException;
+import com.quiet.onterview.question.exception.MyQuestionFolderNotMatchException;
 import com.quiet.onterview.question.exception.MyQuestionNotFoundException;
 import com.quiet.onterview.question.mapper.MyQuestionMapper;
 import com.quiet.onterview.question.repository.CommonQuestionRepository;
@@ -15,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -69,5 +73,23 @@ public class MyQuestionServiceImpl implements MyQuestionService{
         myQuestionRepository.delete(
                 myQuestionRepository.findById(myQuestionId)
                 .orElseThrow(MyQuestionNotFoundException::new));
+    }
+
+    @Override
+    public void moveMyQuestion(MyQuestionMoveRequest myQuestionMoveRequest) {
+        MyQuestion myQuestion = myQuestionRepository.findById(myQuestionMoveRequest.getMyQuestionId())
+                .orElseThrow(MyQuestionNotFoundException::new);
+
+        MyQuestionFolder fromMyQuestionFolder = myQuestionFolderRepository.findById(myQuestionMoveRequest.getFromMyQuestionFolderId())
+                .orElseThrow(MyQuestionFolderNotFoundException::new);
+
+        if (!Objects.equals(myQuestion.getMyQuestionFolder(), fromMyQuestionFolder)) {
+            throw new MyQuestionFolderNotMatchException();
+        }
+
+        MyQuestionFolder toMyQuestionFolder = myQuestionFolderRepository.findById(myQuestionMoveRequest.getToMyQuestionFolderId())
+                .orElseThrow(MyQuestionFolderNotFoundException::new);
+
+        myQuestion.moveMyQuestionFolder(fromMyQuestionFolder, toMyQuestionFolder);
     }
 }
