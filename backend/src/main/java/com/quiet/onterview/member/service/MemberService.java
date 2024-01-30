@@ -1,7 +1,9 @@
 package com.quiet.onterview.member.service;
 
 import com.quiet.onterview.common.BaseException;
+import com.quiet.onterview.member.dto.request.MemberModifyNicknameRequest;
 import com.quiet.onterview.member.dto.request.MemberWithdrawRequest;
+import com.quiet.onterview.member.dto.response.MemberModifyNicknameResponse;
 import com.quiet.onterview.security.jwt.JwtTokenProvider;
 import com.quiet.onterview.member.dto.request.MemberLoginRequest;
 import com.quiet.onterview.member.dto.response.MemberLoginResponse;
@@ -105,5 +107,20 @@ public class MemberService {
 
     public int updatePassword(Long userId, String password) {
         return memberRepository.updatePassword(userId, passwordEncoder.encode(password));
+    }
+
+    public MemberModifyNicknameResponse modifyNickname(Long memberId,
+            MemberModifyNicknameRequest memberModifyNicknameRequest) {
+        String nickname = memberModifyNicknameRequest.getNickname();
+        if((nickname==null)) {
+            throw new BaseException(ErrorCode.REQUIRED_VALUE_NOT_EXISTS);
+        }
+        if(!isNicknameAvailable(nickname)) {
+            throw new BaseException(ErrorCode.NICKNAME_DUPLICATED);
+        }
+        memberRepository.updateNickname(memberId, nickname);
+        return MemberModifyNicknameResponse.builder()
+                .nickname(nickname)
+                .build();
     }
 }

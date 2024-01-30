@@ -2,6 +2,7 @@ package com.quiet.onterview.security.jwt;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.quiet.onterview.common.ErrorCode;
 import com.quiet.onterview.member.entity.Member;
 import com.quiet.onterview.member.repository.MemberRepository;
@@ -15,8 +16,13 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.json.JSONParser;
+import org.apache.tomcat.util.json.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -54,19 +60,5 @@ public class JwtDecoderFilter implements Filter {
         SecurityContextHolder.getContext().setAuthentication(new SecurityMemberAuthentication(new SecurityUser(member)));
 
         filterChain.doFilter(request,response);
-    }
-
-    public void handleSecurityError(HttpServletResponse response,
-                                    AuthenticationException exception) {
-        SecurityException securityException = (SecurityException) exception;
-        response.setStatus(securityException.getErrorCode().getStatusCode().value());
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        try {
-            String json = new ObjectMapper().writeValueAsString(securityException.getMessage());
-            response.getWriter().write(json);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }
