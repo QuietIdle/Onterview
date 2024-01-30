@@ -92,7 +92,7 @@ const sendToServer = async function(chunk, idx) {
 
     const jsonData = {
       filename: filename.value,
-      username: userStore.email.split('@')[0] || "null",
+      username: userStore.email || "null",
       chunkNumber: idx,
       endOfChunk: flag.value,
     }
@@ -104,7 +104,7 @@ const sendToServer = async function(chunk, idx) {
     //const response = await axios.post(`http://70.12.247.60:8080/api/chunk/upload?&chunkNumber=${idx}&endOfChunk=${flag.value}`, formData);
     //console.log('Chunk sent successfully!', response);
     if (response.status === 200) {
-      console.log(response.data);
+      console.log('upload success', response.data);
       uploadData.value = response.data;
     }
   } catch (error) {
@@ -162,7 +162,7 @@ const saveRecording = async function () {
 const cancelRecording = async function () {
   try {
     dialog.value = false
-    const res = await fileServer.cancelUpload(userStore.email.split('@')[0] || "null", filename.value)
+    const res = await fileServer.cancelUpload(userStore.email || "null", filename.value)
     console.log(res.data)
   } catch (error) {
     console.log(error)
