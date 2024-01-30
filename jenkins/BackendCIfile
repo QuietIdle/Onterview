@@ -1,33 +1,44 @@
 pipeline {
-	agent any
-		stages {
-			stage('Build Gradle') {
-        steps {
-				  echo 'Build Gradle'
-				  dir('backend') {
-					  sh """
+    agent any
+    stages {
+        stage('copy yml before build') {
+            steps {
+                withCredentials([file(credentialsId: 'datasource-credentials', variable: 'dbConfigFile'),
+                                 file(credentialsId: 'file-credentials', variable: 'fileConfigFile')]) {
+                    script {
+                        sh 'cp $dbConfigFile backend/src/main/resources/application-datasource.yml'
+                        sh 'cp $fileConfigFile backend/src/main/resources/application-file.yml'
+                    }
+                }
+            }
+        }
+
+        stage('Build Gradle') {
+            steps {
+                echo 'Build Gradle'
+                dir('backend') {
+                    sh """
 						  chmod +x ./gradlew
 						  ./gradlew bootJar
 					  """
 
-            script {
-              docker.build("${BACKEND_DOCKER_IMAGE}")
+                    script {
+                        docker.build("${BACKEND_DOCKER_IMAGE}")
+                    }
+                }
             }
-				  }
-			  }
-			  post {
-        	success {
-            echo "build success"
-            // 빌드가 성공했을 때 GitLab에 성공 상태를 알립니다.
-            updateGitlabCommitStatus name: 'build', state: 'success'
-        	}
-        	failure {
-            echo "build failed"
-            // 빌드가 실패했을 때 GitLab에 실패 상태를 알립니다.
-            updateGitlabCommitStatus name: 'build', state: 'failed'
-          }
+            post {
+                success {
+                    echo "build success"
+                    // 빌드가 성공했을 때 GitLab에 성공 상태를 알립니다.
+                    updateGitlabCommitStatus name: 'build', state: 'success'
+                }
+                failure {
+                    echo "build failed"
+                    // 빌드가 실패했을 때 GitLab에 실패 상태를 알립니다.
+                    updateGitlabCommitStatus name: 'build', state: 'failed'
+                }
+            }
         }
-			}
-		}
-	}
+    }
 }
