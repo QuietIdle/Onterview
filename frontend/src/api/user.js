@@ -26,26 +26,22 @@ const getIsDuplicatedNickname = function (nickname, success, error) {
 
 const patchUpdateUser = function (payload, success, error) {
     console.log("request patch, update user")
+    const userStore = useUserStore()
+    api.defaults.headers["Authorization"] = userStore.accessToken
     api.patch(`/api/user`, payload).then(success).catch(error)
 }
 
 const patchChangeUserPwd = function (payload, success, error) {
     console.log("request patch, change user password")
+    const userStore = useUserStore()
+    api.defaults.headers["Authorization"] = userStore.accessToken
     api.patch(`/api/user/password`, payload).then(success).catch(error)
 }
 
 const deleteDeleteUser = function (payload, success, error) {
     console.log("request delete, delete user")
     const userStore = useUserStore()
-    // const headers = {
-    //     headers: {
-    //         Authorization: userStore.accessToken
-    //     }
-    // }
-    // console.log(headers)
     api.defaults.headers["Authorization"] = userStore.accessToken
-    console.log(userStore.accessToken)
-    console.log(api.defaults.headers)
     api.delete(`/api/user`, payload).then(success).catch(error)
 }
 
