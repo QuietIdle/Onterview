@@ -1,12 +1,14 @@
 package com.quiet.onterview.member.controller;
 
+import com.quiet.onterview.member.dto.request.MemberModifyNicknameRequest;
+import com.quiet.onterview.member.dto.request.MemberWithdrawRequest;
 import com.quiet.onterview.member.dto.response.MemberDuplicateResponse;
 import com.quiet.onterview.member.dto.request.MemberLoginRequest;
 import com.quiet.onterview.member.dto.response.MemberLoginResponse;
 import com.quiet.onterview.member.dto.request.MemberSignupRequest;
 import com.quiet.onterview.member.dto.request.MemberModifyPasswordRequest;
+import com.quiet.onterview.member.dto.response.MemberModifyNicknameResponse;
 import com.quiet.onterview.member.dto.response.MemberTokenResponse;
-import com.quiet.onterview.member.entity.Member;
 import com.quiet.onterview.member.service.MemberService;
 import com.quiet.onterview.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
@@ -49,10 +51,10 @@ public class MemberController {
     }
 
     @DeleteMapping
-    public ResponseEntity withdrawMember(@AuthenticationPrincipal SecurityUser user) {
-        System.out.println("USER ! " + user.getMemberId());
-        memberService.withdrawUser(user.getMemberId());
-        return ResponseEntity.ok().build();
+    public ResponseEntity withdrawMember(@AuthenticationPrincipal SecurityUser user,
+            @RequestBody MemberWithdrawRequest memberWithdrawRequest) {
+        memberService.withdrawUser(user.getMemberId(), memberWithdrawRequest);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/check/nickname")
@@ -70,5 +72,12 @@ public class MemberController {
             @RequestHeader("AccessToken") String accessToken,
             @RequestHeader("RefreshToken") String refreshToken) {
         return ResponseEntity.ok(memberService.remakeMemberToken(accessToken, refreshToken));
+    }
+
+    @PatchMapping("/nickname")
+    public ResponseEntity<MemberModifyNicknameResponse> modifyUserNickname(
+            @AuthenticationPrincipal SecurityUser user,
+            @RequestBody MemberModifyNicknameRequest memberModifyNicknameRequest) {
+        return ResponseEntity.ok(memberService.modifyNickname(user.getMemberId(), memberModifyNicknameRequest));
     }
 }
