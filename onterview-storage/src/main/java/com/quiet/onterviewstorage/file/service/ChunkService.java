@@ -94,4 +94,13 @@ public class ChunkService {
         long end = httpRange.getRangeEnd(contentLength);
         return Long.min(chunkSize, end - start + 1);
     }
+
+    public void delete(String fileName) throws IOException {
+        Path path = Path.of(fileUtils.VIDEO_PATH, fileName);
+        File file = new File(String.valueOf(path));
+
+        if (file.exists()) {
+            Files.delete(path);
+        }
+    }
 }

@@ -52,4 +52,11 @@ public class ChunkController {
                 .eTag(response.getPath())
                 .body(response.getRegion());
     }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> delete(@RequestParam("fileName") String fileName) throws IOException {
+        chunkService.delete(fileName);
+
+        return ResponseEntity.noContent().build();
+    }
 }
