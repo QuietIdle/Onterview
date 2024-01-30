@@ -1,6 +1,7 @@
 package com.quiet.onterview.member.service;
 
 import com.quiet.onterview.common.BaseException;
+import com.quiet.onterview.member.dto.request.MemberWithdrawRequest;
 import com.quiet.onterview.security.jwt.JwtTokenProvider;
 import com.quiet.onterview.member.dto.request.MemberLoginRequest;
 import com.quiet.onterview.member.dto.response.MemberLoginResponse;
@@ -53,8 +54,8 @@ public class MemberService {
         return memberMapper.memberToMemberLoginResponse(member, accessToken, refreshToken);
     }
 
-    public void modifyPassword(Long userId, MemberModifyPasswordRequest memberModifyPasswordRequest) {
-        Member member = memberRepository.findById(userId)
+    public void modifyPassword(Long memberId, MemberModifyPasswordRequest memberModifyPasswordRequest) {
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_EXISTS));
         if(!passwordEncoder.matches(memberModifyPasswordRequest.getOriginal(), member.getPassword())) {
             throw new BaseException(ErrorCode.PASSWORD_NOT_MATCHES);
@@ -62,7 +63,7 @@ public class MemberService {
         if(!isPasswordCorrespond(memberModifyPasswordRequest.getPassword(), memberModifyPasswordRequest.getConfirm())) {
             throw new BaseException(ErrorCode.PASSWORD_CANNOT_CONFIRM);
         }
-        updatePassword(userId, memberModifyPasswordRequest.getPassword());
+        updatePassword(memberId, memberModifyPasswordRequest.getPassword());
     }
 
     public MemberTokenResponse remakeMemberToken(String accessToken, String refreshToken) {
@@ -81,7 +82,12 @@ public class MemberService {
                 .build();
     }
 
-    public void withdrawUser(Long memberId) {
+    public void withdrawUser(Long memberId, MemberWithdrawRequest memberWithdrawRequest) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_EXISTS));
+        if(!passwordEncoder.matches(memberWithdrawRequest.getPassword(), member.getPassword())) {
+            throw new BaseException(ErrorCode.PASSWORD_NOT_MATCHES);
+        }
         memberRepository.deleteById(memberId);
     }
 

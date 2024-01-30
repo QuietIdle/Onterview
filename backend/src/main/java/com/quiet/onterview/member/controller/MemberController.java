@@ -1,5 +1,6 @@
 package com.quiet.onterview.member.controller;
 
+import com.quiet.onterview.member.dto.request.MemberWithdrawRequest;
 import com.quiet.onterview.member.dto.response.MemberDuplicateResponse;
 import com.quiet.onterview.member.dto.request.MemberLoginRequest;
 import com.quiet.onterview.member.dto.response.MemberLoginResponse;
@@ -49,9 +50,10 @@ public class MemberController {
     }
 
     @DeleteMapping
-    public ResponseEntity withdrawMember(@AuthenticationPrincipal SecurityUser user) {
-        memberService.withdrawUser(user.getMemberId());
-        return ResponseEntity.ok().build();
+    public ResponseEntity withdrawMember(@AuthenticationPrincipal SecurityUser user,
+            @RequestBody MemberWithdrawRequest memberWithdrawRequest) {
+        memberService.withdrawUser(user.getMemberId(), memberWithdrawRequest);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/check/nickname")
