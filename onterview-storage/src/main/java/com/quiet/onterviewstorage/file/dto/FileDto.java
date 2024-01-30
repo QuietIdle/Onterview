@@ -22,4 +22,13 @@ public class FileDto {
         private final String thumbnailUrl;
     }
 
+    @Getter
+    @RequiredArgsConstructor
+    public static class VideoRequest {
+
+        private final String username;
+        private final String filename;
+        private final int chunkNumber;
+        private final int endOfChunk;
+    }
 }
