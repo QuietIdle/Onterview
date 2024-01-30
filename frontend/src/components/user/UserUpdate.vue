@@ -1,11 +1,12 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useUserStore } from '@/stores/user.js'
 import { patchUpdateUser } from '@/api/user.js'
 
 const userStore = useUserStore()
 const formRef = ref(null)
 const nickname = ref(userStore.nickname)
+const updateBtnActivated = ref(true)
 // const fileInput = ref(null)
 
 // const fileRules = [
@@ -18,6 +19,13 @@ const nickname = ref(userStore.nickname)
 //   fileInput.value.click()
 // }
 
+const watchNickname = watch(nickname, () => {
+  if (nickname.value != userStore.nickname.value) {
+    updateBtnActivated.value = false
+  } else {
+    updateBtnActivated.value = true
+  }
+})
 
 const nicknameRules = [
   (value) => {
@@ -87,7 +95,7 @@ const requestUpdateUser = function () {
       <v-form ref="formRef" fast-fail @submit.prevent="requestUpdateUser">
         <v-text-field label="닉네임" :rules="nicknameRules" v-model="nickname"></v-text-field>
         <div class="d-flex justify-center">
-          <v-btn type="submit" class="d-flex justify-center mt-2 px-15" color="success">
+          <v-btn type="submit" class="d-flex justify-center mt-2 px-15" :disabled="updateBtnActivated" color="success">
             <h3>회원정보 수정</h3>
           </v-btn>
         </div>
