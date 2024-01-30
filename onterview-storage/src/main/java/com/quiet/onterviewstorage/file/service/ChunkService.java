@@ -1,9 +1,9 @@
 package com.quiet.onterviewstorage.file.service;
 
-import com.quiet.onterviewstorage.file.FileUtils;
 import com.quiet.onterviewstorage.file.dto.FileDto.VideoResponse;
 import com.quiet.onterviewstorage.file.dto.ResourceDto;
 import com.quiet.onterviewstorage.util.FFmpegManager;
+import com.quiet.onterviewstorage.util.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
