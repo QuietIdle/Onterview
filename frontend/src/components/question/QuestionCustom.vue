@@ -1,6 +1,20 @@
 <script setup>
+// lib
 import draggable from 'vuedraggable'
-import { ref } from 'vue'
+import { ref, onMounted, onUpdated, watch } from 'vue'
+
+// api
+import {
+  patchUpdateMyQuestionFolder,
+  patchUpdateMyQuestion,
+  postCreateMyQuestion,
+  patchMoveMyQuestion
+} from '@/api/question'
+
+// assets
+import QuestionModalCreate from '@/components/question/modal/QuestionModalCreate.vue'
+import QuestionModalDelete from '@/components/question/modal/QuestionModalDelete.vue'
+import editImage from '@/assets/question/editImage.png'
 
 // store
 import { storeToRefs } from 'pinia'
@@ -8,86 +22,203 @@ import { useQuestionStore } from '@/stores/question.js'
 const questionStore = useQuestionStore()
 const { myQuestionList } = storeToRefs(questionStore)
 
-const log = function () {
-  console.log('drag n drop my question list')
-  console.log(myQuestionList.value)
+onMounted(() => {
+  questionStore.requestMyQuestionList()
+})
+
+onUpdated(() => {
+  console.log('onupdated', start.value)
+  console.log('onUPdateed', end.value)
+})
+
+const start = ref({
+  myQuestionId: null,
+  myQuestionFolderId: null
+})
+const end = ref({
+  myQuestionId: null,
+  myQuestionFolderId: null,
+  question: null,
+  commonQuestionId: null
+})
+
+const toggle = ref(false)
+
+watch(
+  [start, end],
+  async ([newStart, newEnd]) => {
+    if (toggle.value == true) {
+      toggle.value = false
+    } else if (newStart.myQuestionId === newEnd.myQuestionId) {
+      try {
+        const payload = {
+          myQuestionId: newStart.myQuestionId,
+          fromMyQuestionFolderId: newStart.myQuestionFolderId,
+          toMyQuestionFolderId: newEnd.myQuestionFolderId
+        }
+
+        const response = await patchMoveMyQuestion(payload)
+        console.log('response move my question', response)
+
+        end.value.myQuestionId = null
+        toggle.value = true
+        questionStore.requestMyQuestionList()
+      } catch (error) {
+        console.log('error move my question', error)
+      }
+    } else {
+      try {
+        const payload = {
+          myQuestionFolderId: newEnd.myQuestionFolderId,
+          commonQuestionId: newEnd.commonQuestionId,
+          question: newEnd.question
+        }
+
+        const response = await postCreateMyQuestion(payload)
+        console.log('response create my question', response)
+
+        end.value.myQuestionId = null
+        toggle.value = true
+        questionStore.requestMyQuestionList()
+      } catch (error) {
+        console.log('error create my question', error)
+      }
+    }
+  },
+  { deep: true }
+)
+
+const log = async function (event, folder) {
+  if (event.removed) {
+    start.value.myQuestionId = event.removed.element.myQuestionId
+    start.value.myQuestionFolderId = folder.myQuestionFolderId
+  }
+  if (event.added) {
+    end.value.myQuestionId = event.added.element.myQuestionId
+    end.value.myQuestionFolderId = folder.myQuestionFolderId
+    end.value.question = event.added.element.commonQuestion
+    end.value.commonQuestionId = event.added.element.commonQuestionId
+  }
+
+  questionStore.requestMyQuestionList()
 }
 
-const selectFolder = ref([])
-const selectQuestion = ref([])
-
-const checkFolder = function (folder) {
-  console.log(folder)
-}
-
-const checkAll = function () {}
-
-const enableEditing = function (element) {
+const enableEditingMyQuestion = function (element) {
   element.isEditing = true
   element.editableQuestion = element.question
 }
 
-const disableEditing = function (element) {
+const requestUpdateMyQuestion = async function (element) {
   element.isEditing = false
-  element.question = element.editableQuestion
+  // element.question = element.editableQuestion
+
+  try {
+    const payload = { question: element.editableQuestion }
+    const response = await patchUpdateMyQuestion(element.myQuestionId, payload)
+    console.log('response upadte my question', response)
+
+    questionStore.requestMyQuestionList()
+  } catch (error) {
+    console.log('error update my question', error)
+  }
+}
+
+const enableEditingMyQuestionFolder = function (folder) {
+  folder.isEditing = true
+  folder.editableQuestion = folder.myQuestionFolder
+}
+
+const requestUpdateMyQuestionFolder = async function (folder) {
+  folder.isEditing = false
+  // element.question = element.editableQuestion
+
+  try {
+    const payload = { myQuestionFolder: folder.editableQuestion }
+    const response = await patchUpdateMyQuestionFolder(folder.myQuestionFolderId, payload)
+    console.log('response upadte my question folder', response)
+
+    questionStore.requestMyQuestionList()
+  } catch (error) {
+    console.log('error update my question folder', error)
+  }
 }
 </script>
 
 <template>
   <div class="question-title pa-3">나의 면접 문항 목록</div>
   <div class="bg-white pa-3 d-flex">
-    <div class="me-auto d-flex align-center">
-      <v-btn class="mr-3" variant="elevated" color="purple-accent-4">전체 선택</v-btn>
-      <div style="color: gray">질문 *개 선택됨</div>
-    </div>
-    <v-btn variant="elevated" color="red-accent-2">삭제</v-btn>
-    <v-btn class="ml-3" variant="elevated" color="blue-accent-2">폴더 추가</v-btn>
+    <div class="me-auto d-flex align-center"></div>
+    <QuestionModalCreate content="폴더" />
   </div>
   <div style="max-height: 80%; overflow-y: auto">
     <v-expansion-panels variant="accordion" multiple>
-      <v-expansion-panel v-for="folder in myQuestionList" :key="folder.my_question_folder_id">
-        <v-expansion-panel-title>
-          <v-row>
+      <v-expansion-panel v-for="folder in myQuestionList" :key="folder.myQuestionFolderId">
+        <v-hover v-slot="{ isHovering, props }">
+          <v-expansion-panel-title v-bind="props">
             <v-col cols="auto">
-              <v-checkbox
-                @click.stop="checkFolder(folder)"
-                v-model="selectFolder"
-                :value="folder.my_question_folder_id"
-              ></v-checkbox>
+              <v-img
+                v-if="isHovering"
+                width="20"
+                :src="editImage"
+                @click.stop="enableEditingMyQuestionFolder(folder)"
+              ></v-img>
+              <v-img width="20"></v-img>
             </v-col>
             <v-col class="d-flex align-center">
-              {{ folder.folder }}
+              <template v-if="folder.isEditing">
+                <v-text-field
+                  v-model="folder.editableQuestion"
+                  @blur="requestUpdateMyQuestionFolder(folder)"
+                  @keyup.enter="requestUpdateMyQuestionFolder(folder)"
+                ></v-text-field>
+              </template>
+              <template v-else>
+                {{ folder.myQuestionFolder }}
+              </template>
             </v-col>
-          </v-row>
-        </v-expansion-panel-title>
+            <v-col cols="auto" class="d-flex align-center">
+              <QuestionModalCreate
+                content="질문"
+                :my-question-folder-id="folder.myQuestionFolderId"
+              />
+              <QuestionModalDelete
+                content="폴더"
+                :my-question-folder-id="folder.myQuestionFolderId"
+                :my-question-folder="folder.myQuestionFolder"
+              />
+            </v-col>
+          </v-expansion-panel-title>
 
-        <draggable :list="folder.question" group="question" @change="log" item-key="my_question_id">
-          <template #item="{ element }">
-            <v-expansion-panel-text>
-              <v-row>
-                <v-col cols="auto"></v-col>
-                <v-col cols="auto">
-                  <v-checkbox v-model="selectQuestion" :value="element.my_question_id"></v-checkbox>
-                </v-col>
-                <v-col class="d-flex align-center" @dblclick="enableEditing(element)">
-                  <template v-if="element.isEditing">
-                    <v-text-field
-                      v-model="element.editableQuestion"
-                      @blur="disableEditing(element)"
-                      @keyup.enter="disableEditing(element)"
-                    ></v-text-field>
-                  </template>
-                  <template v-else>
-                    {{ element.question }}
-                  </template>
-                </v-col>
-              </v-row>
-            </v-expansion-panel-text>
-          </template>
-        </draggable>
-      </v-expansion-panel>
-      <v-expansion-panel>
-        <v-expansion-panel-title>폴더 추가</v-expansion-panel-title>
+          <draggable
+            :list="folder.myQuestionList"
+            group="question"
+            @change="(event) => log(event, folder)"
+            item-key="myQuestionId"
+          >
+            <template #item="{ element }">
+              <v-expansion-panel-text>
+                <v-row class="d-flex">
+                  <v-col cols="auto"></v-col>
+                  <v-col class="d-flex align-center" @dblclick="enableEditingMyQuestion(element)">
+                    <template v-if="element.isEditing">
+                      <v-text-field
+                        v-model="element.editableQuestion"
+                        @keyup.enter="requestUpdateMyQuestion(element)"
+                        @blur="requestUpdateMyQuestion(element)"
+                      ></v-text-field>
+                    </template>
+                    <template v-else>
+                      {{ element.question }}
+                    </template>
+                  </v-col>
+                  <v-col cols="auto">
+                    <QuestionModalDelete content="파일" :my-question="element" />
+                  </v-col>
+                </v-row>
+              </v-expansion-panel-text>
+            </template>
+          </draggable>
+        </v-hover>
       </v-expansion-panel>
     </v-expansion-panels>
   </div>
@@ -105,5 +236,11 @@ const disableEditing = function (element) {
 
 .v-input__details {
   display: none !important;
+}
+
+.v-expansion-panel-title {
+  padding: 0 !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
 }
 </style>
