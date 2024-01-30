@@ -1,4 +1,4 @@
-package com.quiet.onterviewstorage.file;
+package com.quiet.onterviewstorage.util;
 
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
@@ -11,10 +11,11 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 @Configuration
 public class FFmpegConfig {
-    @Value("${ffmpeg.path}")
+
+    @Value("${path.ffmpeg}")
     private String ffmpegPath;
 
-    @Value("${ffprobe.path}")
+    @Value("${path.ffprobe}")
     private String ffprobePath;
 
     @Bean

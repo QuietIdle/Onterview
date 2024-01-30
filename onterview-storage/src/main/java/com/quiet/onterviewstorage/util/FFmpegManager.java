@@ -27,11 +27,10 @@ public class FFmpegManager {
 
         try {
             // ffmpeg cli 명령어 생성
-            String s = fileUtils.DEFAULT_URL.substring(0, fileUtils.DEFAULT_URL.length() - 6);
             FFmpegBuilder builder = new FFmpegBuilder()
-                    .setInput(s + "video\\" + sourcePath)
+                    .setInput(fileUtils.DEFAULT_URL + sourcePath)
                     .overrideOutputFiles(true)
-                    .addOutput(s + "image\\" + outputPath)
+                    .addOutput(fileUtils.DEFAULT_URL + outputPath)
                     .setFormat("image2")
                     .setFrames(1)
                     .setVideoFrameRate(1)

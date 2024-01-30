@@ -69,7 +69,8 @@ public class ChunkService {
         ));
     }
 
-    public ResourceDto getStreamResource(HttpHeaders headers, String filename) throws IOException {
+    public Optional<ResourceDto> getStreamResource(HttpHeaders headers, String filename)
+            throws IOException {
         Path path = Paths.get(fileUtils.VIDEO_PATH, filename);
 
         Resource resource = new FileSystemResource(path);
@@ -81,14 +82,22 @@ public class ChunkService {
                 .orElse(HttpRange.createByteRange(0, contentLength - 1));
 
         long rangeLength = calculateRangeLength(httpRange, contentLength, chunkSize);
+        long rangeStart = httpRange.getRangeStart(contentLength);
+        log.info("contentLength " + contentLength);
+        log.info("rangeStart: " + rangeStart);
+
+        if (rangeStart > contentLength) {
+            return Optional.empty();
+        }
+
         ResourceRegion region = new ResourceRegion(resource, httpRange.getRangeStart(contentLength),
                 rangeLength);
 
-        return new ResourceDto(
+        return Optional.of(new ResourceDto(
                 MediaTypeFactory.getMediaType(resource).orElse(MediaType.APPLICATION_OCTET_STREAM),
                 String.valueOf(path),
                 region
-        );
+        ));
     }
 
     private long calculateRangeLength(HttpRange httpRange, long contentLength, long chunkSize) {

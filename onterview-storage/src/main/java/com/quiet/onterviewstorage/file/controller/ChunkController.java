@@ -41,15 +41,15 @@ public class ChunkController {
             @RequestHeader HttpHeaders headers,
             @PathVariable String filename
     ) throws IOException {
-        Optional<ResourceDto> response = chunkService.getStreamResource(headers,
+        Optional<ResourceDto> isDone = chunkService.getStreamResource(headers,
                 filename);
 
-        return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+        return isDone.map(resourceDto -> ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
                 .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES))
-                .contentType(response.get().getMediaType())
+                .contentType(resourceDto.getMediaType())
                 .header("Accept-Ranges", "bytes")
-                .eTag(response.get().getPath())
-                .body(response.get().getRegion());
+                .eTag(resourceDto.getPath())
+                .body(resourceDto.getRegion())).orElseGet(() -> ResponseEntity.ok().build());
     }
 
     @DeleteMapping

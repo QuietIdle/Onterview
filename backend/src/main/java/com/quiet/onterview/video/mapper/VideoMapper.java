@@ -1,5 +1,6 @@
 package com.quiet.onterview.video.mapper;
 
+import com.quiet.onterview.file.mapper.FileInformationMapper;
 import com.quiet.onterview.question.entity.MyQuestion;
 import com.quiet.onterview.video.dto.request.VideoInformationRequest;
 import com.quiet.onterview.video.dto.response.VideoDetailResponse;
@@ -7,50 +8,50 @@ import com.quiet.onterview.video.dto.response.VideoInformationResponse;
 import com.quiet.onterview.video.entity.Video;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class VideoMapper {
 
-    public VideoDetailResponse videoToVideoDetailResponse(Video video) {
+    private final FileInformationMapper fileInformationMapper;
+
+    public VideoDetailResponse videoInformationToResponse(Video video) {
         return VideoDetailResponse.builder()
                 .videoId(video.getVideoId())
                 .title(video.getTitle())
-                .myQuestionId(video.getMyQuestion().getMyQuestionId())
-                .bookmark(video.getBookmark())
-                .videoUrl(video.getVideoUrl())
-                .thumbnailUrl(video.getThumbnailUrl())
+                .thumbnailUrl(fileInformationMapper.fileInformationToResponse(video.getThumbnailUrl()))
                 .feedback(video.getFeedback())
+                .bookmark(video.getBookmark())
+                .myQuestionId(video.getMyQuestion().getMyQuestionId())
+                .videoUrl(fileInformationMapper.fileInformationToResponse(video.getVideoUrl()))
                 .build();
     }
 
-    public List<VideoInformationResponse> videoListToVideoInformationResponseList(
-            Long myQuestionId,
-            List<Video> videos
-    ) {
-        return videos.stream()
-                .map(video -> VideoInformationResponse.builder()
-                        .videoId(video.getVideoId())
-                        .myQuestionId(myQuestionId)
-                        .title(video.getTitle())
-                        .feedback(video.getFeedback())
-                        .thumbnailUrl(video.getThumbnailUrl())
-                        .bookmark(video.getBookmark())
-                        .build())
-                .collect(Collectors.toList());
+    public Video videoInformationToEntity(VideoInformationRequest videoInformationRequest, MyQuestion myQuestion) {
+        return Video.builder()
+                .thumbnailUrl(fileInformationMapper.fileInformationRequestToEntity(
+                        videoInformationRequest.getThumbnailInformation()))
+                .videoUrl(fileInformationMapper.fileInformationRequestToEntity(videoInformationRequest.getVideoInformation()))
+                .title(videoInformationRequest.getTitle())
+                .bookmark(Boolean.FALSE)
+                .videoLength(videoInformationRequest.getVideoLength())
+                .myQuestion(myQuestion)
+                .build();
+    }
+    public List<VideoInformationResponse> allVideoToInformationResponse(List<Video> videos) {
+        return videos.stream().map(this::videoToInformationResponse).collect(Collectors.toList());
     }
 
-    public Video videoInformationRequestToVideo(
-            MyQuestion myQuestion,
-            VideoInformationRequest videoInformationRequest
-    ) {
-        return Video.builder()
-                .title(videoInformationRequest.getTitle())
-                .videoUrl(videoInformationRequest.getVideoUrl())
-                .thumbnailUrl(videoInformationRequest.getThumbnailUrl())
-                .videoLength(videoInformationRequest.getVideoLength())
-                .feedback(videoInformationRequest.getFeedback())
-                .myQuestion(myQuestion)
+    public VideoInformationResponse videoToInformationResponse(Video video) {
+        return VideoInformationResponse.builder()
+                .videoId(video.getVideoId())
+                .myQuestionId(video.getMyQuestion().getMyQuestionId())
+                .title(video.getTitle())
+                .thumbnailUrl(fileInformationMapper.imageInformationToResponse(video.getThumbnailUrl()))
+                .feedback(video.getFeedback())
+                .bookmark(video.getBookmark())
                 .build();
     }
 }

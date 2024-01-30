@@ -6,10 +6,13 @@ import com.quiet.onterview.member.dto.response.MemberLoginResponse;
 import com.quiet.onterview.member.dto.request.MemberSignupRequest;
 import com.quiet.onterview.member.dto.request.MemberModifyPasswordRequest;
 import com.quiet.onterview.member.dto.response.MemberTokenResponse;
+import com.quiet.onterview.member.entity.Member;
 import com.quiet.onterview.member.service.MemberService;
+import com.quiet.onterview.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -39,15 +42,16 @@ public class MemberController {
     }
 
     @PatchMapping("/password")
-    public ResponseEntity modifyPassword(@RequestHeader("Authorization") String accessToken,
+    public ResponseEntity modifyPassword(@AuthenticationPrincipal SecurityUser user,
             @RequestBody MemberModifyPasswordRequest memberModifyPasswordRequest) {
-        memberService.modifyPassword(accessToken, memberModifyPasswordRequest);
+        memberService.modifyPassword(user.getMemberId(), memberModifyPasswordRequest);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
-    public ResponseEntity withdrawMember(@RequestHeader("Authorization") String accessToken) {
-        memberService.withdrawUser(accessToken);
+    public ResponseEntity withdrawMember(@AuthenticationPrincipal SecurityUser user) {
+        System.out.println("USER ! " + user.getMemberId());
+        memberService.withdrawUser(user.getMemberId());
         return ResponseEntity.ok().build();
     }
 
@@ -62,7 +66,8 @@ public class MemberController {
     }
 
     @GetMapping("/token")
-    public ResponseEntity<MemberTokenResponse> remakeMemberToken(@RequestHeader("AccessToken") String accessToken,
+    public ResponseEntity<MemberTokenResponse> remakeMemberToken(
+            @RequestHeader("AccessToken") String accessToken,
             @RequestHeader("RefreshToken") String refreshToken) {
         return ResponseEntity.ok(memberService.remakeMemberToken(accessToken, refreshToken));
     }

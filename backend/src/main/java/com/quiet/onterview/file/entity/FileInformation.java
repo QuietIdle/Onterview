@@ -1,4 +1,4 @@
-package com.quiet.onterview.question.entity;
+package com.quiet.onterview.file.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,25 +8,26 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.cglib.core.GeneratorStrategy;
+
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
 @Entity
-@Table(name = "BASIC_QUESTION")
-public class BasicQuestion {
+@Builder
+@Table(name = "FILE_INFORMATION")
+public class FileInformation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "BASIC_QUESTION_ID")
-    private Long basicQuestionId;
+    private Long fileId;
 
-    @Column(name = "QUESTION", nullable = false)
-    private String question;
+    @Column(name = "ORIGIN_FILENAME")
+    private String originFilename;
 
-    @Column(name = "CATEGORY", nullable = false)
-    private String category;
+    @Column(name = "SAVE_FILENAME", unique = true)
+    private String saveFilename;
 }
