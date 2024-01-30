@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import SelfSpeechRecord from '@/components/selfSpeech/SelfSpeechRecord.vue';
 import SelfSpeechTab from '@/components/selfSpeech/SelfSpeechTab.vue';
 import VideoPlay from '@/components/video/VideoPlay.vue';
+import SelfSpeechQuestion from "@/components/selfSpeech/SelfSpeechQuestion.vue";
 import { useSelfSpeechStore } from '@/stores/selfSpeech';
 import { apiMethods } from '@/api/video';
 
@@ -19,8 +20,9 @@ const selectQuestion = async function () {
 
 <template>
   <div class="main-container w-screen h-screen d-flex">
+
     <div class="w-25 ma-5">
-      <div class="nav-bar ma-3">
+      <!-- <div class="nav-bar ma-3">
         1
       </div>
       <div class="search-box ma-3">
@@ -29,7 +31,9 @@ const selectQuestion = async function () {
       <div class="question-list ma-3">
         <input type="number" v-model="q_id">
         <button @click="selectQuestion">질문1</button>
-      </div>
+      </div> -->
+
+      <SelfSpeechQuestion />
     </div>
 
     <div class="w-75 ma-5">
