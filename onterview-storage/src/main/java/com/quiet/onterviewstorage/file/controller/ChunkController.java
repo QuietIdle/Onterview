@@ -1,15 +1,14 @@
 package com.quiet.onterviewstorage.file.controller;
 
-import com.quiet.onterviewstorage.file.service.ChunkService;
 import com.quiet.onterviewstorage.file.dto.FileDto.VideoResponse;
-import com.quiet.onterviewstorage.file.FileUtils;
+import com.quiet.onterviewstorage.file.dto.ResourceDto;
+import com.quiet.onterviewstorage.file.service.ChunkService;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jcodec.api.JCodecException;
+import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,29 +24,39 @@ public class ChunkController {
 
     @ResponseBody
     @PostMapping("/upload")
-    public ResponseEntity<String> chunkUpload(
+    public ResponseEntity<VideoResponse> chunkUpload(
             @RequestPart("chunk") MultipartFile file,
             @RequestParam("chunkNumber") int chunkNumber,
             @RequestParam("endOfChunk") int endOfChunk
-    ) throws IOException, JCodecException {
+    ) throws IOException {
         Optional<VideoResponse> isDone = chunkService.chunkUpload(file, chunkNumber,
                 endOfChunk);
 
-        return isDone.isEmpty() ?
-                ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).build() :
-                ResponseEntity.ok("File uploaded successfully]");
+        return isDone.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).build());
     }
 
-    @GetMapping("/download")
-    public ResponseEntity<?> streamVideo(@RequestParam("filePath") String filePath)
-            throws IOException {
+    @GetMapping("/stream/{filename}")
+    public ResponseEntity<ResourceRegion> streamVideo(
+            @RequestHeader HttpHeaders headers,
+            @PathVariable String filename
+    ) throws IOException {
+        Optional<ResourceDto> response = chunkService.getStreamResource(headers,
+                filename);
 
-        Path path = Path.of(FileUtils.DEFAULT_VIDEO_PATH + "/" + filePath);
-        byte[] bytes = Files.readAllBytes(path);
+        return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES))
+                .contentType(response.get().getMediaType())
+                .header("Accept-Ranges", "bytes")
+                .eTag(response.get().getPath())
+                .body(response.get().getRegion());
+    }
 
-        String contentType = Files.probeContentType(path);
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(contentType))
-                .body(bytes);
+    @DeleteMapping
+    public ResponseEntity<?> chunkDelete(
+            @RequestParam("fileName") String fileName
+    ) throws IOException {
+        chunkService.delete(fileName);
+        return ResponseEntity.noContent().build();
     }
 }

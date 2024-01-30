@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.cglib.core.GeneratorStrategy;
+import org.springframework.data.annotation.CreatedDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
