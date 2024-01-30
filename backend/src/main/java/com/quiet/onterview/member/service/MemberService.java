@@ -54,6 +54,11 @@ public class MemberService {
     }
 
     public void modifyPassword(Long userId, MemberModifyPasswordRequest memberModifyPasswordRequest) {
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_EXISTS));
+        if(!passwordEncoder.matches(memberModifyPasswordRequest.getOriginal(), member.getPassword())) {
+            throw new BaseException(ErrorCode.PASSWORD_NOT_MATCHES);
+        }
         if(!isPasswordCorrespond(memberModifyPasswordRequest.getPassword(), memberModifyPasswordRequest.getConfirm())) {
             throw new BaseException(ErrorCode.PASSWORD_CANNOT_CONFIRM);
         }

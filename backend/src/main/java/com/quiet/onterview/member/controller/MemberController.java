@@ -50,7 +50,6 @@ public class MemberController {
 
     @DeleteMapping
     public ResponseEntity withdrawMember(@AuthenticationPrincipal SecurityUser user) {
-        System.out.println("USER ! " + user.getMemberId());
         memberService.withdrawUser(user.getMemberId());
         return ResponseEntity.ok().build();
     }
