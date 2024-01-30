@@ -1,14 +1,14 @@
 <script setup>
 // lib
 import draggable from 'vuedraggable'
-import { onMounted } from 'vue'
+import { ref, onMounted, onUpdated, watch } from 'vue'
 
 // api
 import {
   patchUpdateMyQuestionFolder,
   patchUpdateMyQuestion,
   postCreateMyQuestion,
-  deleteDeleteMyQuestion
+  patchMoveMyQuestion
 } from '@/api/question'
 
 // assets
@@ -26,30 +26,78 @@ onMounted(() => {
   questionStore.requestMyQuestionList()
 })
 
-const log = async function (event, folder) {
-  if (event.added) {
-    try {
-      const payload = {
-        myQuestionFolderId: folder.myQuestionFolderId,
-        commonQuestionId: event.added.element.commonQuestionId,
-        question: event.added.element.question
-          ? event.added.element.question
-          : event.added.element.commonQuestion
-      }
+onUpdated(() => {
+  console.log('onupdated', start.value)
+  console.log('onUPdateed', end.value)
+})
 
-      const response = await postCreateMyQuestion(payload)
-      console.log('response create my question', response)
-    } catch (error) {
-      console.log('error create my question', error)
+const start = ref({
+  myQuestionId: null,
+  myQuestionFolderId: null
+})
+const end = ref({
+  myQuestionId: null,
+  myQuestionFolderId: null,
+  question: null,
+  commonQuestionId: null
+})
+
+const toggle = ref(false)
+
+watch(
+  [start, end],
+  async ([newStart, newEnd]) => {
+    if (toggle.value == true) {
+      toggle.value = false
+    } else if (newStart.myQuestionId === newEnd.myQuestionId) {
+      try {
+        const payload = {
+          myQuestionId: newStart.myQuestionId,
+          fromMyQuestionFolderId: newStart.myQuestionFolderId,
+          toMyQuestionFolderId: newEnd.myQuestionFolderId
+        }
+
+        const response = await patchMoveMyQuestion(payload)
+        console.log('response move my question', response)
+
+        end.value.myQuestionId = null
+        toggle.value = true
+        questionStore.requestMyQuestionList()
+      } catch (error) {
+        console.log('error move my question', error)
+      }
+    } else {
+      try {
+        const payload = {
+          myQuestionFolderId: newEnd.myQuestionFolderId,
+          commonQuestionId: newEnd.commonQuestionId,
+          question: newEnd.question
+        }
+
+        const response = await postCreateMyQuestion(payload)
+        console.log('response create my question', response)
+
+        end.value.myQuestionId = null
+        toggle.value = true
+        questionStore.requestMyQuestionList()
+      } catch (error) {
+        console.log('error create my question', error)
+      }
     }
-  }
+  },
+  { deep: true }
+)
+
+const log = async function (event, folder) {
   if (event.removed) {
-    try {
-      const response = await deleteDeleteMyQuestion(event.removed.element.myQuestionId)
-      console.log('reponse delete my question', response)
-    } catch (error) {
-      console.log('error delete my question', error)
-    }
+    start.value.myQuestionId = event.removed.element.myQuestionId
+    start.value.myQuestionFolderId = folder.myQuestionFolderId
+  }
+  if (event.added) {
+    end.value.myQuestionId = event.added.element.myQuestionId
+    end.value.myQuestionFolderId = folder.myQuestionFolderId
+    end.value.question = event.added.element.commonQuestion
+    end.value.commonQuestionId = event.added.element.commonQuestionId
   }
 
   questionStore.requestMyQuestionList()
