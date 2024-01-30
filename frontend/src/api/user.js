@@ -42,7 +42,11 @@ const deleteDeleteUser = function (payload, success, error) {
     console.log("request delete, delete user")
     const userStore = useUserStore()
     api.defaults.headers["Authorization"] = userStore.accessToken
-    api.delete(`/api/user`, payload).then(success).catch(error)
+    // axios delete method는 데이터를 보낼 때 data: ... 형태로 감싸서 보내야 한다.
+    const data = {
+        data: payload
+    }
+    api.delete(`/api/user`, data).then(success).catch(error)
 }
 
 export { postSignUp, postLogin, getIsDuplicatedEmail, getIsDuplicatedNickname, patchUpdateUser, patchChangeUserPwd, deleteDeleteUser }

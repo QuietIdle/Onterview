@@ -24,13 +24,16 @@ const requestDeleteUser = function () {
   }
 
   const success = function () {
+    alert('지금까지 onterview 서비스를 이용해주셔서 감사합니다.')
     userStore.logout()
     router.push({ name: "main" })
   }
 
-  const error = function () {
+  const error = function (error) {
+    console.log(error)
     alert('비밀번호가 옳지 않습니다.')
-    password.value = null
+    password.value = ''
+    dialog.value = false
   }
 
   deleteDeleteUser(payload, success, error)
