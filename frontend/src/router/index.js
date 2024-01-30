@@ -17,7 +17,8 @@ const router = createRouter({
       component: () => import('@/views/UserLoginView.vue'),
       beforeEnter: ((to, from) => {
         const userStore = useUserStore()
-        if (userStore.accessToken) {
+        if (userStore.accessToken !== null) {
+          console.log(`로그인 중`)
           return { name: 'main' }
         }
       }),
@@ -29,7 +30,8 @@ const router = createRouter({
       component: () => import('@/views/UserRegisterView.vue'),
       beforeEnter: ((to, from) => {
         const userStore = useUserStore()
-        if (userStore.accessToken) {
+        if (userStore.accessToken !== null) {
+          console.log(`로그인 중`)
           return { name: 'main' }
         }
       }),
