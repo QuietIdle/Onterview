@@ -1,9 +1,9 @@
 package com.quiet.onterviewstorage.file.service;
 
-import com.quiet.onterviewstorage.util.FFmpegManager;
-import com.quiet.onterviewstorage.util.FileUtils;
+import com.quiet.onterviewstorage.file.FileUtils;
 import com.quiet.onterviewstorage.file.dto.FileDto.VideoResponse;
 import com.quiet.onterviewstorage.file.dto.ResourceDto;
+import com.quiet.onterviewstorage.util.FFmpegManager;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
@@ -44,6 +44,8 @@ public class ChunkService {
             return Optional.empty();
         }
 
+        log.info("모든 청크 받기 완료");
+
         String outputFilename = UUID.randomUUID() + ".mkv";
         Path outputFile = Paths.get(fileUtils.VIDEO_PATH, outputFilename);
         Files.createFile(outputFile);
@@ -56,7 +58,7 @@ public class ChunkService {
             Files.delete(chunkFile);
         }
 
-        log.info("File uploaded successfully");
+        log.info("File uploaded successfully filename: " + outputFilename);
         String thumbnail = fFmpegManager.getThumbnail(outputFilename);
         long videoLength = (long) fFmpegManager.getDuration(outputFilename);
 
@@ -67,7 +69,8 @@ public class ChunkService {
         ));
     }
 
-    public ResourceDto getStreamResource(HttpHeaders headers, String filename) throws IOException {
+    public Optional<ResourceDto> getStreamResource(HttpHeaders headers, String filename)
+            throws IOException {
         Path path = Paths.get(fileUtils.VIDEO_PATH, filename);
 
         Resource resource = new FileSystemResource(path);
@@ -79,14 +82,22 @@ public class ChunkService {
                 .orElse(HttpRange.createByteRange(0, contentLength - 1));
 
         long rangeLength = calculateRangeLength(httpRange, contentLength, chunkSize);
+        long rangeStart = httpRange.getRangeStart(contentLength);
+        log.info("contentLength " + contentLength);
+        log.info("rangeStart: " + rangeStart);
+
+        if (rangeStart > contentLength) {
+            return Optional.empty();
+        }
+
         ResourceRegion region = new ResourceRegion(resource, httpRange.getRangeStart(contentLength),
                 rangeLength);
 
-        return new ResourceDto(
+        return Optional.of(new ResourceDto(
                 MediaTypeFactory.getMediaType(resource).orElse(MediaType.APPLICATION_OCTET_STREAM),
                 String.valueOf(path),
                 region
-        );
+        ));
     }
 
     private long calculateRangeLength(HttpRange httpRange, long contentLength, long chunkSize) {
