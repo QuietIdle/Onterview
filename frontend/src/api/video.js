@@ -24,15 +24,24 @@ export const apiMethods = {
     patchVideo: function (v_id, req_body) {
         return api.patch(`/api/video/${v_id}`, req_body)
     },
+    saveVideo: function (req_body) {
+        return api.post(`/api/video`, req_body)
+    }
 }
 
 export const fileServer = {
     uploadVideo: function (idx, flag, formData) {
-        return api2.post(`/api/chunk/upload?&chunkNumber=${idx}&endOfChunk=${flag}`, formData)
+        return api2.post(`/api/chunk/upload?chunkNumber=${idx}&endOfChunk=${flag}`, formData)
     },
-    playVideo: function (filename) {
+    playVideo: function (filename, st, ed) {
         return api2.get(`/api/chunk/stream/${filename}`, {
-            responseType: 'arraybuffer'
+            responseType: 'arraybuffer',
+            headers: {
+                Range: `bytes=${st}-${ed}`,
+            }
         });
+    },
+    cancelUpload: function (filename) {
+        return api2.delete(`/api/chunk?fileName=${filename}`)
     },
 }
