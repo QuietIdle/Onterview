@@ -1,6 +1,7 @@
 <script setup>
 import draggable from 'vuedraggable'
 import { onMounted } from 'vue'
+import { apiMethods } from "@/api/video"
 
 // store
 import { storeToRefs } from 'pinia'
@@ -15,9 +16,15 @@ onMounted(() => {
   questionStore.requestMyQuestionList()
 })
 
-const selectQuestion = function(ele) {
-    selfSpeechStore.selectedQuestion = ele.myQuestionId
-    alert(ele.myQuestionId)
+const selectQuestion = async function(ele) {
+  selfSpeechStore.selectedQuestion = ele.myQuestionId
+  try {
+    const result = await apiMethods.getVideoAll(selfSpeechStore.selectedQuestion);
+    selfSpeechStore.questionData = result.data;
+    console.log(result.data)
+  } catch (error) {
+    console.log(error)
+  }
 }
 </script>
 

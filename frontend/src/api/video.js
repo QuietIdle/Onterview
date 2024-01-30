@@ -30,8 +30,8 @@ export const apiMethods = {
 }
 
 export const fileServer = {
-    uploadVideo: function (idx, flag, formData) {
-        return api2.post(`/api/chunk/upload?chunkNumber=${idx}&endOfChunk=${flag}`, formData)
+    uploadVideo: function (formData) {
+        return api2.post(`/api/chunk/upload`, formData)
     },
     playVideo: function (filename, st, ed) {
         return api2.get(`/api/chunk/stream/${filename}`, {
@@ -41,7 +41,7 @@ export const fileServer = {
             }
         });
     },
-    cancelUpload: function (filename) {
-        return api2.delete(`/api/chunk?fileName=${filename}`)
+    cancelUpload: function (username, fileName) {
+        return api2.delete(`/api/chunk?username=${username}&fileName=${fileName}`)
     },
 }
