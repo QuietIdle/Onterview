@@ -8,7 +8,7 @@ const password = ref('')
 
 const emailRules = [
   (value) => {
-    if (value) { 
+    if (value) {
       return true
     } else {
       return '이메일을 입력해주세요.'
@@ -34,17 +34,17 @@ const passwordRules = [
 ]
 
 const requestLogin = function () {
-  
-  for ( const rule of emailRules ) {
+
+  for (const rule of emailRules) {
     const validationResult = rule(email.value)
 
-    if ( validationResult !== true ) {
+    if (validationResult !== true) {
       alert(validationResult)
       return
     }
   }
 
-  for ( const rule of passwordRules ) {
+  for (const rule of passwordRules) {
     const validationResult = rule(password.value)
 
     if (validationResult !== true) {
@@ -74,58 +74,41 @@ const requestLogin = function () {
       </div>
 
       <v-sheet width="90%" class="mx-auto">
-        <v-form 
-          ref="formRef"
-          fast-fail 
-          @submit.prevent="requestLogin"
-        >
-          
-          <label for="email">이메일</label>
-          <v-text-field
-            v-model="email"
-            label="example@onterview.com"
-            id="email"
-          ></v-text-field>
-          
-          <label for="password">비밀번호</label>
-          <v-text-field
-            v-model="password"
-            label="비밀번호"
-            type="password"
-            id="password"
-          ></v-text-field>
+        <v-form ref="formRef" fast-fail @submit.prevent="requestLogin">
 
-          <v-btn 
-            type="submit" 
-            block class="mt-2 py-5"
-          ><h3>로그인</h3></v-btn>
+          <label for="email">이메일</label>
+          <v-text-field v-model="email" label="example@onterview.com" id="email"></v-text-field>
+
+          <label for="password">비밀번호</label>
+          <v-text-field v-model="password" label="비밀번호" type="password" id="password"></v-text-field>
+
+          <v-btn type="submit" block class="mt-2 py-5">
+            <h3>로그인</h3>
+          </v-btn>
         </v-form>
 
-        <v-btn
-          type="submit" 
-          block class="kakao mt-5 py-5"
-        > 
-        <div class="d-flex" justify="center">
-          <img src="@/assets/kakao-logo.png" width="20px">
-          <h3 class="mx-2">카카오 로그인</h3>
-        </div>
+        <v-btn type="submit" block class="kakao mt-5 py-5">
+          <div class="d-flex" justify="center">
+            <img src="@/assets/kakao-logo.png" width="20px">
+            <h3 class="mx-2">카카오 로그인</h3>
+          </div>
         </v-btn>
 
         <p class="text-center mt-5">
           <a href="#"> 비밀번호 찾기 </a>
           <span class="text-grey">|</span>
-          <a href="#"> 회원가입 </a>
+          <a href="/register"> 회원가입 </a>
         </p>
 
       </v-sheet>
-      
+
     </div>
   </div>
 </template>
 
 <style scoped>
 html {
-    height: 100%;
+  height: 100%;
 }
 
 a {
@@ -134,12 +117,11 @@ a {
 }
 
 .body {
-    min-height: 100vh;
+  min-height: 100vh;
 }
 
 .kakao {
   background-color: #FEE500;
   color: #191919;
 }
-
 </style>
