@@ -24,11 +24,11 @@ const getIsDuplicatedNickname = function (nickname, success, error) {
     api.get(`/api/user/check/nickname?nickname=${nickname}`).then(success).catch(error)
 }
 
-const patchUpdateUser = function (payload, success, error) {
+const patchUpdateUserNickname = function (payload, success, error) {
     console.log("request patch, update user")
     const userStore = useUserStore()
     api.defaults.headers["Authorization"] = userStore.accessToken
-    api.patch(`/api/user`, payload).then(success).catch(error)
+    api.patch(`/api/user/nickname`, payload).then(success).catch(error)
 }
 
 const patchChangeUserPwd = function (payload, success, error) {
@@ -49,4 +49,4 @@ const deleteDeleteUser = function (payload, success, error) {
     api.delete(`/api/user`, data).then(success).catch(error)
 }
 
-export { postSignUp, postLogin, getIsDuplicatedEmail, getIsDuplicatedNickname, patchUpdateUser, patchChangeUserPwd, deleteDeleteUser }
+export { postSignUp, postLogin, getIsDuplicatedEmail, getIsDuplicatedNickname, patchUpdateUserNickname, patchChangeUserPwd, deleteDeleteUser }

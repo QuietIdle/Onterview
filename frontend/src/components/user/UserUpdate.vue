@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useUserStore } from '@/stores/user.js'
-import { patchUpdateUser } from '@/api/user.js'
+import { patchUpdateUserNickname } from '@/api/user.js'
 
 const userStore = useUserStore()
 const formRef = ref(null)
@@ -46,7 +46,7 @@ const nicknameRules = [
   },
 ]
 
-const requestUpdateUser = function () {
+const requestUpdateUserNickname = function () {
   console.log(`회원정보 업데이트 요청`)
   const isValid = formRef.value.validate()
 
@@ -57,14 +57,18 @@ const requestUpdateUser = function () {
       }
 
       const success = function () {
-        console.log(`성공`)
+        alert('닉네임을 성공적으로 변경했습니다!')
+        userStore.nickname.value = nickname.value
       }
 
-      const error = function () {
-        console.log('실패')
+      const error = function (error) {
+        alert(error.response.data.errorMessage)
+        console.log(error)
       }
 
-      patchUpdateUser(payload, success, error)
+      patchUpdateUserNickname(payload, success, error)
+    } else {
+      alert('닉네임 입력 형식을 확인하세요.')
     }
   })
 }
@@ -92,7 +96,7 @@ const requestUpdateUser = function () {
     <v-sheet width="90%" class="mx-auto my-10">
       <h3 class="mt-5">닉네임</h3>
       <h6 class="text-grey">한글 2~8자 이하</h6>
-      <v-form ref="formRef" fast-fail @submit.prevent="requestUpdateUser">
+      <v-form ref="formRef" fast-fail @submit.prevent="requestUpdateUserNickname">
         <v-text-field label="닉네임" :rules="nicknameRules" v-model="nickname"></v-text-field>
         <div class="d-flex justify-center">
           <v-btn type="submit" class="d-flex justify-center mt-2 px-15" :disabled="updateBtnActivated" color="success">
