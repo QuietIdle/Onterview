@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,12 +15,26 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: () => import('@/views/UserLoginView.vue'),
+      beforeEnter: ((to, from) => {
+        const userStore = useUserStore()
+        if (userStore.accessToken !== null) {
+          console.log(`로그인 중`)
+          return { name: 'main' }
+        }
+      }),
       meta: {layout: 'main'},
     },
     {
       path: '/register',
       name: 'register',
       component: () => import('@/views/UserRegisterView.vue'),
+      beforeEnter: ((to, from) => {
+        const userStore = useUserStore()
+        if (userStore.accessToken !== null) {
+          console.log(`로그인 중`)
+          return { name: 'main' }
+        }
+      }),
       meta: {layout: 'main'},
     },
     {
@@ -52,6 +68,14 @@ const router = createRouter({
       meta: {layout: 'main'},
     },
   ]
+})
+
+router.beforeEach((to, from) => {
+  const userStore = useUserStore()
+
+  if (to.name === 'mypage' && userStore.accessToken === null) {
+    return { name: 'login' }
+  }
 })
 
 export default router
