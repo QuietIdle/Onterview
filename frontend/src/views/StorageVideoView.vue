@@ -1,8 +1,10 @@
 <script setup>
 import StorageVideoList from "@/components/storage/StorageVideoList.vue";
 import StorageVideoGrid from "@/components/storage/StorageVideoGrid.vue";
+import StorageVideoPlay from "@/components/storage/StorageVideoPlay.vue";
 import { apiMethods } from "@/api/video";
 import { useStorageStore } from "@/stores/storage";
+import { onMounted } from "vue";
 
 const storageStore = useStorageStore();
 
@@ -15,18 +17,20 @@ const storageDisplay = async function() {
   }
 }
 
-storageDisplay()
+onMounted(() => {
+  storageDisplay()
+})
 </script>
 
 <template>
-  <div v-if="storageStore.display===0">
+  <div v-if="!storageStore.display.stream && storageStore.display.list">
     <StorageVideoList />
   </div>
-  <div v-else-if="storageStore.display===1">
+  <div v-else-if="!storageStore.display.stream && !storageStore.display.list">
     <StorageVideoGrid />
   </div>
-  <div v-else>
-
+  <div v-else-if="storageStore.display.stream">
+    <StorageVideoPlay />
   </div>
 </template>
 

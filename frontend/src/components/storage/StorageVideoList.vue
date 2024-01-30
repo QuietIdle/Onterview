@@ -37,6 +37,15 @@ const selectAll = function () {
     }
   }
 }
+
+const selectVideo = async function (v_id) {
+  try {
+    const res = await apiMethods.getVideo(v_id);
+    storageStore.videoData = res.data;
+  } catch (error) {
+    console.log(error)
+  }
+}
 </script>
 
 <template>
@@ -51,7 +60,7 @@ const selectAll = function () {
           삭제
         </v-btn>
 
-        <v-btn class="ml-auto" variant="outlined" @click="storageStore.switchDisplay">
+        <v-btn class="ml-auto" variant="outlined" @click="storageStore.switchDisplay(0)">
           그리드 보기
         </v-btn>
       </div>
@@ -93,7 +102,7 @@ const selectAll = function () {
                 :value="dt.videoId"
                 ></v-checkbox></td>
               <td>{{ n+1 }}</td>
-              <td>{{ dt.title }}</td>
+              <td @click="storageStore.switchDisplay(1), selectVideo(dt.videoId)" class="list-item">{{ dt.title }}</td>
               <td></td>
               <td></td>
               <td><v-icon 
@@ -123,5 +132,8 @@ const selectAll = function () {
 <style scoped>
 .tool-bar>*{
   margin: 8px;
+}
+.list-item{
+  cursor: pointer;
 }
 </style>

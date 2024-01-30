@@ -36,12 +36,21 @@ const selectAll = function () {
     }
   }
 }
+
+const selectVideo = async function (v_id) {
+  try {
+    const res = await apiMethods.getVideo(v_id);
+    storageStore.videoData = res.data;
+  } catch (error) {
+    console.log(error)
+  }
+}
 </script>
 
 <template>
     <div class="pa-10 d-flex justify-center bg-green w-screen">
     <div class="w-75 bg-white">
-        <div class="tool-bar d-flex align-center">
+      <div class="tool-bar d-flex align-center">
         <v-btn variant="tonal" @click="selectAll">
           전체 선택
         </v-btn>
@@ -49,7 +58,7 @@ const selectAll = function () {
           삭제
         </v-btn>
 
-        <v-btn class="ml-auto" variant="outlined" @click="storageStore.switchDisplay">
+        <v-btn class="ml-auto" variant="outlined" @click="storageStore.switchDisplay(0)">
           리스트 보기
         </v-btn>
       </div>
@@ -58,41 +67,54 @@ const selectAll = function () {
         <v-container>
           <v-row>
             <v-col 
-            v-for="(dt, n) in storageStore.storageData.value"
-            :key="n"
-            cols="auto"
+              v-for="(dt, n) in storageStore.storageData.value"
+              :key="n"
+              cols="auto"
             >
-            <v-card height="150" width="200" class="d-flex flex-column align-center justify-center">
-              <div class="card">
-                <v-img class="img-container" :src="dt.thumbnailUrl.saveFilename" width="180" height="120">
+              <v-card 
+                height="200" 
+                width="200"
+              >
+                <div class="image-container w-100 h-100">
                   <div class="number">{{ n+1 }}</div>
                   <v-icon 
-                  v-show="!dt.bookmark" 
-                  class="icon"
-                  color="purple" 
-                  size="32" 
-                  icon="mdi-bookmark-outline"
-                  @click="markVideo(dt.videoId, dt.bookmark), dt.bookmark=!dt.bookmark"
+                    v-show="!dt.bookmark" 
+                    class="icon"
+                    color="purple" 
+                    size="32" 
+                    icon="mdi-bookmark-outline"
+                    @click="markVideo(dt.videoId, dt.bookmark), dt.bookmark=!dt.bookmark"
                   >
                   </v-icon>
                   <v-icon 
-                  v-show="dt.bookmark" 
-                  class="icon"
-                  color="purple" 
-                  size="32" 
-                  icon="mdi-bookmark-check"
-                  @click="markVideo(dt.videoId, dt.bookmark), dt.bookmark=!dt.bookmark"
+                    v-show="dt.bookmark" 
+                    class="icon"
+                    color="purple" 
+                    size="32" 
+                    icon="mdi-bookmark-check"
+                    @click="markVideo(dt.videoId, dt.bookmark), dt.bookmark=!dt.bookmark"
                   >
                   </v-icon>
+                
+                  <v-card 
+                    class="image-card" 
+                    :image="dt.thumbnailUrl.saveFilename" 
+                    width="180" 
+                    height="135"
+                    @click="storageStore.switchDisplay(1), selectVideo(dt.videoId)"
+                  >
+                  </v-card>
                   <v-checkbox
-                  class="check-box"
-                  v-model="selectedId"
-                  :value="dt.videoId"
+                    class="check-box"
+                    v-model="selectedId"
+                    :value="dt.videoId"
                   ></v-checkbox>
-                </v-img>
-                <div>{{ dt.title }}</div>
-              </div>
-            </v-card>
+                  <div class="text-container">
+                    {{ dt.title }}
+                  </div>
+                </div>
+              </v-card>
+            
             </v-col>
           </v-row>
         </v-container>
@@ -105,16 +127,34 @@ const selectAll = function () {
 .tool-bar>*{
   margin: 8px;
 }
+.image-container{
+  position: relative;
+}
 .number{
   position: absolute;
+  top: 0%;
+  left: 0%;
 }
 .icon{
   position: absolute;
-  right: 0;
+  top: 0%;
+  right: 0%;
+}
+.image-card{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .check-box{
   position: absolute;
-  bottom: -20%;
-  right: 0;
+  bottom: -16%;
+  left: 0%;
+}
+.text-container{
+  position: absolute;
+  bottom: -3%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>
