@@ -1,0 +1,27 @@
+version: "4"
+services:
+  main-server:
+    image: ejoh/onterview-server
+    container_name: onterview-server
+    ports:
+      - "8081:8081"
+    networks:
+      - onterview_net
+    restart: "always"
+    environment:
+      - TZ=Asia/Seoul
+  client:
+    image: ejoh/onterview-client
+    container_name: onterview-client
+    ports:
+      - "3000:3000"
+    networks:
+      - onterview_net
+    restart: "always"
+    environment:
+      - TZ=Asia/Seoul
+
+networks:
+  onterview_net:
+    driver: bridge
+
