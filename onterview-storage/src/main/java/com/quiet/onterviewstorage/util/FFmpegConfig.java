@@ -12,10 +12,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FFmpegConfig {
 
-    @Value("${ffmpeg.path}")
+    @Value("${path.ffmpeg}")
     private String ffmpegPath;
 
-    @Value("${ffprobe.path}")
+    @Value("${path.ffprobe}")
     private String ffprobePath;
 
     @Bean
