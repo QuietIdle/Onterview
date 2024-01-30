@@ -45,6 +45,12 @@ public class MyQuestion extends BaseEntity {
         myQuestionFolder.getMyQuestionList().add(this);
     }
 
+    public void moveMyQuestionFolder(MyQuestionFolder fromMyQuestionFolder, MyQuestionFolder toMyQuestionFolder) {
+        fromMyQuestionFolder.getMyQuestionList().remove(this);
+        this.myQuestionFolder = toMyQuestionFolder;
+        myQuestionFolder.getMyQuestionList().add(this);
+    }
+
     public void saveCommonQuestion(CommonQuestion commonQuestion) {
         this.commonQuestion = commonQuestion;
     }
