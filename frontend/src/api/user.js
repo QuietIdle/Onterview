@@ -1,4 +1,5 @@
 import { localAxios } from "@/api/index.js"
+import { useUserStore } from "@/stores/user"
 
 const api = localAxios()
 
@@ -35,6 +36,16 @@ const patchChangeUserPwd = function (payload, success, error) {
 
 const deleteDeleteUser = function (payload, success, error) {
     console.log("request delete, delete user")
+    const userStore = useUserStore()
+    // const headers = {
+    //     headers: {
+    //         Authorization: userStore.accessToken
+    //     }
+    // }
+    // console.log(headers)
+    api.defaults.headers["Authorization"] = userStore.accessToken
+    console.log(userStore.accessToken)
+    console.log(api.defaults.headers)
     api.delete(`/api/user`, payload).then(success).catch(error)
 }
 
