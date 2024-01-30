@@ -36,10 +36,10 @@ const userStore = useUserStore()
       </TheDropDownMenu>
     </TheDropDownMenu>
 
-    <RouterLink to="/login">
+    <RouterLink v-if="userStore.accessToken === null" to="/login">
       <v-btn variant="tonal" color="deep-purple-accent-4">로그인</v-btn>
     </RouterLink>
-    <TheDropDownMenu text="마이페이지" ref="dropdownMenu">
+    <TheDropDownMenu v-else text="마이페이지" ref="dropdownMenu">
       <v-list>
         <v-list-item :prepend-avatar="logo" title="관리자님" subtitle="환영합니다"> </v-list-item>
       </v-list>
