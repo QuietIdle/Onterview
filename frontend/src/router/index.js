@@ -73,13 +73,12 @@ const router = createRouter({
 router.beforeEach((to, from) => {
   const userStore = useUserStore()
 
-  if (to.name === 'mypage' && userStore.accessToken === null) {
-    return { name: 'login' }
+  if (userStore.accessToken === null) {
+    if (to.name === 'mypage' || to.name === 'selfspeech-room' || to.name === 'storage-question' || to.name === 'storage-video') {
+      alert('로그인이 필요합니다!')
+      return { name: 'login' }
+    }
   }
 })
 
 export default router
-
-
-
-
