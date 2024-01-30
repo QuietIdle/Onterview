@@ -10,6 +10,15 @@ export const useUserStore = defineStore('user', () => {
     const accessToken = ref(null)
     const refreshToken = ref(null)
 
+    const logout = function () {
+        nickname.value = null
+        email.value = null
+        accessToken.value = null
+        refreshToken.value = null
+
+        router.push({ name: 'main' })
+    }
+
     const requestLogin = function (payload) {
         console.log(`로그인 요청`)
         
@@ -31,5 +40,5 @@ export const useUserStore = defineStore('user', () => {
         postLogin(payload, success, error)
     }
 
-  return { nickname, email, accessToken, refreshToken, requestLogin }
+  return { nickname, email, accessToken, refreshToken, logout, requestLogin }
 }, { persist: true })

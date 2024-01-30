@@ -1,10 +1,22 @@
 <script setup>
+import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
 import { deleteDeleteUser } from '@/api/user.js'
+import { useUserStore } from "@/stores/user.js"
 
 const router = useRouter()
-const password = ref(null)
+const userStore = useUserStore()
+const password = ref('')
+const dialog = ref(false)
+const deleteBtnActivated = ref(true)
+
+const watchPassword = watch(password, () => {
+  if (password.value !== '') {
+    deleteBtnActivated.value = false
+  } else {
+    deleteBtnActivated.value = true
+  }
+})
 
 const requestDeleteUser = function () {
   const payload = {
@@ -12,13 +24,16 @@ const requestDeleteUser = function () {
   }
 
   const success = function () {
-    password.value = null
-    router.push({ name: "home" })
+    alert('지금까지 onterview 서비스를 이용해주셔서 감사합니다.')
+    userStore.logout()
+    router.push({ name: "main" })
   }
 
-  const error = function () {
+  const error = function (error) {
+    console.log(error)
     alert('비밀번호가 옳지 않습니다.')
-    password.value = null
+    password.value = ''
+    dialog.value = false
   }
 
   deleteDeleteUser(payload, success, error)
@@ -35,9 +50,34 @@ const requestDeleteUser = function () {
       <v-form class="mt-5" ref="formRef" fast-fail @submit.prevent="requestDeleteUser">
         <v-text-field v-model="password" type="password" label="비밀번호"></v-text-field>
         <div class="d-flex justify-center">
-          <v-btn type="submit" class="d-flex justify-center mt-2 px-15" color="red">
+          <v-dialog v-model="dialog" persistent width="auto">
+            <template v-slot:activator="{ props }">
+              <v-btn color="red" class="mt-2 px-15" @click="dialog = true" :disabled="deleteBtnActivated" v-bind="props">
+                회원 탈퇴
+              </v-btn>
+            </template>
+
+            <v-card>
+              <v-card-title class="text-h5">
+                정말 계정을 삭제하시겠습니까?
+              </v-card-title>
+              <v-card-text>
+                탈퇴 후 해당 데이터는 복구할 수 없습니다.
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="grey" variant="text" @click="dialog = false">
+                  취소
+                </v-btn>
+                <v-btn color="red" variant="text" @click="requestDeleteUser">
+                  삭제
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <!-- <v-btn type="submit" class="d-flex justify-center mt-2 px-15" :disabled="deleteBtnActivated" color="red">
             <h3>회원 탈퇴</h3>
-          </v-btn>
+          </v-btn> -->
         </div>
       </v-form>
     </v-sheet>
