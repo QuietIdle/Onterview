@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class FileUtils {
 
-    @Value("${image.path}")
+    @Value("${path.image}")
     public String IMAGE_PATH;
-    @Value("${video.path}")
+    @Value("${path.video}")
     public String VIDEO_PATH;
-    @Value("${root.path}")
+    @Value("${path.root}")
     public String DEFAULT_URL;
-    @Value("${default-image.path}")
+    @Value("${path.default-image}")
     public String DEFAULT_IMAGE;
 
     public String createUUIDFileName(String extension) {
