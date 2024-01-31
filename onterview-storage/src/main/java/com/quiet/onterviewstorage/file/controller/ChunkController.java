@@ -52,9 +52,10 @@ public class ChunkController {
 
     @DeleteMapping
     public ResponseEntity<?> chunkDelete(
+            @RequestParam("username") String username,
             @RequestParam("fileName") String fileName
-    ) throws IOException {
-        chunkService.delete(fileName);
+    ) {
+        chunkService.delete(username, fileName);
         return ResponseEntity.noContent().build();
     }
 }

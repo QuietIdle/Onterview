@@ -81,12 +81,14 @@ public class ChunkService {
         ));
     }
 
-    public void delete(String fileName) throws IOException {
-        Path path = Path.of(fileUtils.VIDEO_PATH, fileName);
-        File file = new File(String.valueOf(path));
+    public void delete(String username, String fileName) {
+        Path path = Path.of(fileUtils.VIDEO_PATH, username, fileName);
+        File folder = new File(String.valueOf(path));
 
-        if (file.exists()) {
-            Files.delete(path);
+        if (folder.exists()) {
+            File[] files = folder.listFiles();
+            Arrays.stream(files).filter(File::isFile).forEach(File::delete);
+            folder.delete();
         }
     }
 
