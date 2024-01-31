@@ -1,5 +1,9 @@
 package com.quiet.onterview.question.service;
 
+import com.quiet.onterview.common.BaseException;
+import com.quiet.onterview.common.ErrorCode;
+import com.quiet.onterview.member.entity.Member;
+import com.quiet.onterview.member.repository.MemberRepository;
 import com.quiet.onterview.question.dto.request.MyQuestionFolderRequest;
 import com.quiet.onterview.question.dto.response.MyQuestionFolderResponse;
 import com.quiet.onterview.question.entity.MyQuestionFolder;
@@ -20,6 +24,7 @@ public class MyQuestionFolderServiceImpl implements MyQuestionFolderService {
 
     private final MyQuestionFolderRepository myQuestionFolderRepository;
     private final MyQuestionFolderMapper myQuestionFolderMapper;
+    private final MemberRepository memberRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -31,8 +36,9 @@ public class MyQuestionFolderServiceImpl implements MyQuestionFolderService {
     }
 
     @Override
-    public void createMyQuestionFolder(MyQuestionFolderRequest myQuestionFolderRequest) {
-        MyQuestionFolder myQuestionFolder = myQuestionFolderMapper.myQuestionFolderRequestToEntity(myQuestionFolderRequest);
+    public void createMyQuestionFolder(Long memberId, MyQuestionFolderRequest myQuestionFolderRequest) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new BaseException(ErrorCode.MEMBERID_NOT_EXISTS));
+        MyQuestionFolder myQuestionFolder = myQuestionFolderMapper.myQuestionFolderRequestToEntity(member, myQuestionFolderRequest);
         myQuestionFolderRepository.save(myQuestionFolder);
     }
 
