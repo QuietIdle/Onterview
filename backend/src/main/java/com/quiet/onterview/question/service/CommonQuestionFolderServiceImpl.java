@@ -2,14 +2,20 @@ package com.quiet.onterview.question.service;
 
 import com.quiet.onterview.question.dto.request.CommonQuestionFolderRequest;
 import com.quiet.onterview.question.dto.response.CommonQuestionFolderResponse;
+import com.quiet.onterview.question.entity.CommonQuestion;
 import com.quiet.onterview.question.entity.CommonQuestionFolder;
 import com.quiet.onterview.question.exception.CommonQuestionFolderNotFoundException;
+import com.quiet.onterview.question.exception.InvalidSelectionCountException;
+import com.quiet.onterview.question.exception.QuestionFolderEmptyException;
 import com.quiet.onterview.question.mapper.CommonQuestionFolderMapper;
+import com.quiet.onterview.question.mapper.CommonQuestionMapper;
 import com.quiet.onterview.question.repository.CommonQuestionFolderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +26,7 @@ public class CommonQuestionFolderServiceImpl implements CommonQuestionFolderServ
 
     private final CommonQuestionFolderRepository commonQuestionFolderRepository;
     private final CommonQuestionFolderMapper commonQuestionFolderMapper;
+    private final CommonQuestionMapper commonQuestionMapper;
 
     @Override
     @Transactional(readOnly = true)
@@ -32,7 +39,9 @@ public class CommonQuestionFolderServiceImpl implements CommonQuestionFolderServ
 
     @Override
     public CommonQuestionFolderResponse getOneCommonQuestionFolderInfo(Long commonQuestionFolderId) {
-        CommonQuestionFolder commonQuestionFolder = commonQuestionFolderRepository.findOneCommonQuestionFolderInfo(commonQuestionFolderId);
+        CommonQuestionFolder commonQuestionFolder = commonQuestionFolderRepository.findOneCommonQuestionFolderInfo(commonQuestionFolderId)
+                .orElseThrow(CommonQuestionFolderNotFoundException::new);
+
         return commonQuestionFolderMapper.commonQuestionFolderToCommonQuestionFolderResponse(commonQuestionFolder);
     }
 
@@ -56,6 +65,22 @@ public class CommonQuestionFolderServiceImpl implements CommonQuestionFolderServ
         commonQuestionFolderRepository.delete(
                 commonQuestionFolderRepository.findById(commonQuestionFolderId)
                         .orElseThrow(CommonQuestionFolderNotFoundException::new));
+    }
+
+    @Override
+    public List<CommonQuestion> getRandomCommonQuestionList(String commonQuestionFolderName, int numToSelect) {
+        CommonQuestionFolder commonQuestionFolder = commonQuestionFolderRepository.findInterviewQuestionFolder(commonQuestionFolderName)
+                .orElseThrow(CommonQuestionFolderNotFoundException::new);
+
+        List<CommonQuestion> allQuestions = commonQuestionFolder.getCommonQuestionList();
+
+        if (numToSelect <= 0) throw new InvalidSelectionCountException();
+        if (allQuestions.isEmpty()) throw new QuestionFolderEmptyException();
+
+        List<CommonQuestion> shuffledQuestions = new ArrayList<>(allQuestions);
+        Collections.shuffle(shuffledQuestions);
+
+        return shuffledQuestions.stream().limit(numToSelect).toList();
     }
 
 }
