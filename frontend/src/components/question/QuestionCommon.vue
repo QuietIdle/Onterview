@@ -1,6 +1,7 @@
 <script setup>
 import draggable from 'vuedraggable'
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
+import folderImage from '@/assets/question/folderImage.svg'
 
 // store
 import { storeToRefs } from 'pinia'
@@ -23,20 +24,37 @@ const cloneList = function (data) {
 const log = function () {
   questionStore.requestCommonQuestionList()
 }
+
+const search = ref('')
+// @click:append-inner="onClick"
 </script>
 
 <template>
   <div class="question-title pa-3">빈출 면접 문항 목록</div>
+
+  <v-text-field
+    v-model="search"
+    label="검색어를 입력해주세요"
+    append-inner-icon="mdi-magnify"
+    single-line
+    variant="solo"
+    density="compact"
+    hide-details
+  ></v-text-field>
   <div style="max-height: 80%; overflow-y: auto">
     <v-expansion-panels
       variant="accordion"
       v-for="folder in commonQuestionList"
       :key="folder.commonQuestionFolderId"
+      color="grey-lighten-2"
     >
-      <v-expansion-panel
-        :title="folder.commonQuestionFolder"
-        :value="folder.commonQuestionFolderId"
-      >
+      <v-expansion-panel>
+        <v-expansion-panel-title color="grey-lighten-2">
+          <v-col cols="auto">
+            <v-img width="20" :src="folderImage"></v-img>
+          </v-col>
+          {{ folder.commonQuestionFolder }}
+        </v-expansion-panel-title>
         <draggable
           :list="folder.commonQuestionList"
           :group="{ name: 'question', pull: 'clone', put: false }"
@@ -57,5 +75,15 @@ const log = function () {
 .question-title {
   background-color: #7d797f;
   color: white;
+}
+
+.v-expansion-panel-title {
+  padding: 0px !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+.v-expansion-panel-text /deep/ {
+  box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2);
 }
 </style>
