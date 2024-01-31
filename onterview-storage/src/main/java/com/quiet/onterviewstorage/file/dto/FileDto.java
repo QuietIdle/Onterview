@@ -1,7 +1,6 @@
 package com.quiet.onterviewstorage.file.dto;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 public class FileDto {
 
@@ -11,15 +10,6 @@ public class FileDto {
 
         private final String filePath;
         private final String fileName;
-    }
-
-    @Getter
-    @RequiredArgsConstructor
-    public static class VideoResponse {
-
-        private final String videoUrl;
-        private final Long videoLength;
-        private final String thumbnailUrl;
     }
 
     @Getter

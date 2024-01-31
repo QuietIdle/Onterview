@@ -1,13 +1,13 @@
 package com.quiet.onterviewstorage.file.service;
 
 import com.quiet.onterviewstorage.file.dto.FileDto;
-import com.quiet.onterviewstorage.file.dto.FileDto.VideoResponse;
 import com.quiet.onterviewstorage.file.dto.ResourceDto;
 import com.quiet.onterviewstorage.util.FFmpegManager;
 import com.quiet.onterviewstorage.util.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.Arrays;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ public class ChunkService {
     private final FFmpegManager fFmpegManager;
     private final FileUtils fileUtils;
 
-    public Optional<VideoResponse> chunkUpload(MultipartFile file, FileDto.VideoRequest request)
+    public boolean chunkUpload(MultipartFile file, FileDto.VideoRequest request)
             throws IOException {
         int chunkNumber = request.getChunkNumber();
         int endOfChunk = request.getEndOfChunk();
@@ -38,22 +38,16 @@ public class ChunkService {
 
         // 파일이 전송중인 경우
         if (endOfChunk == 0) {
-            return Optional.empty();
+            return false;
         }
-        log.debug("모든 청크 받기 완료");
 
         Path outputFilePath = mergeTempFile(file, path, filename, chunkNumber);
         String outputFilename = String.valueOf(outputFilePath);
-        log.debug("File uploaded successfully filename: " + outputFilename);
+        log.info("File uploaded successfully filename: " + outputFilename);
 
-        String thumbnail = fFmpegManager.getThumbnail(outputFilename);
-        long videoLength = (long) fFmpegManager.getDuration(outputFilename);
+        fFmpegManager.createThumbnail(outputFilename);
 
-        return Optional.of(new VideoResponse(
-                outputFilename,
-                videoLength,
-                thumbnail
-        ));
+        return true;
     }
 
     public Optional<ResourceDto> getStreamResource(HttpHeaders headers, String filename)
@@ -96,12 +90,12 @@ public class ChunkService {
         }
     }
 
-    private static Path mergeTempFile(MultipartFile file, Path path, String filename, int chunkNumber)
+    private static Path mergeTempFile(MultipartFile file, Path path, String filename,
+            int chunkNumber)
             throws IOException {
         Path outputFilePath = Path.of(String.valueOf(path), filename + ".mkv");
         Files.createFile(outputFilePath);
 
-        // 임시 파일들을 하나로 합침
         for (int number = 1; number <= chunkNumber; number++) {
             Path chunkFile = Paths.get(String.valueOf(path),
                     file.getOriginalFilename() + ".part" + number);

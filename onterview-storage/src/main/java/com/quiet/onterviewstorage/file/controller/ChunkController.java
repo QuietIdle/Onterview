@@ -1,7 +1,6 @@
 package com.quiet.onterviewstorage.file.controller;
 
 import com.quiet.onterviewstorage.file.dto.FileDto;
-import com.quiet.onterviewstorage.file.dto.FileDto.VideoResponse;
 import com.quiet.onterviewstorage.file.dto.ResourceDto;
 import com.quiet.onterviewstorage.file.service.ChunkService;
 import java.io.IOException;
@@ -25,14 +24,14 @@ public class ChunkController {
 
     @ResponseBody
     @PostMapping("/upload")
-    public ResponseEntity<VideoResponse> chunkUpload(
+    public ResponseEntity<?> chunkUpload(
             @RequestPart("chunk") MultipartFile file,
-            @RequestBody FileDto.VideoRequest request
+            @RequestPart("jsonData") FileDto.VideoRequest request
     ) throws IOException {
-        Optional<VideoResponse> isDone = chunkService.chunkUpload(file, request);
+        boolean isDone = chunkService.chunkUpload(file, request);
 
-        return isDone.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).build());
+        return (isDone ? ResponseEntity.ok()
+                : ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)).build();
     }
 
     @GetMapping("/stream/{filename}")
