@@ -1,13 +1,16 @@
 import { localAxios } from "@/api/index.js"
+import { useUserStore } from "@/stores/user"
 
-const api = localAxios();
+const api = localAxios()
+const userStore = useUserStore()
+api.defaults.headers.common["Authorization"] = userStore.accessToken
 
 const getCommonQuestionList = function () {
     return api.get(`/api/common-question-folder`)
 }
 
 const getMyQuestionList = function () {
-    return api.get(`/api/my-question-folder?memberId=${1}`) // 추후 member_id 삭제 후 user token 추가
+    return api.get(`/api/my-question-folder`) 
 }
 
 const postCreateMyQuestionFolder = function (payload) {

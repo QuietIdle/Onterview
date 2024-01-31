@@ -31,7 +31,10 @@ const search = ref('')
 
 <template>
   <div class="question-title pa-3">빈출 면접 문항 목록</div>
-
+  <div class="intro pa-3 d-flex mb-1">
+    <v-icon class="mr-2">mdi-gesture-tap</v-icon>
+    <span>Drag & Drop해서 My 질문에 추가해보세요!</span>
+  </div>
   <v-text-field
     v-model="search"
     label="검색어를 입력해주세요"
@@ -85,5 +88,12 @@ const search = ref('')
 
 .v-expansion-panel-text {
   box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2);
+}
+
+.intro {
+  color: #925050;
+  padding-left: 0;
+  padding-right: 0;
+  border: 1px solid #925050;
 }
 </style>

@@ -32,4 +32,8 @@ import QuestionCustom from '@/components/question/QuestionCustom.vue'
   margin-left: 1%;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
 }
+
+.v-expansion-panel-title {
+  padding: 0px !important;
+}
 </style>
