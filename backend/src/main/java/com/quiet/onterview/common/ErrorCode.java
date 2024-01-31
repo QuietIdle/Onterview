@@ -17,6 +17,7 @@ public enum ErrorCode {
     PASSWORD_CANNOT_CONFIRM(HttpStatus.BAD_REQUEST, "비밀번호와 비밀번호 확인이 일치하지 않습니다"),
     PASSWORD_NOT_MATCHES(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다"),
     EMAIL_NOT_EXISTS(HttpStatus.BAD_REQUEST, "해당 이메일을 가진 유저가 없습니다"),
+    MEMBERID_NOT_EXISTS(HttpStatus.BAD_REQUEST, "해당 아이디를 가진 유저가 없습니다"),
     ACCESS_TOKEN_NOT_EXPIRED(HttpStatus.UNAUTHORIZED, "ACCESS TOKEN이 만료되지 않았습니다"),
     ACCESS_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "ACCESS TOKEN이 만료되었습니다"),
     REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "REFRESH TOKEN이 만료되었습니다"),
