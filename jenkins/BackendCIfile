@@ -8,8 +8,8 @@ pipeline {
                     script {
                         sh 'chmod 755 $dbConfigFile'
                         sh 'chmod 755 $fileConfigFile'
-                        sh 'cp $dbConfigFile backend/src/main/resources/application-datasource.yml'
-                        sh 'cp $fileConfigFile backend/src/main/resources/application-file.yml'
+                        sh 'cp -f $dbConfigFile backend/src/main/resources/application-datasource.yml'
+                        sh 'cp -f $fileConfigFile backend/src/main/resources/application-file.yml'
                     }
                 }
             }
