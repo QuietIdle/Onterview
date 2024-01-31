@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { useSelfSpeechStore } from '@/stores/selfSpeech';
 import VideoThumbnail from "@/components/video/VideoThumbnail.vue";
 import { apiMethods } from "@/api/video";
+import { patchUpdateMyQuestionAnswer } from "@/api/question";
 
 const selfSpeechStore = useSelfSpeechStore();
 const maxCounter = ref(20);
@@ -33,11 +34,24 @@ const rules = ref([
 ])
 
 const saveFeedback = async function () {
+  if(selfSpeechStore.questionData.feedback.length > maxCounter.value) return
   try {
-    const result = await apiMethods.patchVideo(selfSpeechStore.videoData.videoId, {
+    await apiMethods.patchVideo(selfSpeechStore.videoData.videoId, {
       feedback: selfSpeechStore.videoData.feedback,
     })
-    console.log(result.data)
+    console.log("save feedback succesfully!")
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const saveScript = async function () {
+  if(selfSpeechStore.questionData.answer.length > maxCounter.value) return
+  try {
+    await patchUpdateMyQuestionAnswer({
+      answer: selfSpeechStore.questionData.answer,
+    })
+    console.log("save answer succesfully!")
   } catch (error) {
     console.log(error)
   }
@@ -69,7 +83,7 @@ const saveFeedback = async function () {
               :rules="rules"
               v-model="selfSpeechStore.questionData.answer"
               no-resize
-              @blur="console.log(selfSpeechStore.questionData.answer)"
+              @blur="saveScript"
             >
             {{ selfSpeechStore.questionData.answer }}
             </v-textarea>
