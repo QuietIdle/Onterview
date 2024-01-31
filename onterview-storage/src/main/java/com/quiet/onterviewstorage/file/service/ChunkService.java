@@ -1,14 +1,14 @@
 package com.quiet.onterviewstorage.file.service;
 
-import com.quiet.onterviewstorage.file.dto.FileDto.VideoResponse;
+import com.quiet.onterviewstorage.file.dto.FileDto;
 import com.quiet.onterviewstorage.file.dto.ResourceDto;
 import com.quiet.onterviewstorage.util.FFmpegManager;
 import com.quiet.onterviewstorage.util.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.Arrays;
 import java.util.Optional;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
@@ -26,47 +26,28 @@ public class ChunkService {
     private final FFmpegManager fFmpegManager;
     private final FileUtils fileUtils;
 
-    public Optional<VideoResponse> chunkUpload(MultipartFile file, int chunkNumber, int endOfChunk)
+    public boolean chunkUpload(MultipartFile file, FileDto.VideoRequest request)
             throws IOException {
-        File dir = new File(fileUtils.VIDEO_PATH);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
+        int chunkNumber = request.getChunkNumber();
+        int endOfChunk = request.getEndOfChunk();
+        String filename = request.getFilename();
+        String username = request.getUsername();
 
-        // 임시 저장 파일 이름
-        String tempFilename = file.getOriginalFilename() + ".part" + chunkNumber;
-        Path tempFilePath = Paths.get(fileUtils.VIDEO_PATH, tempFilename);
-        // 임시 저장
-        Files.write(tempFilePath, file.getBytes());
+        Path path = createFolder(username, filename);
+        saveTempFile(file, chunkNumber, path);
 
         // 파일이 전송중인 경우
         if (endOfChunk == 0) {
-            return Optional.empty();
+            return false;
         }
 
-        log.info("모든 청크 받기 완료");
-
-        String outputFilename = UUID.randomUUID() + ".mkv";
-        Path outputFile = Paths.get(fileUtils.VIDEO_PATH, outputFilename);
-        Files.createFile(outputFile);
-
-        // 임시 파일들을 하나로 합침
-        for (int i = 1; i <= chunkNumber; i++) {
-            Path chunkFile = Paths.get(fileUtils.VIDEO_PATH,
-                    file.getOriginalFilename() + ".part" + i);
-            Files.write(outputFile, Files.readAllBytes(chunkFile), StandardOpenOption.APPEND);
-            Files.delete(chunkFile);
-        }
-
+        Path outputFilePath = mergeTempFile(file, path, filename, chunkNumber);
+        String outputFilename = String.valueOf(outputFilePath);
         log.info("File uploaded successfully filename: " + outputFilename);
-        String thumbnail = fFmpegManager.getThumbnail(outputFilename);
-        long videoLength = (long) fFmpegManager.getDuration(outputFilename);
 
-        return Optional.of(new VideoResponse(
-                String.valueOf(outputFile.getFileName()),
-                videoLength,
-                thumbnail
-        ));
+        fFmpegManager.createThumbnail(outputFilename);
+
+        return true;
     }
 
     public Optional<ResourceDto> getStreamResource(HttpHeaders headers, String filename)
@@ -83,9 +64,9 @@ public class ChunkService {
 
         long rangeLength = calculateRangeLength(httpRange, contentLength, chunkSize);
         long rangeStart = httpRange.getRangeStart(contentLength);
+
         log.info("contentLength " + contentLength);
         log.info("rangeStart: " + rangeStart);
-
         if (rangeStart > contentLength) {
             return Optional.empty();
         }
@@ -100,18 +81,54 @@ public class ChunkService {
         ));
     }
 
+    public void delete(String username, String fileName) {
+        Path path = Path.of(fileUtils.VIDEO_PATH, username, fileName);
+        File folder = new File(String.valueOf(path));
+
+        if (folder.exists()) {
+            File[] files = folder.listFiles();
+            Arrays.stream(files).filter(File::isFile).forEach(File::delete);
+            folder.delete();
+        }
+    }
+
+    private static Path mergeTempFile(MultipartFile file, Path path, String filename,
+            int chunkNumber)
+            throws IOException {
+        Path outputFilePath = Path.of(String.valueOf(path), filename + ".mkv");
+        log.info(String.valueOf(outputFilePath), "최종 결과물");
+        Files.createFile(outputFilePath);
+
+        for (int number = 1; number <= chunkNumber; number++) {
+            Path chunkFile = Paths.get(String.valueOf(path),
+                    file.getOriginalFilename() + ".part" + number);
+            Files.write(outputFilePath, Files.readAllBytes(chunkFile), StandardOpenOption.APPEND);
+            Files.delete(chunkFile);
+        }
+        return outputFilePath;
+    }
+
+    private static void saveTempFile(MultipartFile file, int chunkNumber, Path path)
+            throws IOException {
+        // 임시 저장 파일 이름
+        String tempFilename = file.getOriginalFilename() + ".part" + chunkNumber;
+        Path tempFilePath = Paths.get(String.valueOf(path), tempFilename);
+        // 임시 저장
+        Files.write(tempFilePath, file.getBytes());
+    }
+
+    private Path createFolder(String username, String filename) {
+        Path path = Path.of(fileUtils.VIDEO_PATH, username, filename);
+        File dir = new File(String.valueOf(path));
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        return path;
+    }
+
     private long calculateRangeLength(HttpRange httpRange, long contentLength, long chunkSize) {
         long start = httpRange.getRangeStart(contentLength);
         long end = httpRange.getRangeEnd(contentLength);
         return Long.min(chunkSize, end - start + 1);
-    }
-
-    public void delete(String fileName) throws IOException {
-        Path path = Path.of(fileUtils.VIDEO_PATH, fileName);
-        File file = new File(String.valueOf(path));
-
-        if (file.exists()) {
-            Files.delete(path);
-        }
     }
 }
