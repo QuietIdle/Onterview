@@ -63,7 +63,7 @@ const markVideo = async function (id, bool) {
 
 const isCompleted = ref(false)
 
-async function getAllChunks(filename) {
+const getAllChunks = async function(filename) {
   const chunkSize = 1024 * 1024; // 1MB 단위로 청크를 받음
   let start = 0;
   let end = chunkSize - 1;
@@ -105,6 +105,15 @@ async function getAllChunks(filename) {
   }          
 }
 
+const deleteVideo = async function (v_id) {
+  try {
+    await apiMethods.deleteVideos([v_id])
+  } catch (error) {
+    console.log(error)
+  }
+  backToRecording()
+}
+
 onUpdated(getAllChunks(selfSpeechStore.videoData.videoUrl.saveFilename))
 
 onBeforeUnmount(() => {
@@ -116,20 +125,20 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="container h-100 d-flex flex-column justify-space-between">
-    <div class="d-flex align-center">
+    <div class="nav-bar d-flex align-center">
       <div class="ma-1">{{ selfSpeechStore.questionData.question }}</div>
       <v-icon class="exit-btn ma-1 ml-auto" color="black" size="32" icon="mdi-close-circle-outline" @click="goSelfSpeechMain"></v-icon>
     </div>
 
-    <div class="pa-2">
+    <div class="pa-1">
       <div class="empty-player-container d-flex justify-center align-center">
         <video 
           ref="videoPlayer" 
           class="video-js vjs-big-play-centered"
           id="my-video"
-          data-setup='{"width": 640}'
+          data-setup='{}'
           controls
-          width="640" height="360"></video>
+        ></video>
       </div>
     </div>
 
@@ -140,8 +149,8 @@ onBeforeUnmount(() => {
         <div v-if="!selfSpeechStore.videoData.bookmark">북마크 추가</div>
         <div v-else>북마크 해제</div>
       </v-btn>
-      <v-btn class="mx-3 my-5">
-        <v-icon color="black" size="32" icon="mdi-trash-can-outline" @click="goSelfSpeechMain"></v-icon>
+      <v-btn class="mx-3 my-5" @click="deleteVideo(selfSpeechStore.videoData.videoId)">
+        <v-icon color="black" size="32" icon="mdi-trash-can-outline"></v-icon>
         <div>삭제</div>
       </v-btn>
       <v-btn class="mx-3 my-5 ml-auto bg-red" @click="backToRecording" variant="outlined">녹화하러가기</v-btn>
@@ -150,24 +159,22 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.nav-bar{
+  border: 1px solid black;
+  background-color: #f0f0f0;
+}
 .container{
-  background-color: #bb66ff;
+  background-color: black;
 }
 .empty-player-container {
   width: 100%;
-  height: 360px;
-  background-color: #f0f0f0;
+  height: 390px;
+  background-color: black;
   position: relative;
 }
 #my-video{
   width: 640px;
-  height: 360px;
-  background-color: #f0f0f0;
-}
-.play-button {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  height: 390px;
+  background-color: black;
 }
 </style>
