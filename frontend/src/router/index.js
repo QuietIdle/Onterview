@@ -67,6 +67,12 @@ const router = createRouter({
       component: () => import('@/views/StorageVideoView.vue'),
       meta: {layout: 'main'},
     },
+    {
+      path: '/interview',
+      name: 'interview-main',
+      component: () => import('@/views/InterviewMain.vue'),
+      meta: {layout: 'main'},
+    },
   ]
 })
 
