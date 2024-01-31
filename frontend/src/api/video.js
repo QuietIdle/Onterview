@@ -9,11 +9,11 @@ const api = localAxios()
 const api2 = axios.create({
     baseURL: 'http://70.12.247.60:8080',
     header: {
-        "Authorization": `Bearer ${authToken}`
+        "Authorization": `${authToken}`
     }
 });
 
-api.defaults.headers.common['Authorization'] = `Bearer ${authToken}`
+api.defaults.headers.common['Authorization'] = `${authToken}`
 
 export const apiMethods = {
     getVideo: function (v_id) {
