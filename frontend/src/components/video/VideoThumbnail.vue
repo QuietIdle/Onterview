@@ -6,23 +6,7 @@ import { apiMethods } from '@/api/video';
 const selfSpeechStore = useSelfSpeechStore();
 const model = ref(null); // 썸네일
 
-//const videos = selfSpeechStore.questionData.videos;
-const videos = ref([
-  {
-    videoId: 1,
-    title: "testest",
-    thumbnailUrl: {
-      saveFilename: "https://picsum.photos/200",
-    },
-  },
-  {
-    videoId: 2,
-    title: "TT",
-    thumbnailUrl: {
-      saveFilename: "https://picsum.photos/200",
-    },
-  }
-])
+const videos = selfSpeechStore.questionData.videos;
 
 const selectVideo = async function (v_id) {
   selfSpeechStore.display = false;

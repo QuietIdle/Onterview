@@ -2,7 +2,9 @@
 import { ref } from 'vue';
 import { apiMethods, fileServer } from "@/api/video";
 import { useSelfSpeechStore } from "@/stores/selfSpeech";
+import { useUserStore } from "@/stores/user";
 import { useRouter } from 'vue-router'
+import { v4 as uuidv4 } from 'uuid'
 
 const router = useRouter()
 
@@ -16,7 +18,10 @@ const mediaToggle = ref({
 const time = ref(0); // 타이머
 let timerId;
 
+const filename = ref("")
+
 const selfSpeechStore = useSelfSpeechStore();
+const userStore = useUserStore()
 const uploadData = ref(null);
 const videoTitle = ref("");
 
@@ -55,7 +60,9 @@ const startVideo = function () {
     })
 }
 
-const startRecording = function(stream) {
+const startRecording = function (stream) {
+  console.log(userStore.email)
+  filename.value = uuidv4();
   flag.value = 0;
   let idx = 0; // chunk 갯수
   recordedChunks = [];
@@ -83,12 +90,21 @@ const sendToServer = async function(chunk, idx) {
     const formData = new FormData();
     formData.append('chunk', chunk);
 
+    const jsonData = {
+      filename: filename.value,
+      username: userStore.email || "null",
+      chunkNumber: idx,
+      endOfChunk: flag.value,
+    }
+    formData.append('jsonData', new Blob([JSON.stringify(jsonData)], {
+      type: "application/json",
+    }))
     // axios를 사용하여 POST 요청을 서버로 보냄
-    const response = await fileServer.uploadVideo(idx, flag.value, formData);
+    const response = await fileServer.uploadVideo(formData);
     //const response = await axios.post(`http://70.12.247.60:8080/api/chunk/upload?&chunkNumber=${idx}&endOfChunk=${flag.value}`, formData);
     //console.log('Chunk sent successfully!', response);
     if (response.status === 200) {
-      console.log(response.data);
+      console.log('upload success', response.data);
       uploadData.value = response.data;
     }
   } catch (error) {
@@ -126,12 +142,12 @@ const saveRecording = async function () {
     videoLength : time.value,
     title : videoTitle.value,
     videoInformation : {
-        saveFilename: uploadData.value.videoUrl,
-        originFilename: uploadData.value.videoUrl
+        saveFilename: `${filename.value}.mkv`,
+        originFilename: `${filename.value}.mkv`,
     },
     thumbnailInformation : {
-        saveFilename: uploadData.value.thumbnailUrl,
-        originFilename: uploadData.value.thumbnailUrl
+        saveFilename: `${filename.value}.png`,
+        originFilename: `${filename.value}.png`,
     }
   }
   try {
@@ -146,23 +162,23 @@ const saveRecording = async function () {
 const cancelRecording = async function () {
   try {
     dialog.value = false
-    const res = await fileServer.cancelUpload(uploadData.value.videoUrl)
+    const res = await fileServer.cancelUpload(userStore.email || "null", filename.value)
     console.log(res.data)
   } catch (error) {
     console.log(error)
   }
 }
 
-const controlMedia = function (a) {
+const controlMedia = function (com) {
   const myStream = document.querySelector('#my-video').captureStream()
 
-  if (a === 0) {
+  if (com === 0) {
     mediaToggle.value.video = !mediaToggle.value.video
     myStream.getVideoTracks().forEach(track => {
       track.enabled = mediaToggle.value.video;
     });
   }
-  else if (a === 1) {
+  else if (com === 1) {
     mediaToggle.value.audio = !mediaToggle.value.audio
     myStream.getAudioTracks().forEach(track => {
       track.enabled = mediaToggle.value.audio
@@ -187,7 +203,7 @@ const controlMedia = function (a) {
     <v-btn class="ma-3" @click="controlMedia(0)" v-else icon="mdi-video-off" color="blue"></v-btn>
     <v-btn class="ma-3" @click="controlMedia(1)" v-if="mediaToggle.audio" icon="mdi-microphone"></v-btn>
     <v-btn class="ma-3" @click="controlMedia(1)" v-else icon="mdi-microphone-off" color="blue"></v-btn>
-    <v-btn class="ma-3" @click="startVideo" v-if="!mediaToggle.play" icon="mdi-play" color="red"></v-btn>
+    <v-btn class="ma-3" @click="startVideo" v-if="!mediaToggle.play" icon="mdi-play" color="red" :disabled="!mediaToggle.video||!mediaToggle.audio"></v-btn>
     <v-btn class="ma-3" variant="tonal" @click="stopRecording" v-else icon="mdi-stop" color="red"></v-btn>
     <div class="timer ml-10" v-if="!mediaToggle.play"></div>
     <div class="timer ml-10" v-else-if="(time%60)>=10">{{ Math.floor(time/60) }}:{{ time%60 }}</div>

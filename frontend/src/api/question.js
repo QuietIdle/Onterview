@@ -34,6 +34,10 @@ const patchUpdateMyQuestion = function (myQuestionId, payload) {
     return api.patch(`/api/my-question/${myQuestionId}`, payload) // myQuestion
 }
 
+const patchUpdateMyQuestionAnswer = function (myQuestionId, payload) {
+    return api.patch(`/api/my-question/answer/${myQuestionId}`, payload) // myQuestionAnswer
+}
+
 const patchMoveMyQuestion = function (payload) {
     return api.patch(`/api/my-question/move`, payload)
 }
@@ -47,5 +51,6 @@ export {
     deleteDeleteMyQuestion,
     patchUpdateMyQuestionFolder,
     patchUpdateMyQuestion,
+    patchUpdateMyQuestionAnswer,
     patchMoveMyQuestion,
 }

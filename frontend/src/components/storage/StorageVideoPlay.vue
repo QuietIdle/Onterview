@@ -86,25 +86,22 @@ onBeforeUnmount(() => {
   <div class="main-container d-flex justify-center">
     <div class="w-75">
 
-    <div class="pa-2">
-      <v-btn @click="storageStore.switchDisplay(1)">목록 보기</v-btn>
-    </div>
-
-    <div class="pa-2">
-      <div class="empty-player-container d-flex justify-center align-center">
-        <video 
-          ref="videoPlayer" 
-          class="video-js vjs-big-play-centered"
-          id="my-video"
-          data-setup='{"width": 640}'
-          controls
-          width="640" height="360"></video>
+      <div class="pa-2">
+        <v-btn @click="storageStore.switchDisplay(1)">목록 보기</v-btn>
       </div>
-    </div>
 
-    <div>
+      <div class="pa-2">
+        <div class="empty-player-container d-flex justify-center align-center">
+          <video 
+            ref="videoPlayer" 
+            class="video-js vjs-big-play-centered"
+            id="my-video"
+            data-setup='{"width": 640}'
+            controls
+            width="640" height="360"></video>
+        </div>
+      </div>
 
-    </div>
       <v-container fluid>
         <v-textarea
           counter="20"

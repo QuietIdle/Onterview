@@ -1,10 +1,19 @@
 import { localAxios } from "@/api/index.js"
 import axios from 'axios'
+import { useUserStore } from "@/stores/user";
+
+const userStore = useUserStore()
+const authToken = userStore.accessToken
 
 const api = localAxios()
 const api2 = axios.create({
     baseURL: 'http://70.12.247.60:8080',
+    header: {
+        "Authorization": `Bearer ${authToken}`
+    }
 });
+
+api.defaults.headers.common['Authorization'] = `Bearer ${authToken}`
 
 export const apiMethods = {
     getVideo: function (v_id) {
@@ -30,8 +39,8 @@ export const apiMethods = {
 }
 
 export const fileServer = {
-    uploadVideo: function (idx, flag, formData) {
-        return api2.post(`/api/chunk/upload?chunkNumber=${idx}&endOfChunk=${flag}`, formData)
+    uploadVideo: function (formData) {
+        return api2.post(`/api/chunk/upload`, formData)
     },
     playVideo: function (filename, st, ed) {
         return api2.get(`/api/chunk/stream/${filename}`, {
@@ -41,7 +50,7 @@ export const fileServer = {
             }
         });
     },
-    cancelUpload: function (filename) {
-        return api2.delete(`/api/chunk?fileName=${filename}`)
+    cancelUpload: function (username, fileName) {
+        return api2.delete(`/api/chunk?username=${username}&fileName=${fileName}`)
     },
 }
