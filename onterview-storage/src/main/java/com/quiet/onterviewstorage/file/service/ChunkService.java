@@ -65,8 +65,8 @@ public class ChunkService {
         long rangeLength = calculateRangeLength(httpRange, contentLength, chunkSize);
         long rangeStart = httpRange.getRangeStart(contentLength);
 
-        log.debug("contentLength " + contentLength);
-        log.debug("rangeStart: " + rangeStart);
+        log.info("contentLength " + contentLength);
+        log.info("rangeStart: " + rangeStart);
         if (rangeStart > contentLength) {
             return Optional.empty();
         }
@@ -96,6 +96,7 @@ public class ChunkService {
             int chunkNumber)
             throws IOException {
         Path outputFilePath = Path.of(String.valueOf(path), filename + ".mkv");
+        log.info(String.valueOf(outputFilePath), "최종 결과물");
         Files.createFile(outputFilePath);
 
         for (int number = 1; number <= chunkNumber; number++) {
@@ -114,7 +115,6 @@ public class ChunkService {
         Path tempFilePath = Paths.get(String.valueOf(path), tempFilename);
         // 임시 저장
         Files.write(tempFilePath, file.getBytes());
-        log.debug(tempFilename, "임시 파일 생성");
     }
 
     private Path createFolder(String username, String filename) {
