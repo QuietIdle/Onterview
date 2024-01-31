@@ -83,7 +83,7 @@ const search = ref('')
   padding-right: 10px !important;
 }
 
-.v-expansion-panel-text /deep/ {
+.v-expansion-panel-text {
   box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2);
 }
 </style>

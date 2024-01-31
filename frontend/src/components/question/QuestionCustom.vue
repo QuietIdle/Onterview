@@ -250,12 +250,7 @@ const search = ref('')
   padding-right: 10px !important;
 }
 
-/* .v-expansion-panel-text /deep/ {
-  padding: 0px !important;
-  box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2);
-} */
-
-.v-expansion-panel-text /deep/ .v-expansion-panel-text__wrapper {
+.v-expansion-panel-text :deep(.v-expansion-panel-text__wrapper) {
   padding: 4px 24px 8px !important;
   box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2);
 }
