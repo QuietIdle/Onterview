@@ -68,9 +68,9 @@ const router = createRouter({
       meta: {layout: 'main'},
     },
     {
-      path: '/interview',
-      name: 'interview-main',
-      component: () => import('@/views/InterviewMain.vue'),
+      path: '/meeting',
+      name: 'meeting-main',
+      component: () => import('@/views/MeetingMain.vue'),
       meta: {layout: 'main'},
     },
   ]

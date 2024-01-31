@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue";
-import mainImg from '@/assets/interview/interviewMainIcon.png'
+import mainImg from '@/assets/meeting/meetingMainIcon.png'
 import { useRouter } from "vue-router";
 
 const router = useRouter()
