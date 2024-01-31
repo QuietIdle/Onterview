@@ -3,6 +3,7 @@ package com.quiet.onterview.question.controller;
 import com.quiet.onterview.question.dto.request.CommonQuestionFolderRequest;
 import com.quiet.onterview.question.dto.request.MyQuestionFolderRequest;
 import com.quiet.onterview.question.dto.response.CommonQuestionFolderResponse;
+import com.quiet.onterview.question.dto.response.CommonQuestionResponse;
 import com.quiet.onterview.question.dto.response.MyQuestionFolderResponse;
 import com.quiet.onterview.question.service.CommonQuestionFolderService;
 import com.quiet.onterview.question.service.MyQuestionFolderService;

@@ -6,12 +6,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CommonQuestionFolderRepository extends JpaRepository<CommonQuestionFolder, Long> {
 
     @Query("SELECT cqf FROM CommonQuestionFolder cqf")
     List<CommonQuestionFolder> findAllCommonQuestionFolderInfo();
 
-    @Query("SELECT cqf FROM CommonQuestionFolder cqf where cqf.commonQuestionFolderId = :commonQuestionFolderId")
-    CommonQuestionFolder findOneCommonQuestionFolderInfo(Long commonQuestionFolderId);
+    @Query("SELECT cqf FROM CommonQuestionFolder cqf WHERE cqf.commonQuestionFolderId = :commonQuestionFolderId")
+    Optional<CommonQuestionFolder> findOneCommonQuestionFolderInfo(Long commonQuestionFolderId);
+
+    @Query("SELECT cqf FROM CommonQuestionFolder cqf WHERE cqf.commonQuestionFolder = :commonQuestionFolderName")
+    Optional<CommonQuestionFolder> findInterviewQuestionFolder(String commonQuestionFolderName);
 }
