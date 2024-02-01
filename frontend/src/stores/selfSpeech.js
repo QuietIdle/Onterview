@@ -8,8 +8,9 @@ export const useSelfSpeechStore = defineStore('selfSpeech', () => {
   const selectedQuestion = ref(-1);
   const questionData = ref({
     answser: "",
+    myQuestionId: undefined,
     question: "질문을 선택하세요",
-    videos: [],
+    videoInformationResponseList: [],
   });
   const videoData = ref({
     feedback: "자가진단진단",
