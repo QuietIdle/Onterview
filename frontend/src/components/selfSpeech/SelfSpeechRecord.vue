@@ -280,7 +280,7 @@ onBeforeUnmount(() => {
   background-color: #f0f0f0;
 }
 .container{
-  background-color: #bb66ff;
+  background-color: black;
 }
 #my-video{
   width: 100%;
