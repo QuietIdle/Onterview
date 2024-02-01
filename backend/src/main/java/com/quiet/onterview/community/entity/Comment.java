@@ -48,6 +48,6 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "PARENT_COMMENT_ID", referencedColumnName = "COMMENT_ID")
     private Comment parent;
 
-    @OneToMany(fetch = LAZY, mappedBy = "parent", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "parent", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Comment> children = new ArrayList<>();
 }
