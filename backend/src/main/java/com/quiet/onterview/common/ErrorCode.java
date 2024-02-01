@@ -43,8 +43,14 @@ public enum ErrorCode {
     /**
      * File
      */
-    FILE_NOT_EXIST(HttpStatus.BAD_REQUEST, "FILE_NOT_EXIST");
+    FILE_NOT_EXIST(HttpStatus.BAD_REQUEST, "FILE_NOT_EXIST"),
 
+    /**
+     * Matching
+     */
+    TYPE_MISMATCH(HttpStatus.BAD_REQUEST, "MESSAGE_TYPE_MISMATCH"),
+    CAN_NOT_GENERATE(HttpStatus.INTERNAL_SERVER_ERROR, "CAN NOT GENERATE"),
+    CAN_NOT_WRITE(HttpStatus.INTERNAL_SERVER_ERROR, "CAN NOT WRITE");
 
     HttpStatus statusCode;
     String message;
