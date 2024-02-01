@@ -38,8 +38,8 @@ const pageCount = computed(() => {
 // 라우터
 const router = useRouter()
 
-const goCommunityDetail = function (data) {
-  router.push({ name: 'community-detail' })
+const goCommunityDetail = function (articleId) {
+  router.push({ name: 'community-detail', params: { articleId: articleId } })
 }
 </script>
 
@@ -94,7 +94,7 @@ const goCommunityDetail = function (data) {
       hover
     >
       <template v-slot:item="{ item }">
-        <tr @click="goCommunityDetail(item)">
+        <tr @click="goCommunityDetail(item.articleId)">
           <td>{{ item.writerNickname }}</td>
           <td>{{ item.title }}</td>
           <td align="center">{{ item.likeCount }}</td>
