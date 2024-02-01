@@ -32,17 +32,6 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public void leave(MatchRequest matchRequest, String user) {
-        MatchWaitingResponse waitingResponse = matchMapper.toWaitingResponse(
-                matchManager.leave(matchRequest, user)
-        );
-        messageService.announceAll(
-                matchRequest.getRoomId(),
-                matchMapper.waitingResponseToJson(waitingResponse)
-        );
-    }
-
-    @Override
     public void match(MatchRequest matchRequest) {
         List<String> users = matchManager.match(matchRequest);
         String sessionId = UUID.randomUUID().toString();
