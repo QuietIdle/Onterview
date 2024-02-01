@@ -2,16 +2,23 @@
 import { ref } from "vue";
 import mainImg from '@/assets/meeting/meetingMainIcon.png'
 import { useRouter } from "vue-router";
+import { multiApi } from "@/api/meetingMulti";
+import meetingMultiHelp from "@/components/meetingMulti/meetingMultiHelp.vue"
+import meetingMultiConfig from "@/components/meetingMulti/meetingMultiConfig.vue"
 
 const router = useRouter()
 
-const steps = ref(["면접자 인원 선택", "면접 유형 선택", "시작하기"]);
-const peopleCount = ref(false);
-const type = ref(false);
+const dialog = ref({
+  wait: false,
+  help: false,
+}) // 모달
 
+const steps = ref(["면접자 인원 선택", "면접 유형 선택", "시작하기"]);
+const peopleCount = ref(false); // 1인 - 다인
+const type = ref(false); // 면접 유형
 const choice = ref({
   people: 'solo',
-  type: 'fit',
+  type: '인성면접',
   typeDetail: 'backend'
 })
 
@@ -22,20 +29,68 @@ const choosePeople = function (val) {
 
 const chooseType = function (val) {
   type.value = val;
-  choice.value.type = type.value ? 'multi' : 'fit';
-  if (choice.value.type === 'fit') {
+  choice.value.type = type.value ? '직무면접' : '인성면접';
+  if (choice.value.type === '인성면접') {
     choice.value.typeDetail = ''
   }
   else choice.value.typeDetail = 'backend'
 }
 
 const enter = function () {
-  console.log(choice.value);
+  
+  if (choice.value.people === 'multi') {
+    dialog.value.wait = true
+  }
+  else {
+    alert('1인 방')
+  }
 }
 
 const openHelp = function () {
-  alert('help!')
+  dialog.value.help = true
 }
+
+
+const selected = ref(0) // 매칭화면 '환경설정'/'도움말' 탭
+const time = ref({
+  second: 0,
+  match: false,
+}) // 대기 시간, 매칭 여부
+let timerId;
+
+const startTimer = function() {
+  time.value.second++;
+  stopTimer();
+  timerId = setTimeout(startTimer, 1000); // 스탑워치 주기 1초
+}
+
+const stopTimer = function() {
+  if (timerId !== null) {
+    clearTimeout(timerId);
+  }
+}
+
+const startMatch = async function () {
+  startTimer()
+  time.value.match = true
+
+  try {
+    const result = await multiApi.getMatch()
+    console.log(result.data)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const stopMatch = function () {
+  dialog.value.wait = false
+  stopTimer()
+  time.value.match = false
+  time.value.second = 0
+}
+
+// 웹 소켓
+
 </script>
 
 <template>
@@ -98,13 +153,77 @@ const openHelp = function () {
           <button @click="enter" class="btn enter">
             <div class="text-h3" style="font-weight: bold;">입장하기</div>
             <br>
-            <div class="">환경세팅 및 매칭 대기가 시작됩니다.</div>
+            <div>환경세팅 및 매칭 대기가 시작됩니다.</div>
           </button>
           <v-btn class="help-btn" icon="mdi-help" @click="openHelp"></v-btn>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- 매칭 대기 모달 창 -->
+  <v-dialog 
+    v-model="dialog.wait" 
+    fullscreen
+  >
+    <v-card class="bg-purple-lighten-4 pa-5">
+      <v-card-title class="text-center">
+        다인 모의 면접 대기실
+      </v-card-title>
+      <v-divider class="border-opacity-100"></v-divider>
+      <div class="mt-5 d-flex justify-space-between">
+        <v-btn-toggle 
+          v-model="selected"
+          mandatory
+          color="purple-darken-3"
+          class="btn-container"
+          @click="console.log(selected)"
+        >
+          <v-btn elevation="2">
+            환경설정
+          </v-btn>
+          <v-btn elevation="2">
+            도움말
+          </v-btn>
+        </v-btn-toggle>
+        <div v-if="!choice.typeDetail">{{ choice.type }}</div>
+        <div v-else>{{ choice.type }} - {{ choice.typeDetail }}</div>
+      </div>
+
+      <v-card-text class="bg-white">
+        <div v-show="selected===0" class="w-100 h-100">
+          <meetingMultiConfig />
+        </div>
+
+        <div v-show="selected===1" class="w-100 h-100">
+          <meetingMultiHelp />
+        </div>
+      </v-card-text>
+
+      <v-card-actions class="d-flex flex-row-reverse btns">
+        <v-btn @click="stopMatch" class="ma-1" rounded elevation="4" size="x-large" style="background-color: #9B9B9B;">매칭취소</v-btn>
+        <v-btn v-if="!time.match" @click="startMatch" class="ma-1" rounded elevation="4" size="x-large" style="background-color: #A069B3;">매칭시작</v-btn>
+        <v-btn v-else class="ma-1" rounded elevation="4" size="x-large" style="background-color: #A069B3;" disabled>매칭 대기 시간 {{ String(Math.floor(time.second/60)).padStart(2,'0') }} : {{ String(time.second%60).padStart(2,'0') }}</v-btn>
+      </v-card-actions>
+
+    </v-card>
+  </v-dialog>
+  
+  <!-- 도움말 모달 창 -->
+  <v-dialog 
+    v-model="dialog.help"
+  >
+    <v-card class="bg-purple-lighten-4 pa-5">
+      <v-card-title class="d-flex flex-row-reverse">
+        <v-btn @click="dialog.help=false" icon="mdi-close"></v-btn>
+      </v-card-title>
+      <v-card-text class="bg-white">
+        <div class="w-100 h-100">
+          <meetingMultiHelp />
+        </div>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 
 <style scoped>
@@ -193,4 +312,9 @@ const openHelp = function () {
 .isSelect {
   border: 0.2em solid #8A439C;
 }
+
+.btns>*{
+  color: white;
+}
+
 </style>
