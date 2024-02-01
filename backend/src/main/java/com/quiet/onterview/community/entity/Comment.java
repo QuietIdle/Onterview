@@ -39,7 +39,7 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "ARTICLE_ID")
     private Article article;
 
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
