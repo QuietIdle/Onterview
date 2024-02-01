@@ -4,5 +4,6 @@ import com.quiet.onterview.interview.dto.request.InterviewRoomRequest;
 
 public interface InterviewRoomService {
 
-     void createInterviewRoom(Long MemberId, InterviewRoomRequest interviewRoomRequest);
+     void createInterviewRoom(Long memberId, InterviewRoomRequest interviewRoomRequest);
+     void deleteinterviewRoom(Long interviewRoomId);
 }

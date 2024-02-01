@@ -4,6 +4,7 @@ import com.quiet.onterview.common.BaseException;
 import com.quiet.onterview.common.ErrorCode;
 import com.quiet.onterview.interview.dto.request.InterviewRoomRequest;
 import com.quiet.onterview.interview.entity.InterviewRoom;
+import com.quiet.onterview.interview.exception.InterviewRoomNotFoundException;
 import com.quiet.onterview.interview.mapper.InterviewRoomMapper;
 import com.quiet.onterview.interview.repository.InterviewRoomRepository;
 import com.quiet.onterview.member.entity.Member;
@@ -44,5 +45,12 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
                         interviewQuestionService.createInterviewQuestion(randomCommonQuestion)));
 
         interviewRoomRepository.save(interviewRoom);
+    }
+
+    @Override
+    public void deleteinterviewRoom(Long interviewRoomId) {
+        interviewRoomRepository.delete(
+                interviewRoomRepository.findById(interviewRoomId)
+                        .orElseThrow(InterviewRoomNotFoundException::new));
     }
 }

@@ -36,6 +36,12 @@ public enum ErrorCode {
     INVALID_SELECTION_COUNT(HttpStatus.BAD_REQUEST, "INVALID_SELECTION_COUNT"),
 
     /**
+     * InterviewRoom
+     */
+
+    INTERVIEW_ROOM_NOT_FOUND(HttpStatus.BAD_REQUEST, "INTERVIEW_ROOM_NOT_FOUND"),
+
+    /**
      * Video
      */
     VIDEO_NOT_FOUND(HttpStatus.BAD_REQUEST, "VIDEO_NOT_FOUND"),
