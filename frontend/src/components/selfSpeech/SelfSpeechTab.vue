@@ -28,13 +28,13 @@ const switchTab = function(page) {
 }
 const rules = ref([
   v => {
-    if (v === undefined) return true;
+    if (v === undefined || v === null) return true;
     return v.length <= maxCounter.value || `${maxCounter.value}글자 이하로 작성해주세요`
   }
 ])
 
 const saveFeedback = async function () {
-  if(selfSpeechStore.questionData.feedback.length > maxCounter.value) return
+  if(selfSpeechStore.videoData.feedback.length > maxCounter.value) return
   try {
     await apiMethods.patchVideo(selfSpeechStore.videoData.videoId, {
       feedback: selfSpeechStore.videoData.feedback,

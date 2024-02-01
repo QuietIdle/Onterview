@@ -6,7 +6,7 @@ import { apiMethods } from '@/api/video';
 const selfSpeechStore = useSelfSpeechStore();
 const model = ref(null); // 썸네일
 
-const videos = selfSpeechStore.questionData.videos;
+const videos = selfSpeechStore.questionData.videoInformationResponseList;
 
 const markVideo = async function (id, bool) {
   try {

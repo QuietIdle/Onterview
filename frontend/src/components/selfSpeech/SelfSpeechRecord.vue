@@ -287,4 +287,7 @@ onBeforeUnmount(() => {
   height: 390px;
   background-color: black;
 }
+.timer{
+  color: white;
+}
 </style>
