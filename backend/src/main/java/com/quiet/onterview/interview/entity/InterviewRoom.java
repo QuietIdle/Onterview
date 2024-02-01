@@ -31,6 +31,8 @@ public class InterviewRoom extends BaseEntity {
     @Column(name = "ROOM_TYPE", nullable = false)
     private RoomType roomType;
 
+    private Integer runTime;
+
     @OneToMany(mappedBy = "interviewRoom", cascade = CascadeType.PERSIST, orphanRemoval = true)
     List<InterviewQuestion> interviewQuestionList = new ArrayList<>();
 
