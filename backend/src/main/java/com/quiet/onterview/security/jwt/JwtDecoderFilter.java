@@ -7,19 +7,23 @@ import com.quiet.onterview.member.repository.MemberRepository;
 import com.quiet.onterview.security.SecurityMemberAuthentication;
 import com.quiet.onterview.security.SecurityUser;
 import com.quiet.onterview.security.exception.SecurityException;
-import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.filter.OncePerRequestFilter;
 
+
+/**
+ * 해당 필터는 JWT을 가지고 해당 사용자를 인증하는 필터이다.
+ * 여기서 OncePerRequestFilter는 기존 Filter(요청이 들어온 시점과 나가는 시점)와 다르게 초반에 요청이 들어왔을 때 한번만 검증한다는 특징이 있는 Filter이다.
+ * 인증이 된 사용자는 SecurityContextHolder에 보관한다.
+ */
 @RequiredArgsConstructor
-public class JwtDecoderFilter implements Filter {
+public class JwtDecoderFilter extends OncePerRequestFilter {
 
     private final String AUTHORIZATION_HEADER = "Authorization";
     private final String ACCESS_TOKEN_HEADER = "AccessToken";
@@ -28,27 +32,26 @@ public class JwtDecoderFilter implements Filter {
     private final MemberRepository memberRepository;
 
     @Override
-    public void doFilter(ServletRequest servletRequest,
-                         ServletResponse servletResponse,
-                         FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
-
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         String receivedToken = request.getHeader(AUTHORIZATION_HEADER);
         String receivedAccessToken = request.getHeader(ACCESS_TOKEN_HEADER);
         String receivedRefreshToken = request.getHeader(REFRESH_TOKEN_HEADER);
 
-        if((receivedAccessToken!=null && receivedRefreshToken!=null)
-                || (receivedToken==null)
-                || (!jwtTokenProvider.isValidToken(receivedToken))) {
-            filterChain.doFilter(request,response);
-            return;
-        }
+//        if((receivedAccessToken!=null && receivedRefreshToken!=null)
+//                || (receivedToken==null)
+//                || (!jwtTokenProvider.isValidToken(receivedToken))) {
+//            filterChain.doFilter(request,response);
+//            return;
+//        }
 
-        String email = jwtTokenProvider.getEmail(receivedToken);
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new SecurityException(ErrorCode.EMAIL_NOT_EXISTS));
-        SecurityContextHolder.getContext().setAuthentication(new SecurityMemberAuthentication(new SecurityUser(member)));
+        if (receivedToken != null && jwtTokenProvider.isValidToken(receivedToken)) {
+            String email = jwtTokenProvider.getEmail(receivedToken);
+            Member member = memberRepository.findByEmail(email)
+                    .orElseThrow(() -> new SecurityException(ErrorCode.EMAIL_NOT_EXISTS));
+            SecurityUser securityUser = new SecurityUser(member);
+            SecurityContextHolder.getContext().setAuthentication(new SecurityMemberAuthentication(securityUser));
+        }
 
         filterChain.doFilter(request,response);
     }

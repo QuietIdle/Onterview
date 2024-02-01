@@ -4,17 +4,18 @@ import com.quiet.onterview.common.ErrorCode;
 import com.quiet.onterview.member.entity.Member;
 import com.quiet.onterview.member.repository.MemberRepository;
 import com.quiet.onterview.security.SecurityMemberAuthentication;
-
 import com.quiet.onterview.security.SecurityUser;
 import com.quiet.onterview.security.exception.SecurityException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationProvider implements AuthenticationProvider {
@@ -37,6 +38,6 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return false;
+        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }
