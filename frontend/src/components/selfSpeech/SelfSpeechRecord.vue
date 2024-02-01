@@ -224,7 +224,7 @@ onBeforeUnmount(() => {
     <v-btn class="ma-3" @click="controlMedia(0)" v-else icon="mdi-video-off" color="blue"></v-btn>
     <v-btn class="ma-3" @click="controlMedia(1)" v-if="mediaToggle.audio" icon="mdi-microphone"></v-btn>
     <v-btn class="ma-3" @click="controlMedia(1)" v-else icon="mdi-microphone-off" color="blue"></v-btn>
-    <v-btn class="ma-3" @click="startRecording" v-if="!mediaToggle.play" icon="mdi-play" color="red" :disabled="!mediaToggle.video||!mediaToggle.audio"></v-btn>
+    <v-btn class="ma-3" @click="startRecording" v-if="!mediaToggle.play" icon="mdi-play" color="red" :disabled="!mediaToggle.video||!mediaToggle.audio||!selfSpeechStore.myQuestionId"></v-btn>
     <v-btn class="ma-3" variant="tonal" @click="stopRecording" v-else icon="mdi-stop" color="red"></v-btn>
     <div class="timer ml-10" v-if="!mediaToggle.play"></div>
     <div class="timer ml-10" v-else-if="(time%60)>=10">{{ Math.floor(time/60) }}:{{ time%60 }}</div>
