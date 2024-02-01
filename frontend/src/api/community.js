@@ -10,7 +10,14 @@ const getMyPostList = () => {
     return api.get(`/api/community/my?order=like`)
 }
 
+const getPostDetail = (articleId) => {
+    return api.get(`/api/community/post/detail/${articleId}`)
+}
+
+// const getCommentDetail = () => {}
+
 export {
     getAllPostList,
     getMyPostList,
+    getPostDetail,
 }
