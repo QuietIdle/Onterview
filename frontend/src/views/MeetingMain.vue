@@ -1,6 +1,10 @@
 <script setup>
 import { ref } from "vue";
 import mainImg from '@/assets/meeting/meetingMainIcon.png'
+import BtnImg1 from "@/assets/meeting/meetingMainBtnIcon1.png"
+import BtnImg2 from "@/assets/meeting/meetingMainBtnIcon2.png"
+import BtnImg3 from "@/assets/meeting/meetingMainBtnIcon3.png"
+import BtnImg4 from "@/assets/meeting/meetingMainBtnIcon4.png"
 import { useRouter } from "vue-router";
 import { useMeetingMultiStore } from "@/stores/meetingMulti";
 import meetingMultiHelpModal from "@/components/meetingMulti/meetingMultiHelpModal.vue"
@@ -69,11 +73,14 @@ const openHelp = function () {
 
       <div class="item">
         <div class="item-body">
-          <button class="btn" :class="{ isSelect : !peopleCount}" @click="choosePeople(false)">
-            1인
+          <button class="btn d-flex justify-center align-center" :class="{ isSelect : !peopleCount}" @click="choosePeople(false)">
+            <div class="w-25 ma-2">1인</div>
+            <div class="w-25 ma-2"><v-img :src="BtnImg1"></v-img></div>
           </button>
-          <button class="btn" :class="{ isSelect : peopleCount}" @click="choosePeople(true)">
-            3 ~ 4인
+          
+          <button class="btn d-flex justify-center align-center" :class="{ isSelect : peopleCount}" @click="choosePeople(true)">
+            <div class="w-25 ma-2">3인~4인</div>
+            <div class="w-25 ma-2"><v-img :src="BtnImg2"></v-img></div>
           </button>
         </div>
       </div>
@@ -82,7 +89,8 @@ const openHelp = function () {
         <div class="item-body">
           <div class="job">
             <button :class="{ isSelect : type}" @click="chooseType(true)" class="btn job-btn">
-              직무
+              <div class="w-50 ma-1">직무</div>
+              <div class="w-50 ma-1"><v-img :src="BtnImg3"></v-img></div>
             </button>
             <v-radio-group class="job-detail" v-if="type" v-model="meetingMultiStore.choice.typeDetail">
               <v-radio
@@ -97,7 +105,8 @@ const openHelp = function () {
           </div>
           <div class="fit">
             <button class="btn fit-btn" :class="{ isSelect : !type}" @click="chooseType(false)">
-              인성
+              <div class="w-25 ma-1">인성</div>
+              <div class="ma-1" style="width: 35%;"><v-img :src="BtnImg4"></v-img></div>
             </button>
           </div>
         </div>
@@ -159,7 +168,8 @@ const openHelp = function () {
   background-color: #fff;
   border-radius: 6px;
   height: 30vh;
-}.fit {
+}
+.fit {
   width: 100%;
 }
 .fit-btn {

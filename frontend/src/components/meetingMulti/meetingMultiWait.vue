@@ -4,6 +4,7 @@ import meetingMultiConfig from "./meetingMultiConfig.vue";
 import meetingMultiHelp from "@/components/meetingMulti/meetingMultiHelp.vue"
 import { useMeetingMultiStore } from "@/stores/meetingMulti";
 import { multiApi } from "@/api/meetingMulti";
+import Stomp from "stompjs"
 
 const meetingMultiStore = useMeetingMultiStore()
 const selectedTab = ref(0)
@@ -26,16 +27,29 @@ const stopTimer = function() {
   }
 }
 
-const startMatch = async function () {
+const startMatch = function () {
   startTimer()
   time.value.match = true
 
-  try {
-    const result = await multiApi.getMatch()
-    console.log(result.data)
-  } catch (error) {
-    console.log(error)
+  const socket = new WebSocket('ws://localhost:8080/matching');
+  const matchRequest = {
+    type: "ENTER",
+	  roomId: 1, 
+	  matchCount: 4,
   }
+  const stomp = Stomp.over(socket);
+  
+  stomp.connect({}, () => {
+    stomp.subscribe('/sub/roomType', function (message) {
+      console.log(message.body);
+    });
+    stomp.subscribe('/user/sub/1', function (message) {
+      console.log(message.body);
+    });
+    stomp.send("/pub/enter", {}, JSON.stringify(matchRequest))
+  }, error => {
+    console.error(error);
+  })
 }
 
 const stopMatch = function () {
@@ -44,6 +58,7 @@ const stopMatch = function () {
   time.value.match = false
   time.value.second = 0
 }
+
 </script>
 
 <template>
