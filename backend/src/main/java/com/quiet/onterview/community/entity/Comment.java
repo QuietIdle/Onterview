@@ -41,7 +41,6 @@ public class Comment extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "MEMBER_ID")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
     @Column(name="CONTENT", nullable = false)

@@ -37,7 +37,6 @@ public class Like {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "MEMBER_ID")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
     @Column(name="STATUS", nullable = false)
