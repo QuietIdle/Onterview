@@ -3,6 +3,11 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { getPostDetail } from '@/api/community'
 
+// assets
+import tempThumbnail from '@/assets/main/introduceImage2.png'
+import unlikeButton from '@/assets/community/unlikeButton.svg'
+import likeButton from '@/assets/community/likeButton.svg'
+
 onMounted(() => {
   // postDetail.value = requestPostDetail()
 })
@@ -26,14 +31,88 @@ const postDetail = ref({
   likeCount: 3,
   writtenDate: '1999/4/19',
 
-  content: '고민 내용',
+  content:
+    '제가 횡설수설 하지 않고 잘 말하고 있는지 궁금합니다. 피드백 정말 환영합니다^^ 03:38부터 보시면 됩니다!',
   isWriter: true,
   isLike: true
 })
 </script>
 
 <template>
-  <div>{{ postDetail }}</div>
+  <v-container class="detail pt-16">
+    <!-- 영상 제목 -->
+    <v-row>
+      <v-col cols="12" class="text-left">
+        <h2 class="title">{{ postDetail.title }}</h2>
+      </v-col>
+    </v-row>
+    <v-divider :thickness="2"></v-divider>
+
+    <!-- 작성자 정보 -->
+    <v-row class="px-3 pt-3">
+      <v-col cols="6">
+        <span class="writernickname">{{ postDetail.writerNickname }}</span>
+      </v-col>
+      <v-col cols="6" class="text-right">
+        <span class="writtendate">{{ postDetail.writtenDate }}</span>
+      </v-col>
+    </v-row>
+
+    <!-- 수정 삭제 버튼 -->
+    <v-col cols="12" class="text-right">
+      <v-btn class="updatebutton" variant="plain">수정</v-btn>
+      <v-btn class="deletebutton" color="red" variant="plain">삭제</v-btn>
+    </v-col>
+
+    <!-- 영상 컴포넌트 -->
+    <v-row>
+      <v-col cols="12">
+        <div class="video d-flex justify-center">
+          <v-img
+            max-width="800"
+            gradient=""
+            :src="tempThumbnail"
+            cover
+            aspect-ratio="16/9"
+            class="grey lighten-2"
+          ></v-img>
+        </div>
+      </v-col>
+    </v-row>
+
+    <!-- 작성자 닉네임 및 내용 -->
+    <v-row class="pt-8">
+      <v-col cols="12">
+        <div class="writer-and-content">
+          <div class="">
+            <span>{{ postDetail.writerNickname }}</span>
+            <span class="text-grey">님의 고민</span>
+          </div>
+          <div class="content py-4">
+            <!-- 내용 텍스트 -->
+            {{ postDetail.content }}
+          </div>
+        </div>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12" class="d-flex justify-end align-center mb-3">
+        <div class="mr-2">추천 {{ postDetail.likeCount }}</div>
+        <div>
+          <v-img width="20" :src="likeButton"></v-img>
+          <!-- <v-img width="20" :src="unlikeButton"></v-img> -->
+        </div>
+      </v-col>
+    </v-row>
+
+    <v-divider :thickness="2"></v-divider>
+  </v-container>
 </template>
 
-<style scoped></style>
+<style scoped>
+.title {
+  font-size: 24px; /* 제목 크기 */
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+</style>
