@@ -18,6 +18,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -33,6 +35,7 @@ public class Article extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "MEMBER_ID")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
     @ManyToOne(fetch = LAZY)

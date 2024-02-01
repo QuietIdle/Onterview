@@ -20,6 +20,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -39,6 +41,7 @@ public class Comment extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "MEMBER_ID")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
     @Column(name="CONTENT", nullable = false)
@@ -48,6 +51,6 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "PARENT_COMMENT_ID", referencedColumnName = "COMMENT_ID")
     private Comment parent;
 
-    @OneToMany(mappedBy = "parent", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Comment> children = new ArrayList<>();
 }
