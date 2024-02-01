@@ -9,7 +9,7 @@ const useCommunityStore = defineStore('community', () => {
         articleId: 5,
         writerNickname: '이경민',
         title: '성격의 장단점',
-        likeCount: 4,
+        likeCount: 3,
         commentCount: 19,
         writtenDate: '1999/4/19'
       },
@@ -28,7 +28,1071 @@ const useCommunityStore = defineStore('community', () => {
         likeCount: 4,
         commentCount: 19,
         writtenDate: '1999/4/19'
-      }
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 18,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 118,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 20,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 18,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 118,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 20,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 18,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 118,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 20,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 18,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 118,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 20,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 18,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 118,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 20,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 18,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 118,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 20,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 18,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 118,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 20,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 18,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 118,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 20,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 19,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 5,
+        writerNickname: '이경민',
+        title: '성격의 장단점',
+        likeCount: 3,
+        commentCount: 18,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 9,
+        writerNickname: '김경민',
+        title: '지원 동기',
+        likeCount: 4,
+        commentCount: 118,
+        writtenDate: '1999/4/19'
+      },
+      {
+        articleId: 40,
+        writerNickname: '최경민',
+        title: '인상깊은 협업 경험',
+        likeCount: 4,
+        commentCount: 20,
+        writtenDate: '1999/4/19'
+      },
     ]
   })
 

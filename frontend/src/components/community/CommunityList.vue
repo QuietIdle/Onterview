@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import searchButton from '@/assets/community/searchButton.svg'
 
 import useCommunityStore from '@/stores/community'
@@ -7,12 +7,31 @@ import useCommunityStore from '@/stores/community'
 const communityStore = useCommunityStore()
 
 onMounted(() => {
-  communityStore.requestPostList()
-  postList.value = communityStore.allPostList
+  // communityStore.requestPostList()
+  postList.value = communityStore.allPostList.postList
 })
 
-const postList = ref({})
+const postList = ref([])
 const search = ref('')
+
+const page = ref(1)
+const itemsPerPage = ref(10)
+const headers = ref([
+  {
+    align: 'start',
+    key: 'writerNickname',
+    sortable: false,
+    title: '작성자'
+  },
+  { title: '면접 질문', key: 'title', sortable: false },
+  { title: '추천수', key: 'likeCount', sortable: false },
+  { title: '조회수', key: 'commentCount', sortable: false },
+  { title: '작성날짜', key: 'writtenDate', sortable: false }
+])
+
+const pageCount = computed(() => {
+  return Math.ceil(postList.value.length / itemsPerPage.value)
+})
 </script>
 
 <template>
@@ -57,8 +76,29 @@ const search = ref('')
         <v-btn color="primary" class="ml-2">글쓰기</v-btn>
       </v-col>
     </v-row>
-
-    <div class="board"></div>
+    <!-- 게시판 -->
+    <v-data-table
+      v-model:page="page"
+      :headers="headers"
+      :items="postList"
+      :items-per-page="itemsPerPage"
+      hover
+    >
+      <template v-slot:bottom>
+        <div class="text-center pt-2">
+          <v-pagination
+            v-model="page"
+            :length="pageCount"
+            :total-visible="8"
+            rounded="circle"
+            prev-icon="mdi-menu-left"
+            next-icon="mdi-menu-right"
+            active-color="#BB66FF"
+            density="comfortable"
+          ></v-pagination>
+        </div>
+      </template>
+    </v-data-table>
     <div class="pagination"></div>
   </v-container>
 </template>
