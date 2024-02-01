@@ -77,7 +77,7 @@ const selectVideo = async function (v_id) {
   }
   .icon{
     position: absolute;
-    top: -5%;
-    left: -15%;
+    top: 0%;
+    left: 0%;
   }
 </style>
