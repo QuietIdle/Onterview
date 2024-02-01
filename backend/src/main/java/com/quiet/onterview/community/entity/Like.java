@@ -3,6 +3,7 @@ package com.quiet.onterview.community.entity;
 import static jakarta.persistence.FetchType.LAZY;
 
 import com.quiet.onterview.member.entity.Member;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,11 +32,11 @@ public class Like {
     @Column(name = "LIKE_ID")
     private Long likeId;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "ARTICLE_ID")
     private Article article;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 

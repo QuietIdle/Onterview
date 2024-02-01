@@ -5,6 +5,7 @@ import static jakarta.persistence.FetchType.LAZY;
 import com.quiet.onterview.common.BaseEntity;
 import com.quiet.onterview.member.entity.Member;
 import com.quiet.onterview.video.entity.Video;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,7 +34,7 @@ public class Article extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long articleId;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
