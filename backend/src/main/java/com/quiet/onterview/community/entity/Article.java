@@ -13,14 +13,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -34,12 +35,14 @@ public class Article extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long articleId;
 
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "MEMBER_ID")
+//    @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "VIDEO_ID")
+//    @OnDelete(action = OnDeleteAction.CASCADE)
     private Video video;
 
     @Column(name="TITLE")
@@ -55,4 +58,7 @@ public class Article extends BaseEntity {
     @Column(name="COMMENT_COUNT")
     @ColumnDefault("0")
     private Integer commentCount;
+
+    @OneToMany(mappedBy = "article", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<Comment> commentList = new ArrayList<>();
 }

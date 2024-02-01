@@ -12,6 +12,8 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Embeddable
 @Getter
@@ -20,11 +22,13 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 public class LikesPrimaryKey implements Serializable {
 
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "ARTICLE_ID")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Article article;
 
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "MEMBER_ID")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 }

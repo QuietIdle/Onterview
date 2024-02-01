@@ -35,8 +35,9 @@ public class Comment extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "ARTICLE_ID")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Article article;
 
     @ManyToOne(fetch = LAZY)
@@ -46,8 +47,9 @@ public class Comment extends BaseEntity {
     @Column(name="CONTENT", nullable = false)
     private String content;
 
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "PARENT_COMMENT_ID", referencedColumnName = "COMMENT_ID")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Comment parent;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.PERSIST, orphanRemoval = true)
