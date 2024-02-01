@@ -73,6 +73,12 @@ const router = createRouter({
       component: () => import('@/views/MeetingMain.vue'),
       meta: {layout: 'main'},
     },
+    {
+      path: '/meeting/multiRoom',
+      name: 'meeting-multi-room',
+      component: () => import('@/views/MeetingMultiRoom.vue'),
+      meta: {layout: ''},
+    },
   ]
 })
 

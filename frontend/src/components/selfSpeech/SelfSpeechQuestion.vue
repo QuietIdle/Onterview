@@ -21,7 +21,6 @@ const selectQuestion = async function(ele) {
   try {
     const result = await apiMethods.getVideoAll(selfSpeechStore.selectedQuestion);
     selfSpeechStore.questionData = result.data;
-    console.log(result.data)
   } catch (error) {
     console.log(error)
   }
@@ -29,7 +28,10 @@ const selectQuestion = async function(ele) {
 </script>
 
 <template>
-  <div class="question-title pa-3">나의 면접 문항 목록</div>
+  <div class="question-title pa-3 d-flex align-center justify-space-between">
+    <div>나의 면접 문항 목록</div>
+    <v-btn color="grey-lighten-1">관리</v-btn>
+  </div>
   <div style="max-height: 80%; overflow-y: auto">
     <v-expansion-panels variant="accordion">
       <v-expansion-panel

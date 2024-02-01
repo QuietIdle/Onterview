@@ -32,7 +32,7 @@ const chooseType = function (val) {
   }
   else {
     meetingMultiStore.choice.type = '인성면접'
-    meetingMultiStore.choice.typeDetail = ''
+    meetingMultiStore.choice.typeDetail = undefined
   }
 }
 

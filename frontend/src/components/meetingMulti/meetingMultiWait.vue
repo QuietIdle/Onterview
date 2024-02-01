@@ -1,13 +1,18 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onUnmounted } from "vue";
 import meetingMultiConfig from "./meetingMultiConfig.vue";
 import meetingMultiHelp from "@/components/meetingMulti/meetingMultiHelp.vue"
 import { useMeetingMultiStore } from "@/stores/meetingMulti";
-import { multiApi } from "@/api/meetingMulti";
 import Stomp from "stompjs"
+import { useUserStore } from "@/stores/user";
+
+const userStore = useUserStore()
+const authToken = userStore.accessToken
 
 const meetingMultiStore = useMeetingMultiStore()
 const selectedTab = ref(0)
+
+let stomp
 
 const time = ref({
   second: 0,
@@ -30,35 +35,52 @@ const stopTimer = function() {
 const startMatch = function () {
   startTimer()
   time.value.match = true
+  console.log(authToken)
 
-  const socket = new WebSocket('ws://localhost:8080/matching');
-  const matchRequest = {
-    type: "ENTER",
-	  roomId: 1, 
-	  matchCount: 4,
-  }
-  const stomp = Stomp.over(socket);
+  const socket = new WebSocket('ws://70.12.247.51:8080/api/meeting/matching');
+  stomp = Stomp.over(socket);
   
-  stomp.connect({}, () => {
-    stomp.subscribe('/sub/roomType', function (message) {
+  stomp.connect({
+        Authorization: `${authToken}`
+    }, () => {
+    stomp.subscribe(`/sub/${meetingMultiStore.stompType}`, function (message) {
       console.log(message.body);
     });
-    stomp.subscribe('/user/sub/1', function (message) {
+    stomp.subscribe(`/user/sub/${meetingMultiStore.stompType}`, function (message) {
       console.log(message.body);
     });
-    stomp.send("/pub/enter", {}, JSON.stringify(matchRequest))
+    
+    stomp.send("/pub/enter", {}, JSON.stringify({
+    type: "ENTER",
+	  roomId: meetingMultiStore.stompType,
+	  matchCount: 4,
+    }))
+    stomp.send("/pub/match", {}, JSON.stringify({
+    type: "MATCH",
+	  roomId: meetingMultiStore.stompType,
+	  matchCount: 4,
+    }))
   }, error => {
     console.error(error);
   })
 }
 
-const stopMatch = function () {
+const stopMatch = async function () {
   meetingMultiStore.dialog.wait = false
   stopTimer()
   time.value.match = false
   time.value.second = 0
+  try {
+    await stomp.send("/pub/leave", {}, JSON.stringify({
+      type: "LEAVE",
+      roomId: meetingMultiStore.stompType,
+      matchCount: 4,
+    }))
+  } catch (error) {
+    console.log(error)
+  }
+  stomp.disconnect()
 }
-
 </script>
 
 <template>

@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useMeetingMultiStore = defineStore('meetingMulti', () => {
@@ -9,8 +9,13 @@ export const useMeetingMultiStore = defineStore('meetingMulti', () => {
   const choice = ref({
     people: 'solo',
     type: '인성면접',
-    typeDetail: 'backend'
+    typeDetail: undefined
+  })
+  const stompType = computed(() => {
+    if (choice.value.type === '인성면접') return 1
+    else if (choice.value.typeDetail === 'backend') return 2
+    else return 3
   })
 
-  return { dialog, choice }
+  return { dialog, choice, stompType }
 })
