@@ -18,15 +18,23 @@ const dropdownMenu = ref(null)
     <template #logo>
       <TheDropDownNavbarLogo>
         <RouterLink to="/">
-          <v-img class="logo" :width="150" aspect-ratio="16/9" cover :src="logo"></v-img>
+          <v-img
+            class="logo"
+            :width="150"
+            aspect-ratio="16/9"
+            cover
+            :src="logo"
+          ></v-img>
         </RouterLink>
       </TheDropDownNavbarLogo>
     </template>
     <TheDropDownItem link="/selfspeech"> 셀프 스피치 </TheDropDownItem>
     <TheDropDownItem link="/"> 모의 면접 </TheDropDownItem>
-    <TheDropDownItem link="/"> 커뮤니티 </TheDropDownItem>
+    <TheDropDownItem link="/community/list"> 커뮤니티 </TheDropDownItem>
     <TheDropDownMenu text="보관함" ref="dropdownMenu">
-      <TheDropDownItem link="/storage/question"> 면접 문항 목록 </TheDropDownItem>
+      <TheDropDownItem link="/storage/question">
+        면접 문항 목록
+      </TheDropDownItem>
       <TheDropDownMenu text="녹화 영상 목록">
         <TheDropDownItem link="/storage/video"> 셀프 스피치 </TheDropDownItem>
         <TheDropDownItem link="/"> 1인 모의 면접 </TheDropDownItem>
@@ -39,7 +47,12 @@ const dropdownMenu = ref(null)
     </RouterLink>
     <TheDropDownMenu text="마이페이지" ref="dropdownMenu">
       <v-list>
-        <v-list-item :prepend-avatar="logo" title="관리자님" subtitle="환영합니다"> </v-list-item>
+        <v-list-item
+          :prepend-avatar="logo"
+          title="관리자님"
+          subtitle="환영합니다"
+        >
+        </v-list-item>
       </v-list>
       <TheDropDownItem link="/mypage">나의 정보 수정</TheDropDownItem>
       <TheDropDownItem link="/">Sign out</TheDropDownItem>

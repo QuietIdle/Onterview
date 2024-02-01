@@ -51,6 +51,20 @@ const router = createRouter({
       component: () => import('@/views/StorageVideoView.vue'),
       meta: {layout: 'main'},
     },
+    {
+      path: '/community',
+      name: 'community',
+      component: () => import('@/views/CommunityView.vue'),
+      meta: { layout: 'main' },
+      redirect: { name: "community-list" },
+      children: [
+        {
+          path: "list",
+          name: "community-list",
+          component: () => import('@/components/community/CommunityList.vue')
+        },
+      ]
+    },
   ]
 })
 
