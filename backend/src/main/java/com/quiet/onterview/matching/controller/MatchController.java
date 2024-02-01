@@ -22,12 +22,6 @@ public class MatchController {
         matchService.enter(matchRequest, user.getName());
     }
 
-    @MessageMapping("/leave")
-    public void leave(@Payload MatchRequest matchRequest, Principal user) {
-        log.info("LEAVE : {}", matchRequest);
-        matchService.leave(matchRequest, user.getName());
-    }
-
     @MessageMapping("/match")
     public void waiting(@Payload MatchRequest matchRequest) {
         log.info("MATCH : {}", matchRequest);

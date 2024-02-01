@@ -14,6 +14,6 @@ public class MatchRequest {
     }
 
     private MessageType type;
-    private Long roomId;
+    private Integer roomId;
     private Integer matchCount;
 }

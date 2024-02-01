@@ -10,11 +10,11 @@ public class MessageService {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final String SUB_PREFIX = "/sub/";
 
-    public void announceAll(Long roomId, String message) {
+    public void announceAll(Integer roomId, String message) {
         simpMessagingTemplate.convertAndSend(SUB_PREFIX + roomId, message);
     }
 
-    public void announceToUser(Long roomId, String user, String message) {
+    public void announceToUser(Integer roomId, String user, String message) {
         simpMessagingTemplate.convertAndSendToUser(user, SUB_PREFIX + roomId, message);
     }
 }

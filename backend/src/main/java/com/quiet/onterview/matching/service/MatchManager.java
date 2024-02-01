@@ -20,16 +20,13 @@ public class MatchManager {
             throw new TypeMismatchException();
         }
 
-        Long roomId = matchRequest.getRoomId();
+        Integer roomId = matchRequest.getRoomId();
         return matchRepository.enter(roomId, user);
     }
 
-    public Integer leave(MatchRequest matchRequest, String user) {
-        if (matchRequest.getType() != MessageType.LEAVE) {
-            throw new TypeMismatchException();
-        }
-        Long roomId = matchRequest.getRoomId();
-        return matchRepository.leave(roomId, user);
+    public void leave(String user) {
+        int roomId = matchRepository.findRoom(user);
+        matchRepository.leave(roomId, user);
     }
 
     public List<String> match(MatchRequest matchRequest) {
@@ -37,7 +34,7 @@ public class MatchManager {
             throw new TypeMismatchException();
         }
 
-        Long roomId = matchRequest.getRoomId();
+        Integer roomId = matchRequest.getRoomId();
         Integer matchCount = matchRequest.getMatchCount();
 
         if (matchRepository.isMatch(roomId, matchCount)) {
