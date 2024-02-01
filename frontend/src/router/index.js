@@ -63,6 +63,11 @@ const router = createRouter({
           name: "community-list",
           component: () => import('@/components/community/CommunityList.vue')
         },
+        {
+          path: "detail",
+          name: "community-detail",
+          component: () => import('@/components/community/CommunityDetail.vue')
+        }
       ]
     },
   ]

@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import searchButton from '@/assets/community/searchButton.svg'
 
 import useCommunityStore from '@/stores/community'
@@ -11,6 +12,7 @@ onMounted(() => {
   postList.value = communityStore.allPostList.postList
 })
 
+// 게시판
 const postList = ref([])
 const search = ref('')
 
@@ -24,14 +26,21 @@ const headers = ref([
     title: '작성자'
   },
   { title: '면접 질문', key: 'title', sortable: false },
-  { title: '추천수', key: 'likeCount', sortable: false },
-  { title: '조회수', key: 'commentCount', sortable: false },
+  { title: '추천수', key: 'likeCount', sortable: false, align: 'center' },
+  { title: '댓글수', key: 'commentCount', sortable: false, align: 'center' },
   { title: '작성날짜', key: 'writtenDate', sortable: false }
 ])
 
 const pageCount = computed(() => {
   return Math.ceil(postList.value.length / itemsPerPage.value)
 })
+
+// 라우터
+const router = useRouter()
+
+const goCommunityDetail = function (data) {
+  router.push({ name: 'community-detail' })
+}
 </script>
 
 <template>
@@ -84,6 +93,15 @@ const pageCount = computed(() => {
       :items-per-page="itemsPerPage"
       hover
     >
+      <template v-slot:item="{ item }">
+        <tr @click="goCommunityDetail(item)">
+          <td>{{ item.writerNickname }}</td>
+          <td>{{ item.title }}</td>
+          <td align="center">{{ item.likeCount }}</td>
+          <td align="center">{{ item.commentCount }}</td>
+          <td>{{ item.writtenDate }}</td>
+        </tr>
+      </template>
       <template v-slot:bottom>
         <div class="text-center pt-2">
           <v-pagination
