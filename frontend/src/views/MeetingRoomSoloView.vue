@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue'
+import Timer from '@/components/meeting/Timer.vue'
 
 const mediaVideo = ref(null)
 const isAcceptedPermission = ref(true)
@@ -78,7 +79,9 @@ console.log(isAcceptedPermission)
     </div>
 
     <v-row class="text-center">
-      <div class="offset-1 v-col-3">타이머 등</div>
+      <div class="d-flex justify-center offset-1 v-col-3 py-0 px-0">
+        <Timer class="my-auto" />
+      </div>
       <div class="video-container offset-1 v-col-6">
         <video ref="mediaVideo" autoplay></video>
 
@@ -97,12 +100,7 @@ console.log(isAcceptedPermission)
           <v-btn v-if="!isMicrophoneOn" icon="mdi-microphone-off" size="small" class="mx-1"
             @click="setupMicrophone"></v-btn>
           <v-btn v-else icon="mdi-microphone" size="small" class="mx-1" @click="setupMicrophone"></v-btn>
-          <!-- <v-btn icon size="small" class="mx-1" @click="setupMicrophone">
-            <img src="@/assets/icons/microphone-off.png" style="width: 50%;" />
-          </v-btn> -->
         </v-col>
-        <!-- <button class="text-white" @click="setupWebcam">웹캠/마이크 활성화</button>
-        <button class="text-white" @click="setupMicrophone">마이크 활성화</button> -->
       </div>
     </div>
   </div>
