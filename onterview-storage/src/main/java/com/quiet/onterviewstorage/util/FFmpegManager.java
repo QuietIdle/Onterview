@@ -21,7 +21,7 @@ public class FFmpegManager {
     private final FFprobe ffprobe;
     private final FileUtils fileUtils;
 
-    public String getThumbnail(String sourcePath) {
+    public String createThumbnail(String sourcePath) {
         // 썸네일 저장할 경로
         final String outputPath = sourcePath.split("\\.")[0] + ".png";
 

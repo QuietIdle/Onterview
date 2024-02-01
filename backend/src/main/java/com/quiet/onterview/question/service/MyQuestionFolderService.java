@@ -8,7 +8,7 @@ import java.util.List;
 public interface MyQuestionFolderService {
 
     List<MyQuestionFolderResponse> getMyQuestionFolder(Long memberId);
-    void createMyQuestionFolder(MyQuestionFolderRequest myQuestionFolderRequest);
+    void createMyQuestionFolder(Long memberId, MyQuestionFolderRequest myQuestionFolderRequest);
     void updateMyQuestionFolder(Long myQuestionFolderId, MyQuestionFolderRequest myQuestionFolderRequest);
     void deleteMyQuestionFolder(Long myQuestionFolderId);
 }

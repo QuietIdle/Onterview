@@ -6,8 +6,10 @@ pipeline {
                 withCredentials([file(credentialsId: 'datasource-credentials', variable: 'dbConfigFile'),
                                  file(credentialsId: 'file-credentials', variable: 'fileConfigFile')]) {
                     script {
-                        sh 'cp $dbConfigFile backend/src/main/resources/application-datasource.yml'
-                        sh 'cp $fileConfigFile backend/src/main/resources/application-file.yml'
+                        sh 'chmod 755 $dbConfigFile'
+                        sh 'chmod 755 $fileConfigFile'
+                        sh 'cp -f $dbConfigFile backend/src/main/resources/application-datasource.yml'
+                        sh 'cp -f $fileConfigFile backend/src/main/resources/application-file.yml'
                     }
                 }
             }
@@ -42,3 +44,4 @@ pipeline {
         }
     }
 }
+
