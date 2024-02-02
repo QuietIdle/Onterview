@@ -36,7 +36,7 @@ public class InterviewRoomMapper {
     public InterviewRoomResponse interviewRoomTointerviewRoomResponse(InterviewRoom interviewRoom) {
         return InterviewRoomResponse.builder()
                 .interviewRoomId(interviewRoom.getInterviewRoomId())
-                .runTime(interviewRoom.getRunTime())
+                .runTime(interviewRoom.getRuntime())
                 .questionType(interviewRoom.getQuestionType())
                 .roomType(interviewRoom.getRoomType())
                 .createAt(interviewRoom.getCreateAt())
@@ -58,7 +58,7 @@ public class InterviewRoomMapper {
                 .interviewRoomId(interviewRoom.getInterviewRoomId())
                 .questionType(interviewRoom.getQuestionType())
                 .roomType(interviewRoom.getRoomType())
-                .runTime(interviewRoom.getRunTime())
+                .runTime(interviewRoom.getRuntime())
                 .createAt(interviewRoom.getCreateAt())
                 .feedback(interviewRoom.getFeedback())
                 .interviewQuestionResponseList(interviewQuestionResponseList)

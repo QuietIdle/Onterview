@@ -36,7 +36,7 @@ public class InterviewRoom extends BaseEntity {
     private RoomType roomType;
 
     @Column(name = "RUNTIME")
-    private Integer runTime;
+    private Integer runtime;
 
     @Column(name = "FEEDBACK")
     private String feedback;
