@@ -27,6 +27,11 @@ public class LikesServiceImpl implements LikesService {
     @Override
     @Transactional
     public ArticleLikeResponse likeOrCancelArticle(Long memberId, Long articleId) {
+        Article article = articleRepository.findById(articleId).orElseThrow(() ->
+                new BaseException(ErrorCode.ARTICLE_NOT_EXISTS));
+        if(article.getMember().getMemberId().equals(memberId)) {
+            throw new BaseException(ErrorCode.REQUEST_CONDITION_NOT_MATCHES);
+        }
         makeLikesInformation(memberId,articleId);
         LikesPrimaryKey likesPrimaryKey = getLikesPrimaryKey(memberId, articleId);
         Likes likes = likesRepository.findById(likesPrimaryKey).orElseThrow();
@@ -43,9 +48,6 @@ public class LikesServiceImpl implements LikesService {
     protected LikesPrimaryKey getLikesPrimaryKey(Long memberId, Long articleId) {
         Article article = articleRepository.findById(articleId).orElseThrow(() ->
                 new BaseException(ErrorCode.ARTICLE_NOT_EXISTS));
-        if(article.getMember().getMemberId().equals(memberId)) {
-            throw new BaseException(ErrorCode.REQUEST_CONDITION_NOT_MATCHES);
-        }
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new BaseException(ErrorCode.USER_NOT_EXISTS));
         return new LikesPrimaryKey(article, member);

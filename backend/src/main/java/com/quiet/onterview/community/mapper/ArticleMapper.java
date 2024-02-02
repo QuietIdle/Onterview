@@ -1,6 +1,7 @@
 package com.quiet.onterview.community.mapper;
 
 import com.quiet.onterview.community.dto.request.ArticlePostRequest;
+import com.quiet.onterview.community.dto.response.ArticleInfoResponse;
 import com.quiet.onterview.community.dto.response.ArticleListResponse;
 import com.quiet.onterview.community.dto.response.ArticlePostResponse;
 import com.quiet.onterview.community.entity.Article;
@@ -8,13 +9,15 @@ import com.quiet.onterview.member.entity.Member;
 import com.quiet.onterview.video.entity.Video;
 import com.quiet.onterview.video.mapper.VideoMapper;
 import java.time.format.DateTimeFormatter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class ArticleMapper {
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-    private VideoMapper videoMapper;
+    private final VideoMapper videoMapper;
 
     public ArticleListResponse articleToArticleListResponse(Article article) {
         return ArticleListResponse.builder()
@@ -47,6 +50,19 @@ public class ArticleMapper {
                 .content(article.getContent())
                 .likeCount(article.getLikeCount())
                 .commentCount(article.getCommentCount())
+                .writtenDate(article.getCreateAt().format(formatter))
+                .build();
+    }
+
+    public ArticleInfoResponse articleToArticleInfoResponse(Article article, Long memberId, Boolean isLikedByMe) {
+        return ArticleInfoResponse.builder()
+                .title(article.getTitle())
+                .writerNickname(article.getMember().getNickname())
+                .content(article.getContent())
+                .videoInfo(videoMapper.videoInformationToResponse(article.getVideo()))
+                .isMyArticle(article.getMember().getMemberId().equals(memberId))
+                .likeCount(article.getLikeCount())
+                .isLiked(isLikedByMe)
                 .writtenDate(article.getCreateAt().format(formatter))
                 .build();
     }
