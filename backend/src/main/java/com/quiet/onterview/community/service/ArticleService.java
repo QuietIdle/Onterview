@@ -5,6 +5,7 @@ import com.quiet.onterview.community.dto.request.ArticlePostRequest;
 import com.quiet.onterview.community.dto.response.ArticleInfoResponse;
 import com.quiet.onterview.community.dto.response.ArticleListResponse;
 import com.quiet.onterview.community.dto.response.ArticlePostResponse;
+import com.quiet.onterview.community.dto.response.ArticleResponse;
 import java.util.List;
 
 public interface ArticleService {
@@ -18,4 +19,6 @@ public interface ArticleService {
     List<ArticleListResponse> getAllMyArticle(Long memberId, String order);
 
     ArticleInfoResponse getArticleInformation(Long articleId, Long memberId);
+
+    ArticleResponse getArticleDetail(Long articleId, Long memberId);
 }
