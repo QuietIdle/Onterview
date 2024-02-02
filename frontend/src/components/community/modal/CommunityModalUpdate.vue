@@ -33,38 +33,36 @@ const dialog = ref(false)
 </script>
 
 <template>
-  <div>
-    <v-dialog v-model="dialog" width="auto">
-      <template v-slot:activator="{ props }">
-        <v-btn v-bind="props" class="updatebutton" variant="plain">수정</v-btn>
-      </template>
-      <v-card class="px-6 pt-6" width="1000">
-        <div class="writer-and-content">
-          <div class="mb-3">
-            <span>{{ props.writerNickname }}</span>
-            <span class="text-grey">님의 고민</span>
-          </div>
-          <v-textarea
-            variant="outlined"
-            v-model="valueTextField"
-            style="font-family: Pretendard-Regular"
-          ></v-textarea>
+  <v-dialog v-model="dialog" width="auto">
+    <template v-slot:activator="{ props }">
+      <v-btn v-bind="props" class="updatebutton" variant="plain">수정</v-btn>
+    </template>
+    <v-card class="px-6 pt-6" width="1000">
+      <div class="writer-and-content">
+        <div class="mb-3">
+          <span>{{ props.writerNickname }}</span>
+          <span class="text-grey">님의 고민</span>
         </div>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn variant="text" color="grey-darken-1" @click="dialog = false"
-            >취소</v-btn
-          >
-          <v-btn
-            variant="text"
-            color="deep-purple-accent-4"
-            @click="requestUpdateMyPostContent()"
-            >수정</v-btn
-          >
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </div>
+        <v-textarea
+          variant="outlined"
+          v-model="valueTextField"
+          style="font-family: Pretendard-Regular"
+        ></v-textarea>
+      </div>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn variant="text" color="grey-darken-1" @click="dialog = false"
+          >취소</v-btn
+        >
+        <v-btn
+          variant="text"
+          color="deep-purple-accent-4"
+          @click="requestUpdateMyPostContent()"
+          >수정</v-btn
+        >
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <style scoped></style>
