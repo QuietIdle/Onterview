@@ -104,7 +104,7 @@ public class ArticleServiceImpl implements ArticleService {
                 articleListResponse.add(articleMapper.articleToArticleListResponse(article)));
         return articleListResponse;
     }
-    
+
     private List<Article> getArticleList(Long memberId, String order) {
         List<Article> articleList = new ArrayList<>();
         if(order.equals("recent")) {

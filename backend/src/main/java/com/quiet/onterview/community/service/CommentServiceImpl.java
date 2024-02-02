@@ -16,12 +16,13 @@ import com.quiet.onterview.member.entity.Member;
 import com.quiet.onterview.member.repository.MemberRepository;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CommentServiceImpl implements CommentService {
 
     private final ArticleRepository articleRepository;
@@ -49,6 +50,7 @@ public class CommentServiceImpl implements CommentService {
         } else { // 댓글
             comment = commentMapper.commentPostRequestToComment(commentPostRequest, null, article, member);
         }
+        articleRepository.updateCommentCount(article.getArticleId(),1);
         return commentMapper.commentToCommentPostResponse(commentRepository.save(comment),memberId);
     }
 
@@ -61,7 +63,9 @@ public class CommentServiceImpl implements CommentService {
         if(!comment.getMember().getMemberId().equals(member.getMemberId())) {
             throw new BaseException(ErrorCode.COMMENT_WRITER_NOT_MATCHES);
         }
+        Integer deletedCount = 1 + commentRepository.findAllChildCommentByCommentId(commentId).size();
         commentRepository.deleteById(comment.getCommentId());
+        articleRepository.updateCommentCount(comment.getArticle().getArticleId(),deletedCount * -1);
     }
 
     @Override

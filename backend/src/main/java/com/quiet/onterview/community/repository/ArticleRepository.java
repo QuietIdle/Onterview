@@ -27,4 +27,8 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     @Modifying
     @Query("update Article a set a.likeCount = a.likeCount + :value where a.articleId = :articleId")
     int updateLikeCount(Long articleId, Integer value);
+
+    @Modifying
+    @Query("update Article a set a.commentCount = a.commentCount + :value where a.articleId = :articleId")
+    void updateCommentCount(Long articleId, Integer value);
 }
