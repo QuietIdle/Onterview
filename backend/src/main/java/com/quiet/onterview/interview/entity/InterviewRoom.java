@@ -31,6 +31,10 @@ public class InterviewRoom extends BaseEntity {
     @Column(name = "QUESTION_TYPE", nullable = false)
     private QuestionType questionType;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ROOM_TYPE", nullable = false)
+    private RoomType roomType;
+
     private Integer runTime;
 
     private String feedback;

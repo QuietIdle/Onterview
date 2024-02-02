@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -29,6 +28,7 @@ public class InterviewRoomMapper {
                 .member(member)
                 .interviewQuestionList(new ArrayList<>())
                 .questionType(interviewRoomRequest.getQuestionType())
+                .roomType(interviewRoomRequest.getRoomType())
                 .build();
 
     }
@@ -38,6 +38,7 @@ public class InterviewRoomMapper {
                 .interviewRoomId(interviewRoom.getInterviewRoomId())
                 .runTime(interviewRoom.getRunTime())
                 .questionType(interviewRoom.getQuestionType())
+                .roomType(interviewRoom.getRoomType())
                 .createAt(interviewRoom.getCreateAt())
                 .numOfQuestion(interviewRoom.getInterviewQuestionList().size())
                 .build();
@@ -56,6 +57,7 @@ public class InterviewRoomMapper {
         return InterviewRoomDetailResponse.builder()
                 .interviewRoomId(interviewRoom.getInterviewRoomId())
                 .questionType(interviewRoom.getQuestionType())
+                .roomType(interviewRoom.getRoomType())
                 .runTime(interviewRoom.getRunTime())
                 .createAt(interviewRoom.getCreateAt())
                 .feedback(interviewRoom.getFeedback())
