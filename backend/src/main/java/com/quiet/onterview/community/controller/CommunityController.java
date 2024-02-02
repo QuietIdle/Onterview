@@ -56,4 +56,11 @@ public class CommunityController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(commentService.postComment(user.getMemberId(), commentPostRequest));
     }
+
+    @DeleteMapping("/comment/{commentId}")
+    public ResponseEntity deleteComment(@AuthenticationPrincipal SecurityUser user,
+            @PathVariable("commentId") Long commentId) {
+        commentService.deleteComment(user.getMemberId(), commentId);
+        return ResponseEntity.noContent().build();
+    }
 }

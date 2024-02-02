@@ -6,4 +6,6 @@ import com.quiet.onterview.community.dto.response.CommentPostResponse;
 public interface CommentService {
 
     CommentPostResponse postComment(Long memberId, CommentPostRequest commentPostRequest);
+
+    void deleteComment(Long memberId, Long commentId);
 }
