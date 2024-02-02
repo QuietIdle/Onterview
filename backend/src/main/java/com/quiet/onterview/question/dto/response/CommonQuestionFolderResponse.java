@@ -9,7 +9,7 @@ import java.util.List;
 @Builder
 public class CommonQuestionFolderResponse {
 
-    Long commonQuestionFolderId;
-    String commonQuestionFolder;
-    List<CommonQuestionResponse> commonQuestionList;
+    private Long commonQuestionFolderId;
+    private String commonQuestionFolder;
+    private List<CommonQuestionResponse> commonQuestionList;
 }

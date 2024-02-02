@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class MyQuestionMoveRequest {
 
-    Long myQuestionId;
-    Long fromMyQuestionFolderId;
-    Long toMyQuestionFolderId;
+    private Long myQuestionId;
+    private Long fromMyQuestionFolderId;
+    private Long toMyQuestionFolderId;
 }

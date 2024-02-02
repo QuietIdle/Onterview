@@ -9,7 +9,7 @@ import lombok.Getter;
 @Builder
 public class MyQuestionResponse {
 
-    Long commonQuestionId;
-    Long myQuestionId;
-    String question;
+    private Long commonQuestionId;
+    private Long myQuestionId;
+    private String question;
 }

@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MyQuestionFolderRequest {
 
-    String myQuestionFolder;
+    private String myQuestionFolder;
 }

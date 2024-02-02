@@ -9,5 +9,5 @@ import lombok.*;
 @AllArgsConstructor
 public class MyAnswerUpdateRequest {
 
-    String answer;
+    private String answer;
 }
