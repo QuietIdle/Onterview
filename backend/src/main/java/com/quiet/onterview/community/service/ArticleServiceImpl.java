@@ -4,6 +4,7 @@ import com.quiet.onterview.common.BaseException;
 import com.quiet.onterview.common.ErrorCode;
 import com.quiet.onterview.community.dto.request.ArticleModifyContentRequest;
 import com.quiet.onterview.community.dto.request.ArticlePostRequest;
+import com.quiet.onterview.community.dto.response.ArticleListResponse;
 import com.quiet.onterview.community.dto.response.ArticlePostResponse;
 import com.quiet.onterview.community.entity.Article;
 import com.quiet.onterview.community.mapper.ArticleMapper;
@@ -13,6 +14,8 @@ import com.quiet.onterview.member.repository.MemberRepository;
 import com.quiet.onterview.video.entity.Video;
 import com.quiet.onterview.video.exception.VideoNotFoundException;
 import com.quiet.onterview.video.repository.VideoRepository;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,5 +65,33 @@ public class ArticleServiceImpl implements ArticleService {
             throw new BaseException(ErrorCode.ARTICLE_WRITER_NOT_MATCHES);
         }
         articleRepository.deleteById(articleId);
+    }
+
+    @Override
+    public List<ArticleListResponse> getAllMyArticle(Long memberId, String order) {
+        List<Article> articleList = getArticleList(memberId, order);
+        List<ArticleListResponse> articleListResponse = new ArrayList<>();
+        articleList.stream().forEach(article ->
+                articleListResponse.add(articleMapper.articleToArticleListResponse(article)));
+        return articleListResponse;
+    }
+
+    private List<Article> getArticleList(Long memberId, String order) {
+        List<Article> articleList = new ArrayList<>();
+        System.out.println("MEMBER ID ? " + (memberId==null) + " no null " + memberId + " order " + order);
+        if(order.equals("recent")) {
+            articleList = (memberId==null) ?
+                    articleRepository.findAllByOrderByCreateAtAsc()
+                    : articleRepository.findByMember_MemberIdOrderByCreateAtAsc(memberId);
+        } else if(order.equals("like")) {
+            articleList = (memberId==null) ?
+                    articleRepository.findAllByOrderByLikeCountDesc()
+                    : articleRepository.findByMember_MemberIdOrderByLikeCountDesc(memberId);
+        } else if(order.equals("comment")) {
+            articleList = (memberId==null) ?
+                    articleRepository.findAllByOrderByCommentCountDesc()
+                    : articleRepository.findByMember_MemberIdOrderByCommentCountDesc(memberId);
+        }
+        return articleList;
     }
 }

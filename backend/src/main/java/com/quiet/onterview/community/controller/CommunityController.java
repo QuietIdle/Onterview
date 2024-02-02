@@ -3,12 +3,14 @@ package com.quiet.onterview.community.controller;
 import com.quiet.onterview.community.dto.request.ArticleModifyContentRequest;
 import com.quiet.onterview.community.dto.request.ArticlePostRequest;
 import com.quiet.onterview.community.dto.request.CommentPostRequest;
+import com.quiet.onterview.community.dto.response.ArticleListResponse;
 import com.quiet.onterview.community.dto.response.ArticlePostResponse;
 import com.quiet.onterview.community.dto.response.CommentListResponse;
 import com.quiet.onterview.community.dto.response.CommentPostResponse;
 import com.quiet.onterview.community.service.ArticleService;
 import com.quiet.onterview.community.service.CommentService;
 import com.quiet.onterview.security.SecurityUser;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -50,6 +53,12 @@ public class CommunityController {
             @PathVariable("articleId") Long articleId) {
         articleService.deleteArticle(user.getMemberId(), articleId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<List<ArticleListResponse>> getAllMyArticle(@AuthenticationPrincipal SecurityUser user,
+            @RequestParam("order") String order) {
+        return ResponseEntity.ok().body(articleService.getAllMyArticle(user.getMemberId(), order));
     }
 
     @PostMapping("/comment")
