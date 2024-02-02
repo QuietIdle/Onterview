@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { getPostDetail } from '@/api/community'
+import CommunityModelDelete from '@/components/community/modal/CommunityModalDelete.vue'
 
 // assets
 import tempThumbnail from '@/assets/main/introduceImage2.png'
@@ -61,7 +62,10 @@ const postDetail = ref({
     <!-- 수정 삭제 버튼 -->
     <v-col cols="12" class="text-right">
       <v-btn class="updatebutton" variant="plain">수정</v-btn>
-      <v-btn class="deletebutton" color="red" variant="plain">삭제</v-btn>
+      <CommunityModelDelete
+        :articleId="postDetail.articleId"
+        :title="postDetail.title"
+      />
     </v-col>
 
     <!-- 영상 컴포넌트 -->

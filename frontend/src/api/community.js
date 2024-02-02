@@ -2,22 +2,27 @@ import { localAxios } from '@/api/index'
 
 const api = localAxios()
 
-const getAllPostList = () => {
+const getAllPostList = function () {
     return api.get(`/api/community?order=recent`)
 }
 
-const getMyPostList = () => {
+const getMyPostList = function () {
     return api.get(`/api/community/my?order=like`)
 }
 
-const getPostDetail = (articleId) => {
+const getPostDetail = function (articleId) {
     return api.get(`/api/community/post/detail/${articleId}`)
 }
 
-// const getCommentDetail = () => {}
+// const getCommentDetail = function () {}
+
+const deleteDeleteMyPost = function (articleId) {
+    return api.delete(`/api/community/${articleId}`)
+}
 
 export {
     getAllPostList,
     getMyPostList,
     getPostDetail,
+    deleteDeleteMyPost
 }
