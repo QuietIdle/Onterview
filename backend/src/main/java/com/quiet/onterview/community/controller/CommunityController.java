@@ -2,8 +2,11 @@ package com.quiet.onterview.community.controller;
 
 import com.quiet.onterview.community.dto.request.ArticleModifyContentRequest;
 import com.quiet.onterview.community.dto.request.ArticlePostRequest;
+import com.quiet.onterview.community.dto.request.CommentPostRequest;
 import com.quiet.onterview.community.dto.response.ArticlePostResponse;
+import com.quiet.onterview.community.dto.response.CommentPostResponse;
 import com.quiet.onterview.community.service.ArticleService;
+import com.quiet.onterview.community.service.CommentService;
 import com.quiet.onterview.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class CommunityController {
 
     private final ArticleService articleService;
+    private final CommentService commentService;
+
     @PostMapping
     public ResponseEntity<ArticlePostResponse> postArticle(@AuthenticationPrincipal SecurityUser user,
             @RequestBody ArticlePostRequest articlePostRequest) {
@@ -43,5 +48,12 @@ public class CommunityController {
             @PathVariable("articleId") Long articleId) {
         articleService.deleteArticle(user.getMemberId(), articleId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/comment")
+    public ResponseEntity<CommentPostResponse> postComment(@AuthenticationPrincipal SecurityUser user,
+            @RequestBody CommentPostRequest commentPostRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(commentService.postComment(user.getMemberId(), commentPostRequest));
     }
 }
