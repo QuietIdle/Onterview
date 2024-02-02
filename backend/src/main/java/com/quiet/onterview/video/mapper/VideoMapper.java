@@ -1,20 +1,13 @@
 package com.quiet.onterview.video.mapper;
 
-import com.quiet.onterview.common.BaseException;
-import com.quiet.onterview.common.ErrorCode;
 import com.quiet.onterview.file.mapper.FileInformationMapper;
 import com.quiet.onterview.interview.entity.InterviewQuestion;
-import com.quiet.onterview.question.dto.response.MyQuestionResponse;
-import com.quiet.onterview.question.entity.CommonQuestion;
 import com.quiet.onterview.question.entity.MyQuestion;
-import com.quiet.onterview.question.mapper.MyQuestionMapper;
 import com.quiet.onterview.video.dto.request.VideoInformationRequest;
 import com.quiet.onterview.video.dto.response.VideoDetailResponse;
 import com.quiet.onterview.video.dto.response.VideoInformationResponse;
 import com.quiet.onterview.video.entity.Video;
-import com.quiet.onterview.video.entity.Video.VideoBuilder;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

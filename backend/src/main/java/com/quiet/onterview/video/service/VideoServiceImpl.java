@@ -1,7 +1,5 @@
 package com.quiet.onterview.video.service;
 
-import com.quiet.onterview.common.BaseException;
-import com.quiet.onterview.common.ErrorCode;
 import com.quiet.onterview.file.service.FileService;
 import com.quiet.onterview.interview.entity.InterviewQuestion;
 import com.quiet.onterview.interview.repository.InterviewQuestionRepository;
@@ -19,7 +17,6 @@ import com.quiet.onterview.video.repository.VideoRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +40,7 @@ public class VideoServiceImpl implements VideoService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<VideoInformationResponse> loadAllMyVideo(String email) {
         return videoMapper.allVideoToInformationResponse(videoRepository.findAllByEmail(email));
     }

@@ -1,7 +1,6 @@
 package com.quiet.onterview.video.dto.response;
 
 import com.quiet.onterview.file.dto.response.FileInformationResponse;
-import com.quiet.onterview.question.dto.response.MyQuestionResponse;
 import lombok.Builder;
 import lombok.Getter;
 
