@@ -38,7 +38,7 @@ public class MyQuestion extends BaseEntity {
     private CommonQuestion commonQuestion;
 
     @OneToMany(mappedBy = "myQuestion", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    List<Video> videoList = new ArrayList<>();
+    final List<Video> videoList = new ArrayList<>();
 
     public void changeMyQuestionFolder(MyQuestionFolder myQuestionFolder) {
         this.myQuestionFolder = myQuestionFolder;

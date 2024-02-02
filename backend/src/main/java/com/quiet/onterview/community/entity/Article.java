@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -27,6 +28,7 @@ import org.hibernate.annotations.ColumnDefault;
 @AllArgsConstructor
 @Getter
 @Entity
+@Builder
 @Table(name = "ARTICLE")
 public class Article extends BaseEntity {
 
@@ -37,12 +39,10 @@ public class Article extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "MEMBER_ID")
-//    @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "VIDEO_ID")
-//    @OnDelete(action = OnDeleteAction.CASCADE)
     private Video video;
 
     @Column(name="TITLE")
@@ -51,14 +51,14 @@ public class Article extends BaseEntity {
     @Column(name="CONTENT")
     private String content;
 
-    @Column(name="LIKE_COUNT")
+    @Column(name="LIKE_COUNT", nullable = false)
     @ColumnDefault("0")
     private Integer likeCount;
 
-    @Column(name="COMMENT_COUNT")
+    @Column(name="COMMENT_COUNT", nullable = false)
     @ColumnDefault("0")
     private Integer commentCount;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<Comment> commentList = new ArrayList<>();
+    private final List<Comment> commentList = new ArrayList<>();
 }
