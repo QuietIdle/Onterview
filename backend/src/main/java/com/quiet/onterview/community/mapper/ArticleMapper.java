@@ -1,6 +1,7 @@
 package com.quiet.onterview.community.mapper;
 
 import com.quiet.onterview.community.dto.request.ArticlePostRequest;
+import com.quiet.onterview.community.dto.response.ArticleListResponse;
 import com.quiet.onterview.community.dto.response.ArticlePostResponse;
 import com.quiet.onterview.community.entity.Article;
 import com.quiet.onterview.member.entity.Member;
@@ -14,6 +15,17 @@ public class ArticleMapper {
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
     private VideoMapper videoMapper;
+
+    public ArticleListResponse articleToArticleListResponse(Article article) {
+        return ArticleListResponse.builder()
+                .articleId(article.getArticleId())
+                .writerNickname(article.getMember().getNickname())
+                .title(article.getTitle())
+                .likeCount(article.getLikeCount())
+                .commentCount(article.getCommentCount())
+                .writtenDate(article.getCreateAt().format(formatter))
+                .build();
+    }
 
     public Article articlePostRequestToArticle(Member member, Video video,
             ArticlePostRequest articlePostRequest) {
