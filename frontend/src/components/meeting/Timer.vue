@@ -2,12 +2,14 @@
 import { ref, watch, onUnmounted } from 'vue'
 
 const maxTime = 60
-const remainingTime = ref(maxTime)
 const timerId = ref(null)
+const remainingTime = ref(maxTime)
 
 const props = defineProps({
   startTimer: Boolean
 })
+
+const emit = defineEmits(['finishTimer'])
 
 watch(() => props.startTimer, (newVal) => {
   if (newVal === true) {
@@ -35,7 +37,6 @@ watch(remainingTime, (newVal) => {
 
 const startTimer = function () {
   if (timerId.value === null) {
-    console.log("?")
     timerId.value = setInterval(updateRemainingTime, 1000)
   }
 }
@@ -46,6 +47,7 @@ const resetTimer = function () {
   remainingTime.value = maxTime
   // 그래프 스타일을 초기값으로 설정
   document.documentElement.style.setProperty('--offset', `292.5px`)
+  emit('finishTimer')
 }
 
 // 컴포넌트가 언마운트되면 타이머를 정리

@@ -84,6 +84,10 @@ const startInterview = function () {
   isInterviewInProgress.value = true
 }
 
+const finishInterview = function () {
+  isInterviewInProgress.value = false
+}
+
 onMounted(() => {
   navigator.permissions.query({ name: 'camera' })
     .then(permissionStatus => {
@@ -109,8 +113,13 @@ onMounted(() => {
     <v-row class="text-center">
       <div class="d-flex flex-column align-center my-auto offset-1 v-col-3 py-0 px-0">
         <TimerComponent :start-timer="isInterviewInProgress" /><br>
-        <v-btn :disabled="!isAbleMeeting" rounded="xl" size="x-large" class="active-btn mt-4 mx-2 px-15"
-          @click="startInterview">면접 시작</v-btn>
+        <div v-if="!isInterviewInProgress">
+          <v-btn :disabled="!isAbleMeeting" rounded="xl" size="x-large" class="active-btn mt-4 mx-2 px-15"
+            @click="startInterview">면접 시작</v-btn>
+        </div>
+        <div v-else>
+          <v-btn rounded="xl" size="x-large" class="active-btn mt-4 mx-2 px-15" @click="finishInterview">답변 완료</v-btn>
+        </div>
       </div>
       <div class="video-container offset-1 v-col-6">
         <video ref="mediaVideo" autoplay></video>
