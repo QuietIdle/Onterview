@@ -35,8 +35,10 @@ public class InterviewRoom extends BaseEntity {
     @Column(name = "ROOM_TYPE", nullable = false)
     private RoomType roomType;
 
+    @Column(name = "RUNTIME")
     private Integer runTime;
 
+    @Column(name = "FEEDBACK")
     private String feedback;
 
     @OneToMany(mappedBy = "interviewRoom", cascade = CascadeType.PERSIST, orphanRemoval = true)
