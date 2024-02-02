@@ -1,21 +1,57 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onUnmounted } from 'vue'
 
-const remainingTime = ref(60);
+const maxTime = 60
+const remainingTime = ref(maxTime)
+const timerId = ref(null)
 
-const updateRemainingTime = () => {
-  if (remainingTime.value > 0) {
-    remainingTime.value--;
+const props = defineProps({
+  startTimer: Boolean
+})
+
+watch(() => props.startTimer, (newVal) => {
+  if (newVal === true) {
+    startTimer()
+  } else {
+    resetTimer()
   }
-};
+})
 
-watch(remainingTime, () => {
-  const elapsedPercentage = ((60 - remainingTime.value) / 60) * 100;
-  const offset = (292.5 * elapsedPercentage) / 100;
-  document.documentElement.style.setProperty('--offset', `${offset}px`);
-});
+const updateRemainingTime = function () {
+  if (remainingTime.value > 0) {
+    remainingTime.value--
+  }
+}
 
-setInterval(updateRemainingTime, 1000);
+watch(remainingTime, (newVal) => {
+  const elapsedPercentage = ((maxTime - remainingTime.value) / maxTime) * 100
+  const offset = (292.5 * elapsedPercentage) / 100
+  document.documentElement.style.setProperty('--offset', `${offset}px`)
+
+  if (newVal === 0) {
+    resetTimer()
+  }
+})
+
+const startTimer = function () {
+  if (timerId.value === null) {
+    console.log("?")
+    timerId.value = setInterval(updateRemainingTime, 1000)
+  }
+}
+
+const resetTimer = function () {
+  clearInterval(timerId.value)
+  timerId.value = null
+  remainingTime.value = maxTime
+  // 그래프 스타일을 초기값으로 설정
+  document.documentElement.style.setProperty('--offset', `292.5px`)
+}
+
+// 컴포넌트가 언마운트되면 타이머를 정리
+onUnmounted(() => {
+  resetTimer()
+})
 </script>
 
 <template>
@@ -27,7 +63,7 @@ setInterval(updateRemainingTime, 1000);
           :style="{ strokeDasharray: '292.5px', strokeDashoffset: 'var(--offset)' }" />
       </g>
     </svg>
-    <span class="base-timer__label">
+    <span class="base-timer__label text-h4">
       {{ remainingTime }}
     </span>
   </div>
@@ -53,7 +89,7 @@ setInterval(updateRemainingTime, 1000);
 
 .base-timer__path-elapsed {
   stroke-width: 3px;
-  stroke: #BB66FF;
+  stroke: #8747AE;
   fill: #ffffff;
   transition: stroke-dashoffset 1s linear;
   transform-origin: center;
@@ -67,6 +103,6 @@ setInterval(updateRemainingTime, 1000);
   transform: translate(-50%, -50%);
   font-size: 20px;
   font-weight: bold;
-  color: black;
+  color: #8747AE;
 }
 </style>

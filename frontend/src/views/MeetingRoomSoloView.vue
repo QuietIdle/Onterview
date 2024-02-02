@@ -1,14 +1,18 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue'
-import Timer from '@/components/meeting/Timer.vue'
+import TimerComponent from '@/components/meeting/Timer.vue'
 
+const timerRef = ref(null)
 const mediaVideo = ref(null)
 const isAcceptedPermission = ref(true)
 const isWebcamOn = ref(false)
 const isMicrophoneOn = ref(false)
 const isAbleMeeting = ref(false)
+const isInterviewInProgress = ref(false)
 const dialogRequestPermissionMedia = ref(false) // 처음 권한을 요청할 때
 const dialogDeniedPermissionMedia = ref(false)  // 권한 요청이 거부되었을 때
+
+
 
 const watchWebcamOn = watch(isWebcamOn, () => {
   if (isWebcamOn.value === true) {
@@ -76,6 +80,10 @@ const setupMicrophone = async function () {
   })
 }
 
+const startInterview = function () {
+  isInterviewInProgress.value = true
+}
+
 onMounted(() => {
   navigator.permissions.query({ name: 'camera' })
     .then(permissionStatus => {
@@ -90,7 +98,6 @@ onMounted(() => {
     })
 })
 
-console.log(isAcceptedPermission)
 </script>
 
 <template>
@@ -101,9 +108,9 @@ console.log(isAcceptedPermission)
 
     <v-row class="text-center">
       <div class="d-flex flex-column align-center my-auto offset-1 v-col-3 py-0 px-0">
-        <Timer /><br>
-        <v-btn v-if="isAbleMeeting" rounded="xl" size="x-large" class="active-btn mt-4 mx-2 px-15">면접 시작</v-btn>
-        <v-btn v-else disabled rounded="xl" size="x-large" class="mt-4 mx-2 px-15">면접 시작</v-btn>
+        <TimerComponent :start-timer="isInterviewInProgress" /><br>
+        <v-btn :disabled="!isAbleMeeting" rounded="xl" size="x-large" class="active-btn mt-4 mx-2 px-15"
+          @click="startInterview">면접 시작</v-btn>
       </div>
       <div class="video-container offset-1 v-col-6">
         <video ref="mediaVideo" autoplay></video>
