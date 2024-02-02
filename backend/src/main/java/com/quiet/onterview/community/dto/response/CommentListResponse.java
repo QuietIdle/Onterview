@@ -8,6 +8,6 @@ import lombok.Getter;
 @Builder
 public class CommentListResponse {
 
-    Long commentCount;
+    Integer commentCount;
     List<CommentObjectResponse> comments;
 }
