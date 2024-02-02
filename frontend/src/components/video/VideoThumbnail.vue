@@ -21,13 +21,14 @@ const markVideo = async function (id, bool) {
 }
 
 const selectVideo = async function (v_id) {
-  selfSpeechStore.display = false;
+  
   try {
     const res = await apiMethods.getVideo(v_id);
     selfSpeechStore.videoData = res.data;
   } catch (error) {
     console.log(error)
   }
+  selfSpeechStore.display = false;
 }
 </script>
 
