@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class InterviewRoomRequest {
 
-    RoomType roomType;
-    int numToSelect = 5;
+    private RoomType roomType;
+    private int numToSelect = 5;
 }

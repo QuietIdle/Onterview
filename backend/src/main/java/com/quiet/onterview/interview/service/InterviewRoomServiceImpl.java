@@ -3,6 +3,7 @@ package com.quiet.onterview.interview.service;
 import com.quiet.onterview.common.BaseException;
 import com.quiet.onterview.common.ErrorCode;
 import com.quiet.onterview.interview.dto.request.InterviewRoomRequest;
+import com.quiet.onterview.interview.dto.response.InterviewRoomDetailResponse;
 import com.quiet.onterview.interview.dto.response.InterviewRoomResponse;
 import com.quiet.onterview.interview.entity.InterviewRoom;
 import com.quiet.onterview.interview.exception.InterviewRoomNotFoundException;
@@ -11,7 +12,6 @@ import com.quiet.onterview.interview.repository.InterviewRoomRepository;
 import com.quiet.onterview.member.entity.Member;
 import com.quiet.onterview.member.repository.MemberRepository;
 import com.quiet.onterview.question.entity.CommonQuestion;
-import com.quiet.onterview.question.entity.MyQuestionFolder;
 import com.quiet.onterview.question.service.CommonQuestionFolderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,6 +40,13 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
     }
 
     @Override
+    public InterviewRoomDetailResponse getInterviewRoomDetail(Long memberId, Long interviewRoomId) {
+
+        InterviewRoom interviewRoom = interviewRoomRepository.findInterviewRoomDetail(memberId, interviewRoomId);
+        return interviewRoomMapper.interviewRoomToInterviewRoomDetailResponse(interviewRoom);
+    }
+
+    @Override
     public void createInterviewRoom(Long memberId, InterviewRoomRequest interviewRoomRequest) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new BaseException(ErrorCode.MEMBERID_NOT_EXISTS));
 
@@ -58,7 +65,7 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
     }
 
     @Override
-    public void deleteinterviewRoom(Long interviewRoomId) {
+    public void deleteInterviewRoom(Long interviewRoomId) {
         interviewRoomRepository.delete(
                 interviewRoomRepository.findById(interviewRoomId)
                         .orElseThrow(InterviewRoomNotFoundException::new));

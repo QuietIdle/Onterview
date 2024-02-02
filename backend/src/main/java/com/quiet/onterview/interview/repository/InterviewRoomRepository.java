@@ -8,6 +8,9 @@ import java.util.List;
 
 public interface InterviewRoomRepository extends JpaRepository<InterviewRoom, Long> {
 
-    @Query("SELECT ir FROM InterviewRoom ir where ir.member.memberId = :memberId")
+    @Query("SELECT ir FROM InterviewRoom ir WHERE ir.member.memberId = :memberId")
     List<InterviewRoom> findInterviewRoom(Long memberId);
+
+    @Query("SELECT ir FROM InterviewRoom ir WHERE ir.member.memberId = :memberId AND ir.interviewRoomId = :interviewRoomId")
+    InterviewRoom findInterviewRoomDetail(Long memberId, Long interviewRoomId);
 }

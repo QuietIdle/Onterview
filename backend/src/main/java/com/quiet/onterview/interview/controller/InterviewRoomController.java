@@ -1,9 +1,9 @@
 package com.quiet.onterview.interview.controller;
 
 import com.quiet.onterview.interview.dto.request.InterviewRoomRequest;
+import com.quiet.onterview.interview.dto.response.InterviewRoomDetailResponse;
 import com.quiet.onterview.interview.dto.response.InterviewRoomResponse;
 import com.quiet.onterview.interview.service.InterviewRoomService;
-import com.quiet.onterview.question.dto.response.MyQuestionFolderResponse;
 import com.quiet.onterview.security.SecurityUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,6 +27,14 @@ public class InterviewRoomController {
         return ResponseEntity.ok(interviewRoomService.getInterviewRoomList(user.getMemberId()));
     }
 
+    @Operation(summary = "GET 방식으로 특정 모의 면접장 상세 조회")
+    @GetMapping("/{interview_room_id}")
+    public ResponseEntity<InterviewRoomDetailResponse> getInterviewRoomDetail(
+            @AuthenticationPrincipal SecurityUser user,
+            @PathVariable("interview_room_id") Long interviewRoomId) {
+        return ResponseEntity.ok(interviewRoomService.getInterviewRoomDetail(user.getMemberId(), interviewRoomId));
+    }
+
     @Operation(summary = "POST 방식으로 모의 면접장 생성")
     @PostMapping
     public ResponseEntity<Void> registerInterviewRoom(
@@ -39,7 +47,7 @@ public class InterviewRoomController {
     @Operation(summary = "DELETE 방식으로 모의 면접장 삭제")
     @DeleteMapping("/{interview_room_id}")
     public ResponseEntity<Void> deleteInterviewRoom(@PathVariable("interview_room_id") Long interviewRoomId) {
-        interviewRoomService.deleteinterviewRoom(interviewRoomId);
+        interviewRoomService.deleteInterviewRoom(interviewRoomId);
         return ResponseEntity.ok().build();
     }
 }
