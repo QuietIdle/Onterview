@@ -73,7 +73,7 @@ public class CommentServiceImpl implements CommentService {
         Article article = articleRepository.findById(articleId).orElseThrow(() ->
                 new BaseException(ErrorCode.ARTICLE_NOT_EXISTS));
         return CommentListResponse.builder()
-                .commentCount(commentRepository.countByArticle_ArticleId(article.getArticleId()))
+                .commentCount(article.getCommentCount())
                 .comments(getArticleCommentList(article.getArticleId(),memeberId))
                 .build();
     }
