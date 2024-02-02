@@ -17,7 +17,7 @@ public class VideoMapper {
 
     private final FileInformationMapper fileInformationMapper;
 
-    public VideoDetailResponse videoInformationToResponse(Video video) {
+    public VideoDetailResponse videoToDetailResponse(Video video) {
         return VideoDetailResponse.builder()
                 .videoId(video.getVideoId())
                 .title(video.getTitle())
