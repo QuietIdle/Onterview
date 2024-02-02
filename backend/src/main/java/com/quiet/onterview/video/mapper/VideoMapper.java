@@ -1,6 +1,7 @@
 package com.quiet.onterview.video.mapper;
 
 import com.quiet.onterview.file.mapper.FileInformationMapper;
+import com.quiet.onterview.interview.entity.InterviewQuestion;
 import com.quiet.onterview.question.entity.MyQuestion;
 import com.quiet.onterview.video.dto.request.VideoInformationRequest;
 import com.quiet.onterview.video.dto.response.VideoDetailResponse;
@@ -17,11 +18,13 @@ public class VideoMapper {
 
     private final FileInformationMapper fileInformationMapper;
 
-    public VideoDetailResponse videoInformationToResponse(Video video) {
+    public VideoDetailResponse videoToDetailResponse(Video video) {
         return VideoDetailResponse.builder()
                 .videoId(video.getVideoId())
+                .interviewQuestionId(video.getInterviewQuestion().getInterviewQuestionId())
                 .title(video.getTitle())
-                .thumbnailUrl(fileInformationMapper.fileInformationToResponse(video.getThumbnailUrl()))
+                .thumbnailUrl(
+                        fileInformationMapper.fileInformationToResponse(video.getThumbnailUrl()))
                 .feedback(video.getFeedback())
                 .bookmark(video.getBookmark())
                 .myQuestionId(video.getMyQuestion().getMyQuestionId())
@@ -29,17 +32,22 @@ public class VideoMapper {
                 .build();
     }
 
-    public Video videoInformationToEntity(VideoInformationRequest videoInformationRequest, MyQuestion myQuestion) {
-        return Video.builder()
-                .thumbnailUrl(fileInformationMapper.fileInformationRequestToEntity(
+    public Video videoInformationToEntity(
+            VideoInformationRequest videoInformationRequest,
+            MyQuestion myQuestion,
+            InterviewQuestion interviewQuestion) {
+        return Video.builder().thumbnailUrl(fileInformationMapper.fileInformationRequestToEntity(
                         videoInformationRequest.getThumbnailInformation()))
-                .videoUrl(fileInformationMapper.fileInformationRequestToEntity(videoInformationRequest.getVideoInformation()))
+                .videoUrl(fileInformationMapper.fileInformationRequestToEntity(
+                        videoInformationRequest.getVideoInformation()))
                 .title(videoInformationRequest.getTitle())
                 .bookmark(Boolean.FALSE)
                 .videoLength(videoInformationRequest.getVideoLength())
                 .myQuestion(myQuestion)
+                .interviewQuestion(interviewQuestion)
                 .build();
     }
+
     public List<VideoInformationResponse> allVideoToInformationResponse(List<Video> videos) {
         return videos.stream().map(this::videoToInformationResponse).collect(Collectors.toList());
     }
@@ -47,9 +55,11 @@ public class VideoMapper {
     public VideoInformationResponse videoToInformationResponse(Video video) {
         return VideoInformationResponse.builder()
                 .videoId(video.getVideoId())
+                .interviewQuestionId(video.getInterviewQuestion().getInterviewQuestionId())
                 .myQuestionId(video.getMyQuestion().getMyQuestionId())
                 .title(video.getTitle())
-                .thumbnailUrl(fileInformationMapper.imageInformationToResponse(video.getThumbnailUrl()))
+                .thumbnailUrl(
+                        fileInformationMapper.imageInformationToResponse(video.getThumbnailUrl()))
                 .feedback(video.getFeedback())
                 .bookmark(video.getBookmark())
                 .build();

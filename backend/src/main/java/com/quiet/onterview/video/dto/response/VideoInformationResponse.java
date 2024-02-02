@@ -10,6 +10,7 @@ public class VideoInformationResponse {
 
     private Long videoId;
     private Long myQuestionId;
+    private Long interviewQuestionId;
     private String title;
     private FileInformationResponse thumbnailUrl;
     private String feedback;
