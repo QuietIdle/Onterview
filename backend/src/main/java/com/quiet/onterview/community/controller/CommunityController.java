@@ -38,6 +38,11 @@ public class CommunityController {
     private final CommentService commentService;
     private final LikesService likesService;
 
+    @GetMapping
+    public ResponseEntity<List<ArticleListResponse>> getAllArticle(@RequestParam("order") String order) {
+        return ResponseEntity.ok().body(articleService.getAllArticle(order));
+    }
+
     @PostMapping
     public ResponseEntity<ArticlePostResponse> postArticle(@AuthenticationPrincipal SecurityUser user,
             @RequestBody ArticlePostRequest articlePostRequest) {

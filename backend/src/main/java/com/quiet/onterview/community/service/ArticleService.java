@@ -21,4 +21,6 @@ public interface ArticleService {
     ArticleInfoResponse getArticleInformation(Long articleId, Long memberId);
 
     ArticleResponse getArticleDetail(Long articleId, Long memberId);
+
+    List<ArticleListResponse> getAllArticle(String order);
 }
