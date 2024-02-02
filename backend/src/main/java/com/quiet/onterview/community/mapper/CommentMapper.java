@@ -2,6 +2,7 @@ package com.quiet.onterview.community.mapper;
 
 import com.quiet.onterview.community.dto.request.CommentPostRequest;
 import com.quiet.onterview.community.dto.response.CommentPostResponse;
+import com.quiet.onterview.community.dto.response.CommentResponse;
 import com.quiet.onterview.community.entity.Article;
 import com.quiet.onterview.community.entity.Comment;
 import com.quiet.onterview.member.entity.Member;
@@ -29,6 +30,17 @@ public class CommentMapper {
                 .nickname(comment.getMember().getNickname())
                 .writtenDate(comment.getCreateAt().format(formatter))
                 .isMyComment((memberId == comment.getMember().getMemberId()))
+                .build();
+    }
+
+    public CommentResponse commentToCommentResponse(Comment comment, Long memberId) {
+        return CommentResponse.builder()
+                .parentCommentId(comment.getParent() == null ? null : comment.getParent().getCommentId())
+                .commentId(comment.getCommentId())
+                .writerNickname(comment.getMember().getNickname())
+                .content(comment.getContent())
+                .writtenDate(comment.getCreateAt().format(formatter))
+                .isMyComment((comment.getMember().getMemberId()).equals(memberId))
                 .build();
     }
 }

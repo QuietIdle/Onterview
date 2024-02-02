@@ -4,6 +4,7 @@ import com.quiet.onterview.community.dto.request.ArticleModifyContentRequest;
 import com.quiet.onterview.community.dto.request.ArticlePostRequest;
 import com.quiet.onterview.community.dto.request.CommentPostRequest;
 import com.quiet.onterview.community.dto.response.ArticlePostResponse;
+import com.quiet.onterview.community.dto.response.CommentListResponse;
 import com.quiet.onterview.community.dto.response.CommentPostResponse;
 import com.quiet.onterview.community.service.ArticleService;
 import com.quiet.onterview.community.service.CommentService;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -62,5 +64,11 @@ public class CommunityController {
             @PathVariable("commentId") Long commentId) {
         commentService.deleteComment(user.getMemberId(), commentId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/comment/detail/{articleId}")
+    public ResponseEntity<CommentListResponse> getArticleCommentList(@AuthenticationPrincipal SecurityUser user,
+            @PathVariable("articleId") Long articleId) {
+        return ResponseEntity.ok(commentService.getArticleCommentInfo(articleId, user.getMemberId()));
     }
 }

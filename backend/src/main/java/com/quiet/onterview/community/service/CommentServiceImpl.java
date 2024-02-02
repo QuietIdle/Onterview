@@ -3,7 +3,10 @@ package com.quiet.onterview.community.service;
 import com.quiet.onterview.common.BaseException;
 import com.quiet.onterview.common.ErrorCode;
 import com.quiet.onterview.community.dto.request.CommentPostRequest;
+import com.quiet.onterview.community.dto.response.CommentListResponse;
+import com.quiet.onterview.community.dto.response.CommentObjectResponse;
 import com.quiet.onterview.community.dto.response.CommentPostResponse;
+import com.quiet.onterview.community.dto.response.CommentResponse;
 import com.quiet.onterview.community.entity.Article;
 import com.quiet.onterview.community.entity.Comment;
 import com.quiet.onterview.community.mapper.CommentMapper;
@@ -11,6 +14,8 @@ import com.quiet.onterview.community.repository.ArticleRepository;
 import com.quiet.onterview.community.repository.CommentRepository;
 import com.quiet.onterview.member.entity.Member;
 import com.quiet.onterview.member.repository.MemberRepository;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -57,5 +62,42 @@ public class CommentServiceImpl implements CommentService {
             throw new BaseException(ErrorCode.COMMENT_WRITER_NOT_MATCHES);
         }
         commentRepository.deleteById(comment.getCommentId());
+    }
+
+    @Override
+    public CommentListResponse getArticleCommentInfo(Long articleId, Long memeberId) {
+        Article article = articleRepository.findById(articleId).orElseThrow(() ->
+                new BaseException(ErrorCode.ARTICLE_NOT_EXISTS));
+        return CommentListResponse.builder()
+                .commentCount(commentRepository.countByArticle_ArticleId(article.getArticleId()))
+                .comments(getArticleCommentList(article.getArticleId(),memeberId))
+                .build();
+    }
+
+    protected List<CommentObjectResponse> getArticleCommentList(Long articleId, Long memeberId) {
+        List<Comment> parentCommentList = getParentCommentList(articleId);
+        List<CommentObjectResponse> commentObjectResponseList = new ArrayList<>();
+        parentCommentList.stream().forEach(parentComment -> {
+
+            List<Comment> childList = getChildCommentList(parentComment.getCommentId());
+            List<CommentResponse> childResponse = new ArrayList<>();
+            childList.stream().forEach(childComment -> {
+                childResponse.add(commentMapper.commentToCommentResponse(childComment, memeberId));
+            });
+            System.out.println("CHILD SIZE " + childResponse.size());
+            commentObjectResponseList.add(CommentObjectResponse.builder()
+                    .parentComment(commentMapper.commentToCommentResponse(parentComment, memeberId))
+                    .childCommentList(childResponse)
+                    .build());
+        });
+        return commentObjectResponseList;
+    }
+
+    protected List<Comment> getParentCommentList(Long articleId) {
+        return commentRepository.findAllParentCommentByArticleId(articleId);
+    }
+
+    protected List<Comment> getChildCommentList(Long parentCommentId) {
+        return commentRepository.findAllChildCommentByCommentId(parentCommentId);
     }
 }
