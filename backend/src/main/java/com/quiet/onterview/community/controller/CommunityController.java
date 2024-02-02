@@ -7,6 +7,7 @@ import com.quiet.onterview.community.dto.response.ArticleInfoResponse;
 import com.quiet.onterview.community.dto.response.ArticleLikeResponse;
 import com.quiet.onterview.community.dto.response.ArticleListResponse;
 import com.quiet.onterview.community.dto.response.ArticlePostResponse;
+import com.quiet.onterview.community.dto.response.ArticleResponse;
 import com.quiet.onterview.community.dto.response.CommentListResponse;
 import com.quiet.onterview.community.dto.response.CommentPostResponse;
 import com.quiet.onterview.community.service.ArticleService;
@@ -57,6 +58,12 @@ public class CommunityController {
             @PathVariable("articleId") Long articleId) {
         articleService.deleteArticle(user.getMemberId(), articleId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/detail/{articleId}")
+    public ResponseEntity<ArticleResponse> getArticleDetail(@AuthenticationPrincipal SecurityUser user,
+            @PathVariable("articleId") Long articleId) {
+        return ResponseEntity.ok(articleService.getArticleDetail(articleId, user.getMemberId()));
     }
 
     @GetMapping("/post/detail/{articleId}")

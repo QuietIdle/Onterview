@@ -7,6 +7,7 @@ import com.quiet.onterview.community.dto.request.ArticlePostRequest;
 import com.quiet.onterview.community.dto.response.ArticleInfoResponse;
 import com.quiet.onterview.community.dto.response.ArticleListResponse;
 import com.quiet.onterview.community.dto.response.ArticlePostResponse;
+import com.quiet.onterview.community.dto.response.ArticleResponse;
 import com.quiet.onterview.community.entity.Article;
 import com.quiet.onterview.community.mapper.ArticleMapper;
 import com.quiet.onterview.community.repository.ArticleRepository;
@@ -31,6 +32,7 @@ public class ArticleServiceImpl implements ArticleService {
     private final MemberRepository memberRepository;
     private final VideoRepository videoRepository;
     private final LikesServiceImpl likesService;
+    private final CommentService commentService;
 
     @Override
     public ArticlePostResponse postArticle(Long memberId, ArticlePostRequest articlePostRequest) {
@@ -80,11 +82,18 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public ArticleInfoResponse getArticleInformation(Long articleId, Long memberId) {
-        System.out.println("ARTICLE !!! 여기 들어옴");
         Article article = articleRepository.findById(articleId).orElseThrow(() ->
                 new BaseException(ErrorCode.ARTICLE_NOT_EXISTS));
         Boolean likesStatus = likesService.getMyLikeStatus(memberId, articleId);
         return articleMapper.articleToArticleInfoResponse(article,memberId, likesStatus);
+    }
+
+    @Override
+    public ArticleResponse getArticleDetail(Long articleId, Long memberId) {
+        return ArticleResponse.builder()
+                .articleInfo(getArticleInformation(articleId, memberId))
+                .commentInfo(commentService.getArticleCommentInfo(articleId, memberId))
+                .build();
     }
 
 
