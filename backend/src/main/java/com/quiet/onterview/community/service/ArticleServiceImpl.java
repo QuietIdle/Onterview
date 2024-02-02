@@ -1,5 +1,41 @@
 package com.quiet.onterview.community.service;
 
-public class ArticleServiceImpl {
+import com.quiet.onterview.common.BaseException;
+import com.quiet.onterview.common.ErrorCode;
+import com.quiet.onterview.community.dto.request.ArticlePostRequest;
+import com.quiet.onterview.community.dto.response.ArticlePostResponse;
+import com.quiet.onterview.community.entity.Article;
+import com.quiet.onterview.community.mapper.ArticleMapper;
+import com.quiet.onterview.community.repository.ArticleRepository;
+import com.quiet.onterview.member.entity.Member;
+import com.quiet.onterview.member.repository.MemberRepository;
+import com.quiet.onterview.video.entity.Video;
+import com.quiet.onterview.video.exception.VideoNotFoundException;
+import com.quiet.onterview.video.repository.VideoRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Service
+@RequiredArgsConstructor
+@Transactional
+public class ArticleServiceImpl implements ArticleService {
+
+    private final ArticleRepository articleRepository;
+    private final ArticleMapper articleMapper;
+    private final MemberRepository memberRepository;
+    private final VideoRepository videoRepository;
+
+    @Override
+    public ArticlePostResponse postArticle(Long memberId, ArticlePostRequest articlePostRequest) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new BaseException(ErrorCode.USER_NOT_EXISTS));
+        Video video = videoRepository.findById(articlePostRequest.getVideoId()).orElseThrow(() ->
+                new VideoNotFoundException());
+        if(!video.getMyQuestion().getMyQuestionFolder().getMember().getMemberId().equals(memberId)) {
+            throw new BaseException(ErrorCode.REQUEST_CONDITION_NOT_MATCHES);
+        }
+        Article article = articleMapper.articlePostRequestToArticle(member, video, articlePostRequest);
+        return articleMapper.articleToArticlePostResponse(articleRepository.save(article));
+    }
 }
