@@ -40,7 +40,9 @@ const postDetail = ref({
   isLike: true
 })
 
-const content = computed(() => postDetail.value.content.replace('\n', '<br />'))
+const content = computed(() =>
+  postDetail.value.content.replaceAll('\n', '<br />')
+)
 </script>
 
 <template>
