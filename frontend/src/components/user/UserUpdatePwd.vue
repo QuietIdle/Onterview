@@ -93,8 +93,14 @@ const requestUserPwdChange = function () {
         confirm.value = null
       }
 
-      const error = function (response) {
+      const error = function (error) {
         // 리턴되는 값에 따라 적용
+        alert(error.response.data.errorMessage)
+
+        // 입력되어 있는 데이터 지우기
+        original.value = null
+        password.value = null
+        confirm.value = null
       }
 
       patchChangeUserPwd(payload, success, error)

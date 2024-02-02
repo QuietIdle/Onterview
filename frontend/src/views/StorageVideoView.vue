@@ -1,32 +1,36 @@
 <script setup>
 import StorageVideoList from "@/components/storage/StorageVideoList.vue";
 import StorageVideoGrid from "@/components/storage/StorageVideoGrid.vue";
-import { apiMethods } from "@/api/video.js";
-import { useStorageStore } from "@/stores/storage.js";
+import StorageVideoPlay from "@/components/storage/StorageVideoPlay.vue";
+import { apiMethods } from "@/api/video";
+import { useStorageStore } from "@/stores/storage";
+import { onMounted } from "vue";
 
-const pinia = useStorageStore();
+const storageStore = useStorageStore();
 
 const storageDisplay = async function() {
   try {
     const result = await apiMethods.getUserVideoAll();
-    pinia.storageData.value = result.data;
+    storageStore.storageData.value = result.data;
   } catch (error) {
     console.log(error);
   }
 }
 
-storageDisplay()
+onMounted(() => {
+  storageDisplay()
+})
 </script>
 
 <template>
-  <div v-if="pinia.display===0">
+  <div v-if="!storageStore.display.stream && storageStore.display.list">
     <StorageVideoList />
   </div>
-  <div v-else-if="pinia.display===1">
+  <div v-else-if="!storageStore.display.stream && !storageStore.display.list">
     <StorageVideoGrid />
   </div>
-  <div v-else>
-
+  <div v-else-if="storageStore.display.stream">
+    <StorageVideoPlay />
   </div>
 </template>
 

@@ -1,9 +1,9 @@
 <script setup>
 import { ref } from 'vue';
-import { apiMethods } from "@/api/video.js";
-import { useStorageStore } from '@/stores/storage.js';
+import { apiMethods } from "@/api/video";
+import { useStorageStore } from '@/stores/storage';
 
-const pinia = useStorageStore();
+const storageStore = useStorageStore();
 const selectedId = ref([]);
 
 const deleteVideo = async function () {
@@ -31,10 +31,19 @@ const markVideo = async function (id, bool) {
 }
 
 const selectAll = function () {
-  for (const item of pinia.storageData.value) {
+  for (const item of storageStore.storageData.value) {
     if (!selectedId.value.includes(item.videoId)) {
       selectedId.value.push(item.videoId)
     }
+  }
+}
+
+const selectVideo = async function (v_id) {
+  try {
+    const res = await apiMethods.getVideo(v_id);
+    storageStore.videoData = res.data;
+  } catch (error) {
+    console.log(error)
   }
 }
 </script>
@@ -51,7 +60,7 @@ const selectAll = function () {
           삭제
         </v-btn>
 
-        <v-btn class="ml-auto" variant="outlined" @click="pinia.switchDisplay">
+        <v-btn class="ml-auto" variant="outlined" @click="storageStore.switchDisplay(0)">
           그리드 보기
         </v-btn>
       </div>
@@ -85,7 +94,7 @@ const selectAll = function () {
           </thead>
           <tbody>
             <tr
-              v-for="(dt, n) in pinia.storageData.value"
+              v-for="(dt, n) in storageStore.storageData.value"
               :key="n"
             >
               <td><v-checkbox
@@ -93,7 +102,7 @@ const selectAll = function () {
                 :value="dt.videoId"
                 ></v-checkbox></td>
               <td>{{ n+1 }}</td>
-              <td>{{ dt.title }}</td>
+              <td @click="storageStore.switchDisplay(1), selectVideo(dt.videoId)" class="list-item">{{ dt.title }}</td>
               <td></td>
               <td></td>
               <td><v-icon 
@@ -123,5 +132,8 @@ const selectAll = function () {
 <style scoped>
 .tool-bar>*{
   margin: 8px;
+}
+.list-item{
+  cursor: pointer;
 }
 </style>
