@@ -22,7 +22,6 @@ public enum ErrorCode {
     ACCESS_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "ACCESS TOKEN이 만료되었습니다"),
     REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "REFRESH TOKEN이 만료되었습니다"),
     USER_NOT_EXISTS(HttpStatus.BAD_REQUEST, "존재하지 않는 사용자입니다"),
-    REQUIRED_VALUE_NOT_EXISTS(HttpStatus.BAD_REQUEST, "필요한 값이 없습니다"),
 
     /**
      * Question
@@ -52,7 +51,23 @@ public enum ErrorCode {
     TYPE_MISMATCH(HttpStatus.BAD_REQUEST, "MESSAGE_TYPE_MISMATCH"),
     CAN_NOT_GENERATE(HttpStatus.INTERNAL_SERVER_ERROR, "CAN NOT GENERATE"),
     CAN_NOT_WRITE(HttpStatus.INTERNAL_SERVER_ERROR, "CAN NOT WRITE"),
-    USER_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "NOT_FOUND_USER");
+
+    /**
+     * COMMUNITY
+     */
+    ARTICLE_NOT_EXISTS(HttpStatus.BAD_REQUEST, "게시글이 존재하지 않습니다"),
+    ARTICLE_WRITER_NOT_MATCHES(HttpStatus.BAD_REQUEST, "자신이 작성한 게시글이 아닙니다"),
+
+    COMMENT_NOT_EXISTS(HttpStatus.BAD_REQUEST, "해당 댓글이 존재하지 않습니다"),
+    CANNOT_CREATE_CHILD_COMMENT_TO_CHILD_COMMENT(HttpStatus.BAD_REQUEST, "답글에는 답글을 달 수 없습니다"),
+    COMMENT_WRITER_NOT_MATCHES(HttpStatus.BAD_REQUEST, "자신이 작성한 피드백/답글이 아닙니다"),
+
+    /**
+     * COMMON
+     */
+
+    REQUIRED_VALUE_NOT_EXISTS(HttpStatus.BAD_REQUEST, "필요한 값이 없습니다"),
+    REQUEST_CONDITION_NOT_MATCHES(HttpStatus.BAD_REQUEST, "요청 조건이 맞지 않습니다");
 
     HttpStatus statusCode;
     String message;
