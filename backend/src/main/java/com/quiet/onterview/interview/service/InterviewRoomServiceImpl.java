@@ -50,7 +50,7 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
     public void createInterviewRoom(Long memberId, InterviewRoomRequest interviewRoomRequest) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new BaseException(ErrorCode.MEMBERID_NOT_EXISTS));
 
-        String commonQuestionFolderName = interviewRoomRequest.getRoomType().getCommonQuestionFolder();
+        String commonQuestionFolderName = interviewRoomRequest.getQuestionType().getCommonQuestionFolder();
         int numToSelect = interviewRoomRequest.getNumToSelect();
 
         List<CommonQuestion> randomCommonQuestionList = commonQuestionFolderService.getRandomCommonQuestionList(commonQuestionFolderName, numToSelect);

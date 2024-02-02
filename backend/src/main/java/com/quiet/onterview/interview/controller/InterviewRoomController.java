@@ -27,7 +27,7 @@ public class InterviewRoomController {
     @GetMapping
     public ResponseEntity<Page<InterviewRoomResponse>> getInterviewRoomList(
             @AuthenticationPrincipal SecurityUser user,
-            @PageableDefault(size = 2, sort = "createAt", direction = Sort.Direction.DESC) Pageable pageable
+            @PageableDefault(size = 10, sort = "createAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         return ResponseEntity.ok(interviewRoomService.getInterviewRoomList(user.getMemberId(), pageable));
     }

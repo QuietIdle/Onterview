@@ -28,8 +28,8 @@ public class InterviewRoom extends BaseEntity {
     private Member member;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "ROOM_TYPE", nullable = false)
-    private RoomType roomType;
+    @Column(name = "QUESTION_TYPE", nullable = false)
+    private QuestionType questionType;
 
     private Integer runTime;
 

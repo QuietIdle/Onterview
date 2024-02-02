@@ -1,6 +1,6 @@
 package com.quiet.onterview.interview.dto.response;
 
-import com.quiet.onterview.interview.entity.RoomType;
+import com.quiet.onterview.interview.entity.QuestionType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class InterviewRoomResponse {
 
     private Long interviewRoomId;
-    private RoomType roomType;
+    private QuestionType questionType;
     private Integer numOfQuestion;
     private Integer runTime;
     private LocalDateTime createAt;
