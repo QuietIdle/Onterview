@@ -46,4 +46,16 @@ public class CommentServiceImpl implements CommentService {
         }
         return commentMapper.commentToCommentPostResponse(commentRepository.save(comment),memberId);
     }
+
+    @Override
+    public void deleteComment(Long memberId, Long commentId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new BaseException(ErrorCode.USER_NOT_EXISTS));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() ->
+                new BaseException(ErrorCode.COMMENT_NOT_EXISTS));
+        if(!comment.getMember().getMemberId().equals(member.getMemberId())) {
+            throw new BaseException(ErrorCode.COMMENT_WRITER_NOT_MATCHES);
+        }
+        commentRepository.deleteById(comment.getCommentId());
+    }
 }
