@@ -159,7 +159,8 @@ const saveRecording = async function () {
     thumbnailInformation : {
         saveFilename: `${filename.value}.png`,
         originFilename: `${filename.value}.png`,
-    }
+    },
+    category: 1,
   }
   try {
     const response = await apiMethods.saveVideo(req_body)

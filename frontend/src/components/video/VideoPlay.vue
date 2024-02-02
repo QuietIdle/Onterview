@@ -1,7 +1,7 @@
 <script setup>
 import { useSelfSpeechStore } from '@/stores/selfSpeech';
-import videojs from "video.js";
-import { onUpdated, onBeforeUnmount, ref } from "vue";
+import { useUserStore } from "@/stores/user";
+import { onMounted, ref, watch } from "vue";
 import { fileServer } from "@/api/video";
 import { useRouter } from 'vue-router'
 import { apiMethods } from "@/api/video";
@@ -9,6 +9,7 @@ import { apiMethods } from "@/api/video";
 const router = useRouter()
 
 const selfSpeechStore = useSelfSpeechStore();
+const userStore = useUserStore()
 
 const goSelfSpeechMain = function () {
   router.push({name: 'selfspeech-main'})
@@ -19,35 +20,8 @@ const backToRecording = function() {
   selfSpeechStore.listIdx = 1;
 }
 
-let player;
-const videoPlayer = ref(undefined);
-
-// const requestVideo = async function () {
-//   videoLoaded.value = true;
-//   let idx = 1024 * 1024;
-
-//   try {
-//     //const response = await fileServer.playVideo(selfSpeechStore.videoData.videoUrl.saveFilename);
-//     const response = await fileServer.playVideo("058e0ced-14e4-4b0b-9069-2c056623141d.mkv", 0, idx-1);
-    
-//     const blob = new Blob([response.data], { type: 'video/mp4' });
-//     const url = URL.createObjectURL(blob);
-//     console.log(blob)
-
-//     player = videojs(videoPlayer.value, {
-//       sources: [{
-//         src: url,
-//         type: 'video/mp4'
-//       }]
-//     }, function onPlayerReady() {
-//       console.log('Your player is ready!');
-//       this.play();
-//     });
-//   }
-//   catch (error) {
-//     console.log(error);
-//   }
-// }
+const urlRef = ref(null)
+const mediaPlay = ref(false)
 
 const markVideo = async function (id, bool) {
   try {
@@ -63,7 +37,9 @@ const markVideo = async function (id, bool) {
 
 const isCompleted = ref(false)
 
-const getAllChunks = async function(filename) {
+const getAllChunks = async function (filename) {
+  isCompleted.value = false
+  
   const chunkSize = 1024 * 1024; // 1MB 단위로 청크를 받음
   let start = 0;
   let end = chunkSize - 1;
@@ -72,7 +48,7 @@ const getAllChunks = async function(filename) {
   
   while (!isCompleted.value) {
     try {
-      const response = await fileServer.playVideo(filename, start, end)
+      const response = await fileServer.playVideo(filename, userStore.email, start, end)
 
       console.log(response)
 
@@ -88,21 +64,19 @@ const getAllChunks = async function(filename) {
         const blob = new Blob(chunks, { type: 'video/mp4' });
         const url = URL.createObjectURL(blob);
 
-        player = videojs(videoPlayer.value, {
-        sources: [{
-          src: url,
-          type: 'video/mp4'
-          }]
-        }, function onPlayerReady() {
-        console.log('Your player is ready!');
-        this.play();
-      });  
+        urlRef.value = url
+        // if (com === 0) renderVideo(url)
+        // else reRenderVideo(url)
       }
     } catch (error) {
       console.error('호제야...', error);
       break;
     }
   }          
+}
+
+const playRecorded = function () {
+  document.querySelector('#my-video').play()
 }
 
 const deleteVideo = async function (v_id) {
@@ -114,13 +88,23 @@ const deleteVideo = async function (v_id) {
   backToRecording()
 }
 
-onUpdated(getAllChunks(selfSpeechStore.videoData.videoUrl.saveFilename))
-
-onBeforeUnmount(() => {
-  if (player) {
-    player.dispose();
+onMounted(async () => {
+  try {
+    await getAllChunks(selfSpeechStore.videoData.videoUrl.saveFilename, 0)
+  } catch (error) {
+    console.warn(error)
   }
-})
+}),
+
+watch(() => selfSpeechStore.videoData,
+  async (newValue, oldValue) => {
+    try {
+      await getAllChunks(newValue.videoUrl.saveFilename, 1)
+    } catch (error) {
+      console.warn(error)
+    }
+  }
+)
 </script>
 
 <template>
@@ -131,14 +115,21 @@ onBeforeUnmount(() => {
     </div>
 
     <div class="pa-1">
-      <div class="empty-player-container d-flex justify-center align-center">
-        <video 
+      <div class="empty-player-container">
+        <!-- <video 
           ref="videoPlayer" 
           class="video-js vjs-big-play-centered"
           id="my-video"
           data-setup='{}'
           controls
+        ></video> -->
+        <video 
+          id="my-video" 
+          :src="urlRef" 
+          controls="true"
+          style="max-width: 100%; min-width: 100px;"
         ></video>
+        <v-btn v-show="!mediaPlay" class="play-button" @click="playRecorded(), mediaPlay=!mediaPlay" icon="mdi-play"></v-btn>
       </div>
     </div>
 
@@ -176,5 +167,13 @@ onBeforeUnmount(() => {
   width: 640px;
   height: 390px;
   background-color: black;
+  display: block;
+  margin: 0 auto;
+}
+.play-button{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>

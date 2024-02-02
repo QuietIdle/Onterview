@@ -21,13 +21,14 @@ const markVideo = async function (id, bool) {
 }
 
 const selectVideo = async function (v_id) {
-  selfSpeechStore.display = false;
+  
   try {
     const res = await apiMethods.getVideo(v_id);
     selfSpeechStore.videoData = res.data;
   } catch (error) {
     console.log(error)
   }
+  selfSpeechStore.display = false;
 }
 </script>
 
@@ -77,7 +78,7 @@ const selectVideo = async function (v_id) {
   }
   .icon{
     position: absolute;
-    top: -5%;
-    left: -15%;
+    top: 0%;
+    left: 0%;
   }
 </style>
