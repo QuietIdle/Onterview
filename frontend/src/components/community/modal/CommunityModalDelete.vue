@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { deleteDeleteMyPost } from '@/api/community'
 
 const props = defineProps({
@@ -11,6 +12,9 @@ const requestDeleteMyPost = async function () {
   try {
     const response = await deleteDeleteMyPost()
     console.log('response delete my post', response)
+
+    const route = useRoute()
+    route.push({ name: 'community-list' })
   } catch (error) {
     alert('게시글을 삭제하지 못했습니다. 다시 시도해주세요. ')
   }

@@ -20,9 +20,14 @@ const deleteDeleteMyPost = function (articleId) {
     return api.delete(`/api/community/${articleId}`)
 }
 
+const patchUpdateMyPostContent = function (articleId, payload) {
+    return api.patch(`/api/community/${articleId}`, payload)
+}
+
 export {
     getAllPostList,
     getMyPostList,
     getPostDetail,
-    deleteDeleteMyPost
+    deleteDeleteMyPost,
+    patchUpdateMyPostContent
 }

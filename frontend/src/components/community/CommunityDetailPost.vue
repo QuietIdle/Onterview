@@ -1,8 +1,9 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { getPostDetail } from '@/api/community'
-import CommunityModelDelete from '@/components/community/modal/CommunityModalDelete.vue'
+import CommunityModalUpdate from '@/components/community/modal/CommunityModalUpdate.vue'
+import CommunityModalDelete from '@/components/community/modal/CommunityModalDelete.vue'
 
 // assets
 import tempThumbnail from '@/assets/main/introduceImage2.png'
@@ -20,6 +21,7 @@ const requestPostDetail = async function () {
 
     const response = await getPostDetail(articleId)
     console.log('response post detail', response)
+    postDetail.value = response.data
   } catch (error) {
     alert('게시글을 조회하지 못했습니다.')
   }
@@ -33,10 +35,12 @@ const postDetail = ref({
   writtenDate: '1999/4/19',
 
   content:
-    '제가 횡설수설 하지 않고 잘 말하고 있는지 궁금합니다. 피드백 정말 환영합니다^^ 03:38부터 보시면 됩니다!',
+    '제가 횡설수설 하지 않고 잘 말하고 있는지 궁금합니다. \n피드백 정말 환영합니다^^ \n03:38부터 보시면 됩니다!',
   isWriter: true,
   isLike: true
 })
+
+const content = computed(() => postDetail.value.content.replace('\n', '<br />'))
 </script>
 
 <template>
@@ -61,8 +65,13 @@ const postDetail = ref({
 
     <!-- 수정 삭제 버튼 -->
     <v-col cols="12" class="text-right">
-      <v-btn class="updatebutton" variant="plain">수정</v-btn>
-      <CommunityModelDelete
+      <CommunityModalUpdate
+        :articleId="postDetail.articleId"
+        :content="postDetail.content"
+        :writerNickname="postDetail.writerNickname"
+        @request-post-detail="requestPostDetail()"
+      />
+      <CommunityModalDelete
         :articleId="postDetail.articleId"
         :title="postDetail.title"
       />
@@ -88,17 +97,16 @@ const postDetail = ref({
     <v-row class="pt-8">
       <v-col cols="12">
         <div class="writer-and-content">
-          <div class="">
+          <div class="mb-3">
             <span>{{ postDetail.writerNickname }}</span>
             <span class="text-grey">님의 고민</span>
           </div>
-          <div class="content py-4">
-            <!-- 내용 텍스트 -->
-            {{ postDetail.content }}
-          </div>
+          <div v-html="content" style="font-family: Pretendard-Regular"></div>
         </div>
       </v-col>
     </v-row>
+
+    <!-- 추천 -->
     <v-row>
       <v-col cols="12" class="d-flex justify-end align-center mb-3">
         <div class="mr-2">추천 {{ postDetail.likeCount }}</div>
