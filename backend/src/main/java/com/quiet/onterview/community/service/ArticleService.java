@@ -9,4 +9,6 @@ public interface ArticleService {
     ArticlePostResponse postArticle(Long memberId, ArticlePostRequest articlePostRequest);
 
     void modifyArticleContent(Long memberId, Long articleId, ArticleModifyContentRequest articleModifyContentRequest);
+
+    void deleteArticle(Long memberId, Long articleId);
 }

@@ -53,4 +53,14 @@ public class ArticleServiceImpl implements ArticleService {
         }
         articleRepository.updateContent(articleId,articleModifyContentRequest.getContent());
     }
+
+    @Override
+    public void deleteArticle(Long memberId, Long articleId) {
+        Article article = articleRepository.findById(articleId).orElseThrow(() ->
+                new BaseException(ErrorCode.ARTICLE_NOT_EXISTS));
+        if(!article.getMember().getMemberId().equals(memberId)) {
+            throw new BaseException(ErrorCode.ARTICLE_WRITER_NOT_MATCHES);
+        }
+        articleRepository.deleteById(articleId);
+    }
 }
