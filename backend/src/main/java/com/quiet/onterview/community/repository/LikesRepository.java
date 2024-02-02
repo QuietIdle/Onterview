@@ -8,4 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface LikesRepository extends JpaRepository<Likes, LikesPrimaryKey> {
 
+    @Modifying
+    @Query("update Likes l set l.status = :status where l.likesPrimaryKey = :likesPrimaryKey")
+    int updateStatus(LikesPrimaryKey likesPrimaryKey, Boolean status);
 }

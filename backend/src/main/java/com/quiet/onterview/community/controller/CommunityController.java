@@ -3,12 +3,14 @@ package com.quiet.onterview.community.controller;
 import com.quiet.onterview.community.dto.request.ArticleModifyContentRequest;
 import com.quiet.onterview.community.dto.request.ArticlePostRequest;
 import com.quiet.onterview.community.dto.request.CommentPostRequest;
+import com.quiet.onterview.community.dto.response.ArticleLikeResponse;
 import com.quiet.onterview.community.dto.response.ArticleListResponse;
 import com.quiet.onterview.community.dto.response.ArticlePostResponse;
 import com.quiet.onterview.community.dto.response.CommentListResponse;
 import com.quiet.onterview.community.dto.response.CommentPostResponse;
 import com.quiet.onterview.community.service.ArticleService;
 import com.quiet.onterview.community.service.CommentService;
+import com.quiet.onterview.community.service.LikesService;
 import com.quiet.onterview.security.SecurityUser;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,7 @@ public class CommunityController {
 
     private final ArticleService articleService;
     private final CommentService commentService;
+    private final LikesService likesService;
 
     @PostMapping
     public ResponseEntity<ArticlePostResponse> postArticle(@AuthenticationPrincipal SecurityUser user,
@@ -59,6 +62,12 @@ public class CommunityController {
     public ResponseEntity<List<ArticleListResponse>> getAllMyArticle(@AuthenticationPrincipal SecurityUser user,
             @RequestParam("order") String order) {
         return ResponseEntity.ok().body(articleService.getAllMyArticle(user.getMemberId(), order));
+    }
+
+    @PatchMapping("/like/{articleId}")
+    public ResponseEntity<ArticleLikeResponse> likeOrCancelArticle(@AuthenticationPrincipal SecurityUser user,
+            @PathVariable("articleId") Long articleId) {
+        return ResponseEntity.ok(likesService.likeOrCancelArticle(user.getMemberId(), articleId));
     }
 
     @PostMapping("/comment")
