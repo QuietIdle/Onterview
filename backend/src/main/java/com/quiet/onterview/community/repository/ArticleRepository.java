@@ -8,4 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface ArticleRepository extends JpaRepository<Article, Long> {
 
+    @Modifying
+    @Query("update Article a set a.content = :content where a.articleId = :articleId")
+    int updateContent(Long articleId, String content);
 }

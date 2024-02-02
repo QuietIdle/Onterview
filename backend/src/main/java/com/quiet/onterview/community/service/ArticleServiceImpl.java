@@ -2,6 +2,7 @@ package com.quiet.onterview.community.service;
 
 import com.quiet.onterview.common.BaseException;
 import com.quiet.onterview.common.ErrorCode;
+import com.quiet.onterview.community.dto.request.ArticleModifyContentRequest;
 import com.quiet.onterview.community.dto.request.ArticlePostRequest;
 import com.quiet.onterview.community.dto.response.ArticlePostResponse;
 import com.quiet.onterview.community.entity.Article;
@@ -37,5 +38,19 @@ public class ArticleServiceImpl implements ArticleService {
         }
         Article article = articleMapper.articlePostRequestToArticle(member, video, articlePostRequest);
         return articleMapper.articleToArticlePostResponse(articleRepository.save(article));
+    }
+
+    @Override
+    public void modifyArticleContent(Long memberId, Long articleId,
+            ArticleModifyContentRequest articleModifyContentRequest) {
+        Article article = articleRepository.findById(articleId).orElseThrow(() ->
+                new BaseException(ErrorCode.ARTICLE_NOT_EXISTS));
+        if(!article.getMember().getMemberId().equals(memberId)) {
+            throw new BaseException(ErrorCode.ARTICLE_WRITER_NOT_MATCHES);
+        }
+        if(articleModifyContentRequest.getContent().isEmpty()) {
+            throw new BaseException(ErrorCode.REQUIRED_VALUE_NOT_EXISTS);
+        }
+        articleRepository.updateContent(articleId,articleModifyContentRequest.getContent());
     }
 }
