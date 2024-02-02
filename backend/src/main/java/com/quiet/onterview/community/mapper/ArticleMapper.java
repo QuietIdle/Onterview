@@ -59,7 +59,7 @@ public class ArticleMapper {
                 .title(article.getTitle())
                 .writerNickname(article.getMember().getNickname())
                 .content(article.getContent())
-                .videoInfo(videoMapper.videoInformationToResponse(article.getVideo()))
+                .videoInfo(videoMapper.videoToDetailResponse(article.getVideo()))
                 .isMyArticle(article.getMember().getMemberId().equals(memberId))
                 .likeCount(article.getLikeCount())
                 .isLiked(isLikedByMe)
