@@ -1,6 +1,10 @@
 package com.quiet.onterview.video.service;
 
+import com.quiet.onterview.common.BaseException;
+import com.quiet.onterview.common.ErrorCode;
 import com.quiet.onterview.file.service.FileService;
+import com.quiet.onterview.interview.entity.InterviewQuestion;
+import com.quiet.onterview.interview.repository.InterviewQuestionRepository;
 import com.quiet.onterview.question.entity.MyQuestion;
 import com.quiet.onterview.question.repository.MyQuestionRepository;
 import com.quiet.onterview.video.dto.request.VideoDeleteRequest;
@@ -15,6 +19,7 @@ import com.quiet.onterview.video.repository.VideoRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,13 +30,14 @@ public class VideoServiceImpl implements VideoService {
 
     private final VideoRepository videoRepository;
     private final MyQuestionRepository myQuestionRepository;
+    private final InterviewQuestionRepository interviewQuestionRepository;
     private final VideoMapper videoMapper;
     private final FileService fileService;
 
     @Override
     @Transactional(readOnly = true)
     public VideoDetailResponse loadVideoInformation(Long videoId) {
-        return videoMapper.videoInformationToResponse(
+        return videoMapper.videoToDetailResponse(
                 videoRepository.findById(videoId).orElseThrow(VideoNotFoundException::new)
         );
     }
@@ -44,11 +50,14 @@ public class VideoServiceImpl implements VideoService {
     @Override
     public void createVideoInformation(VideoInformationRequest videoInformationRequest) {
         MyQuestion myQuestion = myQuestionRepository.findById(
-                        videoInformationRequest.getQuestionId())
-                .orElseThrow(IllegalArgumentException::new);
+                videoInformationRequest.getMyQuestionId()).orElse(null);
+        InterviewQuestion interviewQuestion = interviewQuestionRepository.findById(
+                videoInformationRequest.getInterviewQuestionId()).orElse(null);
         videoRepository.save(
-                videoMapper.videoInformationToEntity(videoInformationRequest, myQuestion)
-        );
+                videoMapper.videoInformationToEntity(
+                        videoInformationRequest,
+                        myQuestion,
+                        interviewQuestion));
     }
 
     @Override

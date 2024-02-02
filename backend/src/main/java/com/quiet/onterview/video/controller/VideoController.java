@@ -38,10 +38,10 @@ public class VideoController {
         return ResponseEntity.ok(videoService.loadVideoInformation(videoId));
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<VideoInformationResponse>> getAllMyVideo(
+    @GetMapping
+    public ResponseEntity<List<VideoInformationResponse>> getAllMyVideoByCategory(
             @AuthenticationPrincipal SecurityUser user) {
-        return ResponseEntity.ok(videoService.loadAllMyVideo("onterview@gmail.com"));
+        return ResponseEntity.ok(videoService.loadAllMyVideo(user.getEmail()));
     }
 
     @PostMapping

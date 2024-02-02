@@ -1,6 +1,7 @@
 package com.quiet.onterview.video.dto.response;
 
 import com.quiet.onterview.file.dto.response.FileInformationResponse;
+import com.quiet.onterview.question.dto.response.MyQuestionResponse;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,6 +11,7 @@ public class VideoInformationResponse {
 
     private Long videoId;
     private Long myQuestionId;
+    private Long interviewQuestionId;
     private String title;
     private FileInformationResponse thumbnailUrl;
     private String feedback;
