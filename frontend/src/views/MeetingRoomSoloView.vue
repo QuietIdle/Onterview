@@ -6,8 +6,29 @@ const mediaVideo = ref(null)
 const isAcceptedPermission = ref(true)
 const isWebcamOn = ref(false)
 const isMicrophoneOn = ref(false)
+const isAbleMeeting = ref(false)
 const dialogRequestPermissionMedia = ref(false) // 처음 권한을 요청할 때
 const dialogDeniedPermissionMedia = ref(false)  // 권한 요청이 거부되었을 때
+
+const watchWebcamOn = watch(isWebcamOn, () => {
+  if (isWebcamOn.value === true) {
+    if (isMicrophoneOn.value === true) {
+      isAbleMeeting.value = true
+    }
+  } else {
+    isAbleMeeting.value = false
+  }
+})
+
+const watchMicrophoneOn = watch(isMicrophoneOn, () => {
+  if (isMicrophoneOn.value === true) {
+    if (isWebcamOn.value === true) {
+      isAbleMeeting.value = true
+    }
+  } else {
+    isAbleMeeting.value = false
+  }
+})
 
 // 미디어 권한 요청 (마이크 & 카메라)
 const requestPermissionMedia = function () {
@@ -79,8 +100,10 @@ console.log(isAcceptedPermission)
     </div>
 
     <v-row class="text-center">
-      <div class="d-flex justify-center offset-1 v-col-3 py-0 px-0">
-        <Timer class="my-auto" />
+      <div class="d-flex flex-column align-center my-auto offset-1 v-col-3 py-0 px-0">
+        <Timer /><br>
+        <v-btn v-if="isAbleMeeting" rounded="xl" size="x-large" class="active-btn mt-4 mx-2 px-15">면접 시작</v-btn>
+        <v-btn v-else disabled rounded="xl" size="x-large" class="mt-4 mx-2 px-15">면접 시작</v-btn>
       </div>
       <div class="video-container offset-1 v-col-6">
         <video ref="mediaVideo" autoplay></video>
@@ -95,11 +118,11 @@ console.log(isAcceptedPermission)
       <div class="d-flex justify-center mt-3 text-black">
         <!-- 웹캠/마이크 활성화 버튼 -->
         <v-col cols="auto">
-          <v-btn v-if="!isWebcamOn" icon="mdi-video-off" size="small" class="mx-1" @click="setupWebcam"></v-btn>
-          <v-btn v-else icon="mdi-video" size="small" class="mx-1" @click="setupWebcam"></v-btn>
-          <v-btn v-if="!isMicrophoneOn" icon="mdi-microphone-off" size="small" class="mx-1"
+          <v-btn v-if="!isWebcamOn" icon="mdi-video-off" size="large" class="bg-error mx-2" @click="setupWebcam"></v-btn>
+          <v-btn v-else icon="mdi-video" size="large" class="mx-2" @click="setupWebcam"></v-btn>
+          <v-btn v-if="!isMicrophoneOn" icon="mdi-microphone-off" size="large" class="bg-error mx-2"
             @click="setupMicrophone"></v-btn>
-          <v-btn v-else icon="mdi-microphone" size="small" class="mx-1" @click="setupMicrophone"></v-btn>
+          <v-btn v-else icon="mdi-microphone" size="large" class="mx-2" @click="setupMicrophone"></v-btn>
         </v-col>
       </div>
     </div>
@@ -142,6 +165,11 @@ html,
 body {
   width: 100%;
   height: 100%;
+}
+
+.active-btn {
+  background-color: #8747AE;
+  color: white;
 }
 
 .container {
