@@ -14,6 +14,8 @@ import com.quiet.onterview.member.repository.MemberRepository;
 import com.quiet.onterview.question.entity.CommonQuestion;
 import com.quiet.onterview.question.service.CommonQuestionFolderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,11 +34,9 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
 
 
     @Override
-    public List<InterviewRoomResponse> getInterviewRoomList(Long memberId) {
-        List<InterviewRoom> interviewRoomList = interviewRoomRepository.findInterviewRoom(memberId);
-        return interviewRoomList.stream()
-                .map(interviewRoomMapper::interviewRoomTointerviewRoomResponse)
-                .toList();
+    public Page<InterviewRoomResponse> getInterviewRoomList(Long memberId, Pageable pageable) {
+        return interviewRoomRepository.findInterviewRoom(memberId, pageable)
+                .map(interviewRoomMapper::interviewRoomTointerviewRoomResponse);
     }
 
     @Override
