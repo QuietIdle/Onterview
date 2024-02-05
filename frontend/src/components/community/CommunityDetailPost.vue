@@ -11,7 +11,7 @@ import unlikeButton from '@/assets/community/unlikeButton.svg'
 import likeButton from '@/assets/community/likeButton.svg'
 
 onMounted(() => {
-  // postDetail.value = requestPostDetail()
+  requestPostDetail()
 })
 
 const requestPostDetail = async function () {
@@ -19,7 +19,7 @@ const requestPostDetail = async function () {
     const route = useRoute()
     const articleId = ref(route.params.articleId)
 
-    const response = await getPostDetail(articleId)
+    const response = await getPostDetail(articleId.value)
     console.log('response post detail', response)
     postDetail.value = response.data
   } catch (error) {
@@ -28,21 +28,24 @@ const requestPostDetail = async function () {
 }
 
 const postDetail = ref({
-  articleId: 5,
-  writerNickname: '이경민',
-  title: '성격의 장단점',
-  likeCount: 3,
-  writtenDate: '1999/4/19',
+  articleId: 0,
+  writerNickname: '',
+  title: '',
+  likeCount: 0,
+  writtenDate: '1900/00/00',
 
-  content:
-    '제가 횡설수설 하지 않고 잘 말하고 있는지 궁금합니다. \n피드백 정말 환영합니다^^ \n03:38부터 보시면 됩니다!',
-  isWriter: true,
-  isLike: true
+  content: '',
+  isMyArticle: false,
+  isLike: false
 })
 
-const content = computed(() =>
-  postDetail.value.content.replaceAll('\n', '<br />')
-)
+const content = computed(() => {
+  if (postDetail.value.content.includes('\n')) {
+    return postDetail.value.content.replaceAll('\n', '<br />')
+  } else {
+    return postDetail.value.content
+  }
+})
 </script>
 
 <template>
@@ -66,7 +69,7 @@ const content = computed(() =>
     </v-row>
 
     <!-- 수정 삭제 버튼 -->
-    <v-col cols="12" class="text-right">
+    <v-col v-if="postDetail.isMyArticle" cols="12" class="text-right">
       <CommunityModalUpdate
         :articleId="postDetail.articleId"
         :content="postDetail.content"
@@ -78,6 +81,8 @@ const content = computed(() =>
         :title="postDetail.title"
       />
     </v-col>
+
+    <v-col v-else class="mb-10"> </v-col>
 
     <!-- 영상 컴포넌트 -->
     <v-row>
@@ -113,8 +118,8 @@ const content = computed(() =>
       <v-col cols="12" class="d-flex justify-end align-center mb-3">
         <div class="mr-2">추천 {{ postDetail.likeCount }}</div>
         <div>
-          <v-img width="20" :src="likeButton"></v-img>
-          <!-- <v-img width="20" :src="unlikeButton"></v-img> -->
+          <v-img v-if="postDetail.isLike" width="20" :src="likeButton"></v-img>
+          <v-img v-else width="20" :src="unlikeButton"></v-img>
         </div>
       </v-col>
     </v-row>
