@@ -55,7 +55,7 @@ public class JwtTokenProvider {
             Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
             return !claims.getExpiration().before(new Date());
         } catch(ExpiredJwtException expiredJwtException) {
-            throw new SecurityException(ErrorCode.ACCESS_TOKEN_EXPIRED);
+            return false;
         }
     }
 
