@@ -126,10 +126,15 @@ const comments = ref({
 
       <v-row>
         <v-col cols="11">
-          <v-textarea :no-resize="true" variant="outlined"> </v-textarea>
+          <v-textarea
+            placeholder="피드백 내용을 작성해주세요"
+            :no-resize="true"
+            variant="outlined"
+          >
+          </v-textarea>
         </v-col>
         <v-col cols="1">
-          <v-btn>작성</v-btn>
+          <v-btn height="150">작성</v-btn>
         </v-col>
       </v-row>
     </div>

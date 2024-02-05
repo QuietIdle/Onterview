@@ -47,6 +47,7 @@ const dialog = ref(false)
           variant="outlined"
           v-model="valueTextField"
           style="font-family: Pretendard-Regular"
+          :no-resize="true"
         ></v-textarea>
       </div>
       <v-card-actions>
