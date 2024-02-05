@@ -1,10 +1,13 @@
 <script setup>
 import { ref } from 'vue'
+import CommunityModalDeleteComment from '@/components/community/modal/CommunityModalDeleteComment.vue'
 
 const props = defineProps({
   isParent: Boolean,
   comment: Object
 })
+
+const emit = defineEmits(['requestCommentDetail'])
 
 const parent = ref({
   backgroundColor: '#faf3ff'
@@ -25,9 +28,10 @@ const child = ref({
       </v-col>
       <v-col cols="1" v-if="isParent"></v-col>
       <v-col cols="6" class="text-right">
-        <span v-show="comment.isMyComment" class="delete mr-3 text-grey"
-          >삭제</span
-        >
+        <CommunityModalDeleteComment
+          :comment="comment"
+          @request-comment-detail="emit('requestCommentDetail')"
+        />
         <span class="writtendate">{{ comment.writtenDate }}</span>
       </v-col>
     </v-row>
@@ -50,10 +54,6 @@ div {
   font-size: 0.9rem;
 }
 
-.delete:hover {
-  color: #6a3692 !important;
-  cursor: pointer;
-}
 .v-col {
   padding-bottom: 0 !important;
 }

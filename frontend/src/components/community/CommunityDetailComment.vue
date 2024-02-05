@@ -32,7 +32,7 @@ const requestCreateParentComment = async function () {
   try {
     const payload = {
       articleId: articleId,
-      parentCommentId: 0,
+      parentCommentId: null,
       content: parentComment.value
     }
     await postCreateMyComment(payload)
@@ -91,12 +91,20 @@ const childComment = ref([])
     <div>
       <div class="mb-6">댓글 {{ comments.commentCount }}</div>
       <div v-for="(comment, idx) in comments.comments" :key="idx">
-        <CommunityComment :is-parent="true" :comment="comment.parentComment" />
+        <CommunityComment
+          :is-parent="true"
+          :comment="comment.parentComment"
+          @request-comment-detail="requestCommentDetail()"
+        />
         <div
           v-for="(child, idxChild) in comment.childCommentList"
           :key="idxChild"
         >
-          <CommunityComment :is-parent="false" :comment="child" />
+          <CommunityComment
+            :is-parent="false"
+            :comment="child"
+            @request-comment-detail="requestCommentDetail()"
+          />
         </div>
         <v-row class="pt-3">
           <v-col cols="1" style="font-size: 0.9rem">대댓글 쓰기</v-col>
