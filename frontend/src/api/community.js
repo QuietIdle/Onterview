@@ -10,7 +10,7 @@ const getAllPostList = function () {
 }
 
 const getMyPostList = function () {
-    return api.get(`/api/community/my?order=like`)
+    return api.get(`/api/community/my?order=recent`)
 }
 
 const getPostDetail = function (articleId) {

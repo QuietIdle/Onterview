@@ -1,17 +1,38 @@
 <script setup>
+// lib
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+
+// api
+import { getAllPostList, getMyPostList } from '@/api/community'
+
+// asset
 import searchButton from '@/assets/community/searchButton.svg'
 
-import useCommunityStore from '@/stores/community'
-
-const communityStore = useCommunityStore()
+// store
+import { useUserStore } from '@/stores/user'
 
 onMounted(() => {
-  communityStore.requestPostList()
-  postList.value = communityStore.allPostList
+  requestAllPostList()
 })
 
+const requestAllPostList = async function () {
+  try {
+    const response = await getAllPostList()
+    postList.value = response.data
+  } catch (error) {
+    alert(`전체 게시글을 조회하지 못했습니다.`)
+  }
+}
+
+const requestMyPostList = async function () {
+  try {
+    const response = await getMyPostList()
+    postList.value = response.data
+  } catch (error) {
+    alert('내가 쓴 게시글을 조회하지 못했습니다.')
+  }
+}
 // 게시판
 const postList = ref([])
 const search = ref('')
@@ -41,14 +62,33 @@ const router = useRouter()
 const goCommunityDetail = function (articleId) {
   router.push({ name: 'community-detail', params: { articleId: articleId } })
 }
+
+const isLogin = function () {
+  const userStore = useUserStore()
+  return userStore.accessToken === null
+}
 </script>
 
 <template>
   <v-container>
     <!-- 전체보기, 내가 쓴 게시글 보기 토글 -->
     <v-row justify="end">
-      <v-btn text small :href="'#전체보기'">전체 보기</v-btn>
-      <v-btn text small :href="'#내가쓴글'">내가 쓴 게시글 보기</v-btn>
+      <v-btn
+        density="compact"
+        variant="plain"
+        :href="'#전체보기'"
+        @click="requestAllPostList"
+        >전체 보기</v-btn
+      >
+      <div style="color: rgb(190, 190, 190)">|</div>
+      <v-btn
+        density="compact"
+        variant="plain"
+        :href="'#내가쓴글'"
+        @click="requestMyPostList"
+        :disabled="isLogin()"
+        >내가 쓴 게시글 보기</v-btn
+      >
     </v-row>
     <v-row>
       <v-col cols="12" md="6" class="d-flex align-start">
@@ -116,6 +156,7 @@ const goCommunityDetail = function (articleId) {
           ></v-pagination>
         </div>
       </template>
+      <template v-slot:no-data> 게시글이 없습니다 </template>
     </v-data-table>
     <div class="pagination"></div>
   </v-container>
