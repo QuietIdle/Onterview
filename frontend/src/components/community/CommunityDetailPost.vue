@@ -28,15 +28,7 @@ const requestPostDetail = async function () {
 }
 
 const postDetail = ref({
-  articleId: 0,
-  writerNickname: '',
-  title: '',
-  likeCount: 0,
-  writtenDate: '1900/00/00',
-
-  content: '',
-  isMyArticle: false,
-  isLike: false
+  content: ''
 })
 
 const content = computed(() => {

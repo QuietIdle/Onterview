@@ -1,122 +1,27 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { getCommentDetail } from '@/api/community'
 import CommunityComment from '@/components/community/CommunityComment.vue'
 
-const comments = ref({
-  commentCount: 2,
-  comments: [
-    {
-      parentComment: {
-        parentCommentId: null,
-        commentId: 1,
-        writerNickname: '이경민',
-        content:
-          '제가 횡설수설 하지 않고 잘 말하고 있는지 궁금합니다. \n피드백 정말 환영합니다^^ \n03:38부터 보시면 됩니다!',
-        writtenDate: '1999/04/19',
-        isMyComment: true
-      },
-      childCommentList: [
-        {
-          parentCommentId: null,
-          commentId: 1,
-          writerNickname: '최경민',
-          content:
-            '제가 횡설수설 하지 않고 잘 말하고 있는지 궁금합니다. \n피드백 정말 환영합니다^^ \n03:38부터 보시면 됩니다!',
-          writtenDate: '1999/04/19',
-          isMyComment: true
-        },
-        {
-          parentCommentId: null,
-          commentId: 1,
-          writerNickname: '아이경민',
-          content: '댓글1',
-          writtenDate: '1999/04/19',
-          isMyComment: true
-        },
-        {
-          parentCommentId: null,
-          commentId: 1,
-          writerNickname: '김경민',
-          content: '댓글1',
-          writtenDate: '1999/04/19',
-          isMyComment: true
-        }
-      ]
-    },
-    {
-      parentComment: {
-        parentCommentId: null,
-        commentId: 1,
-        writerNickname: '이경민',
-        content: '댓글2',
-        writtenDate: '1999/04/19',
-        isMyComment: true
-      },
-      childCommentList: [
-        {
-          parentCommentId: null,
-          commentId: 1,
-          writerNickname: '둘경민',
-          content: '댓글1',
-          writtenDate: '1999/04/19',
-          isMyComment: true
-        },
-        {
-          parentCommentId: null,
-          commentId: 1,
-          writerNickname: '셋경민',
-          content: '댓글1',
-          writtenDate: '1999/04/19',
-          isMyComment: true
-        },
-        {
-          parentCommentId: null,
-          commentId: 1,
-          writerNickname: '넷경민',
-          content: '댓글1',
-          writtenDate: '1999/04/19',
-          isMyComment: true
-        }
-      ]
-    },
-    {
-      parentComment: {
-        parentCommentId: null,
-        commentId: 1,
-        writerNickname: '이경민',
-        content: '댓글3',
-        writtenDate: '1999/04/19',
-        isMyComment: false
-      },
-      childCommentList: [
-        {
-          parentCommentId: null,
-          commentId: 1,
-          writerNickname: '이경민',
-          content: '댓글1',
-          writtenDate: '1999/04/19',
-          isMyComment: true
-        },
-        {
-          parentCommentId: null,
-          commentId: 1,
-          writerNickname: '이경민',
-          content: '댓글1',
-          writtenDate: '1999/04/19',
-          isMyComment: true
-        },
-        {
-          parentCommentId: null,
-          commentId: 1,
-          writerNickname: '이경민',
-          content: '댓글1',
-          writtenDate: '1999/04/19',
-          isMyComment: true
-        }
-      ]
-    }
-  ]
+onMounted(() => {
+  requestCommentDetail()
 })
+
+const requestCommentDetail = async function () {
+  try {
+    const route = useRoute()
+    const articleId = route.params.articleId
+
+    const response = await getCommentDetail(articleId)
+    comments.value = response.data
+    console.log('request comment detail', response)
+  } catch (error) {
+    alert('댓글 목록을 불러오지 못했습니다. ')
+  }
+}
+
+const comments = ref({})
 </script>
 
 <template>

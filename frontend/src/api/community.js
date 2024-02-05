@@ -17,7 +17,9 @@ const getPostDetail = function (articleId) {
     return api.get(`/api/community/post/detail/${articleId}`)
 }
 
-// const getCommentDetail = function () {}
+const getCommentDetail = function (articleId) {
+    return api.get(`/api/community/comment/detail/${articleId}`)
+}
 
 const deleteDeleteMyPost = function (articleId) {
     return api.delete(`/api/community/${articleId}`)
@@ -31,6 +33,7 @@ export {
     getAllPostList,
     getMyPostList,
     getPostDetail,
+    getCommentDetail,
     deleteDeleteMyPost,
     patchUpdateMyPostContent
 }
