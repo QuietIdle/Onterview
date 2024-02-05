@@ -1,6 +1,9 @@
 import { localAxios } from '@/api/index'
+import { useUserStore } from '@/stores/user'
 
 const api = localAxios()
+const userStore = useUserStore()
+api.defaults.headers.common["Authorization"] = userStore.accessToken
 
 const getAllPostList = function () {
     return api.get(`/api/community?order=recent`)

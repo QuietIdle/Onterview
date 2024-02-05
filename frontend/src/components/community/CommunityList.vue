@@ -8,8 +8,8 @@ import useCommunityStore from '@/stores/community'
 const communityStore = useCommunityStore()
 
 onMounted(() => {
-  // communityStore.requestPostList()
-  postList.value = communityStore.allPostList.postList
+  communityStore.requestPostList()
+  postList.value = communityStore.allPostList
 })
 
 // 게시판
