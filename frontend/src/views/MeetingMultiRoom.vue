@@ -1,6 +1,13 @@
 <script setup>
 import meetingMultiInterviewer from "@/components/meetingMulti/meetingMultiInterviewer.vue";
 import meetingMultiOV from "@/components/meetingMulti/meetingMultiOV.vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter()
+
+const goMeetingMain = function () {
+  router.push({name: 'meeting-main'})
+}
 </script>
 
 <template>
@@ -10,24 +17,30 @@ import meetingMultiOV from "@/components/meetingMulti/meetingMultiOV.vue";
     <v-system-bar 
       class="nav-bar d-flex justify-space-between pa-0"
       height="50" 
-      window color="black" 
+      window
+      color="black" 
       style="border-bottom: 1px solid white;"
     >
-      <div style="border: 0px"></div>
-      <div></div>
+      <div class="d-flex align-center" style="border: 0px">
+        type
+      </div>
+      <div class="d-flex align-center">
+        <v-icon icon="mdi-record" color="#FA3F3F"></v-icon>
+        time
+      </div>
       <div class="d-flex align-center w-75 px-3" style="font-size: large;">Q.평양냉면 맛있다 우래옥 을밀대 </div>
-      <button class="d-flex justify-center align-center">
-        <v-icon color="white" icon="mdi-close"></v-icon>
+      <button @click="goMeetingMain" class="d-flex justify-center align-center">
+        <v-icon icon="mdi-close"></v-icon>
         <div>나가기</div>
       </button>
     </v-system-bar>
   </v-layout>
 
-  <div class="bg-white w-100 h-50">
+  <div class="interviewer-container w-100 h-50">
     <meetingMultiInterviewer />
   </div>
 
-  <div class="bg-green w-100 h-50">
+  <div class="w-100 h-50">
     <meetingMultiOV />
   </div>
 
@@ -39,5 +52,12 @@ import meetingMultiOV from "@/components/meetingMulti/meetingMultiOV.vue";
   border-left: 1px solid white;
   height: 100%;
   padding: 0 4px;
+}
+.divider{
+  background-color: white;
+  text-decoration: none;
+}
+.interviewer-container{
+  border-bottom: 1px solid white;
 }
 </style>

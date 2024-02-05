@@ -68,15 +68,21 @@ const router = createRouter({
       meta: {layout: 'main'},
     },
     {
-      path: '/meeting',
-      name: 'meeting-main',
-      component: () => import('@/views/MeetingMain.vue'),
+      path: '/interview',
+      name: 'interview',
+      component: () => import('@/views/InterviewMainView.vue'),
       meta: {layout: 'main'},
     },
     {
-      path: '/meeting/multiRoom',
-      name: 'meeting-multi-room',
-      component: () => import('@/views/MeetingMultiRoom.vue'),
+      path: '/interview/single',
+      name: 'interview-single',
+      component: () => import('@/views/InterviewRoomSingleView.vue'),
+      meta: {layout: ''},
+    },
+    {
+      path: '/interview/multi',
+      name: 'interview-multi',
+      component: () => import('@/views/InterviewRoomMultiView.vue'),
       meta: {layout: ''},
     },
   ]

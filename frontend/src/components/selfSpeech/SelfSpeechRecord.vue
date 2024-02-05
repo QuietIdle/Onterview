@@ -3,6 +3,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { apiMethods, fileServer } from "@/api/video";
 import { useSelfSpeechStore } from "@/stores/selfSpeech";
 import { useUserStore } from "@/stores/user";
+import { useQuestionStore } from "@/stores/question";
 import { useRouter } from 'vue-router'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -25,6 +26,7 @@ const filename = ref("")
 
 const selfSpeechStore = useSelfSpeechStore();
 const userStore = useUserStore()
+const questionStore = useQuestionStore()
 const uploadData = ref(null);
 
 const flag = ref(0); // chunk 전송 완료 여부
@@ -148,10 +150,18 @@ const stopRecording = function () {
 
 const saveRecording = async function () {
   const date = new Date().toLocaleString()
+  let title = ""
+  if (selfSpeechStore.questionData.question.length > 10) {
+    title = selfSpeechStore.questionData.question.substring(0, 10) + "..."
+  }
+  else {
+    title = selfSpeechStore.questionData.question
+  }
+
   const req_body = {
     questionId : selfSpeechStore.selectedQuestion,
     videoLength : time.value,
-    title : `${selfSpeechStore.questionData.question}-${date}`,
+    title : `${title}-${date}`,
     videoInformation : {
         saveFilename: `${filename.value}.mkv`,
         originFilename: `${filename.value}.mkv`,
@@ -170,6 +180,7 @@ const saveRecording = async function () {
   }
   dialog.value = false
   startVideo()
+  questionStore.requestMyQuestionList()
 }
 
 const cancelRecording = async function () {
