@@ -61,21 +61,18 @@ onBeforeUnmount(() => {
   <div class="w-100 h-100 d-flex align-center">
     
     <div id="video-container" class="w-100 h-100 d-flex align-center justify-space-around">
-      <!-- <ov-video
+      <ov-video
         class="ma-2"
         v-for="stream in remoteStreams" 
         :key="stream.stream.streamId" 
         :id="stream.stream.streamId" 
         :stream-manager="stream"
         style="transform: rotateY(180deg);"
-      ></ov-video> -->
+      ></ov-video>
     </div>
 
   </div>
 </template>
 
 <style scoped>
-.video-container>*{
-
-}
 </style>
