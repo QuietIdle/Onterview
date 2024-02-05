@@ -50,9 +50,12 @@ public class ChunkService {
         return true;
     }
 
-    public Optional<ResourceDto> getStreamResource(HttpHeaders headers, String filename)
+    public Optional<ResourceDto> getStreamResource(HttpHeaders headers, String filename,
+            String username)
             throws IOException {
-        Path path = Paths.get(fileUtils.VIDEO_PATH, filename);
+        Path path = Paths.get(
+                String.valueOf(Path.of(fileUtils.VIDEO_PATH, username, filename.split("\\.")[0])),
+                filename);
 
         Resource resource = new FileSystemResource(path);
 
