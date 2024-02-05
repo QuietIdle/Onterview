@@ -1,6 +1,7 @@
 package com.quiet.onterview.interview.mapper;
 
 import com.quiet.onterview.interview.dto.response.InterviewQuestionResponse;
+import com.quiet.onterview.interview.dto.response.InterviewQuestionCreateResponse;
 import com.quiet.onterview.interview.entity.InterviewQuestion;
 import com.quiet.onterview.video.dto.response.VideoInformationResponse;
 import com.quiet.onterview.video.entity.Video;
@@ -29,5 +30,13 @@ public class InterviewQuestionMapper {
         }
 
         return responseBuilder.build();
+    }
+
+    public InterviewQuestionCreateResponse interviewQuestionToInterviewQuestionCreateResponse(InterviewQuestion interviewQuestion) {
+        return InterviewQuestionCreateResponse.builder()
+                .interviewQuestionId(interviewQuestion.getInterviewQuestionId())
+                .commonQuestionId(interviewQuestion.getCommonQuestion().getCommonQuestionId())
+                .commonQuestion(interviewQuestion.getCommonQuestion().getCommonQuestion())
+                .build();
     }
 }

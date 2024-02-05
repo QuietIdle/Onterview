@@ -3,10 +3,12 @@ package com.quiet.onterview.interview.service;
 import com.quiet.onterview.common.BaseException;
 import com.quiet.onterview.common.ErrorCode;
 import com.quiet.onterview.interview.dto.request.InterviewRoomRequest;
+import com.quiet.onterview.interview.dto.response.InterviewQuestionCreateResponse;
 import com.quiet.onterview.interview.dto.response.InterviewRoomDetailResponse;
 import com.quiet.onterview.interview.dto.response.InterviewRoomResponse;
 import com.quiet.onterview.interview.entity.InterviewRoom;
 import com.quiet.onterview.interview.exception.InterviewRoomNotFoundException;
+import com.quiet.onterview.interview.mapper.InterviewQuestionMapper;
 import com.quiet.onterview.interview.mapper.InterviewRoomMapper;
 import com.quiet.onterview.interview.repository.InterviewRoomRepository;
 import com.quiet.onterview.member.entity.Member;
@@ -30,6 +32,7 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
     private final InterviewQuestionService interviewQuestionService;
     private final InterviewRoomRepository interviewRoomRepository;
     private final InterviewRoomMapper interviewRoomMapper;
+    private final InterviewQuestionMapper interviewQuestionMapper;
     private final MemberRepository memberRepository;
 
 
@@ -59,7 +62,7 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
     }
 
     @Override
-    public void createInterviewRoom(Long memberId, InterviewRoomRequest interviewRoomRequest) {
+    public List<InterviewQuestionCreateResponse> createInterviewRoom(Long memberId, InterviewRoomRequest interviewRoomRequest) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new BaseException(ErrorCode.MEMBERID_NOT_EXISTS));
 
         String commonQuestionFolderName = interviewRoomRequest.getQuestionType().getCommonQuestionFolder();
@@ -74,6 +77,11 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
                         interviewQuestionService.createInterviewQuestion(randomCommonQuestion)));
 
         interviewRoomRepository.save(interviewRoom);
+
+        return interviewRoom.getInterviewQuestionList()
+                .stream()
+                .map(interviewQuestionMapper::interviewQuestionToInterviewQuestionCreateResponse)
+                .toList();
     }
 
     @Override
