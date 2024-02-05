@@ -12,7 +12,6 @@ import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -28,7 +27,7 @@ public class JwtTokenProvider {
         Claims claims = Jwts.claims()
                 .setSubject(email)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + Duration.ofDays(30).toMillis()));
+                .setExpiration(new Date(now.getTime() + Duration.ofDays(1).toMillis()));
         String jwt = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(claims)
@@ -42,7 +41,7 @@ public class JwtTokenProvider {
         Claims claims = Jwts.claims()
                 .setSubject(email)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + Duration.ofDays(60).toMillis()));
+                .setExpiration(new Date(now.getTime() + Duration.ofDays(21).toMillis()));
         String jwt = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(claims)
@@ -62,7 +61,6 @@ public class JwtTokenProvider {
 
     public String getEmail(String accessToken) throws SecurityException {
         if (!isValidToken(accessToken)) {
-            // TODO : TOKEN 만료 시 Exception Handling
             throw new SecurityException(ErrorCode.ACCESS_TOKEN_EXPIRED);
         }
         String email = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(accessToken).getBody().getSubject();
