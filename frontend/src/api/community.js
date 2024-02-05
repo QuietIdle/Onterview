@@ -5,12 +5,12 @@ const api = localAxios()
 const userStore = useUserStore()
 api.defaults.headers.common["Authorization"] = userStore.accessToken
 
-const getAllPostList = function () {
-    return api.get(`/api/community?order=recent`)
+const getAllPostList = function (order) {
+    return api.get(`/api/community?order=${order}`)
 }
 
-const getMyPostList = function () {
-    return api.get(`/api/community/my?order=recent`)
+const getMyPostList = function (order) {
+    return api.get(`/api/community/my?order=${order}`)
 }
 
 const getPostDetail = function (articleId) {
