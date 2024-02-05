@@ -9,6 +9,8 @@ import lombok.Getter;
 public class InterviewQuestionResponse {
 
     private Long interviewQuestionId;
-    private VideoInformationResponse videoInformationResponse;
+    private Long commonQuestionId;
+    private String commonQuestion;
+    private VideoInformationResponse videoInformation;
 
 }

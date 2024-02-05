@@ -19,6 +19,6 @@ public class InterviewRoomDetailResponse {
     private Integer runTime;
     private LocalDateTime createAt;
     private String feedback;
-    private List<InterviewQuestionResponse> interviewQuestionResponseList;
+    private List<InterviewQuestionResponse> interviewQuestionList;
     private VideoDetailResponse videoDetail;
 }

@@ -52,7 +52,7 @@ public class InterviewRoomMapper {
 
         InterviewQuestion firstInterviewQuestion= interviewQuestionList.get(0);
         Video video = firstInterviewQuestion.getVideo();
-        VideoDetailResponse videoDetailResponse = videoMapper.videoInformationToResponse(video);
+        VideoDetailResponse videoDetailResponse = (video != null) ? videoMapper.videoInformationToResponse(video) : null;
 
         return InterviewRoomDetailResponse.builder()
                 .interviewRoomId(interviewRoom.getInterviewRoomId())
@@ -61,7 +61,7 @@ public class InterviewRoomMapper {
                 .runTime(interviewRoom.getRuntime())
                 .createAt(interviewRoom.getCreateAt())
                 .feedback(interviewRoom.getFeedback())
-                .interviewQuestionResponseList(interviewQuestionResponseList)
+                .interviewQuestionList(interviewQuestionResponseList)
                 .videoDetail(videoDetailResponse)
                 .build();
     }

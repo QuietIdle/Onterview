@@ -19,11 +19,13 @@ public class InterviewQuestionMapper {
 
         InterviewQuestionResponse.InterviewQuestionResponseBuilder responseBuilder =
                 InterviewQuestionResponse.builder()
-                        .interviewQuestionId(interviewQuestion.getInterviewQuestionId());
+                        .interviewQuestionId(interviewQuestion.getInterviewQuestionId())
+                        .commonQuestionId(interviewQuestion.getCommonQuestion().getCommonQuestionId())
+                        .commonQuestion(interviewQuestion.getCommonQuestion().getCommonQuestion());
 
         if (video != null) {
             VideoInformationResponse videoInformationResponse = videoMapper.videoToInformationResponse(video);
-            responseBuilder.videoInformationResponse(videoInformationResponse);
+            responseBuilder.videoInformation(videoInformationResponse);
         }
 
         return responseBuilder.build();
