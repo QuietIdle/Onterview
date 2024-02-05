@@ -28,10 +28,7 @@ const requestPostDetail = async function () {
 }
 
 const requestLikePost = async function () {
-  if (postDetail.value.isMyArticle) {
-    alert('내 게시글에는 좋아요를 할 수 없습니다.')
-    return
-  }
+  if (postDetail.value.isMyArticle) return
 
   try {
     await patchLikePost(articleId)
@@ -118,23 +115,21 @@ const content = computed(() => {
 
     <!-- 추천 -->
     <v-row>
-      <v-col cols="12" class="d-flex justify-end align-center mb-3">
-        <div class="mr-2">추천 {{ postDetail.likeCount }}</div>
-        <div>
-          <v-img
-            v-if="postDetail.isLiked"
-            width="20"
-            :src="likeButton"
-            class="like-image"
-            @click="requestLikePost()"
-          ></v-img>
-          <v-img
-            v-else
-            width="20"
-            :src="unlikeButton"
-            class="like-image"
-            @click="requestLikePost()"
-          ></v-img>
+      <v-col cols="12" class="like=image d-flex justify-end align-center mb-3">
+        <div class="like mr-2" @click="requestLikePost()">
+          추천 {{ postDetail.likeCount }}
+        </div>
+        <div class="like" @click="requestLikePost()">
+          <v-img v-if="postDetail.isLiked" width="20" :src="likeButton">
+          </v-img>
+          <v-img v-else width="20" :src="unlikeButton"
+            ><v-tooltip
+              v-if="postDetail.isMyArticle"
+              activator="parent"
+              location="top"
+              >내 게시글에는 좋아요를 할 수 없습니다.</v-tooltip
+            ></v-img
+          >
         </div>
       </v-col>
     </v-row>
@@ -150,7 +145,7 @@ const content = computed(() => {
   margin-bottom: 8px;
 }
 
-.like-image:hover {
+.like:hover {
   cursor: pointer;
 }
 </style>
