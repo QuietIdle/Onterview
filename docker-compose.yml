@@ -1,27 +1,56 @@
-version: "4"
+version: "3.9"
 services:
+  onterview-nginx:
+    image: nginx:latest
+    networks:
+      - onterview
+    restart: "always"
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      - TZ=Asia/Seoul
+    volumes:
+      - conf:/etc/nginx/conf.d
+      - vhost:/etc/nginx/vhost.d
+      - html:/var/www/html
+      - /etc/letsencrypt:/etc/letsencrypt
+
   main-server:
     image: ejoh/onterview-server
     container_name: onterview-server
-    ports:
-      - "8081:8081"
     networks:
-      - onterview_net
+      - onterview
     restart: "always"
     environment:
       - TZ=Asia/Seoul
-  client:
-    image: ejoh/onterview-client
-    container_name: onterview-client
-    ports:
-      - "3000:3000"
+    expose:
+      - 8081
+
+  file-server:
+    image: ejoh/onterview-file
+    container_name: onterview-file
     networks:
-      - onterview_net
+      - onterview
     restart: "always"
     environment:
       - TZ=Asia/Seoul
+    volumes:
+      - /var/lib/video:/video
+    expose:
+      - 8082
 
 networks:
-  onterview_net:
-    driver: bridge
+  onterview:
+    external: true
 
+volumes:
+  conf:
+    name: conf
+    external: true
+  vhost:
+    name: vhost
+    external: true
+  html:
+    name: html
+    external: true
