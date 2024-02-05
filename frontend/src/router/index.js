@@ -56,6 +56,12 @@ const router = createRouter({
       meta: {layout: ''},
     },
     {
+      path: '/meeting/room/solo',
+      name: 'meeting-room-solo',
+      component: () => import('@/views/MeetingRoomSoloview.vue'),
+      meta: {layout: ''},
+    },
+    {
       path: '/storage/question',
       name: 'storage-question',
       component: () => import('@/views/StorageQuestionView.vue'),

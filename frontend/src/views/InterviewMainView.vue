@@ -40,7 +40,7 @@ const enter = function () {
     interviewStore.dialog.wait = true
   }
   else {
-    alert('1인 방')
+    router.push('/meeting/room/solo')
   }
 }
 
