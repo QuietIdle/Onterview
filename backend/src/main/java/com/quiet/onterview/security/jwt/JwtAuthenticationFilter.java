@@ -1,18 +1,15 @@
 package com.quiet.onterview.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.quiet.onterview.common.BaseExceptionResponse;
 import com.quiet.onterview.member.dto.request.MemberLoginRequest;
 import com.quiet.onterview.member.dto.response.MemberLoginResponse;
 import com.quiet.onterview.security.SecurityUser;
-import com.quiet.onterview.security.exception.SecurityException;
+import com.quiet.onterview.security.exception.SecurityExceptionHandler;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -22,11 +19,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private final JwtAuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
+    private final SecurityExceptionHandler securityExceptionHandler;
 
     public JwtAuthenticationFilter(JwtAuthenticationManager jwtAuthenticationManager,
-            JwtTokenProvider jwtTokenProvider) {
+            JwtTokenProvider jwtTokenProvider,
+            SecurityExceptionHandler securityExceptionHandler) {
         this.authenticationManager = jwtAuthenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.securityExceptionHandler = securityExceptionHandler;
         setFilterProcessesUrl("/api/user/login");
     }
 
@@ -44,7 +44,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
             return authentication;
         } catch(AuthenticationException e) {
-            handleSecurityError(response,e);
+            securityExceptionHandler.handleSecurityError(response,e);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -83,22 +83,5 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                         .refreshToken(refreshToken)
                         .build());
         response.getWriter().write(jsonResponse);
-    }
-
-    public void handleSecurityError(HttpServletResponse response,
-                                    AuthenticationException exception) {
-        SecurityException securityException = (SecurityException) exception;
-        response.setStatus(securityException.getHttpStatus().value());
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        try {
-            String json = new ObjectMapper().writeValueAsString(BaseExceptionResponse.builder()
-                    .errorCode(securityException.getHttpStatus().value())
-                    .errorMessage(securityException.getMessage())
-                    .build());
-            response.getWriter().write(json);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

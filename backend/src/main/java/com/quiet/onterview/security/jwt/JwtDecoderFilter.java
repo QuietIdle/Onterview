@@ -7,12 +7,14 @@ import com.quiet.onterview.member.repository.MemberRepository;
 import com.quiet.onterview.security.SecurityMemberAuthentication;
 import com.quiet.onterview.security.SecurityUser;
 import com.quiet.onterview.security.exception.SecurityException;
+import com.quiet.onterview.security.exception.SecurityExceptionHandler;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -26,33 +28,29 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtDecoderFilter extends OncePerRequestFilter {
 
     private final String AUTHORIZATION_HEADER = "Authorization";
-    private final String ACCESS_TOKEN_HEADER = "AccessToken";
-    private final String REFRESH_TOKEN_HEADER = "RefreshToken";
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
+    private final SecurityExceptionHandler securityExceptionHandler;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+            FilterChain filterChain) throws ServletException, IOException {
         String receivedToken = request.getHeader(AUTHORIZATION_HEADER);
-        String receivedAccessToken = request.getHeader(ACCESS_TOKEN_HEADER);
-        String receivedRefreshToken = request.getHeader(REFRESH_TOKEN_HEADER);
 
-//        if((receivedAccessToken!=null && receivedRefreshToken!=null)
-//                || (receivedToken==null)
-//                || (!jwtTokenProvider.isValidToken(receivedToken))) {
-//            filterChain.doFilter(request,response);
-//            return;
-//        }
+        if(receivedToken==null) {
+            filterChain.doFilter(request,response);
+            return;
+        }
 
-        if (receivedToken != null && jwtTokenProvider.isValidToken(receivedToken)) {
+        try {
             String email = jwtTokenProvider.getEmail(receivedToken);
             Member member = memberRepository.findByEmail(email)
                     .orElseThrow(() -> new SecurityException(ErrorCode.EMAIL_NOT_EXISTS));
             SecurityUser securityUser = new SecurityUser(member);
             SecurityContextHolder.getContext().setAuthentication(new SecurityMemberAuthentication(securityUser));
+            filterChain.doFilter(request,response);
+        } catch (AuthenticationException e) {
+            securityExceptionHandler.handleSecurityError(response, e);
         }
-
-        filterChain.doFilter(request,response);
     }
 }
