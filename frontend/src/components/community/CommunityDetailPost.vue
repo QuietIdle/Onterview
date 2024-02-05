@@ -14,12 +14,12 @@ onMounted(() => {
   requestPostDetail()
 })
 
+const route = useRoute()
+const articleId = route.params.articleId
+
 const requestPostDetail = async function () {
   try {
-    const route = useRoute()
-    const articleId = ref(route.params.articleId)
-
-    const response = await getPostDetail(articleId.value)
+    const response = await getPostDetail(articleId)
     // console.log('response post detail', response)
     postDetail.value = response.data
   } catch (error) {
@@ -63,7 +63,7 @@ const content = computed(() => {
     <!-- 수정 삭제 버튼 -->
     <v-col v-if="postDetail.isMyArticle" cols="12" class="text-right">
       <CommunityModalUpdate
-        :articleId="postDetail.articleId"
+        :articleId="articleId"
         :content="postDetail.content"
         :writerNickname="postDetail.writerNickname"
         @request-post-detail="requestPostDetail()"

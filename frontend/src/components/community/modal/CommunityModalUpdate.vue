@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { patchUpdateMyPostContent } from '@/api/community'
 
 const props = defineProps({
-  articleId: Number,
+  articleId: String,
   content: String,
   writerNickname: String
 })
