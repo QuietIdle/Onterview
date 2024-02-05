@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class MyQuestionRequest {
 
-    Long myQuestionFolderId;
-    String question;
-    Long commonQuestionId;
+    private Long myQuestionFolderId;
+    private String question;
+    private Long commonQuestionId;
 }

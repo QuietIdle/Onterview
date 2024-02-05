@@ -74,13 +74,19 @@ public class CommonQuestionFolderServiceImpl implements CommonQuestionFolderServ
 
         List<CommonQuestion> allQuestions = commonQuestionFolder.getCommonQuestionList();
 
-        if (numToSelect <= 0) throw new InvalidSelectionCountException();
         if (allQuestions.isEmpty()) throw new QuestionFolderEmptyException();
+        if (numToSelect > allQuestions.size()) throw new InvalidSelectionCountException();
 
-        List<CommonQuestion> shuffledQuestions = new ArrayList<>(allQuestions);
+        List<CommonQuestion> shuffledQuestions = new ArrayList<>(allQuestions.subList(2, allQuestions.size()));
         Collections.shuffle(shuffledQuestions);
+        shuffledQuestions = shuffledQuestions.stream().limit(numToSelect - 2).toList();
 
-        return shuffledQuestions.stream().limit(numToSelect).toList();
+        List<CommonQuestion> selectedQuestions = new ArrayList<>();
+        selectedQuestions.add(allQuestions.get(0));
+        selectedQuestions.addAll(shuffledQuestions);
+        selectedQuestions.add(allQuestions.get(1));
+
+        return selectedQuestions;
     }
 
 }

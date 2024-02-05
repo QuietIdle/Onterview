@@ -37,6 +37,12 @@ public enum ErrorCode {
     USER_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "NOT_FOUND_USER"),
 
     /**
+     * InterviewRoom
+     */
+
+    INTERVIEW_ROOM_NOT_FOUND(HttpStatus.BAD_REQUEST, "INTERVIEW_ROOM_NOT_FOUND"),
+
+    /**
      * Video
      */
     VIDEO_NOT_FOUND(HttpStatus.BAD_REQUEST, "VIDEO_NOT_FOUND"),

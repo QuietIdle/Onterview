@@ -9,6 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 public class CommonQuestionRequest {
 
-    Long commonQuestionFolderId;
-    String commonQuestion;
+    private Long commonQuestionFolderId;
+    private String commonQuestion;
 }

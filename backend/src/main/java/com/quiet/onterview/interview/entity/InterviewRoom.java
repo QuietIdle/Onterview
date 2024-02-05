@@ -28,8 +28,18 @@ public class InterviewRoom extends BaseEntity {
     private Member member;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "QUESTION_TYPE", nullable = false)
+    private QuestionType questionType;
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "ROOM_TYPE", nullable = false)
     private RoomType roomType;
+
+    @Column(name = "RUNTIME")
+    private Integer runtime;
+
+    @Column(name = "FEEDBACK")
+    private String feedback;
 
     @OneToMany(mappedBy = "interviewRoom", cascade = CascadeType.PERSIST, orphanRemoval = true)
     List<InterviewQuestion> interviewQuestionList = new ArrayList<>();

@@ -10,8 +10,8 @@ import java.util.List;
 @Builder
 public class MyAnswerAndVideoResponse {
 
-    Long myQuestionId;
-    String question;
-    String answer;
-    List<VideoInformationResponse> videoInformationResponseList;
+    private Long myQuestionId;
+    private String question;
+    private String answer;
+    private List<VideoInformationResponse> videoInformationResponseList;
 }

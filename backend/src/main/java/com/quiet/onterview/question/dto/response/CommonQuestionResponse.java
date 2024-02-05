@@ -7,6 +7,6 @@ import lombok.Getter;
 @Builder
 public class CommonQuestionResponse {
 
-    Long commonQuestionId;
-    String CommonQuestion;
+    private Long commonQuestionId;
+    private String CommonQuestion;
 }

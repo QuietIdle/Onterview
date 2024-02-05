@@ -2,9 +2,11 @@ package com.quiet.onterview.interview.entity;
 
 import com.quiet.onterview.common.BaseEntity;
 import com.quiet.onterview.question.entity.CommonQuestion;
+import com.quiet.onterview.video.entity.Video;
 import jakarta.persistence.*;
 import lombok.*;
 
+import static jakarta.persistence.CascadeType.PERSIST;
 import static jakarta.persistence.FetchType.LAZY;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,5 +31,6 @@ public class InterviewQuestion extends BaseEntity {
     @JoinColumn(name = "COMMON_QUESTION_ID")
     private CommonQuestion commonQuestion;
 
-
+    @OneToOne(mappedBy = "interviewQuestion", cascade = PERSIST, orphanRemoval = true)
+    private Video video;
 }
