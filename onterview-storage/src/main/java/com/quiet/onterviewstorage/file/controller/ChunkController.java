@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(originPatterns = "*")
-@RequestMapping("/api/chunk")
+@RequestMapping("/api-file/chunk")
 @Slf4j
 public class ChunkController {
 
@@ -34,13 +34,14 @@ public class ChunkController {
                 : ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)).build();
     }
 
-    @GetMapping("/stream/{filename}")
+    @GetMapping("/stream/{filename}/{username}")
     public ResponseEntity<ResourceRegion> streamVideo(
             @RequestHeader HttpHeaders headers,
-            @PathVariable String filename
+            @PathVariable String filename,
+            @PathVariable String username
     ) throws IOException {
         Optional<ResourceDto> isDone = chunkService.getStreamResource(headers,
-                filename);
+                filename, username);
 
         return isDone.map(resourceDto -> ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
                 .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES))
