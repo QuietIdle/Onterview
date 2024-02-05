@@ -42,7 +42,7 @@ public class SecurityConfiguration {
                         request.requestMatchers("/api/user/signup").permitAll()
                                 .requestMatchers("/api/user/check/*").permitAll()
                                 .requestMatchers("/api/meeting/matching").permitAll()
-                                .anyRequest().authenticated());
+                                .anyRequest().permitAll());
         return http.build();
     }
 }
