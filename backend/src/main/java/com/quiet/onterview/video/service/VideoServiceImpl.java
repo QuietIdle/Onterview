@@ -1,6 +1,8 @@
 package com.quiet.onterview.video.service;
 
 import com.quiet.onterview.file.service.FileService;
+import com.quiet.onterview.interview.entity.InterviewQuestion;
+import com.quiet.onterview.interview.repository.InterviewQuestionRepository;
 import com.quiet.onterview.question.entity.MyQuestion;
 import com.quiet.onterview.question.repository.MyQuestionRepository;
 import com.quiet.onterview.video.dto.request.VideoDeleteRequest;
@@ -25,18 +27,20 @@ public class VideoServiceImpl implements VideoService {
 
     private final VideoRepository videoRepository;
     private final MyQuestionRepository myQuestionRepository;
+    private final InterviewQuestionRepository interviewQuestionRepository;
     private final VideoMapper videoMapper;
     private final FileService fileService;
 
     @Override
     @Transactional(readOnly = true)
     public VideoDetailResponse loadVideoInformation(Long videoId) {
-        return videoMapper.videoInformationToResponse(
+        return videoMapper.videoToDetailResponse(
                 videoRepository.findById(videoId).orElseThrow(VideoNotFoundException::new)
         );
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<VideoInformationResponse> loadAllMyVideo(String email) {
         return videoMapper.allVideoToInformationResponse(videoRepository.findAllByEmail(email));
     }
@@ -44,11 +48,14 @@ public class VideoServiceImpl implements VideoService {
     @Override
     public void createVideoInformation(VideoInformationRequest videoInformationRequest) {
         MyQuestion myQuestion = myQuestionRepository.findById(
-                        videoInformationRequest.getQuestionId())
-                .orElseThrow(IllegalArgumentException::new);
+                videoInformationRequest.getMyQuestionId()).orElse(null);
+        InterviewQuestion interviewQuestion = interviewQuestionRepository.findById(
+                videoInformationRequest.getInterviewQuestionId()).orElse(null);
         videoRepository.save(
-                videoMapper.videoInformationToEntity(videoInformationRequest, myQuestion)
-        );
+                videoMapper.videoInformationToEntity(
+                        videoInformationRequest,
+                        myQuestion,
+                        interviewQuestion));
     }
 
     @Override

@@ -1,14 +1,13 @@
 package com.quiet.onterview.security.config;
 
-import com.quiet.onterview.security.jwt.JwtTokenProvider;
 import com.quiet.onterview.member.repository.MemberRepository;
 import com.quiet.onterview.security.jwt.JwtDecoderFilter;
+import com.quiet.onterview.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
 public class FilterConfiguration {
 
