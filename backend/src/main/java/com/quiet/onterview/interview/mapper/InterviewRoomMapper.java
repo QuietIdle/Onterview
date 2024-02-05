@@ -52,7 +52,7 @@ public class InterviewRoomMapper {
 
         InterviewQuestion firstInterviewQuestion= interviewQuestionList.get(0);
         Video video = firstInterviewQuestion.getVideo();
-        VideoDetailResponse videoDetailResponse = (video != null) ? videoMapper.videoInformationToResponse(video) : null;
+        VideoDetailResponse videoDetailResponse = (video != null) ? videoMapper.videoToDetailResponse(video) : null;
 
         return InterviewRoomDetailResponse.builder()
                 .interviewRoomId(interviewRoom.getInterviewRoomId())
