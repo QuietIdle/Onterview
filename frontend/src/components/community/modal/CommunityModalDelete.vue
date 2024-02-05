@@ -1,21 +1,23 @@
 <script setup>
 import { ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { deleteDeleteMyPost } from '@/api/community'
 
+const router = useRouter()
+
 const props = defineProps({
-  articleId: Number,
+  articleId: String,
   title: String
 })
 
 const requestDeleteMyPost = async function () {
   try {
-    const response = await deleteDeleteMyPost()
-    console.log('response delete my post', response)
-
-    const route = useRoute()
-    route.push({ name: 'community-list' })
+    const response = await deleteDeleteMyPost(props.articleId)
+    console.log(response)
+    alert('게시글이 정상적으로 삭제되었습니다. ')
+    router.push({ name: 'community-list' })
   } catch (error) {
+    console.error(error)
     alert('게시글을 삭제하지 못했습니다. 다시 시도해주세요. ')
   }
   dialog.value = false

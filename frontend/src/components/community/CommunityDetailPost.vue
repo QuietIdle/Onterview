@@ -68,10 +68,7 @@ const content = computed(() => {
         :writerNickname="postDetail.writerNickname"
         @request-post-detail="requestPostDetail()"
       />
-      <CommunityModalDelete
-        :articleId="postDetail.articleId"
-        :title="postDetail.title"
-      />
+      <CommunityModalDelete :articleId="articleId" :title="postDetail.title" />
     </v-col>
 
     <v-col v-else class="mb-10"> </v-col>
