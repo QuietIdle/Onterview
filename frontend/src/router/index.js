@@ -67,6 +67,18 @@ const router = createRouter({
       component: () => import('@/views/StorageVideoView.vue'),
       meta: {layout: 'main'},
     },
+    {
+      path: '/meeting',
+      name: 'meeting-main',
+      component: () => import('@/views/MeetingMain.vue'),
+      meta: {layout: 'main'},
+    },
+    {
+      path: '/meeting/multiRoom',
+      name: 'meeting-multi-room',
+      component: () => import('@/views/MeetingMultiRoom.vue'),
+      meta: {layout: ''},
+    },
   ]
 })
 

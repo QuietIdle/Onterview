@@ -9,12 +9,15 @@ import { v4 as uuidv4 } from 'uuid'
 const router = useRouter()
 
 const dialog = ref(false); // 모달 창
+const TTSscript = ref("")
+const synth = ref(window.speechSynthesis);
 
 const mediaToggle = ref({
   video: true,
   audio: true,
   play: false,
 })
+
 const time = ref(0); // 타이머
 let timerId;
 
@@ -67,6 +70,8 @@ const startVideo = function () {
 const startRecording = function () {
   const stream = document.querySelector("#my-video").captureStream()
   mediaToggle.value.play = true;
+  TTSscript.value = selfSpeechStore.questionData.question
+  TTS()
   filename.value = uuidv4();
   flag.value = 0;
   let idx = 0; // chunk 갯수
@@ -142,7 +147,7 @@ const stopRecording = function () {
 // }
 
 const saveRecording = async function () {
-  const date = new Date()
+  const date = new Date().toLocaleString()
   const req_body = {
     questionId : selfSpeechStore.selectedQuestion,
     videoLength : time.value,
@@ -154,7 +159,8 @@ const saveRecording = async function () {
     thumbnailInformation : {
         saveFilename: `${filename.value}.png`,
         originFilename: `${filename.value}.png`,
-    }
+    },
+    category: 1,
   }
   try {
     const response = await apiMethods.saveVideo(req_body)
@@ -194,6 +200,12 @@ const controlMedia = function (com) {
   }
 }
 
+// 음성 출력
+const TTS = function () {
+  const utterance = new SpeechSynthesisUtterance(TTSscript.value);
+  synth.value.speak(utterance);
+}
+
 onMounted(() => {
   startVideo()
 })
@@ -224,7 +236,7 @@ onBeforeUnmount(() => {
     <v-btn class="ma-3" @click="controlMedia(0)" v-else icon="mdi-video-off" color="blue"></v-btn>
     <v-btn class="ma-3" @click="controlMedia(1)" v-if="mediaToggle.audio" icon="mdi-microphone"></v-btn>
     <v-btn class="ma-3" @click="controlMedia(1)" v-else icon="mdi-microphone-off" color="blue"></v-btn>
-    <v-btn class="ma-3" @click="startRecording" v-if="!mediaToggle.play" icon="mdi-play" color="red" :disabled="!mediaToggle.video||!mediaToggle.audio"></v-btn>
+    <v-btn class="ma-3" @click="startRecording" v-if="!mediaToggle.play" icon="mdi-play" color="red" :disabled="!mediaToggle.video||!mediaToggle.audio||selfSpeechStore.selectedQuestion===-1"></v-btn>
     <v-btn class="ma-3" variant="tonal" @click="stopRecording" v-else icon="mdi-stop" color="red"></v-btn>
     <div class="timer ml-10" v-if="!mediaToggle.play"></div>
     <div class="timer ml-10" v-else-if="(time%60)>=10">{{ Math.floor(time/60) }}:{{ time%60 }}</div>
@@ -280,11 +292,14 @@ onBeforeUnmount(() => {
   background-color: #f0f0f0;
 }
 .container{
-  background-color: #bb66ff;
+  background-color: black;
 }
 #my-video{
   width: 100%;
   height: 390px;
   background-color: black;
+}
+.timer{
+  color: white;
 }
 </style>

@@ -15,6 +15,7 @@ import {
 import QuestionModalCreate from '@/components/question/modal/QuestionModalCreate.vue'
 import QuestionModalDelete from '@/components/question/modal/QuestionModalDelete.vue'
 import editImage from '@/assets/question/editImage.png'
+import folderImage from '@/assets/question/folderImage.svg'
 
 // store
 import { storeToRefs } from 'pinia'
@@ -24,11 +25,6 @@ const { myQuestionList } = storeToRefs(questionStore)
 
 onMounted(() => {
   questionStore.requestMyQuestionList()
-})
-
-onUpdated(() => {
-  console.log('onupdated', start.value)
-  console.log('onUPdateed', end.value)
 })
 
 const start = ref({
@@ -142,19 +138,30 @@ const requestUpdateMyQuestionFolder = async function (folder) {
     console.log('error update my question folder', error)
   }
 }
+
+const search = ref('')
 </script>
 
 <template>
   <div class="question-title pa-3">나의 면접 문항 목록</div>
-  <div class="bg-white pa-3 d-flex">
+  <div class="bg-white pa-3 d-flex align-center">
     <div class="me-auto d-flex align-center"></div>
+    <v-text-field
+      v-model="search"
+      label="검색어를 입력해주세요"
+      append-inner-icon="mdi-magnify"
+      single-line
+      variant="solo"
+      density="compact"
+      hide-details
+    ></v-text-field>
     <QuestionModalCreate content="폴더" />
   </div>
-  <div style="max-height: 80%; overflow-y: auto">
+  <div style="max-height: 80%; overflow-y: auto; overflow-x: hidden">
     <v-expansion-panels variant="accordion" multiple>
       <v-expansion-panel v-for="folder in myQuestionList" :key="folder.myQuestionFolderId">
         <v-hover v-slot="{ isHovering, props }">
-          <v-expansion-panel-title v-bind="props">
+          <v-expansion-panel-title v-bind="props" color="grey-lighten-2">
             <v-col cols="auto">
               <v-img
                 v-if="isHovering"
@@ -162,7 +169,7 @@ const requestUpdateMyQuestionFolder = async function (folder) {
                 :src="editImage"
                 @click.stop="enableEditingMyQuestionFolder(folder)"
               ></v-img>
-              <v-img width="20"></v-img>
+              <v-img v-else width="20" :src="folderImage"></v-img>
             </v-col>
             <v-col class="d-flex align-center">
               <template v-if="folder.isEditing">
@@ -198,7 +205,6 @@ const requestUpdateMyQuestionFolder = async function (folder) {
             <template #item="{ element }">
               <v-expansion-panel-text>
                 <v-row class="d-flex">
-                  <v-col cols="auto"></v-col>
                   <v-col class="d-flex align-center" @dblclick="enableEditingMyQuestion(element)">
                     <template v-if="element.isEditing">
                       <v-text-field
@@ -224,7 +230,7 @@ const requestUpdateMyQuestionFolder = async function (folder) {
   </div>
 </template>
 
-<style>
+<style scoped>
 .question-title {
   background-color: #4f2960;
   color: white;
@@ -239,8 +245,19 @@ const requestUpdateMyQuestionFolder = async function (folder) {
 }
 
 .v-expansion-panel-title {
-  padding: 0 !important;
+  padding: 0px !important;
   padding-left: 10px !important;
   padding-right: 10px !important;
+}
+
+.v-expansion-panel-text :deep(.v-expansion-panel-text__wrapper) {
+  padding: 4px 24px 8px !important;
+  box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2);
+}
+</style>
+
+<style>
+.v-input__details {
+  display: none !important;
 }
 </style>

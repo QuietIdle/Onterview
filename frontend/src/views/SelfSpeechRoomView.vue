@@ -10,13 +10,13 @@ const selfSpeechStore = useSelfSpeechStore();
 </script>
 
 <template>
-  <div class="main-container w-screen h-screen d-flex">
+  <div class="main-container w-screen h-screen d-flex ma-5">
 
-    <div class="w-25 ma-5">
+    <div class="w-25">
       <SelfSpeechQuestion />
     </div>
 
-    <div class="w-75 ma-5">
+    <div class="w-75">
       <div class="h-75">
         <div v-if="selfSpeechStore.display" class="h-100">
           <SelfSpeechRecord />
@@ -35,7 +35,7 @@ const selfSpeechStore = useSelfSpeechStore();
 .main-container>*{
   border: 1px solid black;
 }
-*{
+/* *{
   border: 1px solid black;
-}
+} */
 </style>
