@@ -29,11 +29,21 @@ const patchUpdateMyPostContent = function (articleId, payload) {
     return api.patch(`/api/community/${articleId}`, payload)
 }
 
+const postCreateMyComment = function (payload) {
+    return api.post(`/api/community/comment`, payload)
+}
+
+const deleteDeleteMyComment = function (commentId) {
+    return api.delete(`/api/community/comment/${commentId}`)
+}
+
 export {
     getAllPostList,
     getMyPostList,
     getPostDetail,
     getCommentDetail,
     deleteDeleteMyPost,
-    patchUpdateMyPostContent
+    patchUpdateMyPostContent,
+    postCreateMyComment,
+    deleteDeleteMyComment,
 }

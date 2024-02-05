@@ -1,27 +1,70 @@
 <script setup>
+// lib
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { getCommentDetail } from '@/api/community'
+
+// api
+import { getCommentDetail, postCreateMyComment } from '@/api/community'
+
+// component
 import CommunityComment from '@/components/community/CommunityComment.vue'
 
 onMounted(() => {
   requestCommentDetail()
+  const { commentCount } = comments.value
+  childComment.value = new Array(commentCount).fill('')
 })
+
+const route = useRoute()
+const articleId = route.params.articleId
 
 const requestCommentDetail = async function () {
   try {
-    const route = useRoute()
-    const articleId = route.params.articleId
-
     const response = await getCommentDetail(articleId)
     comments.value = response.data
-    console.log('request comment detail', response)
+    // console.log('response comment detail', response)
   } catch (error) {
     alert('댓글 목록을 불러오지 못했습니다. ')
   }
 }
 
+const requestCreateParentComment = async function () {
+  try {
+    const payload = {
+      articleId: articleId,
+      parentCommentId: 0,
+      content: parentComment.value
+    }
+    await postCreateMyComment(payload)
+
+    alert(`댓글이 정상적으로 등록되었습니다.`)
+    requestCommentDetail()
+  } catch (error) {
+    alert(`댓글을 등록하지 못했습니다. 다시 시도해주세요.`)
+  }
+  parentComment.value = ''
+}
+
+const requestCreateChildComment = async function (commentId, idx) {
+  try {
+    const payload = {
+      articleId: articleId,
+      parentCommentId: commentId,
+      content: childComment.value[idx]
+    }
+    await postCreateMyComment(payload)
+
+    alert(`댓글이 정상적으로 등록되었습니다.`)
+    requestCommentDetail()
+  } catch (error) {
+    alert(`댓글을 등록하지 못했습니다. 다시 시도해주세요.`)
+  }
+  childComment.value[idx] = ''
+}
+
 const comments = ref({})
+const parentComment = ref('')
+const childComment = ref([])
 </script>
 
 <template>
@@ -35,11 +78,12 @@ const comments = ref({})
             placeholder="피드백 내용을 작성해주세요"
             :no-resize="true"
             variant="outlined"
+            v-model="parentComment"
           >
           </v-textarea>
         </v-col>
         <v-col cols="1">
-          <v-btn height="150">작성</v-btn>
+          <v-btn height="150" @click="requestCreateParentComment()">작성</v-btn>
         </v-col>
       </v-row>
     </div>
@@ -57,11 +101,21 @@ const comments = ref({})
         <v-row class="pt-3">
           <v-col cols="1" style="font-size: 0.9rem">대댓글 쓰기</v-col>
           <v-col cols="10">
-            <v-textarea rows="2" :no-resize="true" variant="outlined">
+            <v-textarea
+              v-model="childComment[idx]"
+              rows="2"
+              :no-resize="true"
+              variant="outlined"
+            >
             </v-textarea>
           </v-col>
           <v-col cols="1">
-            <v-btn>작성</v-btn>
+            <v-btn
+              @click="
+                requestCreateChildComment(comment.parentComment.commentId, idx)
+              "
+              >작성</v-btn
+            >
           </v-col>
         </v-row>
       </div>

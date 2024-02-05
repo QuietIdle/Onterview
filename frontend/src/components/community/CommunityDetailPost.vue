@@ -20,7 +20,7 @@ const requestPostDetail = async function () {
     const articleId = ref(route.params.articleId)
 
     const response = await getPostDetail(articleId.value)
-    console.log('response post detail', response)
+    // console.log('response post detail', response)
     postDetail.value = response.data
   } catch (error) {
     alert('게시글을 조회하지 못했습니다.')
