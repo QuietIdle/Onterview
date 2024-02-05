@@ -1,10 +1,11 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import { OpenVidu } from 'openvidu-browser';
-import { useWebsecketTokenStore } from "@/stores/meetingMulti";
-import OvVideo from "@/components/meetingMulti/OvVideo.vue";
+import { useInterviewStore ,useWebsocketStore } from "@/stores/interview";
+import OvVideo from "@/components/interview/OvVideo.vue";
 
-const websecketTokenStore = useWebsecketTokenStore()
+const websocketStore = useWebsocketStore()
+const interviewStore = useInterviewStore()
 
 const OV = new OpenVidu();
 const session = OV.initSession()
@@ -13,7 +14,7 @@ const remoteStreams = ref([]);
 
 const joinSession = async function () {
   
-  session.connect(websecketTokenStore.token).then(() => {
+  session.connect(websocketStore.token).then(() => {
   
     publisher.value = OV.initPublisher("video-container", {
           audioSource: undefined,
@@ -23,10 +24,11 @@ const joinSession = async function () {
           resolution: "320x240",
           frameRate: 30,
           insertMode: "APPEND",
-    });
-
-    session.publish(publisher.value);
+    }).then(() => {
+      session.publish(publisher.value);
+    })
   })
+
   session.on("streamCreated", ({ stream }) => {
     const subscriber = session.subscribe(stream, stream.streamId);
     //console.log("Stream created by", stream, subscriber);
@@ -36,31 +38,44 @@ const joinSession = async function () {
 }
 
 const leaveSession = () => {
-  session.disconnect();
-  publisher.value.destroy();
+  
+  if (session) {
+    session.disconnect();
+    publisher.value.destory()
+    //mainStreamManager = undefined;
+    publisher.value = undefined;
+    remoteStreams.value = [];
+  }
 };
 
 onMounted(() => {
   joinSession()
 })
+
+onBeforeUnmount(() => {
+  leaveSession()
+})
 </script>
 
 <template>
-  <div class="w-100 h-100">
+  <div class="w-100 h-100 d-flex align-center">
     
-    <div id="video-container">
-      <ov-video
+    <div id="video-container" class="w-100 h-100 d-flex align-center justify-space-around">
+      <!-- <ov-video
+        class="ma-2"
         v-for="stream in remoteStreams" 
         :key="stream.stream.streamId" 
         :id="stream.stream.streamId" 
         :stream-manager="stream"
         style="transform: rotateY(180deg);"
-      ></ov-video>
+      ></ov-video> -->
     </div>
 
   </div>
 </template>
 
 <style scoped>
+.video-container>*{
 
+}
 </style>

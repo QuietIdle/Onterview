@@ -1,10 +1,10 @@
 <script setup>
 import { ref } from "vue";
-import mainImg from '@/assets/meeting/meetingMainIcon.png'
-import { useMeetingMultiStore } from "@/stores/meetingMulti";
-import meetingMultiHelpModal from "@/components/meetingMulti/meetingMultiHelpModal.vue"
+import mainImg from '@/assets/interview/interviewMainIcon.png'
+import { useInterviewStore } from "@/stores/interview";
+import interviewMultiHelpModal from "@/components/interview/interviewMultiHelpModal.vue"
 
-const meetingMultiStore = useMeetingMultiStore()
+const interviewStore = useInterviewStore()
 
 const logMessages = ref([])
 const index = ref(0)
@@ -37,7 +37,7 @@ const controlMedia = function (com) {
 }
 
 const openHelp = function () {
-  meetingMultiStore.dialog.help = true
+  interviewStore.dialog.help = true
 }
 </script>
 
@@ -65,13 +65,13 @@ const openHelp = function () {
         <v-btn class="ma-3" @click="controlMedia(1)" v-else icon="mdi-microphone-off" color="grey-lighten-1"></v-btn>
         <v-btn class="ma-3" @click="controlMedia(2)" v-if="mediaToggle.volume" icon="mdi-volume-high" color="grey-lighten-1"></v-btn>
         <v-btn class="ma-3" @click="controlMedia(2)" v-else icon="mdi-volume-off" color="grey-lighten-1"></v-btn>
-        <v-btn class="help-btn ma-3" @click="openHelp" icon="mdi-help" color="grey-lighten-1"></v-btn>
+        <v-btn class="ma-3" @click="openHelp" icon="mdi-help" color="grey-lighten-1"></v-btn>
       </div>
     </div>
 
   </div>
 
-  <meetingMultiHelpModal />
+  <interviewMultiHelpModal />
 </template>
 
 <style scoped>
