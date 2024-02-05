@@ -11,12 +11,12 @@ pipeline {
                 echo 'Docker push'
                 script {
                     def backImage = docker.image("${BACKEND_DOCKER_IMAGE}")
-                    def frontImage = docker.image("${FRONTEND_DOCKER_IMAGE}")
+                    def fileServerImage = docker.image("${FILE_SERVER_DOCKER_IMAGE}")
                     docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
                         backImage.push("${env.BUILD_NUMBER}")
                         backImage.push("latest")
-                        frontImage.push("${env.BUILD_NUMBER}")
-                        frontImage.push("latest")
+                        fileServerImage.push("${env.BUILD_NUMBER}")
+                        fileServerImage.push("latest")
                     }
                 }
             }
@@ -34,6 +34,7 @@ pipeline {
         stage('Docker Compose') {
             steps {
                 script {
+                    sh 'cat docker-compose.yml'
                     sh 'docker volume prune -f' // 안쓰는 이미지 볼륨 제거
                     sh 'docker-compose down' // 구성된 compose에 있는 이미지 중단 및 삭제
                     sh 'docker-compose pull' // 구성된 compose에 있는 이미지 pull
