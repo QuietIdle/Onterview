@@ -1,6 +1,6 @@
 <script setup>
-import helpImg3 from "@/assets/meeting/meetingMultiHelp3.png"
-import helpImg5 from "@/assets/meeting/meetingMultiHelp5.png"
+import helpImg3 from "@/assets/interview/interviewMultiHelp3.png"
+import helpImg5 from "@/assets/interview/interviewMultiHelp5.png"
 import { ref } from "vue";
 
 const helpText = ref([
@@ -41,13 +41,8 @@ const tab = ref(null)
     </div> -->
     <div class="w-75 h-100">
       <v-window v-model="tab" class="w-100 h-100">
-        <v-window-item
-          v-for="n in helpText.length"
-          :key="n"
-          :value="n"
-          class="my-auto"
-        >
-          <v-img :src="helpText[n-1].img" max-height="480px"></v-img>
+        <v-window-item v-for="n in helpText.length" :key="n" :value="n" class="my-auto">
+          <v-img :src="helpText[n - 1].img" max-height="480px"></v-img>
         </v-window-item>
       </v-window>
     </div>
@@ -55,23 +50,11 @@ const tab = ref(null)
     <v-divider vertical inset class="border-opacity-100 ma-3"></v-divider>
 
     <div class="d-flex justify-center align-center w-auto">
-      <v-tabs
-        v-model="tab"
-        color="deep-purple-accent-4"
-        align-tabs=""
-        mandatory
-        direction="vertical"
-      >
-        <v-tab
-          v-for="item in helpText"
-          :key="item.id"
-          :value="item.id"
-        >{{ item.id }}. {{ item.text }}</v-tab>
+      <v-tabs v-model="tab" color="deep-purple-accent-4" align-tabs="" mandatory direction="vertical">
+        <v-tab v-for="item in helpText" :key="item.id" :value="item.id">{{ item.id }}. {{ item.text }}</v-tab>
       </v-tabs>
     </div>
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
