@@ -1,17 +1,6 @@
+server:
+  port: 8082
+
 spring:
-  servlet:
-    multipart:
-      max-file-size: -1
-      max-request-size: -1
-ffmpeg:
-  path: c:\Users\SSAFY\Desktop\ffmpeg-6.1.1-full_build\bin\ffmpeg
-ffprobe:
-  path: c:\Users\SSAFY\Desktop\ffmpeg-6.1.1-full_build\bin\ffprobe
-default-image:
-  path: src\main\resources\static\images\default-thumbnail.png
-root:
-  path: C:\Users\SSAFY\Desktop\S10P12A504\onterview-storage\video\
-video:
-  path: video
-image:
-  path: image
+  profiles:
+    default: dev
