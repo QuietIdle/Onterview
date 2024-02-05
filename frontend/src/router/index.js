@@ -67,19 +67,30 @@ const router = createRouter({
       component: () => import('@/views/StorageVideoView.vue'),
       meta: {layout: 'main'},
     },
+    {
+      path: '/meeting',
+      name: 'meeting-main',
+      component: () => import('@/views/MeetingMain.vue'),
+      meta: {layout: 'main'},
+    },
+    {
+      path: '/meeting/multiRoom',
+      name: 'meeting-multi-room',
+      component: () => import('@/views/MeetingMultiRoom.vue'),
+      meta: {layout: ''},
+    },
   ]
 })
 
 router.beforeEach((to, from) => {
   const userStore = useUserStore()
 
-  if (to.name === 'mypage' && userStore.accessToken === null) {
-    return { name: 'login' }
+  if (userStore.accessToken === null) {
+    if (to.name === 'mypage' || to.name === 'selfspeech-room' || to.name === 'storage-question' || to.name === 'storage-video') {
+      alert('로그인이 필요합니다!')
+      return { name: 'login' }
+    }
   }
 })
 
 export default router
-
-
-
-

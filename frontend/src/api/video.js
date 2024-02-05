@@ -1,10 +1,19 @@
 import { localAxios } from "@/api/index.js"
 import axios from 'axios'
+import { useUserStore } from "@/stores/user";
+
+const userStore = useUserStore()
+const authToken = userStore.accessToken
 
 const api = localAxios()
 const api2 = axios.create({
-    baseURL: 'http://70.12.247.60:8080',
+    baseURL: 'http://i10a504.p.ssafy.io:8082/',
+    header: {
+        "Authorization": `${authToken}`
+    }
 });
+
+api.defaults.headers.common['Authorization'] = `${authToken}`
 
 export const apiMethods = {
     getVideo: function (v_id) {
@@ -15,8 +24,8 @@ export const apiMethods = {
         console.log('request get all videos')
         return api.get(`/api/my-question/${q_id}`)
     },
-    getUserVideoAll: function () {
-        return api.get(`/api/video/all`)
+    getUserVideoAll: function (category) {
+        return api.get(`/api/video/${category}`)
     },
     deleteVideos: function (v_ids) {
         return api.post('/api/video/delete', v_ids)
@@ -24,15 +33,24 @@ export const apiMethods = {
     patchVideo: function (v_id, req_body) {
         return api.patch(`/api/video/${v_id}`, req_body)
     },
+    saveVideo: function (req_body) {
+        return api.post(`/api/video`, req_body)
+    }
 }
 
 export const fileServer = {
-    uploadVideo: function (idx, flag, formData) {
-        return api2.post(`/api/chunk/upload?&chunkNumber=${idx}&endOfChunk=${flag}`, formData)
+    uploadVideo: function (formData) {
+        return api2.post(`/api/chunk/upload`, formData)
     },
-    playVideo: function (filename) {
-        return api2.get(`/api/chunk/stream/${filename}`, {
-            responseType: 'arraybuffer'
+    playVideo: function (filename, username, st, ed) {
+        return api2.get(`/api/chunk/stream/${filename}/${username}`, {
+            responseType: 'arraybuffer',
+            headers: {
+                Range: `bytes=${st}-${ed}`,
+            }
         });
+    },
+    cancelUpload: function (username, fileName) {
+        return api2.delete(`/api/chunk?username=${username}&fileName=${fileName}`)
     },
 }
