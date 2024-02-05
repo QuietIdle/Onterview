@@ -37,8 +37,9 @@ public class MatchServiceImpl implements MatchService {
         String sessionId = UUID.randomUUID().toString();
 
         users.forEach(u -> {
-            MatchTokenResponse tokenResponse = matchMapper.toTokenResponse(
-                    openViduService.getToken(sessionId));
+            matchManager.complete(u);
+            String token = openViduService.getToken(sessionId);
+            MatchTokenResponse tokenResponse = matchMapper.toTokenResponse(token);
             messageService.announceToUser(matchRequest.getRoomId(), u,
                     matchMapper.tokenResponseToJson(tokenResponse));
         });

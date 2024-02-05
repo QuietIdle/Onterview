@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class OpenViduService {
 
-    private final String OPEN_VIDU_HOSTNAME = "http://70.12.247.51:4443";
+    private final String OPEN_VIDU_HOSTNAME = "https://i10a504.p.ssafy.io:4443";
     private final String OPEN_VIDU_SECRET = "onterview";
     private OpenVidu openVidu = new OpenVidu(OPEN_VIDU_HOSTNAME, OPEN_VIDU_SECRET);
 
