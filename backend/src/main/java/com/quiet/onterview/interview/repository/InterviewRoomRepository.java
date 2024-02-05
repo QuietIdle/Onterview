@@ -11,6 +11,12 @@ public interface InterviewRoomRepository extends JpaRepository<InterviewRoom, Lo
     @Query("SELECT ir FROM InterviewRoom ir WHERE ir.member.memberId = :memberId")
     Page<InterviewRoom> findInterviewRoom(Long memberId, Pageable pageable);
 
+    @Query("SELECT ir FROM InterviewRoom ir WHERE ir.member.memberId = :memberId AND ir.roomType = 'SINGLE'")
+    Page<InterviewRoom> findSingleInterviewRoom(Long memberId, Pageable pageable);
+
+    @Query("SELECT ir FROM InterviewRoom ir WHERE ir.member.memberId = :memberId AND ir.roomType = 'MULTI'")
+    Page<InterviewRoom> findMultiInterviewRoom(Long memberId, Pageable pageable);
+
     @Query("SELECT ir FROM InterviewRoom ir WHERE ir.member.memberId = :memberId AND ir.interviewRoomId = :interviewRoomId")
     InterviewRoom findInterviewRoomDetail(Long memberId, Long interviewRoomId);
 }

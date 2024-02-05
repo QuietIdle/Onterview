@@ -8,6 +8,7 @@ import com.quiet.onterview.security.SecurityUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/interview-room")
 @RequiredArgsConstructor
+@Log4j2
 public class InterviewRoomController {
     private final InterviewRoomService interviewRoomService;
 
@@ -27,9 +29,18 @@ public class InterviewRoomController {
     @GetMapping
     public ResponseEntity<Page<InterviewRoomResponse>> getInterviewRoomList(
             @AuthenticationPrincipal SecurityUser user,
+            @RequestParam(name = "roomType", required = true) String roomType,
             @PageableDefault(size = 10, sort = "createAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        return ResponseEntity.ok(interviewRoomService.getInterviewRoomList(user.getMemberId(), pageable));
+        if (roomType.equals("single")) {
+            return ResponseEntity.ok(interviewRoomService.getSingleInterviewRoomList(user.getMemberId(), pageable));
+        } else if (roomType.equals("multi")) {
+            return ResponseEntity.ok(interviewRoomService.getMultiInterviewRoomList(user.getMemberId(), pageable));
+        } else if (roomType.equals("all")) {
+            return ResponseEntity.ok(interviewRoomService.getInterviewRoomList(user.getMemberId(), pageable));
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @Operation(summary = "GET 방식으로 특정 모의 면접장 상세 조회")

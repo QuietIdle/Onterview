@@ -40,6 +40,18 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
     }
 
     @Override
+    public Page<InterviewRoomResponse> getSingleInterviewRoomList(Long memberId, Pageable pageable) {
+        return interviewRoomRepository.findSingleInterviewRoom(memberId, pageable)
+                .map(interviewRoomMapper::interviewRoomTointerviewRoomResponse);
+    }
+
+    @Override
+    public Page<InterviewRoomResponse> getMultiInterviewRoomList(Long memberId, Pageable pageable) {
+        return interviewRoomRepository.findMultiInterviewRoom(memberId, pageable)
+                .map(interviewRoomMapper::interviewRoomTointerviewRoomResponse);
+    }
+
+    @Override
     public InterviewRoomDetailResponse getInterviewRoomDetail(Long memberId, Long interviewRoomId) {
 
         InterviewRoom interviewRoom = interviewRoomRepository.findInterviewRoomDetail(memberId, interviewRoomId);
