@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { getPostDetail } from '@/api/community'
+import { getPostDetail, patchLikePost } from '@/api/community'
 import CommunityModalUpdate from '@/components/community/modal/CommunityModalUpdate.vue'
 import CommunityModalDelete from '@/components/community/modal/CommunityModalDelete.vue'
 
@@ -24,6 +24,20 @@ const requestPostDetail = async function () {
     postDetail.value = response.data
   } catch (error) {
     alert('게시글을 조회하지 못했습니다.')
+  }
+}
+
+const requestLikePost = async function () {
+  if (postDetail.value.isMyArticle) {
+    alert('내 게시글에는 좋아요를 할 수 없습니다.')
+    return
+  }
+
+  try {
+    await patchLikePost(articleId)
+    requestPostDetail()
+  } catch (error) {
+    console.error('좋아요 업데이트 실패', error)
   }
 }
 
@@ -107,8 +121,20 @@ const content = computed(() => {
       <v-col cols="12" class="d-flex justify-end align-center mb-3">
         <div class="mr-2">추천 {{ postDetail.likeCount }}</div>
         <div>
-          <v-img v-if="postDetail.isLike" width="20" :src="likeButton"></v-img>
-          <v-img v-else width="20" :src="unlikeButton"></v-img>
+          <v-img
+            v-if="postDetail.isLiked"
+            width="20"
+            :src="likeButton"
+            class="like-image"
+            @click="requestLikePost()"
+          ></v-img>
+          <v-img
+            v-else
+            width="20"
+            :src="unlikeButton"
+            class="like-image"
+            @click="requestLikePost()"
+          ></v-img>
         </div>
       </v-col>
     </v-row>
@@ -122,5 +148,9 @@ const content = computed(() => {
   font-size: 24px; /* 제목 크기 */
   font-weight: bold;
   margin-bottom: 8px;
+}
+
+.like-image:hover {
+  cursor: pointer;
 }
 </style>

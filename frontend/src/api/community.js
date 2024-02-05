@@ -37,6 +37,10 @@ const deleteDeleteMyComment = function (commentId) {
     return api.delete(`/api/community/comment/${commentId}`)
 }
 
+const patchLikePost = function (articleId) {
+    return api.patch(`/api/community/like/${articleId}`)
+}
+
 export {
     getAllPostList,
     getMyPostList,
@@ -46,4 +50,5 @@ export {
     patchUpdateMyPostContent,
     postCreateMyComment,
     deleteDeleteMyComment,
+    patchLikePost,
 }
