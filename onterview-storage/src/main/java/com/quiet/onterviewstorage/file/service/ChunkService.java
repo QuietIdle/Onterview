@@ -4,11 +4,13 @@ import com.quiet.onterviewstorage.file.dto.FileDto;
 import com.quiet.onterviewstorage.file.dto.ResourceDto;
 import com.quiet.onterviewstorage.util.FFmpegManager;
 import com.quiet.onterviewstorage.util.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.Arrays;
 import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
@@ -50,9 +52,9 @@ public class ChunkService {
         return true;
     }
 
-    public Optional<ResourceDto> getStreamResource(HttpHeaders headers, String filename,
-            String username)
-            throws IOException {
+    public Optional<ResourceDto> getStreamResource(
+            HttpHeaders headers, String filename, String username
+    ) throws IOException {
         Path path = Paths.get(
                 String.valueOf(Path.of(fileUtils.VIDEO_PATH, username, filename.split("\\.")[0])),
                 filename);
@@ -89,25 +91,28 @@ public class ChunkService {
         File folder = new File(String.valueOf(path));
 
         if (folder.exists()) {
-            File[] files = folder.listFiles();
-            Arrays.stream(files).filter(File::isFile).forEach(File::delete);
+            Arrays.stream(folder.listFiles())
+                    .filter(File::isFile)
+                    .forEach(File::delete);
+
             folder.delete();
         }
     }
 
-    private static Path mergeTempFile(MultipartFile file, Path path, String filename,
-            int chunkNumber)
-            throws IOException {
-        Path outputFilePath = Path.of(String.valueOf(path), filename + ".mkv");
+    private static Path mergeTempFile(
+            MultipartFile file, Path savingPath, String filename, int chunkNumber
+    ) throws IOException {
+        Path outputFilePath = Path.of(String.valueOf(savingPath), filename + ".mkv");
         log.info(String.valueOf(outputFilePath), "최종 결과물");
         Files.createFile(outputFilePath);
 
         for (int number = 1; number <= chunkNumber; number++) {
-            Path chunkFile = Paths.get(String.valueOf(path),
+            Path chunkFile = Paths.get(String.valueOf(savingPath),
                     file.getOriginalFilename() + ".part" + number);
             Files.write(outputFilePath, Files.readAllBytes(chunkFile), StandardOpenOption.APPEND);
             Files.delete(chunkFile);
         }
+
         return outputFilePath;
     }
 
