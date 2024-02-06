@@ -24,6 +24,11 @@ const getCommentDetail = function (articleId) {
     return api.get(`/api/community/comment/detail/${articleId}`)
 }
 
+const postCreateMyPost = function (payload) {
+    api.defaults.headers.common["Authorization"] = userStore.accessToken
+    return api.post(`/api/community`, payload)
+}
+
 const deleteDeleteMyPost = function (articleId) {
     api.defaults.headers.common["Authorization"] = userStore.accessToken
     return api.delete(`/api/community/${articleId}`)
@@ -54,6 +59,7 @@ export {
     getMyPostList,
     getPostDetail,
     getCommentDetail,
+    postCreateMyPost,
     deleteDeleteMyPost,
     patchUpdateMyPostContent,
     postCreateMyComment,

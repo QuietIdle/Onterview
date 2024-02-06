@@ -1,10 +1,35 @@
 <script setup>
 import { ref } from 'vue'
+import { postCreateMyPost } from '@/api/community'
 import CommunityStorageVideo from '@/components/community/CommunityStoageVideo.vue'
 
 const tab = ref(1)
 const title = ref(null)
 const content = ref('')
+const selectVideoId = ref(null)
+
+const selectVideo = function (video) {
+  title.value = video.title
+  selectVideoId.value = video.videoId
+}
+
+const requestCreateMyPost = async function () {
+  try {
+    const payload = {
+      videoId: selectVideoId.value,
+      title: title.value,
+      content: content.value
+    }
+    const response = await postCreateMyPost(payload)
+
+    console.log(response.data)
+    // router - 글 조회
+  } catch (error) {
+    console.error('게시글 등록 실패', error)
+    alert(`게시글을 등록하지 못했습니다. 다시 시도해주세요. `)
+    // router - 게시글 리스트
+  }
+}
 </script>
 
 <template>
@@ -22,7 +47,7 @@ const content = ref('')
 
     <v-window v-model="tab">
       <v-window-item :value="1">
-        <CommunityStorageVideo @select-video-title="(data) => (title = data)" />
+        <CommunityStorageVideo @select-video="(video) => selectVideo(video)" />
       </v-window-item>
       <v-window-item :value="2">
         <CommunityStorageVideo />

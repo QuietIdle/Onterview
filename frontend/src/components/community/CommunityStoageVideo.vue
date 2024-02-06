@@ -4,7 +4,7 @@ import selectButton from '@/assets/community/selectButton.svg'
 
 const videoList = ref([
   {
-    videoId: 84,
+    videoId: 1,
     thumbnailUrl: {
       fileId: 2,
       originFilename: 'aaaa',
@@ -15,7 +15,7 @@ const videoList = ref([
     question: 'testCommonQuestion'
   },
   {
-    videoId: 85,
+    videoId: 2,
     thumbnailUrl: {
       fileId: 3,
       originFilename: 'bbb',
@@ -26,7 +26,7 @@ const videoList = ref([
     question: 'testCommonQuestion'
   },
   {
-    videoId: 86,
+    videoId: 3,
     thumbnailUrl: {
       fileId: 2,
       originFilename: 'aaaa',
@@ -37,7 +37,7 @@ const videoList = ref([
     question: 'testCommonQuestion'
   },
   {
-    videoId: 87,
+    videoId: 4,
     thumbnailUrl: {
       fileId: 3,
       originFilename: 'bbb',
@@ -159,12 +159,12 @@ const videoList = ref([
   }
 ])
 
-const emit = defineEmits(['selectVideoTitle'])
+const emit = defineEmits(['selectVideo'])
 const selectVideoId = ref(null)
 
 const selectVideo = function (video) {
   selectVideoId.value = video.videoId
-  emit('selectVideoTitle', video.title)
+  emit('selectVideo', video)
 }
 </script>
 
