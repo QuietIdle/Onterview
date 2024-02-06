@@ -26,7 +26,7 @@ const videoList = ref([
     question: 'testCommonQuestion'
   },
   {
-    videoId: 84,
+    videoId: 86,
     thumbnailUrl: {
       fileId: 2,
       originFilename: 'aaaa',
@@ -37,7 +37,7 @@ const videoList = ref([
     question: 'testCommonQuestion'
   },
   {
-    videoId: 85,
+    videoId: 87,
     thumbnailUrl: {
       fileId: 3,
       originFilename: 'bbb',
@@ -48,7 +48,7 @@ const videoList = ref([
     question: 'testCommonQuestion'
   },
   {
-    videoId: 84,
+    videoId: 88,
     thumbnailUrl: {
       fileId: 2,
       originFilename: 'aaaa',
@@ -59,7 +59,7 @@ const videoList = ref([
     question: 'testCommonQuestion'
   },
   {
-    videoId: 85,
+    videoId: 89,
     thumbnailUrl: {
       fileId: 3,
       originFilename: 'bbb',
@@ -70,7 +70,7 @@ const videoList = ref([
     question: 'testCommonQuestion'
   },
   {
-    videoId: 84,
+    videoId: 90,
     thumbnailUrl: {
       fileId: 2,
       originFilename: 'aaaa',
@@ -81,7 +81,7 @@ const videoList = ref([
     question: 'testCommonQuestion'
   },
   {
-    videoId: 85,
+    videoId: 91,
     thumbnailUrl: {
       fileId: 3,
       originFilename: 'bbb',
@@ -92,7 +92,7 @@ const videoList = ref([
     question: 'testCommonQuestion'
   },
   {
-    videoId: 84,
+    videoId: 92,
     thumbnailUrl: {
       fileId: 2,
       originFilename: 'aaaa',
@@ -103,7 +103,7 @@ const videoList = ref([
     question: 'testCommonQuestion'
   },
   {
-    videoId: 85,
+    videoId: 93,
     thumbnailUrl: {
       fileId: 3,
       originFilename: 'bbb',
@@ -114,7 +114,7 @@ const videoList = ref([
     question: 'testCommonQuestion'
   },
   {
-    videoId: 84,
+    videoId: 94,
     thumbnailUrl: {
       fileId: 2,
       originFilename: 'aaaa',
@@ -125,7 +125,7 @@ const videoList = ref([
     question: 'testCommonQuestion'
   },
   {
-    videoId: 85,
+    videoId: 95,
     thumbnailUrl: {
       fileId: 3,
       originFilename: 'bbb',
@@ -136,7 +136,7 @@ const videoList = ref([
     question: 'testCommonQuestion'
   },
   {
-    videoId: 84,
+    videoId: 96,
     thumbnailUrl: {
       fileId: 2,
       originFilename: 'aaaa',
@@ -147,7 +147,7 @@ const videoList = ref([
     question: 'testCommonQuestion'
   },
   {
-    videoId: 85,
+    videoId: 97,
     thumbnailUrl: {
       fileId: 3,
       originFilename: 'bbb',
@@ -158,19 +158,30 @@ const videoList = ref([
     question: 'testCommonQuestion'
   }
 ])
+
+const emit = defineEmits(['selectVideoTitle'])
+const selectVideoId = ref(null)
+
+const selectVideo = function (video) {
+  selectVideoId.value = video.videoId
+  emit('selectVideoTitle', video.title)
+}
 </script>
 
 <template>
   <div class="layout px-3 py-2 d-flex flex-wrap">
     <div cols="auto" v-for="video in videoList" :key="video.videoId">
-      <v-card class="mx-3 my-2" width="200">
+      <v-card class="mx-3 my-2" width="200" @click="selectVideo(video)">
         <v-img
           class="thumbnail"
           :src="video.thumbnailUrl.saveFilename"
           height="105px"
           cover
         >
-          <v-img :src="selectButton"></v-img>
+          <v-img
+            v-if="selectVideoId == video.videoId"
+            :src="selectButton"
+          ></v-img>
         </v-img>
         <v-card-subtitle class="pa-1">
           {{ video.title }}

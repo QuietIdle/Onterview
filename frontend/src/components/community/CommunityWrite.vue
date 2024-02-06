@@ -3,14 +3,15 @@ import { ref } from 'vue'
 import CommunityStorageVideo from '@/components/community/CommunityStoageVideo.vue'
 
 const tab = ref(1)
-const title = ref('영상을 선택해주세요')
+const title = ref(null)
 const content = ref('')
 </script>
 
 <template>
   <v-container>
     <div class="text-grey">제목</div>
-    <div class="title mb-3">{{ title }}</div>
+    <div class="title mb-3" v-if="title === null">영상을 선택해주세요</div>
+    <div class="title mb-3" v-else>{{ title }}</div>
 
     <!-- Tab -->
     <v-tabs v-model="tab" color="deep-purple-accent-4">
@@ -21,7 +22,7 @@ const content = ref('')
 
     <v-window v-model="tab">
       <v-window-item :value="1">
-        <CommunityStorageVideo />
+        <CommunityStorageVideo @select-video-title="(data) => (title = data)" />
       </v-window-item>
       <v-window-item :value="2">
         <CommunityStorageVideo />
@@ -36,7 +37,7 @@ const content = ref('')
     <textarea
       name="content"
       rows="4"
-      :value="content"
+      v-model="content"
       placeholder="피드백 받고 싶은 내용을 작성해주세요"
     ></textarea>
 
@@ -45,7 +46,11 @@ const content = ref('')
       <v-btn color="grey" variant="tonal" @click="goCommunityList()"
         >취소</v-btn
       >
-      <v-btn color="#BB66FF" variant="tonal" @click="requestCreateMyPost()"
+      <v-btn
+        color="#BB66FF"
+        variant="tonal"
+        @click="requestCreateMyPost()"
+        :disabled="title == null || content == ''"
         >글쓰기</v-btn
       >
     </div>
