@@ -6,14 +6,19 @@ import com.quiet.onterview.member.entity.Member;
 import com.quiet.onterview.member.repository.MemberRepository;
 import com.quiet.onterview.question.dto.request.MyQuestionFolderRequest;
 import com.quiet.onterview.question.dto.response.MyQuestionFolderResponse;
+import com.quiet.onterview.question.entity.MyQuestion;
 import com.quiet.onterview.question.entity.MyQuestionFolder;
 import com.quiet.onterview.question.exception.MyQuestionFolderNotFoundException;
 import com.quiet.onterview.question.mapper.MyQuestionFolderMapper;
+import com.quiet.onterview.question.mapper.MyQuestionMapper;
 import com.quiet.onterview.question.repository.MyQuestionFolderRepository;
+import com.quiet.onterview.video.dto.response.VideoStorageResponse;
+import com.quiet.onterview.video.entity.Video;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +29,7 @@ public class MyQuestionFolderServiceImpl implements MyQuestionFolderService {
 
     private final MyQuestionFolderRepository myQuestionFolderRepository;
     private final MyQuestionFolderMapper myQuestionFolderMapper;
+    private final MyQuestionMapper myQuestionMapper;
     private final MemberRepository memberRepository;
 
     @Override
@@ -33,6 +39,25 @@ public class MyQuestionFolderServiceImpl implements MyQuestionFolderService {
         return myQuestionFolderList.stream()
                 .map(myQuestionFolderMapper::myQuestionFolderToMyQuestionFolderResponse)
                 .toList();
+    }
+
+    @Override
+    public List<VideoStorageResponse> getSelfVideoList(Long memberId) {
+        List<VideoStorageResponse> result = new ArrayList<>();
+        List<MyQuestionFolder> myQuestionFolderList = myQuestionFolderRepository.findMyQuestionFolder(memberId);
+        for (MyQuestionFolder myQuestionFolder : myQuestionFolderList) {
+            List<MyQuestion> myQuestionList = myQuestionFolder.getMyQuestionList();
+            for (MyQuestion myQuestion : myQuestionList) {
+                List<Video> videoList = myQuestion.getVideoList();
+                if (!videoList.isEmpty()) {
+                    for (Video video : videoList) {
+                        VideoStorageResponse videoStorageResponse = myQuestionMapper.videoToVideoStorageResponse(myQuestion, video);
+                        result.add(videoStorageResponse);
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     @Override

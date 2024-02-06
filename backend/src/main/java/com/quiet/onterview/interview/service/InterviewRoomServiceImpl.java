@@ -6,7 +6,7 @@ import com.quiet.onterview.interview.dto.request.InterviewRoomRequest;
 import com.quiet.onterview.interview.dto.response.InterviewQuestionCreateResponse;
 import com.quiet.onterview.interview.dto.response.InterviewRoomDetailResponse;
 import com.quiet.onterview.interview.dto.response.InterviewRoomResponse;
-import com.quiet.onterview.interview.dto.response.InterviewVideoResponse;
+import com.quiet.onterview.video.dto.response.VideoStorageResponse;
 import com.quiet.onterview.interview.entity.InterviewQuestion;
 import com.quiet.onterview.interview.entity.InterviewRoom;
 import com.quiet.onterview.interview.exception.InterviewRoomNotFoundException;
@@ -59,25 +59,25 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
     }
 
     @Override
-    public List<InterviewVideoResponse> getSingleVideoList(Long memberId) {
+    public List<VideoStorageResponse> getSingleVideoList(Long memberId) {
         List<InterviewRoom> singleInterviewRoom = interviewRoomRepository.findSingleInterviewRoomList(memberId);
         return getInterviewVideoResponses(singleInterviewRoom);
     }
 
     @Override
-    public List<InterviewVideoResponse> getMultiVideoList(Long memberId) {
+    public List<VideoStorageResponse> getMultiVideoList(Long memberId) {
         List<InterviewRoom> singleInterviewRoom = interviewRoomRepository.findMultiInterviewRoomList(memberId);
         return getInterviewVideoResponses(singleInterviewRoom);
     }
 
-    private List<InterviewVideoResponse> getInterviewVideoResponses(List<InterviewRoom> singleInterviewRoom) {
-        List<InterviewVideoResponse> result = new ArrayList<>();
+    private List<VideoStorageResponse> getInterviewVideoResponses(List<InterviewRoom> singleInterviewRoom) {
+        List<VideoStorageResponse> result = new ArrayList<>();
         for (InterviewRoom interviewRoom : singleInterviewRoom) {
             List<InterviewQuestion> interviewQuestionList = interviewRoom.getInterviewQuestionList();
             for (InterviewQuestion interviewQuestion : interviewQuestionList) {
                 Video video = interviewQuestion.getVideo();
                 if (video != null) {
-                    InterviewVideoResponse interviewVideoResponse = interviewRoomMapper.entityToInterviewVideoResponse(interviewQuestion, video);
+                    VideoStorageResponse interviewVideoResponse = interviewRoomMapper.entityToInterviewVideoResponse(interviewQuestion, video);
                     result.add(interviewVideoResponse);
                 }
             }

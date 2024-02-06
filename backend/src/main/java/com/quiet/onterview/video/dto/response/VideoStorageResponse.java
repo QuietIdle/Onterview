@@ -1,4 +1,4 @@
-package com.quiet.onterview.interview.dto.response;
+package com.quiet.onterview.video.dto.response;
 
 import com.quiet.onterview.file.entity.FileInformation;
 import lombok.Builder;
@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class InterviewVideoResponse {
+public class VideoStorageResponse {
 
     private Long videoId;
     private FileInformation thumbnailUrl;
