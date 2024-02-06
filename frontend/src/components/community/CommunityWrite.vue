@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import CommunityStorageVideo from '@/components/community/CommunityStoageVideo.vue'
 
 const tab = ref(1)
 const title = ref('영상을 선택해주세요')
@@ -8,8 +9,8 @@ const content = ref('')
 
 <template>
   <v-container>
-    <div class="text-grey mt-10">제목</div>
-    <div class="title mb-5" rows="5">{{ title }}</div>
+    <div class="text-grey">제목</div>
+    <div class="title mb-3">{{ title }}</div>
 
     <!-- Tab -->
     <v-tabs v-model="tab" color="deep-purple-accent-4">
@@ -19,22 +20,28 @@ const content = ref('')
     </v-tabs>
 
     <v-window v-model="tab">
-      <v-window-item :value="1"> 셀프 스피치 </v-window-item>
-      <v-window-item :value="2"> 1인 모의면접 </v-window-item>
-      <v-window-item :value="3"> 다인 모의면접 </v-window-item>
+      <v-window-item :value="1">
+        <CommunityStorageVideo />
+      </v-window-item>
+      <v-window-item :value="2">
+        <CommunityStorageVideo />
+      </v-window-item>
+      <v-window-item :value="3">
+        <CommunityStorageVideo />
+      </v-window-item>
     </v-window>
 
     <!-- 고민 내용 -->
-    <label for="content" class="text-grey mt-5">고민 내용</label>
+    <label for="content" class="text-grey mt-3">고민 내용</label>
     <textarea
       name="content"
-      rows="5"
+      rows="4"
       :value="content"
       placeholder="피드백 받고 싶은 내용을 작성해주세요"
     ></textarea>
 
     <!-- 버튼 -->
-    <div class="d-flex justify-center justify-space-evenly mt-5">
+    <div class="d-flex justify-center justify-space-evenly mt-2">
       <v-btn color="grey" variant="tonal" @click="goCommunityList()"
         >취소</v-btn
       >
