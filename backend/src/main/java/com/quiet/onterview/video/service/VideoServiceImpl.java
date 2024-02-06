@@ -47,29 +47,32 @@ public class VideoServiceImpl implements VideoService {
 
     @Override
     public void createVideoInformation(VideoInformationRequest videoInformationRequest) {
-        MyQuestion myQuestion = myQuestionRepository.findById(
-                videoInformationRequest.getMyQuestionId()).orElse(null);
-        InterviewQuestion interviewQuestion = interviewQuestionRepository.findById(
-                videoInformationRequest.getInterviewQuestionId()).orElse(null);
-        videoRepository.save(
-                videoMapper.videoInformationToEntity(
-                        videoInformationRequest,
-                        myQuestion,
-                        interviewQuestion));
+        MyQuestion myQuestion = Optional.ofNullable(
+                        videoInformationRequest.getMyQuestionId())
+                .flatMap(myQuestionRepository::findById)
+                .orElse(null);
+
+        InterviewQuestion interviewQuestion = Optional.ofNullable(
+                        videoInformationRequest.getInterviewQuestionId())
+                .flatMap(interviewQuestionRepository::findById)
+                .orElse(null);
+
+        videoRepository.save(videoMapper.videoInformationToEntity(videoInformationRequest,
+                myQuestion,
+                interviewQuestion));
     }
 
     @Override
     public void updateVideo(Long videoId, VideoUpdateRequest videoUpdateRequest) {
         Video video = videoRepository.findById(videoId).orElseThrow(VideoNotFoundException::new);
-        Optional.ofNullable(videoUpdateRequest.getTitle())
-                .ifPresent(video::updateTitle);
+        Optional.ofNullable(videoUpdateRequest.getTitle()).ifPresent(video::updateTitle);
         Optional.ofNullable(videoUpdateRequest.getFeedback()).ifPresent(video::updateFeedback);
         Optional.ofNullable(videoUpdateRequest.getBookmark()).ifPresent(video::updateBookmark);
     }
 
     @Override
-    public void deleteVideo(VideoDeleteRequest videos) {
-        fileService.deleteFilesOnFileServer(videos.getVideos().toArray(Long[]::new));
+    public void deleteVideo(VideoDeleteRequest videos, String token) {
+        fileService.deleteFilesOnFileServer(token, videos.getVideos().toArray(Long[]::new));
         videos.getVideos().forEach(v -> videoRepository.delete(
                 videoRepository.findById(v).orElseThrow(VideoNotFoundException::new)
         ));
