@@ -9,7 +9,7 @@ export const useInterviewStore = defineStore('interview', () => {
   const choice = ref({
     people: 'SINGLE',
     type: '인성면접',
-    typeDetail: 'FIT'
+    typeDetail: ''
   })
   const stompType = computed(() => {
     if (choice.value.type === '인성면접') return 1
@@ -19,3 +19,9 @@ export const useInterviewStore = defineStore('interview', () => {
 
   return { dialog, choice, stompType }
 })
+
+export const useWebsocketStore = defineStore('websocket', () => {
+  const OVToken = ref(undefined)
+
+  return { OVToken }
+}, {persist: true}) 
