@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import selectButton from '@/assets/community/selectButton.svg'
 
 const videoList = ref([
   {
@@ -164,11 +165,19 @@ const videoList = ref([
     <div cols="auto" v-for="video in videoList" :key="video.videoId">
       <v-card class="mx-3 my-2" width="200">
         <v-img
+          class="thumbnail"
           :src="video.thumbnailUrl.saveFilename"
           height="105px"
           cover
-        ></v-img>
-        <v-card-subtitle class="pa-1"> {{ video.title }} </v-card-subtitle>
+        >
+          <v-img :src="selectButton"></v-img>
+        </v-img>
+        <v-card-subtitle class="pa-1">
+          {{ video.title }}
+        </v-card-subtitle>
+        <v-tooltip activator="parent" location="top" open-delay="1000">{{
+          video.title
+        }}</v-tooltip>
       </v-card>
     </div>
   </div>
@@ -180,5 +189,9 @@ const videoList = ref([
   height: 42vh;
   max-height: 100%;
   overflow-y: auto;
+}
+
+.thumbnail {
+  padding-left: 85%;
 }
 </style>
