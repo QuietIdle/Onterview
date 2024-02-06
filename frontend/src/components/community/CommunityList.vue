@@ -201,19 +201,4 @@ const goCommunityDetail = function (articleId) {
   align-self: center;
   max-height: 40px;
 }
-::v-deep .v-text-field .v-input__control,
-::v-deep .v-select .v-input__control {
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-/* Adjust padding on buttons if needed */
-::v-deep .v-btn {
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-.custom-data-table ::v-deep .v-data-table__wrapper tbody tr {
-  height: 10px; /* Set your desired height */
-}
 </style>
