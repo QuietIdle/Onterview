@@ -14,8 +14,8 @@ const router = useRouter()
 const interviewStore = useInterviewStore()
 
 const steps = ref(["면접 인원 선택", "면접 유형 선택", "시작하기"])
-const peopleCount = ref(interviewStore.people === 'MULTI')  // 1인 - 다인
-const type = ref(interviewStore.type === '직무면접')  // 면접 유형
+const peopleCount = ref(interviewStore.choice.people === 'MULTI')  // 1인 - 다인
+const type = ref(interviewStore.choice.type === '직무면접')  // 면접 유형
 
 const choosePeople = function (val) {
   peopleCount.value = val

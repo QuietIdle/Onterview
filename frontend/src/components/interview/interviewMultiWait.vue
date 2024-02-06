@@ -87,6 +87,11 @@ const stopMatch = function () {
     stomp.disconnect()
   }
 }
+
+const goRoom = function () {
+  interviewStore.dialog.wait = false
+  router.push({name: 'interview-multi'})
+}
 </script>
 
 <template>
@@ -131,6 +136,7 @@ const stopMatch = function () {
         <v-btn @click="stopMatch" class="ma-1" rounded elevation="4" size="x-large" style="background-color: #9B9B9B;">매칭취소</v-btn>
         <v-btn v-if="!time.match" @click="startMatch" class="ma-1" rounded elevation="4" size="x-large" style="background-color: #A069B3;">매칭시작</v-btn>
         <v-btn v-else class="ma-1" rounded elevation="4" size="x-large" style="background-color: #A069B3;" disabled>매칭 대기 시간 {{ String(Math.floor(time.second/60)).padStart(2,'0') }} : {{ String(time.second%60).padStart(2,'0') }}</v-btn>
+        <v-btn @click="goRoom" class="ma-1" rounded elevation="4" size="x-large" style="background-color: #9B9B9B;">강제 입장</v-btn>
       </v-card-actions>
 
     </v-card>

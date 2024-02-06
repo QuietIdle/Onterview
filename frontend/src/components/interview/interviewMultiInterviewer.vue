@@ -39,6 +39,15 @@ const controlMedia = function (com) {
 const openHelp = function () {
   interviewStore.dialog.help = true
 }
+
+// swap test
+const tt = function () {
+  const len = logMessages.value.length
+
+  const temp = logMessages.value[0]
+  logMessages.value[0] = logMessages.value[len - 1]
+  logMessages.value[len-1] = temp
+}
 </script>
 
 <template>

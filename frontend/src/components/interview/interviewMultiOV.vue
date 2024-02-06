@@ -10,41 +10,44 @@ const interviewStore = useInterviewStore()
 const OV = new OpenVidu();
 const session = OV.initSession()
 const publisher = ref(undefined);
-const remoteStreams = ref([]);
+const subscribers = ref([]);
 
 const joinSession = async function () {
   
   session.connect(websocketStore.token).then(() => {
   
-    publisher.value = OV.initPublisher("video-container", {
-          audioSource: undefined,
-          videoSource: undefined,
-          publishAudio: true,
-          publishVideo: true,
-          resolution: "320x240",
-          frameRate: 30,
-          insertMode: "APPEND",
-    }).then(() => {
-      session.publish(publisher.value);
+    publisher.value = OV.initPublisher(undefined, {
+      audioSource: undefined,
+      videoSource: undefined,
+      publishAudio: true,
+      publishVideo: true,
+      resolution: "320x240",
+      frameRate: 30,
+      insertMode: "APPEND",
+      mirror: false,
     })
+
+    session.publish(publisher.value)
+    
+    subscribers.value.push(publisher.value)
   })
 
   session.on("streamCreated", ({ stream }) => {
     const subscriber = session.subscribe(stream, stream.streamId);
     //console.log("Stream created by", stream, subscriber);
-    remoteStreams.value.push(subscriber);
+    subscribers.value.push(subscriber);
   });
-
 }
 
 const leaveSession = () => {
   
   if (session) {
     session.disconnect();
-    publisher.value.destory()
+    if (publisher.value) {
+      session.unpublish(publisher.value)
+    }
     //mainStreamManager = undefined;
-    publisher.value = undefined;
-    remoteStreams.value = [];
+    subscribers.value = [];
   }
 };
 
@@ -55,20 +58,33 @@ onMounted(() => {
 onBeforeUnmount(() => {
   leaveSession()
 })
+
+// const tog = function () {
+//   if (publisher.value) {
+//     publisher.value.publishVideo = false
+//   }
+// }
+const swap = function (idx) {
+  const temp = subscribers.value[idx]
+  subscribers.value[idx] = subscribers.value[0]
+  subscribers.value[0] = temp
+}
 </script>
 
 <template>
   <div class="w-100 h-100 d-flex align-center">
     
     <div id="video-container" class="w-100 h-100 d-flex align-center justify-space-around">
-      <ov-video
-        class="ma-2"
-        v-for="stream in remoteStreams" 
-        :key="stream.stream.streamId" 
-        :id="stream.stream.streamId" 
-        :stream-manager="stream"
-        style="transform: rotateY(180deg);"
-      ></ov-video>
+
+      <div v-for="(sub, idx) in subscribers" :key="sub.stream.streamId" class="ma-2">
+        <v-btn @click="swap(idx)">{{ idx+1 }}번 째 답변자</v-btn>
+        <ov-video
+          :id="sub.stream.streamId" 
+          :stream-manager="sub"
+          style="transform: rotateY(180deg);"
+        />
+        <div>{{ sub.stream.streamId }}</div>
+      </div>
     </div>
 
   </div>
