@@ -10,7 +10,7 @@ const logMessages = ref([])
 const index = ref(0)
 const addL = function () {
   logMessages.value.push({
-    message: `aaa${index.value}`,
+    message: `답변 후 [답변 완료] 버튼을 눌러주세요 ${index.value}`,
   })
   index.value++
 }
@@ -53,11 +53,16 @@ const tt = function () {
 <template>
   <div class="w-100 h-100 d-flex justify-space-between align-center">
     
-    <div class="w-auto h-100">
-      <div class="ma-1" v-for="(log, idx) in logMessages" :key="idx">
-        {{ log.message }}
-        <v-icon @click="closeL(idx)" icon="mdi-close"></v-icon>
+    <div class="h-100" style="width: 30%;">
+
+      <div class="w-100 d-flex justify-space-between pa-2 ma-1" style="border: 1px solid white; border-radius: 12px;" v-for="(log, idx) in logMessages" :key="idx">
+        <v-icon class="card-icon1" icon="mdi-alert-outline" color="#FF8911"></v-icon>
+        <div class="w-100 mx-1">
+          <div>{{ log.message }}</div>
+        </div>
+        <v-icon class="card-icon2" @click="closeL(idx)" icon="mdi-close"></v-icon>
       </div>
+
     </div>
 
     <div class="h-100 d-flex align-center justify-space-between" style="width: 60%;">
@@ -84,5 +89,4 @@ const tt = function () {
 </template>
 
 <style scoped>
-
 </style>

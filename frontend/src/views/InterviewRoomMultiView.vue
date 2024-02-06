@@ -24,18 +24,24 @@ const goInterviewMain = function () {
       color="black" 
       style="border-bottom: 1px solid white;"
     >
-      <div class="d-flex align-center" style="border: 0px">
-        type
+      <div class="d-flex align-center justify-center">
+        <div>{{ interviewStore.choice.type }}</div>
       </div>
+
       <div class="d-flex align-center">
         <v-icon icon="mdi-record" color="#FA3F3F"></v-icon>
         time
       </div>
-      <div class="d-flex align-center w-75 px-3" style="font-size: large;">Q.평양냉면 맛있다 우래옥 을밀대 </div>
+
+      <div class="d-flex align-center px-3 w-100" style="font-size: large;" >
+        Q.평양냉면 맛있다 우래옥 을밀대
+      </div>
+
       <button @click="goInterviewMain" class="d-flex justify-center align-center">
         <v-icon icon="mdi-close"></v-icon>
         <div>나가기</div>
       </button>
+
     </v-system-bar>
   </v-layout>
 
@@ -52,13 +58,9 @@ const goInterviewMain = function () {
 
 <style scoped>
 .nav-bar>*{
-  border-left: 1px solid white;
+  /* border-left: 1px solid white; */
   height: 100%;
-  padding: 0 4px;
-}
-.divider{
-  background-color: white;
-  text-decoration: none;
+  padding: 8px;
 }
 .interviewer-container{
   border-bottom: 1px solid white;
