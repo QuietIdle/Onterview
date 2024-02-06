@@ -1,7 +1,10 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { postCreateMyPost } from '@/api/community'
 import CommunityStorageVideo from '@/components/community/CommunityStoageVideo.vue'
+
+const router = useRouter()
 
 const tab = ref(1)
 const title = ref(null)
@@ -21,14 +24,24 @@ const requestCreateMyPost = async function () {
       content: content.value
     }
     const response = await postCreateMyPost(payload)
-
-    console.log(response.data)
-    // router - 글 조회
+    goCommunityDetail(response.data.articleId)
   } catch (error) {
     console.error('게시글 등록 실패', error)
     alert(`게시글을 등록하지 못했습니다. 다시 시도해주세요. `)
-    // router - 게시글 리스트
+    goCommunityList()
   }
+}
+
+// router
+const goCommunityList = function () {
+  router.push({ name: 'community-list' })
+}
+
+const goCommunityDetail = function (articleId) {
+  router.push({
+    name: 'community-detail',
+    params: { articleId: articleId }
+  })
 }
 </script>
 
