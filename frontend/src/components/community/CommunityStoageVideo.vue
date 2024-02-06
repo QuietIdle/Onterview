@@ -1,6 +1,39 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { getSelfSpeechVideoList, getInterviewVideoList } from '@/api/community'
 import selectButton from '@/assets/community/selectButton.svg'
+
+const props = defineProps({
+  roomType: String
+})
+
+onMounted(() => {
+  if (props.roomType == 'selfspeech') {
+    requestSelfSpeechVideoList()
+  } else {
+    requestInterviewVideoList()
+  }
+})
+
+const requestSelfSpeechVideoList = async function () {
+  try {
+    const response = await getSelfSpeechVideoList()
+    console.log(response.data)
+    // videoList.value = response.data
+  } catch (error) {
+    console.error('셀프 스피치 영상목록 조회 실패', error)
+  }
+}
+
+const requestInterviewVideoList = async function () {
+  try {
+    const response = await getInterviewVideoList(props.roomType)
+    console.log(response.data)
+    videoList.value = response.data
+  } catch (error) {
+    console.error('모의 면접 영상목록 조회 실패', error)
+  }
+}
 
 const videoList = ref([
   {

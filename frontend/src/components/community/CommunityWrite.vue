@@ -60,13 +60,22 @@ const goCommunityDetail = function (articleId) {
 
     <v-window v-model="tab">
       <v-window-item :value="1">
-        <CommunityStorageVideo @select-video="(video) => selectVideo(video)" />
+        <CommunityStorageVideo
+          room-type="selfspeech"
+          @select-video="(video) => selectVideo(video)"
+        />
       </v-window-item>
       <v-window-item :value="2">
-        <CommunityStorageVideo />
+        <CommunityStorageVideo
+          room-type="single"
+          @select-video="(video) => selectVideo(video)"
+        />
       </v-window-item>
       <v-window-item :value="3">
-        <CommunityStorageVideo />
+        <CommunityStorageVideo
+          room-type="multi"
+          @select-video="(video) => selectVideo(video)"
+        />
       </v-window-item>
     </v-window>
 
