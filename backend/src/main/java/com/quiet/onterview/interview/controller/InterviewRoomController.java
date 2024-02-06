@@ -4,6 +4,7 @@ import com.quiet.onterview.interview.dto.request.InterviewRoomRequest;
 import com.quiet.onterview.interview.dto.response.InterviewQuestionCreateResponse;
 import com.quiet.onterview.interview.dto.response.InterviewRoomDetailResponse;
 import com.quiet.onterview.interview.dto.response.InterviewRoomResponse;
+import com.quiet.onterview.interview.dto.response.InterviewVideoResponse;
 import com.quiet.onterview.interview.service.InterviewRoomService;
 import com.quiet.onterview.security.SecurityUser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,6 +51,20 @@ public class InterviewRoomController {
             @AuthenticationPrincipal SecurityUser user,
             @PathVariable("interview_room_id") Long interviewRoomId) {
         return ResponseEntity.ok(interviewRoomService.getInterviewRoomDetail(user.getMemberId(), interviewRoomId));
+    }
+
+    @Operation(summary = "GET 방식으로 모의 면접 영상 전체 조회")
+    @GetMapping("/video")
+    public ResponseEntity<List<InterviewVideoResponse>> getInterviewVideoList(
+            @AuthenticationPrincipal SecurityUser user,
+            @RequestParam(name = "roomType", required = true) String roomType) {
+        if (roomType.equals("single")) {
+            return ResponseEntity.ok(interviewRoomService.getSingleVideoList(user.getMemberId()));
+        } else if (roomType.equals("multi")) {
+            return ResponseEntity.ok(interviewRoomService.getMultiVideoList(user.getMemberId()));
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @Operation(summary = "POST 방식으로 모의 면접장 생성")

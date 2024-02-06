@@ -4,6 +4,7 @@ import com.quiet.onterview.interview.dto.request.InterviewRoomRequest;
 import com.quiet.onterview.interview.dto.response.InterviewQuestionCreateResponse;
 import com.quiet.onterview.interview.dto.response.InterviewRoomDetailResponse;
 import com.quiet.onterview.interview.dto.response.InterviewRoomResponse;
+import com.quiet.onterview.interview.dto.response.InterviewVideoResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -14,6 +15,8 @@ public interface InterviewRoomService {
      Page<InterviewRoomResponse> getInterviewRoomList(Long memberId, Pageable pageable);
      Page<InterviewRoomResponse> getSingleInterviewRoomList(Long memberId, Pageable pageable);
      Page<InterviewRoomResponse> getMultiInterviewRoomList(Long memberId, Pageable pageable);
+     List<InterviewVideoResponse> getSingleVideoList(Long memberId);
+     List<InterviewVideoResponse> getMultiVideoList(Long memberId);
      InterviewRoomDetailResponse getInterviewRoomDetail(Long memberId, Long interviewRoomId);
      List<InterviewQuestionCreateResponse> createInterviewRoom(Long memberId, InterviewRoomRequest interviewRoomRequest);
      void deleteInterviewRoom(Long interviewRoomId);

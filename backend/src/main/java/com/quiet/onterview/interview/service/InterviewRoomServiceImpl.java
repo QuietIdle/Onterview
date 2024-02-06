@@ -6,6 +6,8 @@ import com.quiet.onterview.interview.dto.request.InterviewRoomRequest;
 import com.quiet.onterview.interview.dto.response.InterviewQuestionCreateResponse;
 import com.quiet.onterview.interview.dto.response.InterviewRoomDetailResponse;
 import com.quiet.onterview.interview.dto.response.InterviewRoomResponse;
+import com.quiet.onterview.interview.dto.response.InterviewVideoResponse;
+import com.quiet.onterview.interview.entity.InterviewQuestion;
 import com.quiet.onterview.interview.entity.InterviewRoom;
 import com.quiet.onterview.interview.exception.InterviewRoomNotFoundException;
 import com.quiet.onterview.interview.mapper.InterviewQuestionMapper;
@@ -15,12 +17,14 @@ import com.quiet.onterview.member.entity.Member;
 import com.quiet.onterview.member.repository.MemberRepository;
 import com.quiet.onterview.question.entity.CommonQuestion;
 import com.quiet.onterview.question.service.CommonQuestionFolderService;
+import com.quiet.onterview.video.entity.Video;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -52,6 +56,33 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
     public Page<InterviewRoomResponse> getMultiInterviewRoomList(Long memberId, Pageable pageable) {
         return interviewRoomRepository.findMultiInterviewRoom(memberId, pageable)
                 .map(interviewRoomMapper::interviewRoomTointerviewRoomResponse);
+    }
+
+    @Override
+    public List<InterviewVideoResponse> getSingleVideoList(Long memberId) {
+        List<InterviewRoom> singleInterviewRoom = interviewRoomRepository.findSingleInterviewRoomList(memberId);
+        return getInterviewVideoResponses(singleInterviewRoom);
+    }
+
+    @Override
+    public List<InterviewVideoResponse> getMultiVideoList(Long memberId) {
+        List<InterviewRoom> singleInterviewRoom = interviewRoomRepository.findMultiInterviewRoomList(memberId);
+        return getInterviewVideoResponses(singleInterviewRoom);
+    }
+
+    private List<InterviewVideoResponse> getInterviewVideoResponses(List<InterviewRoom> singleInterviewRoom) {
+        List<InterviewVideoResponse> result = new ArrayList<>();
+        for (InterviewRoom interviewRoom : singleInterviewRoom) {
+            List<InterviewQuestion> interviewQuestionList = interviewRoom.getInterviewQuestionList();
+            for (InterviewQuestion interviewQuestion : interviewQuestionList) {
+                Video video = interviewQuestion.getVideo();
+                if (video != null) {
+                    InterviewVideoResponse interviewVideoResponse = interviewRoomMapper.entityToInterviewVideoResponse(interviewQuestion, video);
+                    result.add(interviewVideoResponse);
+                }
+            }
+        }
+        return result;
     }
 
     @Override

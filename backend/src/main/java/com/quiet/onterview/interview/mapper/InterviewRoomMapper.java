@@ -4,6 +4,7 @@ import com.quiet.onterview.interview.dto.request.InterviewRoomRequest;
 import com.quiet.onterview.interview.dto.response.InterviewQuestionResponse;
 import com.quiet.onterview.interview.dto.response.InterviewRoomDetailResponse;
 import com.quiet.onterview.interview.dto.response.InterviewRoomResponse;
+import com.quiet.onterview.interview.dto.response.InterviewVideoResponse;
 import com.quiet.onterview.interview.entity.InterviewQuestion;
 import com.quiet.onterview.interview.entity.InterviewRoom;
 import com.quiet.onterview.member.entity.Member;
@@ -30,7 +31,6 @@ public class InterviewRoomMapper {
                 .questionType(interviewRoomRequest.getQuestionType())
                 .roomType(interviewRoomRequest.getRoomType())
                 .build();
-
     }
 
     public InterviewRoomResponse interviewRoomTointerviewRoomResponse(InterviewRoom interviewRoom) {
@@ -63,6 +63,15 @@ public class InterviewRoomMapper {
                 .feedback(interviewRoom.getFeedback())
                 .interviewQuestionList(interviewQuestionResponseList)
                 .videoDetail(videoDetailResponse)
+                .build();
+    }
+    public InterviewVideoResponse entityToInterviewVideoResponse(InterviewQuestion interviewQuestion, Video video) {
+
+        return InterviewVideoResponse.builder()
+                .videoId(video.getVideoId())
+                .thumbnailUrl(video.getThumbnailUrl())
+                .title(video.getTitle())
+                .question(interviewQuestion.getCommonQuestion().getCommonQuestion())
                 .build();
     }
 }
