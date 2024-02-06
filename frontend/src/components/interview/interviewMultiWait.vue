@@ -1,4 +1,5 @@
 <script setup>
+<<<<<<< HEAD
 import { ref } from "vue";
 import interviewMultiConfig from "./interviewMultiConfig.vue";
 import interviewMultiHelp from "@/components/interview/interviewMultiHelp.vue"
@@ -6,13 +7,25 @@ import { useInterviewStore, useWebsocketStore } from "@/stores/interview";
 import { useUserStore } from "@/stores/user";
 import Stomp from "stompjs"
 import { useRouter } from "vue-router";
+=======
+import { ref, onUnmounted } from "vue";
+import interviewMultiConfig from "@/components/interview/interviewMultiConfig.vue"
+import interviewMultiHelp from "@/components/interview/interviewMultiHelp.vue"
+import { useInterviewStore } from "@/stores/interview"
+import Stomp from "stompjs"
+import { useUserStore } from "@/stores/user"
+>>>>>>> 8fc375ca769fa7bc7210b69169bfc62dc9bda668
 
 const router = useRouter()
 const userStore = useUserStore()
+const interviewStore = useInterviewStore()
 const authToken = userStore.accessToken
+<<<<<<< HEAD
 
 const interviewStore = useInterviewStore()
 const websocketStore = useWebsocketStore()
+=======
+>>>>>>> 8fc375ca769fa7bc7210b69169bfc62dc9bda668
 const selectedTab = ref(0)
 
 let stomp
@@ -23,13 +36,13 @@ const time = ref({
 }) // 대기 시간, 매칭 여부
 let timerId;
 
-const startTimer = function() {
+const startTimer = function () {
   time.value.second++;
   stopTimer();
   timerId = setTimeout(startTimer, 1000); // 스탑워치 주기 1초
 }
 
-const stopTimer = function() {
+const stopTimer = function () {
   if (timerId !== null) {
     clearTimeout(timerId);
   }
@@ -41,6 +54,7 @@ const startMatch = function () {
 
   const socket = new WebSocket('ws://70.12.247.51:8081/api/meeting/matching');
   stomp = Stomp.over(socket);
+<<<<<<< HEAD
   const header = {
         Authorization: `${authToken}`
     }
@@ -59,12 +73,34 @@ const startMatch = function () {
       time.value.second = 0
       
       router.push({name: 'interview-multi'})
+=======
+
+  stomp.connect({
+    Authorization: `${authToken}`
+  }, () => {
+    stomp.subscribe(`/sub/${interviewStore.stompType}`, function (message) {
+      console.log(message.body);
     });
-    
+    stomp.subscribe(`/user/sub/${interviewStore.stompType}`, function (message) {
+      console.log(message.body);
+>>>>>>> 8fc375ca769fa7bc7210b69169bfc62dc9bda668
+    });
+
     stomp.send("/pub/enter", {}, JSON.stringify({
+<<<<<<< HEAD
     type: "ENTER",
 	  roomId: interviewStore.stompType,
 	  matchCount: 4,
+=======
+      type: "ENTER",
+      roomId: interviewStore.stompType,
+      matchCount: 4,
+    }))
+    stomp.send("/pub/match", {}, JSON.stringify({
+      type: "MATCH",
+      roomId: interviewStore.stompType,
+      matchCount: 4,
+>>>>>>> 8fc375ca769fa7bc7210b69169bfc62dc9bda668
     }))
     // stomp.send("/pub/match", {}, JSON.stringify({
     // type: "MATCH",
@@ -76,6 +112,7 @@ const startMatch = function () {
   })
 }
 
+<<<<<<< HEAD
 const stopMatch = function () {
   interviewStore.dialog.wait = false
 
@@ -85,6 +122,21 @@ const stopMatch = function () {
     time.value.second = 0
     
     stomp.disconnect()
+=======
+const stopMatch = async function () {
+  interviewStore.dialog.wait = false
+  stopTimer()
+  time.value.match = false
+  time.value.second = 0
+  try {
+    await stomp.send("/pub/leave", {}, JSON.stringify({
+      type: "LEAVE",
+      roomId: interviewStore.stompType,
+      matchCount: 4,
+    }))
+  } catch (error) {
+    console.log(error)
+>>>>>>> 8fc375ca769fa7bc7210b69169bfc62dc9bda668
   }
 }
 
@@ -95,22 +147,21 @@ const goRoom = function () {
 </script>
 
 <template>
+<<<<<<< HEAD
   <v-dialog 
     v-model="interviewStore.dialog.wait" 
     fullscreen
   >
+=======
+  <v-dialog v-model="interviewStore.dialog.wait" fullscreen>
+>>>>>>> 8fc375ca769fa7bc7210b69169bfc62dc9bda668
     <v-card class="bg-purple-lighten-4 pa-5">
       <v-card-title class="text-center">
         다인 모의 면접 대기실
       </v-card-title>
       <v-divider class="border-opacity-100"></v-divider>
       <div class="mt-5 d-flex justify-space-between">
-        <v-btn-toggle 
-          v-model="selectedTab"
-          mandatory
-          color="purple-darken-3"
-          class="btn-container"
-        >
+        <v-btn-toggle v-model="selectedTab" mandatory color="purple-darken-3" class="btn-container">
           <v-btn elevation="2">
             환경설정
           </v-btn>
@@ -123,26 +174,42 @@ const goRoom = function () {
       </div>
 
       <v-card-text class="bg-white">
+<<<<<<< HEAD
         <div v-show="selectedTab===0" class="w-100 h-100">
           <interviewMultiConfig />
         </div>
 
         <div v-show="selectedTab===1" class="w-100 h-100">
+=======
+        <div v-show="selectedTab === 0" class="w-100 h-100">
+          <interviewMultiConfig />
+        </div>
+
+        <div v-show="selectedTab === 1" class="w-100 h-100">
+>>>>>>> 8fc375ca769fa7bc7210b69169bfc62dc9bda668
           <interviewMultiHelp />
         </div>
       </v-card-text>
 
       <v-card-actions class="d-flex flex-row-reverse btns">
+<<<<<<< HEAD
         <v-btn @click="stopMatch" class="ma-1" rounded elevation="4" size="x-large" style="background-color: #9B9B9B;">매칭취소</v-btn>
         <v-btn v-if="!time.match" @click="startMatch" class="ma-1" rounded elevation="4" size="x-large" style="background-color: #A069B3;">매칭시작</v-btn>
         <v-btn v-else class="ma-1" rounded elevation="4" size="x-large" style="background-color: #A069B3;" disabled>매칭 대기 시간 {{ String(Math.floor(time.second/60)).padStart(2,'0') }} : {{ String(time.second%60).padStart(2,'0') }}</v-btn>
         <v-btn @click="goRoom" class="ma-1" rounded elevation="4" size="x-large" style="background-color: #9B9B9B;">강제 입장</v-btn>
+=======
+        <v-btn @click="stopMatch" class="ma-1" rounded elevation="4" size="x-large"
+          style="background-color: #9B9B9B;">매칭취소</v-btn>
+        <v-btn v-if="!time.match" @click="startMatch" class="ma-1" rounded elevation="4" size="x-large"
+          style="background-color: #A069B3;">매칭시작</v-btn>
+        <v-btn v-else class="ma-1" rounded elevation="4" size="x-large" style="background-color: #A069B3;" disabled>매칭 대기
+          시간 {{ String(Math.floor(time.second / 60)).padStart(2, '0') }} : {{ String(time.second % 60).padStart(2, '0')
+          }}</v-btn>
+>>>>>>> 8fc375ca769fa7bc7210b69169bfc62dc9bda668
       </v-card-actions>
 
     </v-card>
   </v-dialog>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

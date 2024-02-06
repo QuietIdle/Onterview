@@ -14,8 +14,14 @@ const router = useRouter()
 const interviewStore = useInterviewStore()
 
 const steps = ref(["면접 인원 선택", "면접 유형 선택", "시작하기"])
+<<<<<<< HEAD
 const peopleCount = ref(interviewStore.choice.people === 'MULTI')  // 1인 - 다인
 const type = ref(interviewStore.choice.type === '직무면접')  // 면접 유형
+=======
+const peopleCount = ref(false)  // 1인 - 다인
+const type = ref(false)  // 면접 유형
+
+>>>>>>> 8fc375ca769fa7bc7210b69169bfc62dc9bda668
 
 const choosePeople = function (val) {
   peopleCount.value = val
@@ -29,7 +35,11 @@ const chooseType = function (val) {
     interviewStore.choice.typeDetail = 'BACKEND'
   } else {
     interviewStore.choice.type = '인성면접'
+<<<<<<< HEAD
     interviewStore.choice.typeDetail = ''
+=======
+    interviewStore.choice.typeDetail = 'FIT'
+>>>>>>> 8fc375ca769fa7bc7210b69169bfc62dc9bda668
   }
 }
 
