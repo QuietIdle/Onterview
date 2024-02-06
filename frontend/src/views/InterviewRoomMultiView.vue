@@ -33,7 +33,7 @@ const goInterviewMain = function () {
         time
       </div>
 
-      <div class="d-flex align-center px-3 w-100" style="font-size: large;" >
+      <div class="d-flex align-center px-3 w-75" style="font-size: large;" >
         Q.평양냉면 맛있다 우래옥 을밀대
       </div>
 
@@ -58,7 +58,7 @@ const goInterviewMain = function () {
 
 <style scoped>
 .nav-bar>*{
-  /* border-left: 1px solid white; */
+  border-left: 1px solid white;
   height: 100%;
   padding: 8px;
 }
