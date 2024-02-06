@@ -28,7 +28,7 @@ public class ChunkService {
     private final FFmpegManager fFmpegManager;
     private final FileUtils fileUtils;
 
-    public boolean chunkUpload(MultipartFile file, FileDto.VideoRequest request)
+    public HttpStatus chunkUpload(MultipartFile file, FileDto.VideoRequest request)
             throws IOException {
         int chunkNumber = request.getChunkNumber();
         int endOfChunk = request.getEndOfChunk();
@@ -42,7 +42,7 @@ public class ChunkService {
 
         // 파일이 전송중인 경우
         if (endOfChunk == 0) {
-            return false;
+            return HttpStatus.PARTIAL_CONTENT;
         }
 
         Path mergedVideoPath = mergeTempFile(file, videoPath, filename, chunkNumber);
@@ -50,7 +50,7 @@ public class ChunkService {
 
         fFmpegManager.createThumbnail(mergedVideoPath, imagePath, filename);
 
-        return true;
+        return HttpStatus.OK;
     }
 
     public Optional<ResourceDto> getStreamResource(
