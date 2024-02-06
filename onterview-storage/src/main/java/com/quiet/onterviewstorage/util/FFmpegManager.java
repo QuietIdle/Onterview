@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import com.quiet.onterviewstorage.global.BaseException;
+import com.quiet.onterviewstorage.global.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.bramp.ffmpeg.FFmpeg;
@@ -24,8 +27,8 @@ public class FFmpegManager {
 
     public String createThumbnail(String sourcePath) {
         // 썸네일 저장할 경로
-        if (!sourcePath.startsWith(fileUtils.VIDEO_PATH)) {
-            return "";
+        if (!sourcePath.startsWith(fileUtils.VIDEO_PATH) || !fileUtils.isVideo(sourcePath)) {
+            throw new BaseException(ErrorCode.FILE_NOT_FOUND);
         }
 
         final String fullPath =
