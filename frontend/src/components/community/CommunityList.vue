@@ -82,11 +82,15 @@ const pageCount = computed(() => {
   return Math.ceil(postList.value.length / itemsPerPage.value)
 })
 
-// 게시글 조회
+// router
 const router = useRouter()
 
 const goCommunityDetail = function (articleId) {
   router.push({ name: 'community-detail', params: { articleId: articleId } })
+}
+
+const goCommunityWrite = function () {
+  router.push({ name: 'community-write' })
 }
 </script>
 
@@ -156,7 +160,9 @@ const goCommunityDetail = function (articleId) {
           return-object
         ></v-select>
         <!-- 글쓰기 버튼 -->
-        <v-btn color="primary" class="ml-2">글쓰기</v-btn>
+        <v-btn color="#BB66FF" class="ml-2" @click="goCommunityWrite()"
+          >글쓰기</v-btn
+        >
       </v-col>
     </v-row>
     <!-- 게시판 -->

@@ -83,6 +83,11 @@ const router = createRouter({
           path: "detail/:articleId",
           name: "community-detail",
           component: () => import('@/components/community/CommunityDetail.vue')
+        },
+        {
+          path: "write",
+          name: "community-write",
+          component: () => import('@/components/community/CommunityWrite.vue')
         }
       ]
     },
