@@ -16,12 +16,19 @@ export const useInterviewStore = defineStore('interview', () => {
     else if (choice.value.typeDetail === 'BACKEND') return 2
     else return 3
   })
+  const mediaToggle = ref({
+    video: true,
+    audio: true,
+    volume: true,
+  })
 
-  return { dialog, choice, stompType }
+  return { dialog, choice, stompType, mediaToggle }
 })
 
 export const useWebsocketStore = defineStore('websocket', () => {
   const OVToken = ref(undefined)
+  const sessionId = ref(null)
+  const stomp = ref(undefined)
 
-  return { OVToken }
-}, {persist: true}) 
+  return { OVToken, sessionId, stomp }
+}, ) 

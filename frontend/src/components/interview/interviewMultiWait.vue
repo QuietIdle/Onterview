@@ -39,6 +39,7 @@ const startMatch = function () {
   startTimer()
   time.value.match = true
 
+  //const socket = new WebSocket('wss://i10a504.p.ssafy.io/api/meeting/matching')
   const socket = new WebSocket('ws://70.12.247.51:8081/api/meeting/matching')
   stomp = Stomp.over(socket)
   const header = {
@@ -54,13 +55,15 @@ const startMatch = function () {
         `/user/sub/${interviewStore.stompType}`,
         function (message) {
           websocketStore.token = JSON.parse(message.body).token
+          websocketStore.sessionId = JSON.parse(message.body).sessionId
           console.log('token accepted successfully!')
-          stomp.disconnect()
 
           interviewStore.dialog.wait = false
           stopTimer()
           time.value.match = false
           time.value.second = 0
+
+          websocketStore.stomp = stomp
 
           router.push({ name: 'interview-multi' })
         }

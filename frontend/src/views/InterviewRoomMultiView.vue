@@ -24,7 +24,7 @@ const goInterviewMain = function () {
       color="black" 
       style="border-bottom: 1px solid white;"
     >
-      <div class="d-flex align-center justify-center">
+      <div class="d-flex align-center justify-center" style="border: 0px">
         <div>{{ interviewStore.choice.type }}</div>
       </div>
 

@@ -18,21 +18,15 @@ const closeL = function (idx) {
   logMessages.value.splice(idx, 1)
 }
 
-const mediaToggle = ref({
-  video: true,
-  audio: true,
-  volume: true,
-})
-
 const controlMedia = function (com) {
   if (com === 0) {
-    mediaToggle.value.video = !mediaToggle.value.video
+    interviewStore.mediaToggle.video = !interviewStore.mediaToggle.video
   }
   else if (com === 1) {
-    mediaToggle.value.audio = !mediaToggle.value.audio
+    interviewStore.mediaToggle.audio = !interviewStore.mediaToggle.audio
   }
   else if (com === 2) {
-    mediaToggle.value.volume = !mediaToggle.value.volume
+    interviewStore.mediaToggle.volume = !interviewStore.mediaToggle.volume
   }
 }
 
@@ -40,14 +34,6 @@ const openHelp = function () {
   interviewStore.dialog.help = true
 }
 
-// swap test
-const tt = function () {
-  const len = logMessages.value.length
-
-  const temp = logMessages.value[0]
-  logMessages.value[0] = logMessages.value[len - 1]
-  logMessages.value[len-1] = temp
-}
 </script>
 
 <template>
@@ -55,12 +41,12 @@ const tt = function () {
     
     <div class="h-100" style="width: 30%;">
 
-      <div class="w-100 d-flex justify-space-between pa-2 ma-1" style="border: 1px solid white; border-radius: 12px;" v-for="(log, idx) in logMessages" :key="idx">
-        <v-icon class="card-icon1" icon="mdi-alert-outline" color="#FF8911"></v-icon>
+      <div class="w-100 d-flex justify-space-between pa-2 ma-2" style="border: 1px solid white; border-radius: 12px;" v-for="(log, idx) in logMessages" :key="idx">
+        <v-icon icon="mdi-alert-outline" color="#FF8911"></v-icon>
         <div class="w-100 mx-1">
           <div>{{ log.message }}</div>
         </div>
-        <v-icon class="card-icon2" @click="closeL(idx)" icon="mdi-close"></v-icon>
+        <v-icon  @click="closeL(idx)" icon="mdi-close"></v-icon>
       </div>
 
     </div>
@@ -73,11 +59,11 @@ const tt = function () {
       </div>
 
       <div class="btn-container d-flex flex-column h-100">
-        <v-btn class="ma-3" @click="controlMedia(0)" v-if="mediaToggle.video" icon="mdi-video" color="grey-lighten-1"></v-btn>
+        <v-btn class="ma-3" @click="controlMedia(0)" v-if="interviewStore.mediaToggle.video" icon="mdi-video" color="grey-lighten-1"></v-btn>
         <v-btn class="ma-3" @click="controlMedia(0)" v-else icon="mdi-video-off" color="grey-lighten-1"></v-btn>
-        <v-btn class="ma-3" @click="controlMedia(1)" v-if="mediaToggle.audio" icon="mdi-microphone" color="grey-lighten-1"></v-btn>
+        <v-btn class="ma-3" @click="controlMedia(1)" v-if="interviewStore.mediaToggle.audio" icon="mdi-microphone" color="grey-lighten-1"></v-btn>
         <v-btn class="ma-3" @click="controlMedia(1)" v-else icon="mdi-microphone-off" color="grey-lighten-1"></v-btn>
-        <v-btn class="ma-3" @click="controlMedia(2)" v-if="mediaToggle.volume" icon="mdi-volume-high" color="grey-lighten-1"></v-btn>
+        <v-btn class="ma-3" @click="controlMedia(2)" v-if="interviewStore.mediaToggle.volume" icon="mdi-volume-high" color="grey-lighten-1"></v-btn>
         <v-btn class="ma-3" @click="controlMedia(2)" v-else icon="mdi-volume-off" color="grey-lighten-1"></v-btn>
         <v-btn class="ma-3" @click="openHelp" icon="mdi-help" color="grey-lighten-1"></v-btn>
       </div>

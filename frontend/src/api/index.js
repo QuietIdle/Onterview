@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const localURL = 'http://i10a504.p.ssafy.io:8081/';
+const localURL = 'https://i10a504.p.ssafy.io/';
 
 // local vue api axios instance
 function localAxios() {

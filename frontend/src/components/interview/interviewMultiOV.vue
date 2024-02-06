@@ -48,27 +48,28 @@ const leaveSession = () => {
     }
     //mainStreamManager = undefined;
     subscribers.value = [];
+
+    websocketStore.stomp.disconnect()
   }
 };
 
 onMounted(() => {
   joinSession()
+  websocketStore.stomp.send(`/room/answer/${websocketStore.sessionId}`, {})
 })
 
 onBeforeUnmount(() => {
   leaveSession()
 })
 
-// const tog = function () {
-//   if (publisher.value) {
-//     publisher.value.publishVideo = false
-//   }
-// }
-const swap = function (idx) {
-  const temp = subscribers.value[idx]
-  subscribers.value[idx] = subscribers.value[0]
-  subscribers.value[0] = temp
-}
+watch(interviewStore.mediaToggle ,
+  () => {
+    if (publisher.value) {
+      publisher.value.publishVideo(interviewStore.mediaToggle.video)
+      publisher.value.publishAudio(interviewStore.mediaToggle.audio)
+    }
+  }
+)
 </script>
 
 <template>
@@ -77,7 +78,7 @@ const swap = function (idx) {
     <div id="video-container" class="w-100 h-100 d-flex align-center justify-space-around">
 
       <div v-for="(sub, idx) in subscribers" :key="sub.stream.streamId" class="ma-2">
-        <v-btn @click="swap(idx)">{{ idx+1 }}번 째 답변자</v-btn>
+        <div class="w-100 bg-grey-lighten-1 text-center my-1" style="border-radius: 12px;">{{ idx+1 }}번 째 답변자</div>
         <ov-video
           :id="sub.stream.streamId" 
           :stream-manager="sub"
