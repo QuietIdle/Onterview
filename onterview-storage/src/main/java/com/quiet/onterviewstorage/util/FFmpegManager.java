@@ -1,5 +1,6 @@
 package com.quiet.onterviewstorage.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,14 +24,28 @@ public class FFmpegManager {
 
     public String createThumbnail(String sourcePath) {
         // 썸네일 저장할 경로
-        final String outputPath = sourcePath.split("\\.")[0] + ".png";
+        if (!sourcePath.startsWith(fileUtils.VIDEO_PATH)) {
+            return "";
+        }
+
+        final String fullPath =
+                fileUtils.IMAGE_PATH + sourcePath.substring(0, sourcePath.length() - 3)
+                        .substring(fileUtils.VIDEO_PATH.length()) + "png";
+        String[] splits = fullPath.split("/");
+        final String imageOutputPath = fullPath.substring(0,
+                fullPath.length() - splits[splits.length - 1].length());
+
+        File file = new File(imageOutputPath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
 
         try {
             // ffmpeg cli 명령어 생성
             FFmpegBuilder builder = new FFmpegBuilder()
                     .setInput(fileUtils.DEFAULT_URL + sourcePath)
                     .overrideOutputFiles(true)
-                    .addOutput(fileUtils.DEFAULT_URL + outputPath)
+                    .addOutput(fileUtils.DEFAULT_URL + fullPath)
                     .setFormat("image2")
                     .setFrames(1)
                     .setVideoFrameRate(1)
@@ -38,7 +53,9 @@ public class FFmpegManager {
 
             // 명령어 실행
             ffmpeg.run(builder);
-            return outputPath;
+
+            log.info(fileUtils.DEFAULT_URL + fullPath, "에 썸네일 생성");
+            return fullPath;
         } catch (Exception e) {
             return fileUtils.DEFAULT_IMAGE;
         }
