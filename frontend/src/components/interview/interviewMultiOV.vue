@@ -1,5 +1,4 @@
 <script setup>
-<<<<<<< HEAD
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import { OpenVidu } from 'openvidu-browser';
 import { useInterviewStore ,useWebsocketStore } from "@/stores/interview";
@@ -88,20 +87,8 @@ const swap = function (idx) {
       </div>
     </div>
 
-=======
-
-</script>
-
-<template>
-  <div class="w-100 h-100">
-    OV
->>>>>>> 8fc375ca769fa7bc7210b69169bfc62dc9bda668
   </div>
 </template>
 
 <style scoped>
-<<<<<<< HEAD
-=======
-
->>>>>>> 8fc375ca769fa7bc7210b69169bfc62dc9bda668
 </style>
