@@ -4,7 +4,8 @@ import { getSelfSpeechVideoList, getInterviewVideoList } from '@/api/community'
 import selectButton from '@/assets/community/selectButton.svg'
 
 const props = defineProps({
-  roomType: String
+  roomType: String,
+  selectVideoId: Number
 })
 
 onMounted(() => {
@@ -193,10 +194,8 @@ const videoList = ref([
 ])
 
 const emit = defineEmits(['selectVideo'])
-const selectVideoId = ref(null)
 
 const selectVideo = function (video) {
-  selectVideoId.value = video.videoId
   emit('selectVideo', video)
 }
 </script>
@@ -212,7 +211,7 @@ const selectVideo = function (video) {
           cover
         >
           <v-img
-            v-if="selectVideoId == video.videoId"
+            v-if="props.selectVideoId == video.videoId"
             :src="selectButton"
           ></v-img>
         </v-img>
