@@ -44,8 +44,16 @@ public class InterviewRoom extends BaseEntity {
     @OneToMany(mappedBy = "interviewRoom", cascade = CascadeType.PERSIST, orphanRemoval = true)
     List<InterviewQuestion> interviewQuestionList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "interviewRoom", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    List<Interviewee> intervieweeList = new ArrayList<>();
+
     public void addInterviewQuestion(InterviewQuestion interviewQuestion) {
         interviewQuestion.setInterviewRoom(this);
         interviewQuestionList.add(interviewQuestion);
+    }
+
+    public void addInterviewee(Interviewee interviewee) {
+        interviewee.setInterviewRoom(this);
+        intervieweeList.add(interviewee);
     }
 }
