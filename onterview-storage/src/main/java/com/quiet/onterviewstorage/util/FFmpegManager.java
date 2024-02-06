@@ -25,30 +25,19 @@ public class FFmpegManager {
     private final FFprobe ffprobe;
     private final FileUtils fileUtils;
 
-    public String createThumbnail(String sourcePath) {
+    public String createThumbnail(Path videoPath, Path imagePath, String filename) {
         // 썸네일 저장할 경로
-        if (!sourcePath.startsWith(fileUtils.VIDEO_PATH) || !fileUtils.isVideo(sourcePath)) {
+        if (!videoPath.startsWith(fileUtils.VIDEO_PATH) || !fileUtils.isVideo(String.valueOf(videoPath))) {
             throw new BaseException(ErrorCode.FILE_NOT_FOUND);
         }
 
-        final String fullPath =
-                fileUtils.IMAGE_PATH + sourcePath.substring(0, sourcePath.length() - 3)
-                        .substring(fileUtils.VIDEO_PATH.length()) + "png";
-        String[] splits = fullPath.split("/");
-        final String imageOutputPath = fullPath.substring(0,
-                fullPath.length() - splits[splits.length - 1].length());
-
-        File file = new File(imageOutputPath);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-
+        System.out.println(Path.of(fileUtils.DEFAULT_URL, videoPath.toString()));
         try {
             // ffmpeg cli 명령어 생성
             FFmpegBuilder builder = new FFmpegBuilder()
-                    .setInput(fileUtils.DEFAULT_URL + sourcePath)
+                    .setInput(Path.of(fileUtils.DEFAULT_URL, videoPath.toString()).toString())
                     .overrideOutputFiles(true)
-                    .addOutput(fileUtils.DEFAULT_URL + fullPath)
+                    .addOutput(Path.of(fileUtils.DEFAULT_URL, imagePath.toString(), filename + ".png").toString())
                     .setFormat("image2")
                     .setFrames(1)
                     .setVideoFrameRate(1)
@@ -57,22 +46,10 @@ public class FFmpegManager {
             // 명령어 실행
             ffmpeg.run(builder);
 
-            log.info(fileUtils.DEFAULT_URL + fullPath, "에 썸네일 생성");
-            return fullPath;
+            log.info(fileUtils.DEFAULT_URL + imagePath + "에 썸네일 생성");
+            return String.valueOf(imagePath);
         } catch (Exception e) {
             return fileUtils.DEFAULT_IMAGE;
         }
-    }
-
-    public double getDuration(String sourcePath) throws IOException {
-        // 영상 경로
-        Path videoPath = Paths.get(fileUtils.DEFAULT_URL + sourcePath);
-
-        // 영상 메타데이터 조회
-        FFmpegProbeResult probeResult = ffprobe.probe(videoPath.toString());
-
-        // 영상 길이 추출
-        FFmpegStream videoStream = probeResult.getStreams().get(0);
-        return videoStream.duration;
     }
 }

@@ -35,19 +35,20 @@ public class ChunkService {
         String filename = request.getFilename();
         String username = request.getUsername();
 
-        Path path = createFolder(username, filename);
-        saveTempFile(file, chunkNumber, path);
+        Path videoPath = createFolder(fileUtils.VIDEO_PATH, username, filename);
+        Path imagePath = createFolder(fileUtils.IMAGE_PATH, username, filename);
+
+        saveTempFile(file, chunkNumber, videoPath);
 
         // 파일이 전송중인 경우
         if (endOfChunk == 0) {
             return false;
         }
 
-        Path outputFilePath = mergeTempFile(file, path, filename, chunkNumber);
-        String outputFilename = String.valueOf(outputFilePath);
-        log.info("File uploaded successfully filename: " + outputFilename);
+        Path mergedVideoPath = mergeTempFile(file, videoPath, filename, chunkNumber);
+        log.info("File uploaded successfully filename: " + mergedVideoPath);
 
-        fFmpegManager.createThumbnail(outputFilename);
+        fFmpegManager.createThumbnail(mergedVideoPath, imagePath, filename);
 
         return true;
     }
@@ -125,12 +126,13 @@ public class ChunkService {
         Files.write(tempFilePath, file.getBytes());
     }
 
-    private Path createFolder(String username, String filename) {
-        Path path = Path.of(fileUtils.VIDEO_PATH, username, filename);
+    private Path createFolder(String subPath, String username, String filename) {
+        Path path = Path.of(subPath, username, filename);
         File dir = new File(String.valueOf(path));
         if (!dir.exists()) {
             dir.mkdirs();
         }
+
         return path;
     }
 
