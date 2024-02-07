@@ -74,6 +74,30 @@ const router = createRouter({
       meta: {layout: 'main'},
     },
     {
+      path: '/community',
+      name: 'community',
+      component: () => import('@/views/CommunityView.vue'),
+      meta: { layout: 'main' },
+      redirect: { name: "community-list" },
+      children: [
+        {
+          path: "list",
+          name: "community-list",
+          component: () => import('@/components/community/CommunityList.vue')
+        },
+        {
+          path: "detail/:articleId",
+          name: "community-detail",
+          component: () => import('@/components/community/CommunityDetail.vue')
+        },
+        {
+          path: "write",
+          name: "community-write",
+          component: () => import('@/components/community/CommunityWrite.vue')
+        }
+      ]
+    },
+    {
       path: '/interview',
       name: 'interview',
       component: () => import('@/views/InterviewMainView.vue'),
