@@ -16,11 +16,11 @@ public interface ArticleService {
 
     void deleteArticle(Long memberId, Long articleId);
 
-    List<ArticleListResponse> getAllMyArticle(Long memberId, String order);
+    List<ArticleListResponse> getAllMyArticle(Long memberId, String order, String category, String query);
 
     ArticleInfoResponse getArticleInformation(Long articleId, Long memberId);
 
     ArticleResponse getArticleDetail(Long articleId, Long memberId);
 
-    List<ArticleListResponse> getAllArticle(String order);
+    List<ArticleListResponse> getAllArticle(String order, String category, String query);
 }

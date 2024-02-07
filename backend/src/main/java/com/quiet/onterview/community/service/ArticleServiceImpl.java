@@ -72,9 +72,13 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<ArticleListResponse> getAllMyArticle(Long memberId, String order) {
-        List<Article> articleList = getArticleList(memberId, order);
+    public List<ArticleListResponse> getAllMyArticle(Long memberId, String order, String category, String query) {
+        if(order.isEmpty()) {
+            throw new BaseException(ErrorCode.REQUIRED_VALUE_NOT_EXISTS);
+        }
         List<ArticleListResponse> articleListResponse = new ArrayList<>();
+        Boolean isFiltered = (!category.isEmpty() && !query.isEmpty());
+        List<Article> articleList = isFiltered ? getAllMyArticleFilteredList(memberId, order, category, query) : getArticleList(memberId, order);
         articleList.stream().forEach(article ->
                 articleListResponse.add(articleMapper.articleToArticleListResponse(article)));
         return articleListResponse;
@@ -97,9 +101,13 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<ArticleListResponse> getAllArticle(String order) {
-        List<Article> articleList = getArticleList(null, order);
+    public List<ArticleListResponse> getAllArticle(String order, String category, String query) {
+        if(order.isEmpty()) {
+            throw new BaseException(ErrorCode.REQUIRED_VALUE_NOT_EXISTS);
+        }
         List<ArticleListResponse> articleListResponse = new ArrayList<>();
+        Boolean isFiltered = (!category.isEmpty() && !query.isEmpty());
+        List<Article> articleList = isFiltered ? getAllArticleFilteredList(order, category, query) : getArticleList(null, order);
         articleList.stream().forEach(article ->
                 articleListResponse.add(articleMapper.articleToArticleListResponse(article)));
         return articleListResponse;
@@ -109,8 +117,8 @@ public class ArticleServiceImpl implements ArticleService {
         List<Article> articleList = new ArrayList<>();
         if(order.equals("recent")) {
             articleList = (memberId==null) ?
-                    articleRepository.findAllByOrderByCreateAtAsc()
-                    : articleRepository.findByMember_MemberIdOrderByCreateAtAsc(memberId);
+                    articleRepository.findAllByOrderByCreateAtDesc()
+                    : articleRepository.findByMember_MemberIdOrderByCreateAtDesc(memberId);
         } else if(order.equals("like")) {
             articleList = (memberId==null) ?
                     articleRepository.findAllByOrderByLikeCountDesc()
@@ -119,6 +127,36 @@ public class ArticleServiceImpl implements ArticleService {
             articleList = (memberId==null) ?
                     articleRepository.findAllByOrderByCommentCountDesc()
                     : articleRepository.findByMember_MemberIdOrderByCommentCountDesc(memberId);
+        }
+        return articleList;
+    }
+
+    private List<Article> getAllArticleFilteredList(String order, String category, String query) {
+        List<Article> articleList = new ArrayList<>();
+        if(order.equals("recent")) {
+            articleList = category.equals("title") ? articleRepository.findAllByTitleContainingOrderByCreateAtDesc(query)
+                    : articleRepository.findAllByContentContainingOrderByCreateAtDesc(query);
+        } else if(order.equals("like")) {
+            articleList = category.equals("title") ? articleRepository.findAllByTitleContainingOrderByLikeCountDesc(query)
+                    : articleRepository.findAllByContentContainingOrderByLikeCountDesc(query);
+        } else if(order.equals("comment")){
+            articleList = category.equals("title") ? articleRepository.findAllByTitleContainingOrderByCommentCountDesc(query)
+                    : articleRepository.findAllByContentContainingOrderByCommentCountDesc(query);
+        }
+        return articleList;
+    }
+
+    private List<Article> getAllMyArticleFilteredList(Long memberId, String order, String category, String query) {
+        List<Article> articleList = new ArrayList<>();
+        if(order.equals("recent")) {
+            articleList = category.equals("title") ? articleRepository.findByMember_MemberIdAndTitleContainingOrderByCreateAtDesc(memberId, query)
+                    : articleRepository.findByMember_MemberIdAndContentContainingOrderByCreateAtDesc(memberId, query);
+        } else if(order.equals("like")) {
+            articleList = category.equals("title") ? articleRepository.findByMember_MemberIdAndTitleContainingOrderByLikeCountDesc(memberId, query)
+                    : articleRepository.findByMember_MemberIdAndContentContainingOrderByLikeCountDesc(memberId, query);
+        } else if(order.equals("comment")){
+            articleList = category.equals("title") ? articleRepository.findByMember_MemberIdAndTitleContainingOrderByCommentCountDesc(memberId, query)
+                    : articleRepository.findByMember_MemberIdAndContentContainingOrderByCommentCountDesc(memberId, query);
         }
         return articleList;
     }
