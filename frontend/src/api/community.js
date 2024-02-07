@@ -4,14 +4,14 @@ import { useUserStore } from '@/stores/user'
 const api = localAxios()
 const userStore = useUserStore()
 
-const getAllPostList = function (order) {
+const getAllPostList = function (order, category, query) {
     api.defaults.headers.common["Authorization"] = userStore.accessToken
-    return api.get(`/api/community?order=${order}`)
+    return api.get(`/api/community?order=${order}&category=${category}&query=${query}`)
 }
 
-const getMyPostList = function (order) {
+const getMyPostList = function (order, category, query) {
     api.defaults.headers.common["Authorization"] = userStore.accessToken
-    return api.get(`/api/community/my?order=${order}`)
+    return api.get(`/api/community/my?order=${order}&category=${category}&query=${query}`)
 }
 
 const getPostDetail = function (articleId) {

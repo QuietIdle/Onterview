@@ -18,9 +18,14 @@ onMounted(() => {
 
 const requestAllPostList = async function () {
   try {
-    const response = await getAllPostList(selectPost.value.order)
+    const response = await getAllPostList(
+      selectPost.value.order,
+      searchCategory.value.value,
+      searchQuery.value
+    )
+
     postList.value = response.data
-    isAllPostList.value != isAllPostList.value
+    isAllPostList.value = true
   } catch (error) {
     alert(`전체 게시글을 조회하지 못했습니다.`)
   }
@@ -28,9 +33,14 @@ const requestAllPostList = async function () {
 
 const requestMyPostList = async function () {
   try {
-    const response = await getMyPostList(selectPost.value.order)
+    const response = await getMyPostList(
+      selectPost.value.order,
+      searchCategory.value.value,
+      searchQuery.value
+    )
+
     postList.value = response.data
-    isAllPostList.value != isAllPostList.value
+    isAllPostList.value = false
   } catch (error) {
     alert('내가 쓴 게시글을 조회하지 못했습니다.')
   }
@@ -42,6 +52,10 @@ const isLogin = function () {
 }
 
 const isAllPostList = ref(true)
+
+// 검색
+const searchCategory = ref({ category: '선택', value: '' })
+const searchQuery = ref('')
 
 // 정렬
 const selectPost = ref({ title: '최신순', order: 'recent' })
@@ -61,7 +75,6 @@ watch(selectPost, (newOrder, oldOrder) => {
 
 // 게시판
 const postList = ref([])
-const search = ref('')
 
 const page = ref(1)
 const itemsPerPage = ref(9)
@@ -102,7 +115,7 @@ const goCommunityWrite = function () {
         density="compact"
         variant="plain"
         :href="'#전체보기'"
-        @click="requestAllPostList"
+        @click="requestAllPostList()"
         >전체 보기</v-btn
       >
       <div style="color: rgb(190, 190, 190)">|</div>
@@ -110,7 +123,7 @@ const goCommunityWrite = function () {
         density="compact"
         variant="plain"
         :href="'#내가쓴글'"
-        @click="requestMyPostList"
+        @click="requestMyPostList()"
         :disabled="isLogin()"
         >내가 쓴 게시글 보기</v-btn
       >
@@ -121,17 +134,24 @@ const goCommunityWrite = function () {
           <v-col cols="4" class="px-0 mx-0">
             <v-select
               label="선택"
-              :items="['제목', '내용']"
+              :items="[
+                { category: '제목', value: 'title' },
+                { category: '내용', value: 'content' }
+              ]"
+              v-model="searchCategory"
+              item-title="category"
+              item-value="value"
               single-line
               variant="solo"
               density="compact"
               hide-details
               class="mr-3"
+              return-object
             ></v-select>
           </v-col>
           <v-col cols="6" class="px-0 mx-0">
             <v-text-field
-              v-model="search"
+              v-model="searchQuery"
               label="검색"
               single-line
               variant="solo"
@@ -140,7 +160,19 @@ const goCommunityWrite = function () {
             ></v-text-field>
           </v-col>
           <v-col cols="2" class="px-0 mx-0">
-            <v-img class="search-button" :src="searchButton"></v-img>
+            <!-- <v-btn
+              variant="elevated"
+              color="#BB66FF"
+              prepend-icon="mdi-magnify"
+              class="search-button"
+            ></v-btn> -->
+            <v-img
+              class="search-button"
+              :src="searchButton"
+              @click="
+                isAllPostList ? requestAllPostList() : requestMyPostList()
+              "
+            ></v-img>
           </v-col>
         </v-row>
       </v-col>
