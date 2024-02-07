@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { v4 as uuidv4 } from 'uuid'
 import TimerComponent from '@/components/interview/Timer.vue'
 import { apiMethods, fileServer } from "@/api/video"
@@ -7,8 +8,14 @@ import { useUserStore } from "@/stores/user"
 import { useInterviewStore } from "@/stores/interview"
 import { postInterviewQuestions } from '@/api/interview'
 
+const router = useRouter()
 const userStore = useUserStore()
 const interviewStore = useInterviewStore()
+
+const startTime = ref(Date.now())
+const timeDifference = ref(0)
+const timerId = ref(null)
+
 const questionList = ref([])
 const mediaVideo = document.createElement('video')  // 비디오+오디오 스트리밍 영상(저장용)
 const mediaOnlyVideo = ref(null)                    // 비디오 스트리밍 영상(송출용)
@@ -17,7 +24,6 @@ const endOfChunk = ref(0)  // chunk 전송 완료 여부 {0: 전송중, 1: 마�
 const isAcceptedPermission = ref(true)
 const isWebcamOn = ref(false)
 const isMicrophoneOn = ref(false)
-const isRecord = ref(false)
 const isActiveTimer = ref(false)
 const isAbleInterview = ref(false)
 const isInterviewInProgress = ref(false)
@@ -92,6 +98,17 @@ const setupMicrophone = function () {
   })
 }
 
+const updateTime = function () {
+  timeDifference.value = Math.floor((Date.now() - startTime.value) / 1000)
+}
+
+const formatTime = function (seconds) {
+  // 초를 'mm:ss' 형식의 문자열로 변환
+  const minutes = Math.floor(seconds / 60)
+  const remainingSeconds = seconds % 60
+  return `${minutes < 10 ? '0' + minutes : minutes}:${remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds}`
+}
+
 const sleep = function (ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
@@ -116,7 +133,13 @@ const TTS = function (script) {
   })
 }
 
-// 1인 면접 시작 소개
+const TTScancel = function () {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+  }
+}
+
+// 1인 면접 시작 전자 음성
 const introduceInterviewSolo = async function () {
   const TTSscript = `
     지금부터 모의 면접을 시작하겠습니다. \n
@@ -126,6 +149,7 @@ const introduceInterviewSolo = async function () {
   await TTS(TTSscript)
 }
 
+// 면접 답변 진행 (타이머 On)
 const answerInterviewSolo = async function (script) {
   isActiveTimer.value = true
 
@@ -135,6 +159,7 @@ const answerInterviewSolo = async function (script) {
   }
 }
 
+// 1인 면접 종료 전자 음성
 const closingInterviewSolo = async function () {
   const TTSscript = `
     수고하셨습니다. 모의 면접을 종료합니다.
@@ -142,6 +167,7 @@ const closingInterviewSolo = async function () {
   await TTS(TTSscript)
 }
 
+// 하나의 면접 문항에 대한 인터뷰 진행
 const interviewOneQuestion = async function (script) {
   await TTS(script)
   startRecord()
@@ -149,10 +175,12 @@ const interviewOneQuestion = async function (script) {
   saveRecording()
 }
 
+// 면접 문항 조기 종료 (답변 완료)
 const finishOneQuestion = async function () {
   isActiveTimer.value = false
 }
 
+// 인터뷰 시작
 const startInterview = async function () {
   let isPossibie = true
   mediaVideo.srcObject.getVideoTracks().forEach(track => {
@@ -178,6 +206,10 @@ const startInterview = async function () {
       return
     }
 
+    // 스톱워치 실행
+    startTime.value = Date.now()
+    timerId.value = setInterval(updateTime, 1000)
+
     isInterviewInProgress.value = true
     await introduceInterviewSolo()
     for (let i = 0; i < 5; i++) {
@@ -187,14 +219,17 @@ const startInterview = async function () {
       }
     }
     await closingInterviewSolo()
-    isInterviewInProgress.value = false
+    stopInterview()
   } catch (error) {
+    alert(`알 수 없는 이유로 모의 면접을 진행할 수 없습니다. \n관리자에게 문의해주세요.`)
     console.error('오류 발생:', error)
   }
 }
 
-const finishInterview = async function () {
+const stopInterview = async function () {
   isInterviewInProgress.value = false
+  TTScancel()
+  timerId.value = null
 }
 
 let recorder
@@ -209,7 +244,6 @@ const startRecord = async function () {
   recordedChunks.length = 0
 
   recorder = new MediaRecorder(stream)
-  isRecord.value = true
   recorder.ondataavailable = async (e) => {
     idx++
     if (e.data.size > 0) {
@@ -220,11 +254,7 @@ const startRecord = async function () {
     if (!isActiveTimer.value | idx > 25) {
       console.log(recorder)
       console.log(e.data, idx, endOfChunk.value, !isActiveTimer.value)
-      endOfChunk.value = 1
-      if (recorder.state === 'recording') {
-        await recorder.stop()
-        // stopRecord()
-      }
+      stopRecord()
     }
   }
   recorder.start(3000)
@@ -233,10 +263,7 @@ const startRecord = async function () {
 // 녹화 종료
 const stopRecord = async function () {
   endOfChunk.value = 1
-  // const stopTrackPromises = mediaVideo.srcObject.getTracks().forEach(track => track.stop())
-
   await recorder.stop()
-  // console.log(recorder)
   recordedChunks.length = 0
   finishOneQuestion()
 }
@@ -318,6 +345,10 @@ const sendToServer = async function (chunk, idx) {
   }
 }
 
+const toInterviewMain = function () {
+  router.push({ name: 'interview' })
+}
+
 onMounted(() => {
   navigator.permissions.query({ name: 'camera' })
     .then(permissionStatus => {
@@ -340,11 +371,19 @@ onUnmounted(() => {
 
 <template>
   <div class="container bg-grey-darken-4 text-grey-lighten-5">
-    <div class="d-flex" style="border-bottom: 1px solid white;">
-      <div class="px-4 py-2" style="border-left: 1px solid white;">{{ interviewStore.choice.type }}</div>
-      <div class="px-4 py-2" style="border-left: 1px solid white; border-right: 1px solid white;">녹화시간</div>
+    <div class="d-flex align-center my-0 py-0" style="border-bottom: 1px solid white;">
+      <div class="m-auto px-4 py-2">{{ interviewStore.choice.type }}</div>
+      <div class="m-auto px-4 py-2">
+        <v-icon icon="mdi-radiobox-marked" class="mx-1" color="red"></v-icon>
+        {{ formatTime(timeDifference) }}
+      </div>
       <div class="mx-auto"></div>
-      <div class="px-4 py-2" style="border-left: 1px solid white; border-right: 1px solid white;">나가기</div>
+      <div v-if="isInterviewInProgress" class="px-4 py-2" style="border-left: 1px solid white;">
+        <v-btn variant="plain" @click="stopInterview">면접종료</v-btn>
+      </div>
+      <div class="px-4 py-2" style="border-left: 1px solid white; border-right: 1px solid white;">
+        <v-btn variant="plain" @click="toInterviewMain">나가기</v-btn>
+      </div>
     </div>
 
     <div class="d-flex justify-center my-15">
