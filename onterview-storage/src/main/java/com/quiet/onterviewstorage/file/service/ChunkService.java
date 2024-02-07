@@ -2,6 +2,8 @@ package com.quiet.onterviewstorage.file.service;
 
 import com.quiet.onterviewstorage.file.dto.FileDto;
 import com.quiet.onterviewstorage.file.dto.ResourceDto;
+import com.quiet.onterviewstorage.global.BaseException;
+import com.quiet.onterviewstorage.global.ErrorCode;
 import com.quiet.onterviewstorage.util.FFmpegManager;
 import com.quiet.onterviewstorage.util.FileUtils;
 
@@ -41,6 +43,7 @@ public class ChunkService {
         saveTempFile(file, chunkNumber, videoPath);
 
         // 파일이 전송중인 경우
+        log.info(chunkNumber + " " + endOfChunk);
         if (endOfChunk == 0) {
             return HttpStatus.PARTIAL_CONTENT;
         }
@@ -107,11 +110,21 @@ public class ChunkService {
     ) throws IOException {
         Path outputFilePath = Path.of(String.valueOf(savingPath), filename + ".mkv");
         log.info(String.valueOf(outputFilePath), "최종 결과물");
+
+        if (outputFilePath.toFile().exists()) {
+            Files.delete(outputFilePath);
+        }
+
         Files.createFile(outputFilePath);
 
         for (int number = 1; number <= chunkNumber; number++) {
             Path chunkFile = Paths.get(String.valueOf(savingPath),
                     file.getOriginalFilename() + ".part" + number);
+
+            if (!chunkFile.toFile().exists()) {
+                throw new BaseException(ErrorCode.CHUNK_NOT_FOUND);
+            }
+
             Files.write(outputFilePath, Files.readAllBytes(chunkFile), StandardOpenOption.APPEND);
             Files.delete(chunkFile);
         }
@@ -126,6 +139,7 @@ public class ChunkService {
         Path tempFilePath = Paths.get(String.valueOf(path), tempFilename);
         // 임시 저장
         Files.write(tempFilePath, file.getBytes());
+        log.info(tempFilename + " 저장");
     }
 
     private Path createFolder(String subPath, String username, String filename) {
