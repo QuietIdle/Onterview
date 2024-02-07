@@ -8,17 +8,41 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface ArticleRepository extends JpaRepository<Article, Long> {
 
-    List<Article> findAllByOrderByCreateAtAsc();
+    List<Article> findAllByOrderByCreateAtDesc();
 
     List<Article> findAllByOrderByLikeCountDesc();
 
     List<Article> findAllByOrderByCommentCountDesc();
 
-    List<Article> findByMember_MemberIdOrderByCreateAtAsc(Long memberId);
+    List<Article> findAllByTitleContainingOrderByCreateAtDesc(String title);
+
+    List<Article> findAllByContentContainingOrderByCreateAtDesc(String content);
+
+    List<Article> findAllByTitleContainingOrderByLikeCountDesc(String title);
+
+    List<Article> findAllByContentContainingOrderByLikeCountDesc(String content);
+
+    List<Article> findAllByTitleContainingOrderByCommentCountDesc(String title);
+
+    List<Article> findAllByContentContainingOrderByCommentCountDesc(String content);
+
+    List<Article> findByMember_MemberIdOrderByCreateAtDesc(Long memberId);
 
     List<Article> findByMember_MemberIdOrderByLikeCountDesc(Long memberId);
 
     List<Article> findByMember_MemberIdOrderByCommentCountDesc(Long memberId);
+
+    List<Article> findByMember_MemberIdAndTitleContainingOrderByCreateAtDesc(Long memberId, String title);
+
+    List<Article> findByMember_MemberIdAndContentContainingOrderByCreateAtDesc(Long memberId, String content);
+
+    List<Article> findByMember_MemberIdAndTitleContainingOrderByLikeCountDesc(Long memberId, String title);
+
+    List<Article> findByMember_MemberIdAndContentContainingOrderByLikeCountDesc(Long memberId, String content);
+
+    List<Article> findByMember_MemberIdAndTitleContainingOrderByCommentCountDesc(Long memberId, String title);
+
+    List<Article> findByMember_MemberIdAndContentContainingOrderByCommentCountDesc(Long memberId, String content);
 
     @Modifying
     @Query("update Article a set a.content = :content where a.articleId = :articleId")

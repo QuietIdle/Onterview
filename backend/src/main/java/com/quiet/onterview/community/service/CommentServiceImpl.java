@@ -39,17 +39,15 @@ public class CommentServiceImpl implements CommentService {
                 new BaseException(ErrorCode.ARTICLE_NOT_EXISTS));
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new BaseException(ErrorCode.USER_NOT_EXISTS));
-        Comment comment;
-        if(commentPostRequest.getParentCommentId()!=0) { // 답글
-            Comment parent = commentRepository.findById(commentPostRequest.getParentCommentId()).orElseThrow(() ->
+        Comment parent = null;
+        if((commentPostRequest.getParentCommentId()!=null)) { // 답글
+            parent = commentRepository.findById(commentPostRequest.getParentCommentId()).orElseThrow(() ->
                     new BaseException(ErrorCode.COMMENT_NOT_EXISTS));
             if(parent.getParent()!=null) { // 자식 댓글에 답글을 달려고 하는 경우
                 throw new BaseException(ErrorCode.CANNOT_CREATE_CHILD_COMMENT_TO_CHILD_COMMENT);
             }
-            comment = commentMapper.commentPostRequestToComment(commentPostRequest, parent, article, member);
-        } else { // 댓글
-            comment = commentMapper.commentPostRequestToComment(commentPostRequest, null, article, member);
         }
+        Comment comment = commentMapper.commentPostRequestToComment(commentPostRequest, parent, article, member);
         articleRepository.updateCommentCount(article.getArticleId(),1);
         return commentMapper.commentToCommentPostResponse(commentRepository.save(comment),memberId);
     }
@@ -88,7 +86,6 @@ public class CommentServiceImpl implements CommentService {
             childList.stream().forEach(childComment -> {
                 childResponse.add(commentMapper.commentToCommentResponse(childComment, memeberId));
             });
-            System.out.println("CHILD SIZE " + childResponse.size());
             commentObjectResponseList.add(CommentObjectResponse.builder()
                     .parentComment(commentMapper.commentToCommentResponse(parentComment, memeberId))
                     .childCommentList(childResponse)
