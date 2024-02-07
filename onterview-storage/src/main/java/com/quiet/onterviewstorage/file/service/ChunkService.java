@@ -6,13 +6,11 @@ import com.quiet.onterviewstorage.global.BaseException;
 import com.quiet.onterviewstorage.global.ErrorCode;
 import com.quiet.onterviewstorage.util.FFmpegManager;
 import com.quiet.onterviewstorage.util.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.Arrays;
 import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
@@ -43,17 +41,17 @@ public class ChunkService {
         saveTempFile(file, chunkNumber, videoPath);
 
         // 파일이 전송중인 경우
-        log.info(chunkNumber + " " + endOfChunk);
         if (endOfChunk == 0) {
+            log.info(String.format("%s's chunk %s%d saved ", username, filename, chunkNumber));
             return HttpStatus.PARTIAL_CONTENT;
         }
 
         Path mergedVideoPath = mergeTempFile(file, videoPath, filename, chunkNumber);
-        log.info("File uploaded successfully filename: " + mergedVideoPath);
+        log.info(String.format("%s's %s%d saved", username, filename, chunkNumber));
 
         String createdThumbnail = fFmpegManager.createThumbnail(mergedVideoPath, imagePath,
                 filename);
-        log.info("Thumbnail created: " + createdThumbnail);
+        log.info(String.format("%s's %s saved", username, createdThumbnail));
 
         return HttpStatus.OK;
     }
@@ -109,7 +107,6 @@ public class ChunkService {
             MultipartFile file, Path savingPath, String filename, int chunkNumber
     ) throws IOException {
         Path outputFilePath = Path.of(String.valueOf(savingPath), filename + ".mkv");
-        log.info(String.valueOf(outputFilePath), "최종 결과물");
 
         if (outputFilePath.toFile().exists()) {
             Files.delete(outputFilePath);
@@ -122,6 +119,7 @@ public class ChunkService {
                     file.getOriginalFilename() + ".part" + number);
 
             if (!chunkFile.toFile().exists()) {
+                log.info(chunkFile + " is not found");
                 throw new BaseException(ErrorCode.CHUNK_NOT_FOUND);
             }
 
@@ -139,7 +137,6 @@ public class ChunkService {
         Path tempFilePath = Paths.get(String.valueOf(path), tempFilename);
         // 임시 저장
         Files.write(tempFilePath, file.getBytes());
-        log.info(tempFilename + " 저장");
     }
 
     private Path createFolder(String subPath, String username, String filename) {
