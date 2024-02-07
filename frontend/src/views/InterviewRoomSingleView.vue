@@ -17,6 +17,7 @@ const endOfChunk = ref(0)  // chunk 전송 완료 여부 {0: 전송중, 1: 마�
 const isAcceptedPermission = ref(true)
 const isWebcamOn = ref(false)
 const isMicrophoneOn = ref(false)
+const isRecord = ref(false)
 const isActiveTimer = ref(false)
 const isAbleInterview = ref(false)
 const isInterviewInProgress = ref(false)
@@ -132,7 +133,6 @@ const answerInterviewSolo = async function (script) {
   while (isActiveTimer.value) {
     await sleep(100)  // 짧은 간격으로 확인
   }
-  // console.log(script)
 }
 
 const closingInterviewSolo = async function () {
@@ -146,14 +146,16 @@ const interviewOneQuestion = async function (script) {
   await TTS(script)
   startRecord()
   await answerInterviewSolo()
-  stopRecord()
   saveRecording()
+}
+
+const finishOneQuestion = async function () {
+  isActiveTimer.value = false
 }
 
 const startInterview = async function () {
   let isPossibie = true
   mediaVideo.srcObject.getVideoTracks().forEach(track => {
-    console.log(track)
     if (track.readyState != "live") {
       alert(`비디오가 활성화 되어 있지 않다면 면접을 진행할 수 없어요 😂`)
       isPossibie = false
@@ -192,31 +194,38 @@ const startInterview = async function () {
 }
 
 const finishInterview = async function () {
-  isActiveTimer.value = false
-  // isInterviewInProgress.value = false
+  isInterviewInProgress.value = false
 }
 
 let recorder
 let recordedChunks = []
+
 // 녹화 시작(면접 문항 제시부터)
 const startRecord = async function () {
   const stream = mediaVideo.captureStream()
   filename.value = uuidv4()
   endOfChunk.value = 0
-  let idx = 1  // chunk 개수
+  let idx = 0  // chunk 개수
   recordedChunks.length = 0
 
   recorder = new MediaRecorder(stream)
-  recorder.ondataavailable = (e) => {
+  isRecord.value = true
+  recorder.ondataavailable = async (e) => {
+    idx++
     if (e.data.size > 0) {
       recordedChunks.push(e.data)
-      if (idx > 20) {
-        // if (!isActiveTimer.value) {
-        stopRecord()
-      }
     }
     sendToServer(e.data, idx)
-    idx++
+
+    if (!isActiveTimer.value | idx > 25) {
+      console.log(recorder)
+      console.log(e.data, idx, endOfChunk.value, !isActiveTimer.value)
+      endOfChunk.value = 1
+      if (recorder.state === 'recording') {
+        await recorder.stop()
+        // stopRecord()
+      }
+    }
   }
   recorder.start(3000)
 }
@@ -226,10 +235,10 @@ const stopRecord = async function () {
   endOfChunk.value = 1
   // const stopTrackPromises = mediaVideo.srcObject.getTracks().forEach(track => track.stop())
 
-  recorder.stop()
-  console.log(recorder)
+  await recorder.stop()
+  // console.log(recorder)
   recordedChunks.length = 0
-  finishInterview()
+  finishOneQuestion()
 }
 
 // 녹화 영상 저장
@@ -324,7 +333,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  stopRecord()
+  // stopRecord()
 })
 
 </script>
@@ -344,7 +353,7 @@ onUnmounted(() => {
 
     <v-row class="text-center">
       <div class="d-flex flex-column align-center my-auto offset-1 v-col-3 py-0 px-0">
-        <TimerComponent :start-timer="isActiveTimer" /><br>
+        <TimerComponent :start-timer="isActiveTimer" @finish-timer="isActiveTimer = false" /><br>
         <div v-if="!isInterviewInProgress">
           <v-btn :disabled="!isAbleInterview" rounded="xl" size="x-large" class="active-btn mt-4 mx-2 px-15"
             @click="startInterview">면접 시작</v-btn>
