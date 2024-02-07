@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(originPatterns = "*")
 @RequestMapping("/api-file/chunk")
 @Slf4j
 public class ChunkController {
@@ -28,10 +27,8 @@ public class ChunkController {
             @RequestPart("chunk") MultipartFile file,
             @RequestPart("jsonData") FileDto.VideoRequest request
     ) throws IOException {
-        boolean isDone = chunkService.chunkUpload(file, request);
-
-        return (isDone ? ResponseEntity.ok()
-                : ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)).build();
+        HttpStatus uploadStatus = chunkService.chunkUpload(file, request);
+        return ResponseEntity.status(uploadStatus).build();
     }
 
     @GetMapping("/stream/{filename}/{username}")

@@ -12,5 +12,5 @@ public interface VideoService {
     List<VideoInformationResponse> loadAllMyVideo(String email);
     void createVideoInformation(VideoInformationRequest videoInformationRequest);
     void updateVideo(Long videoId, VideoUpdateRequest videoUpdateRequest);
-    void deleteVideo(VideoDeleteRequest videos);
+    void deleteVideo(VideoDeleteRequest videos, String token);
 }

@@ -11,7 +11,7 @@ public interface FileService {
     FileInformationResponse loadFileInformationBySaveFilename(String saveFilename);
     void deleteFileInformationByFileInformationId(Long fileInformationId);
     void deleteFileInformationBySaveName(String saveFilename);
-    String transToFileServer(MultipartFile file) throws IOException;
-    void deleteFileOnFileServer(String filename);
-    void deleteFilesOnFileServer(Long... fileId);
+    String transToFileServer(MultipartFile file, String token) throws IOException;
+    void deleteFileOnFileServer(String filename, String token);
+    void deleteFilesOnFileServer(String token, Long... fileId);
 }

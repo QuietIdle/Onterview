@@ -39,8 +39,10 @@ public class CommunityController {
     private final LikesService likesService;
 
     @GetMapping
-    public ResponseEntity<List<ArticleListResponse>> getAllArticle(@RequestParam("order") String order) {
-        return ResponseEntity.ok().body(articleService.getAllArticle(order));
+    public ResponseEntity<List<ArticleListResponse>> getAllArticle(@RequestParam("order") String order,
+            @RequestParam("category") String category,
+            @RequestParam("query") String query) {
+        return ResponseEntity.ok().body(articleService.getAllArticle(order, category, query));
     }
 
     @PostMapping
@@ -79,8 +81,10 @@ public class CommunityController {
 
     @GetMapping("/my")
     public ResponseEntity<List<ArticleListResponse>> getAllMyArticle(@AuthenticationPrincipal SecurityUser user,
-            @RequestParam("order") String order) {
-        return ResponseEntity.ok().body(articleService.getAllMyArticle(user.getMemberId(), order));
+            @RequestParam("order") String order,
+            @RequestParam("category") String category,
+            @RequestParam("query") String query) {
+        return ResponseEntity.ok().body(articleService.getAllMyArticle(user.getMemberId(), order, category, query));
     }
 
     @PatchMapping("/like/{articleId}")

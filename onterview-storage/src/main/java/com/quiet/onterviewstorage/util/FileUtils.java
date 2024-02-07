@@ -17,6 +17,11 @@ public class FileUtils {
     public String DEFAULT_URL;
     @Value("${path.default-image}")
     public String DEFAULT_IMAGE;
+    final String MP4_EXTENSION = "mp4";
+    final String MKV_EXTENSION = "mkv";
+    public boolean isVideo(String filename){
+        return filename.endsWith(MP4_EXTENSION) || filename.endsWith(MKV_EXTENSION);
+    }
 
     public String createUUIDFileName(String extension) {
         return String.format("%s.%s", UUID.randomUUID(), extension);

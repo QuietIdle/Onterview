@@ -26,6 +26,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Slf4j
 public class FileServiceImpl implements FileService {
 
+    private final String AUTHORIZATION_HEADER = "Authorization";
     private final FileInformationRepository fileInformationRepository;
     private final FileInformationMapper fileInformationMapper;
 
@@ -77,11 +78,12 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public String transToFileServer(MultipartFile file) {
+    public String transToFileServer(MultipartFile file, String token) {
         MultiValueMap<String, Object> multipartData = new LinkedMultiValueMap<>();
         multipartData.add(fileKey, file.getResource());
         Map result = WebClient.create(baseUrl)
                 .post()
+                .header(AUTHORIZATION_HEADER, token)
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .body(BodyInserters.fromMultipartData(multipartData))
                 .retrieve()
@@ -91,24 +93,25 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void deleteFilesOnFileServer(Long... fileId) {
+    public void deleteFilesOnFileServer(String token, Long... fileId) {
         Arrays.stream(fileId)
                 .map(fileInformationRepository::findById)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .forEach(fileInformation -> deleteFileOnFileServer(
-                        fileInformation.getSaveFilename())
+                        fileInformation.getSaveFilename(), token)
                 );
     }
 
     @Override
-    public void deleteFileOnFileServer(String filename) {
+    public void deleteFileOnFileServer(String filename, String token) {
         WebClient.create(baseUrl)
                 .delete()
                 .uri(uriBuilder -> uriBuilder
                         .queryParam(filePathQuery, filePath)
                         .queryParam(fileNameQuery, filename)
                         .build())
+                .header(AUTHORIZATION_HEADER, token)
                 .retrieve()
                 .bodyToMono(Void.class)
                 .block();
