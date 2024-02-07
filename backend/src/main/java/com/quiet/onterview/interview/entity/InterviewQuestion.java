@@ -1,6 +1,7 @@
 package com.quiet.onterview.interview.entity;
 
 import com.quiet.onterview.common.BaseEntity;
+import com.quiet.onterview.member.entity.Member;
 import com.quiet.onterview.question.entity.CommonQuestion;
 import com.quiet.onterview.video.entity.Video;
 import jakarta.persistence.*;
@@ -33,4 +34,8 @@ public class InterviewQuestion extends BaseEntity {
 
     @OneToOne(mappedBy = "interviewQuestion", cascade = PERSIST, orphanRemoval = true)
     private Video video;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "INTERVIEWEE_ID")
+    private Interviewee interviewee;
 }
