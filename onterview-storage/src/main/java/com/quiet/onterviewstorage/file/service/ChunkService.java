@@ -48,7 +48,9 @@ public class ChunkService {
         Path mergedVideoPath = mergeTempFile(file, videoPath, filename, chunkNumber);
         log.info("File uploaded successfully filename: " + mergedVideoPath);
 
-        fFmpegManager.createThumbnail(mergedVideoPath, imagePath, filename);
+        String createdThumbnail = fFmpegManager.createThumbnail(mergedVideoPath, imagePath,
+                filename);
+        log.info("Thumbnail created: " + createdThumbnail);
 
         return HttpStatus.OK;
     }
