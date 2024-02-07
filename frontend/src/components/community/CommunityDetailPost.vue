@@ -1,17 +1,29 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+// lib
+import { ref, onMounted, computed, onUpdated } from 'vue'
 import { useRoute } from 'vue-router'
+
+// api
 import { getPostDetail, patchLikePost } from '@/api/community'
-import CommunityModalUpdate from '@/components/community/modal/CommunityModalUpdate.vue'
-import CommunityModalDelete from '@/components/community/modal/CommunityModalDelete.vue'
+import { fileServer } from '@/api/video'
 
 // assets
-import tempThumbnail from '@/assets/main/introduceImage2.png'
 import unlikeButton from '@/assets/community/unlikeButton.svg'
 import likeButton from '@/assets/community/likeButton.svg'
 
-onMounted(() => {
-  requestPostDetail()
+// component
+import CommunityModalUpdate from '@/components/community/modal/CommunityModalUpdate.vue'
+import CommunityModalDelete from '@/components/community/modal/CommunityModalDelete.vue'
+
+onMounted(async () => {
+  await requestPostDetail()
+
+  try {
+    // await getAllChunks('59755822-3226-49f0-bac9-2ee7c44b5de2.mkv', 0)
+    await getAllChunks(postDetail.value.videoInfo.videoUrl.saveFilename, 0)
+  } catch (error) {
+    console.warn(error)
+  }
 })
 
 const route = useRoute()
@@ -20,7 +32,6 @@ const articleId = route.params.articleId
 const requestPostDetail = async function () {
   try {
     const response = await getPostDetail(articleId)
-    // console.log('response post detail', response)
     postDetail.value = response.data
   } catch (error) {
     alert('게시글을 조회하지 못했습니다.')
@@ -49,6 +60,53 @@ const content = computed(() => {
     return postDetail.value.content
   }
 })
+
+// video
+const isCompleted = ref(false)
+const urlRef = ref(null)
+
+const getAllChunks = async function (filename) {
+  isCompleted.value = false
+
+  const chunkSize = 1024 * 1024 // 1MB 단위로 청크를 받음
+  let start = 0
+  let end = chunkSize - 1
+
+  let chunks = []
+
+  while (!isCompleted.value) {
+    try {
+      const response = await fileServer.playVideo(
+        filename,
+        'test@test.com',
+        start,
+        end
+      )
+
+      console.log(response)
+
+      if (response.status === 206) {
+        console.log(`Received chunk ${start}-${end}`)
+        chunks.push(response.data)
+        start = end + 1
+        end = start + chunkSize - 1
+      } else if (response.status === 200) {
+        console.log('Received the last chunk')
+        chunks.push(response.data)
+        isCompleted.value = true
+        const blob = new Blob(chunks, { type: 'video/mp4' })
+        const url = URL.createObjectURL(blob)
+
+        urlRef.value = url
+        // if (com === 0) renderVideo(url)
+        // else reRenderVideo(url)
+      }
+    } catch (error) {
+      console.error('영상 가져오기 실패', error)
+      break
+    }
+  }
+}
 </script>
 
 <template>
@@ -87,15 +145,13 @@ const content = computed(() => {
     <!-- 영상 컴포넌트 -->
     <v-row>
       <v-col cols="12">
-        <div class="video d-flex justify-center">
-          <v-img
-            max-width="800"
-            gradient=""
-            :src="tempThumbnail"
-            cover
-            aspect-ratio="16/9"
-            class="grey lighten-2"
-          ></v-img>
+        <div class="d-flex justify-center">
+          <video
+            id="my-video"
+            :src="urlRef"
+            controls="true"
+            style="max-width: 80%; min-width: 100px"
+          ></video>
         </div>
       </v-col>
     </v-row>
