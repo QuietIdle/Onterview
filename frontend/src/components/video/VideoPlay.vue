@@ -1,7 +1,7 @@
 <script setup>
 import { useSelfSpeechStore } from '@/stores/selfSpeech';
-import videojs from "video.js";
-import { onUpdated, onBeforeUnmount, ref } from "vue";
+import { useUserStore } from "@/stores/user";
+import { onMounted, ref, watch } from "vue";
 import { fileServer } from "@/api/video";
 import { useRouter } from 'vue-router'
 import { apiMethods } from "@/api/video";
@@ -9,6 +9,7 @@ import { apiMethods } from "@/api/video";
 const router = useRouter()
 
 const selfSpeechStore = useSelfSpeechStore();
+const userStore = useUserStore()
 
 const goSelfSpeechMain = function () {
   router.push({name: 'selfspeech-main'})
@@ -19,35 +20,8 @@ const backToRecording = function() {
   selfSpeechStore.listIdx = 1;
 }
 
-let player;
-const videoPlayer = ref(undefined);
-
-// const requestVideo = async function () {
-//   videoLoaded.value = true;
-//   let idx = 1024 * 1024;
-
-//   try {
-//     //const response = await fileServer.playVideo(selfSpeechStore.videoData.videoUrl.saveFilename);
-//     const response = await fileServer.playVideo("058e0ced-14e4-4b0b-9069-2c056623141d.mkv", 0, idx-1);
-    
-//     const blob = new Blob([response.data], { type: 'video/mp4' });
-//     const url = URL.createObjectURL(blob);
-//     console.log(blob)
-
-//     player = videojs(videoPlayer.value, {
-//       sources: [{
-//         src: url,
-//         type: 'video/mp4'
-//       }]
-//     }, function onPlayerReady() {
-//       console.log('Your player is ready!');
-//       this.play();
-//     });
-//   }
-//   catch (error) {
-//     console.log(error);
-//   }
-// }
+const urlRef = ref(null)
+const mediaPlay = ref(false)
 
 const markVideo = async function (id, bool) {
   try {
@@ -63,7 +37,9 @@ const markVideo = async function (id, bool) {
 
 const isCompleted = ref(false)
 
-async function getAllChunks(filename) {
+const getAllChunks = async function (filename) {
+  isCompleted.value = false
+  
   const chunkSize = 1024 * 1024; // 1MB 단위로 청크를 받음
   let start = 0;
   let end = chunkSize - 1;
@@ -72,7 +48,7 @@ async function getAllChunks(filename) {
   
   while (!isCompleted.value) {
     try {
-      const response = await fileServer.playVideo(filename, start, end)
+      const response = await fileServer.playVideo(filename, userStore.email, start, end)
 
       console.log(response)
 
@@ -88,15 +64,9 @@ async function getAllChunks(filename) {
         const blob = new Blob(chunks, { type: 'video/mp4' });
         const url = URL.createObjectURL(blob);
 
-        player = videojs(videoPlayer.value, {
-        sources: [{
-          src: url,
-          type: 'video/mp4'
-          }]
-        }, function onPlayerReady() {
-        console.log('Your player is ready!');
-        this.play();
-      });  
+        urlRef.value = url
+        // if (com === 0) renderVideo(url)
+        // else reRenderVideo(url)
       }
     } catch (error) {
       console.error('호제야...', error);
@@ -105,31 +75,61 @@ async function getAllChunks(filename) {
   }          
 }
 
-onUpdated(getAllChunks(selfSpeechStore.videoData.videoUrl.saveFilename))
+const playRecorded = function () {
+  document.querySelector('#my-video').play()
+}
 
-onBeforeUnmount(() => {
-  if (player) {
-    player.dispose();
+const deleteVideo = async function (v_id) {
+  try {
+    await apiMethods.deleteVideos([v_id])
+  } catch (error) {
+    console.log(error)
   }
-})
+  backToRecording()
+}
+
+onMounted(async () => {
+  try {
+    await getAllChunks(selfSpeechStore.videoData.videoUrl.saveFilename, 0)
+  } catch (error) {
+    console.warn(error)
+  }
+}),
+
+watch(() => selfSpeechStore.videoData,
+  async (newValue, oldValue) => {
+    try {
+      await getAllChunks(newValue.videoUrl.saveFilename, 1)
+    } catch (error) {
+      console.warn(error)
+    }
+  }
+)
 </script>
 
 <template>
   <div class="container h-100 d-flex flex-column justify-space-between">
-    <div class="d-flex align-center">
+    <div class="nav-bar d-flex align-center">
       <div class="ma-1">{{ selfSpeechStore.questionData.question }}</div>
       <v-icon class="exit-btn ma-1 ml-auto" color="black" size="32" icon="mdi-close-circle-outline" @click="goSelfSpeechMain"></v-icon>
     </div>
 
-    <div class="pa-2">
-      <div class="empty-player-container d-flex justify-center align-center">
-        <video 
+    <div class="pa-1">
+      <div class="empty-player-container">
+        <!-- <video 
           ref="videoPlayer" 
           class="video-js vjs-big-play-centered"
           id="my-video"
-          data-setup='{"width": 640}'
+          data-setup='{}'
           controls
-          width="640" height="360"></video>
+        ></video> -->
+        <video 
+          id="my-video" 
+          :src="urlRef" 
+          controls="true"
+          style="max-width: 100%; min-width: 100px;"
+        ></video>
+        <v-btn v-show="!mediaPlay" class="play-button" @click="playRecorded(), mediaPlay=!mediaPlay" icon="mdi-play"></v-btn>
       </div>
     </div>
 
@@ -140,8 +140,8 @@ onBeforeUnmount(() => {
         <div v-if="!selfSpeechStore.videoData.bookmark">북마크 추가</div>
         <div v-else>북마크 해제</div>
       </v-btn>
-      <v-btn class="mx-3 my-5">
-        <v-icon color="black" size="32" icon="mdi-trash-can-outline" @click="goSelfSpeechMain"></v-icon>
+      <v-btn class="mx-3 my-5" @click="deleteVideo(selfSpeechStore.videoData.videoId)">
+        <v-icon color="black" size="32" icon="mdi-trash-can-outline"></v-icon>
         <div>삭제</div>
       </v-btn>
       <v-btn class="mx-3 my-5 ml-auto bg-red" @click="backToRecording" variant="outlined">녹화하러가기</v-btn>
@@ -150,21 +150,27 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.nav-bar{
+  border: 1px solid black;
+  background-color: #f0f0f0;
+}
 .container{
-  background-color: #bb66ff;
+  background-color: black;
 }
 .empty-player-container {
   width: 100%;
-  height: 360px;
-  background-color: #f0f0f0;
+  height: 390px;
+  background-color: black;
   position: relative;
 }
 #my-video{
   width: 640px;
-  height: 360px;
-  background-color: #f0f0f0;
+  height: 390px;
+  background-color: black;
+  display: block;
+  margin: 0 auto;
 }
-.play-button {
+.play-button{
   position: absolute;
   top: 50%;
   left: 50%;

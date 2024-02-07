@@ -9,7 +9,7 @@ import {
 import { ref } from 'vue'
 
 import logo from '@/assets/logo.png'
-import { useUserStore } from "@/stores/user"
+import { useUserStore } from '@/stores/user'
 
 const dropdownMenu = ref(null)
 const userStore = useUserStore()
@@ -31,7 +31,7 @@ const userStore = useUserStore()
       </TheDropDownNavbarLogo>
     </template>
     <TheDropDownItem link="/selfspeech"> 셀프 스피치 </TheDropDownItem>
-    <TheDropDownItem link="/"> 모의 면접 </TheDropDownItem>
+    <TheDropDownItem link="/interview"> 모의 면접 </TheDropDownItem>
     <TheDropDownItem link="/community/list"> 커뮤니티 </TheDropDownItem>
     <TheDropDownMenu text="보관함" ref="dropdownMenu">
       <TheDropDownItem link="/storage/question">

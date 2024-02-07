@@ -91,6 +91,24 @@ const router = createRouter({
         }
       ]
     },
+    {
+      path: '/interview',
+      name: 'interview',
+      component: () => import('@/views/InterviewMainView.vue'),
+      meta: {layout: 'main'},
+    },
+    {
+      path: '/interview/single',
+      name: 'interview-single',
+      component: () => import('@/views/InterviewRoomSingleView.vue'),
+      meta: {layout: ''},
+    },
+    {
+      path: '/interview/multi',
+      name: 'interview-multi',
+      component: () => import('@/views/InterviewRoomMultiView.vue'),
+      meta: {layout: ''},
+    },
   ]
 })
 

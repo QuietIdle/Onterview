@@ -7,7 +7,7 @@ const authToken = userStore.accessToken
 
 const api = localAxios()
 const api2 = axios.create({
-    baseURL: 'http://70.12.247.60:8080',
+    baseURL: 'http://i10a504.p.ssafy.io/',
     header: {
         "Authorization": `${authToken}`
     }
@@ -24,8 +24,8 @@ export const apiMethods = {
         console.log('request get all videos')
         return api.get(`/api/my-question/${q_id}`)
     },
-    getUserVideoAll: function () {
-        return api.get(`/api/video/all`)
+    getUserVideoAll: function (category) {
+        return api.get(`/api/video/${category}`)
     },
     deleteVideos: function (v_ids) {
         return api.post('/api/video/delete', v_ids)
@@ -40,10 +40,10 @@ export const apiMethods = {
 
 export const fileServer = {
     uploadVideo: function (formData) {
-        return api2.post(`/api/chunk/upload`, formData)
+        return api2.post(`/api-file/chunk/upload`, formData)
     },
-    playVideo: function (filename, st, ed) {
-        return api2.get(`/api/chunk/stream/${filename}`, {
+    playVideo: function (filename, username, st, ed) {
+        return api2.get(`/api-file/chunk/stream/${filename}/${username}`, {
             responseType: 'arraybuffer',
             headers: {
                 Range: `bytes=${st}-${ed}`,
@@ -51,6 +51,6 @@ export const fileServer = {
         });
     },
     cancelUpload: function (username, fileName) {
-        return api2.delete(`/api/chunk?username=${username}&fileName=${fileName}`)
+        return api2.delete(`/api-file/chunk?username=${username}&fileName=${fileName}`)
     },
 }
