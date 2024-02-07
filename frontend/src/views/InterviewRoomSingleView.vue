@@ -1,7 +1,7 @@
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
-import TimerComponent from '@/components/meeting/Timer.vue'
+import TimerComponent from '@/components/interview/Timer.vue'
 import { apiMethods, fileServer } from "@/api/video"
 import { useUserStore } from "@/stores/user"
 import { useInterviewStore } from "@/stores/interview"
@@ -126,14 +126,13 @@ const introduceInterviewSolo = async function () {
 }
 
 const answerInterviewSolo = async function (script) {
-  await TTS(script)
   isActiveTimer.value = true
 
   // 이벤트가 발생할 때까지 무한 루프로 대기
   while (isActiveTimer.value) {
     await sleep(100)  // 짧은 간격으로 확인
   }
-  console.log(script)
+  // console.log(script)
 }
 
 const closingInterviewSolo = async function () {
@@ -144,10 +143,11 @@ const closingInterviewSolo = async function () {
 }
 
 const interviewOneQuestion = async function (script) {
-  await startRecord()
-  await answerInterviewSolo(script)
-  await stopRecord()
-  await sleep(1000)
+  await TTS(script)
+  startRecord()
+  await answerInterviewSolo()
+  stopRecord()
+  saveRecording()
 }
 
 const startInterview = async function () {
@@ -180,6 +180,9 @@ const startInterview = async function () {
     await introduceInterviewSolo()
     for (let i = 0; i < 5; i++) {
       await interviewOneQuestion(questionList.value[i].commonQuestion)
+      if (i < 4) {
+        await TTS(`다음 질문입니다.`)
+      }
     }
     await closingInterviewSolo()
     isInterviewInProgress.value = false
@@ -200,23 +203,22 @@ const startRecord = async function () {
   const stream = mediaVideo.captureStream()
   filename.value = uuidv4()
   endOfChunk.value = 0
-  let idx = 0  // chunk 개수
+  let idx = 1  // chunk 개수
   recordedChunks.length = 0
 
   recorder = new MediaRecorder(stream)
-  console.log(recorder)
   recorder.ondataavailable = (e) => {
     if (e.data.size > 0) {
       recordedChunks.push(e.data)
-      idx++
-      if (idx >= 30) {
+      if (idx > 20) {
+        // if (!isActiveTimer.value) {
         stopRecord()
       }
     }
     sendToServer(e.data, idx)
+    idx++
   }
   recorder.start(3000)
-  console.log(recorder)
 }
 
 // 녹화 종료
@@ -227,7 +229,7 @@ const stopRecord = async function () {
   recorder.stop()
   console.log(recorder)
   recordedChunks.length = 0
-  isActiveTimer.value = false
+  finishInterview()
 }
 
 // 녹화 영상 저장
@@ -235,7 +237,7 @@ const saveRecording = async function () {
   const date = new Date().toLocaleString()
   const req_body = {
     // questionId : 현재 면접 문항 id,
-    videoLength: time.value,
+    videoLength: 0,  // TODO
     title: `${"현재 면접 문항 id"}-${date}`,
     videoInformation: {
       saveFilename: `${filename.value}.mkv`,
@@ -266,7 +268,7 @@ const requestInterviewQuestions = function () {
 
     const success = function (response) {
       questionList.value = response.data
-      console.log(response.data)
+      // console.log(response.data)
       resolve(response); // 응답 데이터를 반환합니다.
     }
 
@@ -300,7 +302,7 @@ const sendToServer = async function (chunk, idx) {
     //console.log('Chunk sent successfully!', response)
     if (response.status === 200) {
       console.log('upload success', response.data);
-      uploadData.value = response.data
+      // uploadData.value = response.data
     }
   } catch (error) {
     console.error('Error sending chunk to server:', error)
@@ -321,10 +323,21 @@ onMounted(() => {
     })
 })
 
+onUnmounted(() => {
+  stopRecord()
+})
+
 </script>
 
 <template>
   <div class="container bg-grey-darken-4 text-grey-lighten-5">
+    <div class="d-flex" style="border-bottom: 1px solid white;">
+      <div class="px-4 py-2" style="border-left: 1px solid white;">{{ interviewStore.choice.type }}</div>
+      <div class="px-4 py-2" style="border-left: 1px solid white; border-right: 1px solid white;">녹화시간</div>
+      <div class="mx-auto"></div>
+      <div class="px-4 py-2" style="border-left: 1px solid white; border-right: 1px solid white;">나가기</div>
+    </div>
+
     <div class="d-flex justify-center my-15">
       <h1>면접 환경을 세팅해주세요!</h1>
     </div>
@@ -348,19 +361,22 @@ onMounted(() => {
           <h3 class="mb-5">마이크와 카메라를 활성화 하면<br>모의 면접을 진행할 수 있어요!</h3>
           <v-btn class="bg-primary" @click="requestPermissionMedia">마이크 및 카메라 활성화</v-btn>
         </div>
+
+        <div class="d-flex justify-center mt-3 text-black">
+          <!-- 웹캠/마이크 활성화 버튼 -->
+          <v-col cols="auto">
+            <v-btn v-if="!isWebcamOn" icon="mdi-video-off" size="large" class="bg-error mx-2"
+              @click="setupWebcam"></v-btn>
+            <v-btn v-else icon="mdi-video" size="large" class="mx-2" @click="setupWebcam"></v-btn>
+            <v-btn v-if="!isMicrophoneOn" icon="mdi-microphone-off" size="large" class="bg-error mx-2"
+              @click="setupMicrophone"></v-btn>
+            <v-btn v-else icon="mdi-microphone" size="large" class="mx-2" @click="setupMicrophone"></v-btn>
+          </v-col>
+        </div>
       </div>
     </v-row>
     <div class="offset-5 v-col-6">
-      <div class="d-flex justify-center mt-3 text-black">
-        <!-- 웹캠/마이크 활성화 버튼 -->
-        <v-col cols="auto">
-          <v-btn v-if="!isWebcamOn" icon="mdi-video-off" size="large" class="bg-error mx-2" @click="setupWebcam"></v-btn>
-          <v-btn v-else icon="mdi-video" size="large" class="mx-2" @click="setupWebcam"></v-btn>
-          <v-btn v-if="!isMicrophoneOn" icon="mdi-microphone-off" size="large" class="bg-error mx-2"
-            @click="setupMicrophone"></v-btn>
-          <v-btn v-else icon="mdi-microphone" size="large" class="mx-2" @click="setupMicrophone"></v-btn>
-        </v-col>
-      </div>
+
     </div>
   </div>
 
@@ -424,19 +440,15 @@ video {
 
 .video-container {
   width: 100%;
-  aspect-ratio: 16 / 9;
-  background-color: white;
   position: relative;
+  overflow: hidden;
   border-radius: 10px;
 }
 
 .video-container video {
   width: 100%;
-  aspect-ratio: 16 / 9;
-  position: absolute;
-  /* padding: 5px; */
-  top: 0;
-  left: 0;
+  height: auto;
+  display: block;
   border-radius: 10px;
 }
 
@@ -445,5 +457,12 @@ video {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.border-white {
+  border: 2px solid white;
+  /* 흰색 테두리 추가 */
+  box-sizing: border-box;
+  /* 내부 패딩과 테두리를 요소의 크기에 포함시킴 */
 }
 </style>
