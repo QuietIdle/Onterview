@@ -1,4 +1,4 @@
-import { localAxios, localAxios2 } from '@/api/index'
+import { localAxios } from '@/api/index'
 import { useUserStore } from '@/stores/user'
 
 const api = localAxios()
@@ -56,15 +56,13 @@ const patchLikePost = function (articleId) {
 
 // video
 const getInterviewVideoList = function (roomType) {
-    const api2 = localAxios2()
-    api2.defaults.headers.common["Authorization"] = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvbnRlcnZpZXdAZ21haWwuY29tIiwiaWF0IjoxNzA3MjA3NTE0LCJleHAiOjE3MDcyOTM5MTR9.sF8fDBKFJx50xWfi_ihMCufnbFMGqobjXwg6Yq1iqp8'
-    return api2.get(`api/interview-room/video?roomType=${roomType}`)
+    api.defaults.headers.common["Authorization"] = userStore.accessToken
+    return api.get(`api/interview-room/video?roomType=${roomType}`)
 }
 
 const getSelfSpeechVideoList = function () {  
-    const api2 = localAxios2()
-    api2.defaults.headers.common["Authorization"] = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvbnRlcnZpZXdAZ21haWwuY29tIiwiaWF0IjoxNzA3MjA3NTE0LCJleHAiOjE3MDcyOTM5MTR9.sF8fDBKFJx50xWfi_ihMCufnbFMGqobjXwg6Yq1iqp8'
-    return api2.get(`/api/my-question-folder/video`)
+    api.defaults.headers.common["Authorization"] = userStore.accessToken
+    return api.get(`/api/my-question-folder/video`)
 }
 
 export {
