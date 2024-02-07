@@ -10,10 +10,11 @@ import org.springframework.stereotype.Component;
 public class MemberMapper {
 
     public Member memberSignupRequestToMember(MemberSignupRequest memberSignupRequest) {
-        return new Member(0L,
-                memberSignupRequest.getEmail(),memberSignupRequest.getPassword(),
-                memberSignupRequest.getNickname(),null,
-                new ArrayList<>(), new ArrayList<>());
+        return Member.builder()
+                .email(memberSignupRequest.getEmail())
+                .password(memberSignupRequest.getPassword())
+                .nickname(memberSignupRequest.getNickname())
+                .build();
     }
 
     public MemberLoginResponse memberToMemberLoginResponse(Member member, String accessToken, String refreshToken) {
