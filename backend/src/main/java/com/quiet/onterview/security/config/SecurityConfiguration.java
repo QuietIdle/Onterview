@@ -48,6 +48,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/api/user/token").permitAll()
                                 .requestMatchers("/api/meeting/matching").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/community").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/interview-room").permitAll()
                                 .anyRequest().authenticated());
         return http.build();
     }
