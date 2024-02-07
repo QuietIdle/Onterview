@@ -57,6 +57,16 @@ const isAllPostList = ref(true)
 const searchCategory = ref({ category: '선택', value: '' })
 const searchQuery = ref('')
 
+const openSearchMenu = ref(false)
+
+const clickSearchButton = function () {
+  if (searchCategory.value.value == '' && searchQuery.value != '') {
+    openSearchMenu.value = true
+  } else {
+    isAllPostList.value ? requestAllPostList() : requestMyPostList()
+  }
+}
+
 // 정렬
 const selectPost = ref({ title: '최신순', order: 'recent' })
 const orderPost = ref([
@@ -130,7 +140,7 @@ const goCommunityWrite = function () {
     </v-row>
     <v-row>
       <v-col cols="4">
-        <v-row>
+        <v-row class="align-center">
           <v-col cols="4" class="px-0 mx-0">
             <v-select
               label="선택"
@@ -147,6 +157,7 @@ const goCommunityWrite = function () {
               hide-details
               class="mr-3"
               return-object
+              :menu="openSearchMenu"
             ></v-select>
           </v-col>
           <v-col cols="6" class="px-0 mx-0">
@@ -157,22 +168,16 @@ const goCommunityWrite = function () {
               variant="solo"
               density="compact"
               hide-details
+              @keyup.enter="clickSearchButton()"
             ></v-text-field>
           </v-col>
-          <v-col cols="2" class="px-0 mx-0">
-            <!-- <v-btn
+          <v-col cols="2">
+            <v-btn
               variant="elevated"
               color="#BB66FF"
-              prepend-icon="mdi-magnify"
-              class="search-button"
-            ></v-btn> -->
-            <v-img
-              class="search-button"
-              :src="searchButton"
-              @click="
-                isAllPostList ? requestAllPostList() : requestMyPostList()
-              "
-            ></v-img>
+              @click="clickSearchButton()"
+              ><v-icon size="x-large">mdi-magnify</v-icon></v-btn
+            >
           </v-col>
         </v-row>
       </v-col>
@@ -235,8 +240,7 @@ const goCommunityWrite = function () {
 </template>
 
 <style scoped>
-.search-button {
-  align-self: center;
-  max-height: 40px;
+.v-btn--size-default {
+  min-width: 40px !important;
 }
 </style>
