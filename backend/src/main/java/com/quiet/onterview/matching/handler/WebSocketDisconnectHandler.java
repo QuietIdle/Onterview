@@ -1,5 +1,6 @@
 package com.quiet.onterview.matching.handler;
 
+import com.quiet.onterview.matching.exception.UserNotFoundException;
 import com.quiet.onterview.matching.service.MatchManager;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,11 @@ public class WebSocketDisconnectHandler implements ApplicationListener<SessionDi
     @Override
     public void onApplicationEvent(SessionDisconnectEvent event) {
         Principal user = event.getUser();
-        matchManager.leave(user.getName());
+        try {
+            matchManager.deleteComplete(user.getName());
+        } catch (UserNotFoundException e) {
+            matchManager.leave(user.getName());
+        }
         log.info("disconnect sessionId : {}", user.getName());
     }
 }

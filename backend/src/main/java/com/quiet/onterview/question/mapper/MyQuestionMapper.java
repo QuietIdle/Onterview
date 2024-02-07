@@ -5,6 +5,8 @@ import com.quiet.onterview.question.dto.response.MyAnswerAndVideoResponse;
 import com.quiet.onterview.question.dto.response.MyQuestionResponse;
 import com.quiet.onterview.question.entity.CommonQuestion;
 import com.quiet.onterview.question.entity.MyQuestion;
+import com.quiet.onterview.video.dto.response.VideoStorageResponse;
+import com.quiet.onterview.video.entity.Video;
 import com.quiet.onterview.video.mapper.VideoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -41,5 +43,14 @@ public class MyQuestionMapper {
                 .question(myQuestionRequest.getQuestion())
                 .build();
 
+    }
+
+    public VideoStorageResponse videoToVideoStorageResponse(MyQuestion myQuestion, Video video) {
+        return VideoStorageResponse.builder()
+                .videoId(video.getVideoId())
+                .thumbnailUrl(video.getThumbnailUrl())
+                .title(video.getTitle())
+                .question(myQuestion.getQuestion())
+                .build();
     }
 }

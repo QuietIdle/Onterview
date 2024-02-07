@@ -1,8 +1,10 @@
 package com.quiet.onterview.interview.controller;
 
 import com.quiet.onterview.interview.dto.request.InterviewRoomRequest;
+import com.quiet.onterview.interview.dto.response.InterviewQuestionCreateResponse;
 import com.quiet.onterview.interview.dto.response.InterviewRoomDetailResponse;
 import com.quiet.onterview.interview.dto.response.InterviewRoomResponse;
+import com.quiet.onterview.video.dto.response.VideoStorageResponse;
 import com.quiet.onterview.interview.service.InterviewRoomService;
 import com.quiet.onterview.security.SecurityUser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "interview-room-controller", description = "모의 면접장 컨트롤러")
 @RestController
 @RequestMapping("/api/interview-room")
@@ -27,9 +31,18 @@ public class InterviewRoomController {
     @GetMapping
     public ResponseEntity<Page<InterviewRoomResponse>> getInterviewRoomList(
             @AuthenticationPrincipal SecurityUser user,
+            @RequestParam(name = "roomType", required = true) String roomType,
             @PageableDefault(size = 10, sort = "createAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        return ResponseEntity.ok(interviewRoomService.getInterviewRoomList(user.getMemberId(), pageable));
+        if (roomType.equals("single")) {
+            return ResponseEntity.ok(interviewRoomService.getSingleInterviewRoomList(user.getMemberId(), pageable));
+        } else if (roomType.equals("multi")) {
+            return ResponseEntity.ok(interviewRoomService.getMultiInterviewRoomList(user.getMemberId(), pageable));
+        } else if (roomType.equals("all")) {
+            return ResponseEntity.ok(interviewRoomService.getInterviewRoomList(user.getMemberId(), pageable));
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @Operation(summary = "GET 방식으로 특정 모의 면접장 상세 조회")
@@ -40,13 +53,26 @@ public class InterviewRoomController {
         return ResponseEntity.ok(interviewRoomService.getInterviewRoomDetail(user.getMemberId(), interviewRoomId));
     }
 
+    @Operation(summary = "GET 방식으로 모의 면접 영상 전체 조회")
+    @GetMapping("/video")
+    public ResponseEntity<List<VideoStorageResponse>> getInterviewVideoList(
+            @AuthenticationPrincipal SecurityUser user,
+            @RequestParam(name = "roomType", required = true) String roomType) {
+        if (roomType.equals("single")) {
+            return ResponseEntity.ok(interviewRoomService.getSingleVideoList(user.getMemberId()));
+        } else if (roomType.equals("multi")) {
+            return ResponseEntity.ok(interviewRoomService.getMultiVideoList(user.getMemberId()));
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     @Operation(summary = "POST 방식으로 모의 면접장 생성")
     @PostMapping
-    public ResponseEntity<Void> registerInterviewRoom(
+    public ResponseEntity<List<InterviewQuestionCreateResponse>> registerInterviewRoom(
             @AuthenticationPrincipal SecurityUser user,
             @RequestBody InterviewRoomRequest interviewRoomRequest) {
-        interviewRoomService.createInterviewRoom(user.getMemberId(), interviewRoomRequest);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(interviewRoomService.createInterviewRoom(user.getMemberId(), interviewRoomRequest));
     }
 
     @Operation(summary = "DELETE 방식으로 모의 면접장 삭제")

@@ -3,22 +3,28 @@ package com.quiet.onterview.interview.service;
 import com.quiet.onterview.common.BaseException;
 import com.quiet.onterview.common.ErrorCode;
 import com.quiet.onterview.interview.dto.request.InterviewRoomRequest;
+import com.quiet.onterview.interview.dto.response.InterviewQuestionCreateResponse;
 import com.quiet.onterview.interview.dto.response.InterviewRoomDetailResponse;
 import com.quiet.onterview.interview.dto.response.InterviewRoomResponse;
+import com.quiet.onterview.video.dto.response.VideoStorageResponse;
+import com.quiet.onterview.interview.entity.InterviewQuestion;
 import com.quiet.onterview.interview.entity.InterviewRoom;
 import com.quiet.onterview.interview.exception.InterviewRoomNotFoundException;
+import com.quiet.onterview.interview.mapper.InterviewQuestionMapper;
 import com.quiet.onterview.interview.mapper.InterviewRoomMapper;
 import com.quiet.onterview.interview.repository.InterviewRoomRepository;
 import com.quiet.onterview.member.entity.Member;
 import com.quiet.onterview.member.repository.MemberRepository;
 import com.quiet.onterview.question.entity.CommonQuestion;
 import com.quiet.onterview.question.service.CommonQuestionFolderService;
+import com.quiet.onterview.video.entity.Video;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,6 +36,7 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
     private final InterviewQuestionService interviewQuestionService;
     private final InterviewRoomRepository interviewRoomRepository;
     private final InterviewRoomMapper interviewRoomMapper;
+    private final InterviewQuestionMapper interviewQuestionMapper;
     private final MemberRepository memberRepository;
 
 
@@ -40,6 +47,45 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
     }
 
     @Override
+    public Page<InterviewRoomResponse> getSingleInterviewRoomList(Long memberId, Pageable pageable) {
+        return interviewRoomRepository.findSingleInterviewRoom(memberId, pageable)
+                .map(interviewRoomMapper::interviewRoomTointerviewRoomResponse);
+    }
+
+    @Override
+    public Page<InterviewRoomResponse> getMultiInterviewRoomList(Long memberId, Pageable pageable) {
+        return interviewRoomRepository.findMultiInterviewRoom(memberId, pageable)
+                .map(interviewRoomMapper::interviewRoomTointerviewRoomResponse);
+    }
+
+    @Override
+    public List<VideoStorageResponse> getSingleVideoList(Long memberId) {
+        List<InterviewRoom> singleInterviewRoom = interviewRoomRepository.findSingleInterviewRoomList(memberId);
+        return getInterviewVideoResponses(singleInterviewRoom);
+    }
+
+    @Override
+    public List<VideoStorageResponse> getMultiVideoList(Long memberId) {
+        List<InterviewRoom> singleInterviewRoom = interviewRoomRepository.findMultiInterviewRoomList(memberId);
+        return getInterviewVideoResponses(singleInterviewRoom);
+    }
+
+    private List<VideoStorageResponse> getInterviewVideoResponses(List<InterviewRoom> singleInterviewRoom) {
+        List<VideoStorageResponse> result = new ArrayList<>();
+        for (InterviewRoom interviewRoom : singleInterviewRoom) {
+            List<InterviewQuestion> interviewQuestionList = interviewRoom.getInterviewQuestionList();
+            for (InterviewQuestion interviewQuestion : interviewQuestionList) {
+                Video video = interviewQuestion.getVideo();
+                if (video != null) {
+                    VideoStorageResponse interviewVideoResponse = interviewRoomMapper.entityToInterviewVideoResponse(interviewQuestion, video);
+                    result.add(interviewVideoResponse);
+                }
+            }
+        }
+        return result;
+    }
+
+    @Override
     public InterviewRoomDetailResponse getInterviewRoomDetail(Long memberId, Long interviewRoomId) {
 
         InterviewRoom interviewRoom = interviewRoomRepository.findInterviewRoomDetail(memberId, interviewRoomId);
@@ -47,7 +93,7 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
     }
 
     @Override
-    public void createInterviewRoom(Long memberId, InterviewRoomRequest interviewRoomRequest) {
+    public List<InterviewQuestionCreateResponse> createInterviewRoom(Long memberId, InterviewRoomRequest interviewRoomRequest) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new BaseException(ErrorCode.MEMBERID_NOT_EXISTS));
 
         String commonQuestionFolderName = interviewRoomRequest.getQuestionType().getCommonQuestionFolder();
@@ -62,6 +108,11 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
                         interviewQuestionService.createInterviewQuestion(randomCommonQuestion)));
 
         interviewRoomRepository.save(interviewRoom);
+
+        return interviewRoom.getInterviewQuestionList()
+                .stream()
+                .map(interviewQuestionMapper::interviewQuestionToInterviewQuestionCreateResponse)
+                .toList();
     }
 
     @Override

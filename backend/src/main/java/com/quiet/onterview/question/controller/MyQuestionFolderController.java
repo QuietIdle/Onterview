@@ -4,6 +4,7 @@ import com.quiet.onterview.question.dto.request.MyQuestionFolderRequest;
 import com.quiet.onterview.question.dto.response.MyQuestionFolderResponse;
 import com.quiet.onterview.question.service.MyQuestionFolderService;
 import com.quiet.onterview.security.SecurityUser;
+import com.quiet.onterview.video.dto.response.VideoStorageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,12 @@ public class MyQuestionFolderController {
     @GetMapping
     public ResponseEntity<List<MyQuestionFolderResponse>> getMyQuestionList(@AuthenticationPrincipal SecurityUser user) {
         return ResponseEntity.ok(myQuestionFolderService.getMyQuestionFolder(user.getMemberId()));
+    }
+
+    @Operation(summary = "GET 방식으로 셀프 스피치 영상 전체 조회")
+    @GetMapping("/video")
+    public ResponseEntity<List<VideoStorageResponse>> getSelfVideoList(@AuthenticationPrincipal SecurityUser user) {
+        return ResponseEntity.ok(myQuestionFolderService.getSelfVideoList(user.getMemberId()));
     }
 
     @Operation(summary = "POST 방식으로 나의 면접 질문 폴더 생성")
