@@ -55,6 +55,9 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = true)
     List<Interviewee> intervieweeList = new ArrayList<>();
 
+    public Member(long memberId, String email, String password, String nickname, Object imageUrl, ArrayList<Article> articleList, ArrayList<Likes> likesList) {
+    }
+
     public void addInterviewee(Interviewee interviewee) {
         interviewee.setMember(this);
         intervieweeList.add(interviewee);
