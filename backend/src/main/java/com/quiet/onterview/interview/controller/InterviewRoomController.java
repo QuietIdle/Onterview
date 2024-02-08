@@ -78,10 +78,12 @@ public class InterviewRoomController {
         return ResponseEntity.ok(interviewRoomService.createInterviewRoom(interviewRoomRequest));
     }
 
-//    @Operation(summary = "DELETE 방식으로 모의 면접장 삭제")
-//    @DeleteMapping("/{interview_room_id}")
-//    public ResponseEntity<Void> deleteInterviewRoom(@PathVariable("interview_room_id") Long interviewRoomId) {
-//        interviewRoomService.deleteInterviewRoom(interviewRoomId);
-//        return ResponseEntity.ok().build();
-//    }
+    @Operation(summary = "DELETE 방식으로 모의 면접장 삭제")
+    @DeleteMapping("/{interview_room_id}")
+    public ResponseEntity<Long> deleteInterviewRoom(
+            @AuthenticationPrincipal SecurityUser user,
+            @PathVariable("interview_room_id") Long interviewRoomId) {
+        interviewRoomService.deleteInterviewRoom(user.getMemberId(), interviewRoomId);
+        return ResponseEntity.ok(interviewRoomId);
+    }
 }
