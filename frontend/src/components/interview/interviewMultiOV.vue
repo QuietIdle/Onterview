@@ -13,10 +13,13 @@ const OV = new OpenVidu();
 const session = OV.initSession()
 const publisher = ref(undefined);
 const subscribers = ref([]);
+const myStream = ref(null)
 OV.enableProdMode()
 
-
-const name = userStore.nickname
+const num = String(websocketStore.roomData.index)
+// 디버깅용 이름
+const name = num + num + num + num
+//const name = userStore.nickname
 
 const joinSession = async function () {
   
@@ -35,11 +38,12 @@ const joinSession = async function () {
     })
 
     session.publish(publisher.value)
+    myStream.value = Object(publisher.value.stream)
     
-      subscribers.value.push({
-        subscriber: publisher.value,
-        id: websocketStore.roomData.index,
-      })
+    subscribers.value.push({
+      subscriber: publisher.value,
+      id: websocketStore.roomData.index,
+    })
   })
 
   session.on("streamCreated", ({ stream }) => {
@@ -121,6 +125,10 @@ const receive = async function (message) {
       sendMessage('START')
       break;
 
+    case 'END':
+      websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
+      break;
+
     default:
       break;
   }
@@ -152,17 +160,26 @@ watch(interviewStore.mediaToggle ,
     }
   }
 )
+
+const checkStream = function () {
+  const temp = document.querySelector(`#${myStream.value.streamId}`).captureStream()
+
+  console.log(temp)
+  console.log(myStream.value)
+}
 </script>
 
 <template>
   <div class="w-100 h-100 d-flex align-center">
+    <v-btn @click="checkStream">test</v-btn>
     <div id="video-container" class="w-100 h-100 d-flex align-center justify-space-around">
       <div v-for="(item, idx) in subscribers" :key="item.subscriber.stream.streamId" class="ma-2">
         <div class="w-100 bg-grey-lighten-1 text-center my-1" style="border-radius: 12px;">{{ idx+1 }}번 째 답변자</div>
         <ov-video
-          :id="item.subscriber.stream.streamId" 
+          :id="item.subscriber.stream.streamId"
           :stream-manager="item.subscriber"
           style="transform: rotateY(180deg);"
+          :muted="!interviewStore.mediaToggle.volume"
         />
         <div>{{ JSON.parse(item.subscriber.stream.connection.data).clientData.name }}</div>
       </div>

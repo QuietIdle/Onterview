@@ -42,15 +42,11 @@ const startMatch = function () {
   //const socket = new WebSocket('wss://i10a504.p.ssafy.io/api/meeting/matching')
   const socket = new WebSocket('ws://70.12.247.51:8081/api/meeting/matching')
   stomp = Stomp.over(socket)
-  const header = {
-    Authorization: `${authToken}`
-  }
-  stomp.connect(
-    header,
+  // const headers = {
+  //   Authorization: `${authToken}`
+  // }
+  stomp.connect({},
     () => {
-      // stomp.subscribe(`/sub/${interviewStore.stompType}`, function (message) {
-      //   console.log(message.body);
-      // })
       stomp.subscribe(
         `/user/sub/${interviewStore.stompType}`,
         function (message) {
@@ -74,7 +70,8 @@ const startMatch = function () {
         JSON.stringify({
           type: 'ENTER',
           roomId: interviewStore.stompType,
-          matchCount: 3,
+          matchCount: 1,
+          //accessToken: authToken,
         })
       )
       // stomp.send("/pub/match", {}, JSON.stringify({
