@@ -3,10 +3,6 @@ import { ref, onMounted } from 'vue'
 import { apiMethods } from '@/api/video'
 import { useStorageStore } from '@/stores/storage'
 
-onMounted(() => {
-  storageStore.requestUserVideoAll()
-})
-
 const storageStore = useStorageStore()
 const selectedId = ref([])
 const isSelectedAll = ref(false)
@@ -82,14 +78,13 @@ const selectVideo = async function (v_id) {
             <tr>
               <th class="text-left">선택</th>
               <th class="text-left">번호</th>
+              <th class="text-left">제목</th>
               <th class="text-left">질문</th>
-              <th class="text-left">녹화 시간</th>
-              <th class="text-left">영상 길이</th>
               <th class="text-left">북마크</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(dt, n) in storageStore.storageData" :key="n">
+            <tr v-for="(dt, n) in storageStore.storageData" :key="n" hover>
               <td>
                 <v-checkbox
                   v-model="selectedId"
@@ -105,8 +100,7 @@ const selectVideo = async function (v_id) {
               >
                 {{ dt.title }}
               </td>
-              <td></td>
-              <td></td>
+              <td>{{ dt.question }}</td>
               <td>
                 <v-icon
                   v-show="!dt.bookmark"
@@ -145,5 +139,9 @@ const selectVideo = async function (v_id) {
 }
 .list-item {
   cursor: pointer;
+}
+
+:deep(.v-input__details) {
+  display: none;
 }
 </style>

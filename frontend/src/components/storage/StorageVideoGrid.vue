@@ -3,10 +3,6 @@ import { ref, onMounted } from 'vue'
 import { apiMethods } from '@/api/video'
 import { useStorageStore } from '@/stores/storage'
 
-onMounted(() => {
-  storageStore.requestUserVideoAll()
-})
-
 const storageStore = useStorageStore()
 const selectedId = ref([])
 const isSelectedAll = ref(false)
@@ -82,7 +78,7 @@ const selectVideo = async function (v_id) {
               :key="n"
               cols="auto"
             >
-              <v-card height="200" width="200">
+              <v-card height="200" width="230">
                 <div class="image-container w-100 h-100">
                   <div class="number">{{ n + 1 }}</div>
                   <v-icon
@@ -113,7 +109,7 @@ const selectVideo = async function (v_id) {
                   <v-card
                     class="image-card"
                     :image="dt.thumbnailUrl.saveFilename"
-                    width="180"
+                    width="230"
                     height="135"
                     @click="
                       storageStore.goStorageVideoPlay(), selectVideo(dt.videoId)
