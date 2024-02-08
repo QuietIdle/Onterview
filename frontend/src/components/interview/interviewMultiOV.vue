@@ -1,9 +1,10 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import { OpenVidu } from 'openvidu-browser';
-import { useInterviewStore ,useWebsocketStore } from "@/stores/interview";
+import { useUserStore, useInterviewStore ,useWebsocketStore } from "@/stores/interview";
 import OvVideo from "@/components/interview/OvVideo.vue";
 
+const userStore = useUserStore()
 const websocketStore = useWebsocketStore()
 const interviewStore = useInterviewStore()
 
@@ -13,11 +14,10 @@ const publisher = ref(undefined);
 const subscribers = ref([]);
 OV.enableProdMode()
 
-
-// 디버깅용 이름
 const num = String(websocketStore.roomData.index)
+// 디버깅용 이름
 const name = num + num + num + num
-//
+//const name = userStore.nickname
 
 const joinSession = async function () {
   

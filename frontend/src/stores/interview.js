@@ -70,7 +70,10 @@ export const useWebsocketStore = defineStore('websocket', () => {
   })
   const now = ref({
     turn: -1,
-    question: 0,
+    question: {
+      id: 0,
+      content: "1분 자기소개",
+    },
     orders: [],
     people: 3,
   })

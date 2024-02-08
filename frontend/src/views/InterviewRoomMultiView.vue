@@ -42,7 +42,7 @@ watch(() => websocketStore.flag.room,
       </div>
 
       <div class="d-flex align-center px-3 w-75" style="font-size: large;" >
-        Q.평양냉면 맛있다 우래옥 을밀대
+        Q. {{ websocketStore.now.question.content }}
       </div>
 
       <button @click="goInterviewMain" class="d-flex justify-center align-center">

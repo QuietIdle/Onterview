@@ -89,8 +89,13 @@ watch(() => websocketStore.flag.interviewer, async () => {
     case 'FINISH':
       isActiveTimer.value = false
       addLog(`${websocketStore.now.turn}번 째 참가자 답변 완료`)
-      addLog(`${websocketStore.now.question}번 질문 종료...`)
-      websocketStore.now.question += 1;
+      if (websocketStore.now.question.id !== 0) {
+        addLog(`${websocketStore.now.question.id}번 질문 종료...`)
+      }
+      else {
+        addLog(`1분 자기 소개 종료`)
+      }
+      websocketStore.now.question.id += 1;
       websocketStore.now.turn = -1
       break;
 
