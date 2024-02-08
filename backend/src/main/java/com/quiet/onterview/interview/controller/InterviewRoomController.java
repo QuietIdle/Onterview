@@ -1,10 +1,26 @@
 package com.quiet.onterview.interview.controller;
 
+import com.quiet.onterview.interview.dto.request.InterviewRoomRequest;
+import com.quiet.onterview.interview.dto.response.InterviewQuestionCreateResponse;
+import com.quiet.onterview.interview.dto.response.InterviewRoomDetailResponse;
+import com.quiet.onterview.interview.dto.response.InterviewRoomResponse;
+import com.quiet.onterview.member.entity.Member;
+import com.quiet.onterview.question.dto.response.CommonQuestionResponse;
+import com.quiet.onterview.video.dto.response.VideoStorageResponse;
 import com.quiet.onterview.interview.service.InterviewRoomService;
+import com.quiet.onterview.security.SecurityUser;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "interview-room-controller", description = "모의 면접장 컨트롤러")
 @RestController
@@ -53,12 +69,14 @@ public class InterviewRoomController {
 //        }
 //    }
 
-//    @Operation(summary = "POST 방식으로 모의 면접장 생성")
-//    @PostMapping
-//    public ResponseEntity<List<CommonQuestionResponse>> registerInterviewRoom(
-//            @RequestBody InterviewRoomRequest interviewRoomRequest) {
-//        return ResponseEntity.ok(interviewRoomService.createInterviewRoom(interviewRoomRequest));
-//    }
+    @Operation(summary = "POST 방식으로 1인 모의 면접장 생성")
+    @PostMapping
+    public ResponseEntity<List<CommonQuestionResponse>> registerInterviewRoom(
+            @AuthenticationPrincipal SecurityUser user,
+            @RequestBody InterviewRoomRequest interviewRoomRequest) {
+        interviewRoomRequest.getMemberIdList().add(user.getMemberId());
+        return ResponseEntity.ok(interviewRoomService.createInterviewRoom(interviewRoomRequest));
+    }
 
 //    @Operation(summary = "DELETE 방식으로 모의 면접장 삭제")
 //    @DeleteMapping("/{interview_room_id}")
