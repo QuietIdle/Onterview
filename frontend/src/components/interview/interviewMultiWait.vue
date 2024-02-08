@@ -70,8 +70,8 @@ const startMatch = function () {
         JSON.stringify({
           type: 'ENTER',
           roomId: interviewStore.stompType,
-          matchCount: 1,
-          //accessToken: authToken,
+          matchCount: 2,
+          accessToken: authToken,
         })
       )
       // stomp.send("/pub/match", {}, JSON.stringify({
