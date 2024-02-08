@@ -409,6 +409,15 @@ onMounted(() => {
     })
 })
 
+
+onUnmounted(() => {
+  if (mediaVideo.srcObject) {
+    mediaVideo.srcObject.getTracks().forEach(track => {
+      track.stop()
+    })
+    mediaVideo.srcObject = null
+  }
+})
 </script>
 
 <template>
@@ -447,9 +456,9 @@ onMounted(() => {
         </div>
       </div>
       <div class="video-container offset-1 v-col-6">
-        <video ref="mediaOnlyVideo" autoplay></video>
+        <video ref="mediaOnlyVideo" autoplay color="black"></video>
 
-        <div v-if="!isAcceptedPermission" class="video-activate text-black">
+        <div v-if="!isAcceptedPermission" class="video-activate text-white">
           <h3 class="mb-5">마이크와 카메라를 활성화 하면<br>모의 면접을 진행할 수 있어요!</h3>
           <v-btn class="bg-primary" @click="requestPermissionMedia">마이크 및 카메라 활성화</v-btn>
         </div>
@@ -546,6 +555,7 @@ video {
   /* Safari and Chrome */
   -moz-transform: rotateY(180deg);
   /* Firefox */
+  background-color: black;
 }
 
 .active-btn {
