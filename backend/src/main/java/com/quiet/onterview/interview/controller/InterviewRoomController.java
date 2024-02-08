@@ -29,23 +29,21 @@ import java.util.List;
 public class InterviewRoomController {
     private final InterviewRoomService interviewRoomService;
 
-//    @Operation(summary = "GET 방식으로 모의 면접장 전체 조회")
-//    @GetMapping
-//    public ResponseEntity<Page<InterviewRoomResponse>> getInterviewRoomList(
-//            @AuthenticationPrincipal SecurityUser user,
-//            @RequestParam(name = "roomType", required = true) String roomType,
-//            @PageableDefault(size = 10, sort = "createAt", direction = Sort.Direction.DESC) Pageable pageable
-//    ) {
-//        if (roomType.equals("single")) {
-//            return ResponseEntity.ok(interviewRoomService.getSingleInterviewRoomList(user.getMemberId(), pageable));
-//        } else if (roomType.equals("multi")) {
-//            return ResponseEntity.ok(interviewRoomService.getMultiInterviewRoomList(user.getMemberId(), pageable));
-//        } else if (roomType.equals("all")) {
-//            return ResponseEntity.ok(interviewRoomService.getInterviewRoomList(user.getMemberId(), pageable));
-//        } else {
-//            return ResponseEntity.badRequest().build();
-//        }
-//    }
+    @Operation(summary = "GET 방식으로 모의 면접장 전체 조회")
+    @GetMapping
+    public ResponseEntity<Page<InterviewRoomResponse>> getInterviewRoomList(
+            @AuthenticationPrincipal SecurityUser user,
+            @RequestParam(name = "roomType", required = true) String roomType,
+            @PageableDefault(size = 10, sort = "createAt", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        if (roomType.equals("single")) {
+            return ResponseEntity.ok(interviewRoomService.getSingleInterviewRoomList(user.getMemberId(), pageable));
+        } else if (roomType.equals("multi")) {
+            return ResponseEntity.ok(interviewRoomService.getMultiInterviewRoomList(user.getMemberId(), pageable));
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 //
 //    @Operation(summary = "GET 방식으로 특정 모의 면접장 상세 조회")
 //    @GetMapping("/{interview_room_id}")

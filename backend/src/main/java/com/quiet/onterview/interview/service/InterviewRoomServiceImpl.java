@@ -49,24 +49,17 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
     private final CommonQuestionMapper commonQuestionMapper ;
 //    private final VideoMapper videoMapper;
 
+    @Override
+    public Page<InterviewRoomResponse> getSingleInterviewRoomList(Long memberId, Pageable pageable) {
+        return interviewRoomRepository.findSingleInterviewRoom(memberId, pageable)
+                .map(interviewRoomMapper::interviewRoomTointerviewRoomResponse);
+    }
 
-//    @Override
-//    public Page<InterviewRoomResponse> getInterviewRoomList(Long memberId, Pageable pageable) {
-//        return interviewRoomRepository.findInterviewRoom(memberId, pageable)
-//                .map(interviewRoomMapper::interviewRoomTointerviewRoomResponse);
-//    }
-//
-//    @Override
-//    public Page<InterviewRoomResponse> getSingleInterviewRoomList(Long memberId, Pageable pageable) {
-//        return interviewRoomRepository.findSingleInterviewRoom(memberId, pageable)
-//                .map(interviewRoomMapper::interviewRoomTointerviewRoomResponse);
-//    }
-//
-//    @Override
-//    public Page<InterviewRoomResponse> getMultiInterviewRoomList(Long memberId, Pageable pageable) {
-//        return interviewRoomRepository.findMultiInterviewRoom(memberId, pageable)
-//                .map(interviewRoomMapper::interviewRoomTointerviewRoomResponse);
-//    }
+    @Override
+    public Page<InterviewRoomResponse> getMultiInterviewRoomList(Long memberId, Pageable pageable) {
+        return interviewRoomRepository.findMultiInterviewRoom(memberId, pageable)
+                .map(interviewRoomMapper::interviewRoomTointerviewRoomResponse);
+    }
 //
 //    @Override
 //    public List<VideoStorageResponse> getSingleVideoList(Long memberId) {

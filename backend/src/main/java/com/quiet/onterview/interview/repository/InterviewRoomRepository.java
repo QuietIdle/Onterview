@@ -10,14 +10,11 @@ import java.util.List;
 
 public interface InterviewRoomRepository extends JpaRepository<InterviewRoom, Long> {
 
-//    @Query("SELECT ir FROM InterviewRoom ir WHERE ir.member.memberId = :memberId")
-//    Page<InterviewRoom> findInterviewRoom(Long memberId, Pageable pageable);
-//
-//    @Query("SELECT ir FROM InterviewRoom ir WHERE ir.member.memberId = :memberId AND ir.roomType = 'SINGLE'")
-//    Page<InterviewRoom> findSingleInterviewRoom(Long memberId, Pageable pageable);
-//
-//    @Query("SELECT ir FROM InterviewRoom ir WHERE ir.member.memberId = :memberId AND ir.roomType = 'MULTI'")
-//    Page<InterviewRoom> findMultiInterviewRoom(Long memberId, Pageable pageable);
+    @Query("SELECT ie.interviewRoom FROM Interviewee ie WHERE ie.member.memberId = :memberId AND ie.interviewRoom.roomType = 'SINGLE'")
+    Page<InterviewRoom> findSingleInterviewRoom(Long memberId, Pageable pageable);
+
+    @Query("SELECT ie.interviewRoom FROM Interviewee ie WHERE ie.member.memberId = :memberId AND ie.interviewRoom.roomType = 'MULTI'")
+    Page<InterviewRoom> findMultiInterviewRoom(Long memberId, Pageable pageable);
 //
 //    @Query("SELECT ir FROM InterviewRoom ir WHERE ir.member.memberId = :memberId AND ir.roomType = 'SINGLE'")
 //    List<InterviewRoom> findSingleInterviewRoomList(Long memberId);
