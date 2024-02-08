@@ -42,16 +42,16 @@ public class ChunkService {
 
         // 파일이 전송중인 경우
         if (endOfChunk == 0) {
-            log.info(String.format("%s's chunk %s%d saved ", username, filename, chunkNumber));
+            log.info(String.format("%s's chunk %s.%d saved ", username, filename, chunkNumber));
             return HttpStatus.PARTIAL_CONTENT;
         }
 
         Path mergedVideoPath = mergeTempFile(file, videoPath, filename, chunkNumber);
-        log.info(String.format("%s's %s%d saved", username, filename, chunkNumber));
+        log.info(String.format("%s's %s saved", username, filename));
 
         String createdThumbnail = fFmpegManager.createThumbnail(mergedVideoPath, imagePath,
                 filename);
-        log.info(String.format("%s's %s saved", username, createdThumbnail));
+        log.info(String.format("%s's thumbnail %s saved", username, createdThumbnail));
 
         return HttpStatus.OK;
     }
@@ -118,7 +118,7 @@ public class ChunkService {
             Path chunkFile = Paths.get(String.valueOf(savingPath),
                     file.getOriginalFilename() + ".part" + number);
 
-            if (!chunkFile.toFile().exists()) {
+            if (!Files.exists(chunkFile)) {
                 log.info(chunkFile + " is not found");
                 throw new BaseException(ErrorCode.CHUNK_NOT_FOUND);
             }
