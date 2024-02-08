@@ -1,13 +1,16 @@
 package com.quiet.onterview.video.service;
 
+import com.quiet.onterview.common.BaseException;
+import com.quiet.onterview.common.ErrorCode;
 import com.quiet.onterview.file.service.FileService;
 import com.quiet.onterview.interview.entity.InterviewQuestion;
+import com.quiet.onterview.interview.entity.RoomType;
 import com.quiet.onterview.interview.repository.InterviewQuestionRepository;
 import com.quiet.onterview.question.entity.MyQuestion;
 import com.quiet.onterview.question.repository.MyQuestionRepository;
-import com.quiet.onterview.video.dto.request.VideoDeleteRequest;
-import com.quiet.onterview.video.dto.request.VideoInformationRequest;
-import com.quiet.onterview.video.dto.request.VideoUpdateRequest;
+import com.quiet.onterview.security.SecurityUser;
+import com.quiet.onterview.video.SpeechType;
+import com.quiet.onterview.video.dto.request.*;
 import com.quiet.onterview.video.dto.response.VideoDetailResponse;
 import com.quiet.onterview.video.dto.response.VideoInformationResponse;
 import com.quiet.onterview.video.entity.Video;
@@ -41,8 +44,20 @@ public class VideoServiceImpl implements VideoService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<VideoInformationResponse> loadAllMyVideo(String email) {
-        return videoMapper.allVideoToInformationResponse(videoRepository.findAllByEmail(email));
+    public List<VideoInformationResponse> loadAllMyVideo(SecurityUser user, SpeechType speechType) {
+        if (speechType == SpeechType.SELF) {
+            return videoMapper.allVideoToInformationResponse(
+                    videoRepository.findAllSelfVideoByMember(user.getMemberId()));
+        } else if (speechType == SpeechType.MULTI) {
+            return videoMapper.allVideoToInformationResponse(
+                    videoRepository.findAllMultiVideoByMember(
+                            user.getMemberId(), RoomType.MULTI));
+        } else if (speechType == SpeechType.SINGLE) {
+            return videoMapper.allVideoToInformationResponse(
+                    videoRepository.findAllSingleVideoByMember(
+                            user.getMemberId(), RoomType.SINGLE));
+        }
+        throw new BaseException(ErrorCode.VIDEO_NOT_FOUND);
     }
 
     @Override
