@@ -20,5 +20,5 @@ public interface InterviewRoomService {
 //     List<VideoStorageResponse> getMultiVideoList(Long memberId);
 //     InterviewRoomDetailResponse getInterviewRoomDetail(Long memberId, Long interviewRoomId);
      List<CommonQuestionResponse> createInterviewRoom(InterviewRoomRequest interviewRoomRequest);
-//     void deleteInterviewRoom(Long interviewRoomId);
+     void deleteInterviewRoom(Long memberId, Long interviewRoomId);
 }
