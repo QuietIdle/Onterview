@@ -22,13 +22,62 @@ export const useInterviewStore = defineStore('interview', () => {
     volume: true,
   })
 
-  return { dialog, choice, stompType, mediaToggle }
+  const script = ref({
+    enter: "다인 모의 면접장입니다.",
+    start: "시작합니다",
+    proceeding: "다음 사람 준비해 주세요",
+    timeout: "",
+    finish: "자리가 변경됩니다",
+    end: "수고 하셨습니다",
+  })
+
+  const TTS = function (script) {
+    return new Promise((resolve, reject) => {
+      
+      const synth = window.speechSynthesis
+      const utterance = new SpeechSynthesisUtterance(script)
+  
+      utterance.onend = function () {
+        resolve()
+      };
+  
+      utterance.onerror = function (error) {
+        reject(error)
+      };
+  
+      synth.speak(utterance)
+      
+    })
+  }
+
+  return { dialog, choice, stompType, mediaToggle, script, TTS }
 })
 
 export const useWebsocketStore = defineStore('websocket', () => {
-  const OVToken = ref(undefined)
-  const sessionId = ref(null)
+  const roomData = ref({
+    token: undefined,
+    sessoinId: undefined,
+    index: undefined,
+  })
   const stomp = ref(undefined)
 
-  return { OVToken, sessionId, stomp }
+  const flag = ref({
+    interviewer: true,
+    room: true,
+  })
+  const message = ref({
+    type: undefined,
+  })
+  const now = ref({
+    turn: -1,
+    question: 0,
+    orders: [],
+    people: 3,
+  })
+  const myTurn = computed(() => {
+    if(now.value.turn === -1) return false
+    return roomData.value.index === now.value.orders[now.value.turn]
+  })
+
+  return { roomData, stomp, flag, message, now, myTurn }
 }, ) 

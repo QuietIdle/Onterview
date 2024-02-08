@@ -1,16 +1,24 @@
 <script setup>
+import {ref, watch} from 'vue'
 import interviewMultiInterviewer from "@/components/interview/interviewMultiInterviewer.vue";
 import interviewMultiOV from "@/components/interview/interviewMultiOV.vue";
 import { useRouter } from "vue-router";
-import { useInterviewStore } from "@/stores/interview";
+import { useInterviewStore, useWebsocketStore } from "@/stores/interview";
 
 const interviewStore = useInterviewStore()
+const websocketStore = useWebsocketStore()
 const router = useRouter()
 
 const goInterviewMain = function () {
   interviewStore.ov = false
   router.push({name: 'interview'})
 }
+
+watch(() => websocketStore.flag.room,
+  () => {
+    console.log("room event!")
+  }
+)
 </script>
 
 <template>

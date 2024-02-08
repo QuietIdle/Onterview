@@ -48,15 +48,14 @@ const startMatch = function () {
   stomp.connect(
     header,
     () => {
-      stomp.subscribe(`/sub/${interviewStore.stompType}`, function (message) {
-        //console.log(message.body);
-      })
+      // stomp.subscribe(`/sub/${interviewStore.stompType}`, function (message) {
+      //   console.log(message.body);
+      // })
       stomp.subscribe(
         `/user/sub/${interviewStore.stompType}`,
         function (message) {
-          websocketStore.token = JSON.parse(message.body).token
-          websocketStore.sessionId = JSON.parse(message.body).sessionId
-          console.log('token accepted successfully!')
+          websocketStore.roomData = JSON.parse(message.body)
+          console.log('token accepted successfully!', websocketStore.roomData)
 
           interviewStore.dialog.wait = false
           stopTimer()
@@ -75,7 +74,7 @@ const startMatch = function () {
         JSON.stringify({
           type: 'ENTER',
           roomId: interviewStore.stompType,
-          matchCount: 4
+          matchCount: 3,
         })
       )
       // stomp.send("/pub/match", {}, JSON.stringify({
@@ -100,11 +99,6 @@ const stopMatch = function () {
 
     stomp.disconnect()
   }
-}
-
-const goRoom = function () {
-  interviewStore.dialog.wait = false
-  router.push({ name: 'interview-multi' })
 }
 </script>
 
@@ -173,15 +167,6 @@ const goRoom = function () {
           >매칭 대기 시간
           {{ String(Math.floor(time.second / 60)).padStart(2, '0') }} :
           {{ String(time.second % 60).padStart(2, '0') }}</v-btn
-        >
-        <v-btn
-          @click="goRoom"
-          class="ma-1"
-          rounded
-          elevation="4"
-          size="x-large"
-          style="background-color: #9b9b9b"
-          >강제 입장</v-btn
         >
       </v-card-actions>
     </v-card>
