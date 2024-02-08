@@ -1,16 +1,19 @@
 <script setup>
 import draggable from 'vuedraggable'
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { apiMethods } from "@/api/video"
 
 // store
 import { storeToRefs } from 'pinia'
 import { useQuestionStore } from '@/stores/question.js'
 import { useSelfSpeechStore } from "@/stores/selfSpeech"
+import StorageQuestionView from "@/views/StorageQuestionView.vue"
 
 const questionStore = useQuestionStore()
 const selfSpeechStore = useSelfSpeechStore()
 const { myQuestionList } = storeToRefs(questionStore)
+
+const dialog = ref(false)
 
 onMounted(() => {
   questionStore.requestMyQuestionList()
@@ -30,7 +33,7 @@ const selectQuestion = async function(ele) {
 <template>
   <div class="question-title pa-3 d-flex align-center justify-space-between">
     <div>나의 면접 문항 목록</div>
-    <v-btn color="grey-lighten-1">관리</v-btn>
+    <v-btn color="grey-lighten-1" @click="dialog = true">관리</v-btn>
   </div>
   <div style="max-height: 80%; overflow-y: auto">
     <v-expansion-panels variant="accordion">
@@ -55,6 +58,20 @@ const selectQuestion = async function(ele) {
       </v-expansion-panel>
     </v-expansion-panels>
   </div>
+
+  <v-dialog v-model="dialog">
+    <v-card class="bg-purple-lighten-4 pa-5">
+      <v-card-title class="d-flex flex-row-reverse">
+        <v-icon class="exit-btn ma-1 ml-auto" color="black" size="32" icon="mdi-close-circle-outline" @click="dialog = false"></v-icon>
+      </v-card-title>
+      <v-card-text class="bg-white">
+        <div class="w-100 h-100">
+          <StorageQuestionView />
+        </div>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
+
 </template>
 
 <style scoped>
