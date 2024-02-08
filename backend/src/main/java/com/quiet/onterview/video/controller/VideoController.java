@@ -37,8 +37,9 @@ public class VideoController {
     public ResponseEntity<List<VideoInformationResponse>> getAllMyVideoByCategory(
             @RequestParam(name = "category") SpeechType speechType,
             @AuthenticationPrincipal SecurityUser user) {
-        videoService.loadAllMyVideo(user, speechType);
-        return ResponseEntity.ok(null);
+        List<VideoInformationResponse> videoInformationResponses = videoService.loadAllMyVideo(user,
+                speechType);
+        return ResponseEntity.ok(videoInformationResponses);
     }
 
     @PostMapping
