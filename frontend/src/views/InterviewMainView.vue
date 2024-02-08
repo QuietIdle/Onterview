@@ -39,7 +39,7 @@ const enter = function () {
     interviewStore.dialog.wait = true
   }
   else {
-    alert('1인 방')
+    router.push('/interview/single')
   }
 }
 
@@ -88,7 +88,7 @@ const openHelp = function () {
         <div class="item-body">
           <div class="job">
             <button :class="{ isSelect: type }" @click="chooseType(true)" class="btn job-btn">
-              <div class="w-50 ma-1">직무</div>
+              <div class="w-50 ma-1">직무면접</div>
               <div class="w-50 ma-1"><v-img :src="BtnImg3"></v-img></div>
             </button>
             <v-radio-group class="job-detail" v-if="type" v-model="interviewStore.choice.typeDetail">
@@ -98,7 +98,7 @@ const openHelp = function () {
           </div>
           <div class="fit">
             <button class="btn fit-btn" :class="{ isSelect: !type }" @click="chooseType(false)">
-              <div class="w-25 ma-1">인성</div>
+              <div class="w-25 ma-1">인성면접</div>
               <div class="ma-1" style="width: 35%;"><v-img :src="BtnImg4"></v-img></div>
             </button>
           </div>
