@@ -9,6 +9,7 @@ onMounted(() => {
 
 const storageStore = useStorageStore()
 const selectedId = ref([])
+const isSelectedAll = ref(false)
 
 const deleteVideo = async function () {
   try {
@@ -34,9 +35,15 @@ const markVideo = async function (id, bool) {
 }
 
 const selectAll = function () {
-  for (const item of storageStore.storageData) {
-    if (!selectedId.value.includes(item.videoId)) {
-      selectedId.value.push(item.videoId)
+  if (isSelectedAll.value == true) {
+    selectedId.value = []
+    isSelectedAll.value = false
+  } else {
+    for (const item of storageStore.storageData) {
+      if (!selectedId.value.includes(item.videoId)) {
+        selectedId.value.push(item.videoId)
+        isSelectedAll.value = true
+      }
     }
   }
 }
