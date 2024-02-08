@@ -55,6 +55,12 @@ const router = createRouter({
       component: () => import('@/views/SelfSpeechRoomView.vue'),
       meta: {layout: ''},
     },
+    // {
+    //   path: '/meeting/room/solo',
+    //   name: 'meeting-room-solo',
+    //   component: () => import('@/views/MeetingRoomSoloview.vue'),
+    //   meta: {layout: ''},
+    // },
     {
       path: '/storage/question',
       name: 'storage-question',
@@ -116,7 +122,7 @@ router.beforeEach((to, from) => {
   const userStore = useUserStore()
 
   if (userStore.accessToken === null) {
-    if (to.name === 'mypage' || to.name === 'selfspeech-room' || to.name === 'storage-question' || to.name === 'storage-video') {
+    if (to.name === 'mypage' || to.name === 'selfspeech-room' || to.name === 'storage-question' || to.name === 'storage-video' || to.name === 'interview-single') {
       alert('로그인이 필요합니다!')
       return { name: 'login' }
     }

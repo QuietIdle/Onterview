@@ -9,7 +9,7 @@ export const useInterviewStore = defineStore('interview', () => {
   const choice = ref({
     people: 'SINGLE',
     type: '인성면접',
-    typeDetail: ''
+    typeDetail: 'FIT'
   })
   const stompType = computed(() => {
     if (choice.value.type === '인성면접') return 1
