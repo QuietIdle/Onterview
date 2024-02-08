@@ -1,19 +1,19 @@
 <script setup>
-import { ref } from 'vue';
-import { apiMethods } from "@/api/video";
-import { useStorageStore } from '@/stores/storage';
+import { ref } from 'vue'
+import { apiMethods } from '@/api/video'
+import { useStorageStore } from '@/stores/storage'
 
-const storageStore = useStorageStore();
-const selectedId = ref([]);
+const storageStore = useStorageStore()
+const selectedId = ref([])
 
 const deleteVideo = async function () {
   try {
     const result = await apiMethods.deleteVideos({
       videos: selectedId.value
-    });
-    console.log(result.data);
+    })
+    console.log(result.data)
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
 }
 
@@ -23,9 +23,9 @@ const markVideo = async function (id, bool) {
       bookmark: !bool
     }
     const result = await apiMethods.patchVideo(id, req_body)
-    console.log(result.data);
+    console.log(result.data)
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
 }
 
@@ -39,8 +39,8 @@ const selectAll = function () {
 
 const selectVideo = async function (v_id) {
   try {
-    const res = await apiMethods.getVideo(v_id);
-    storageStore.videoData = res.data;
+    const res = await apiMethods.getVideo(v_id)
+    storageStore.videoData = res.data
   } catch (error) {
     console.log(error)
   }
@@ -48,17 +48,17 @@ const selectVideo = async function (v_id) {
 </script>
 
 <template>
-    <div class="pa-10 d-flex justify-center bg-green w-screen">
+  <div class="pa-10 d-flex justify-center w-screen h-screen">
     <div class="w-75 bg-white">
       <div class="tool-bar d-flex align-center">
-        <v-btn variant="tonal" @click="selectAll">
-          전체 선택
-        </v-btn>
-        <v-btn variant="tonal" @click="deleteVideo">
-          삭제
-        </v-btn>
+        <v-btn variant="tonal" @click="selectAll"> 전체 선택 </v-btn>
+        <v-btn variant="tonal" @click="deleteVideo"> 삭제 </v-btn>
 
-        <v-btn class="ml-auto" variant="outlined" @click="storageStore.switchDisplay(0)">
+        <v-btn
+          class="ml-auto"
+          variant="outlined"
+          @click="storageStore.goStorageVideoList()"
+        >
           리스트 보기
         </v-btn>
       </div>
@@ -66,42 +66,47 @@ const selectVideo = async function (v_id) {
       <div class="pa-2">
         <v-container>
           <v-row>
-            <v-col 
-              v-for="(dt, n) in storageStore.storageData.value"
+            <v-col
+              v-for="(dt, n) in storageStore.storageData"
               :key="n"
               cols="auto"
             >
-              <v-card 
-                height="200" 
-                width="200"
-              >
+              <v-card height="200" width="200">
                 <div class="image-container w-100 h-100">
-                  <div class="number">{{ n+1 }}</div>
-                  <v-icon 
-                    v-show="!dt.bookmark" 
+                  <div class="number">{{ n + 1 }}</div>
+                  <v-icon
+                    v-show="!dt.bookmark"
                     class="icon"
-                    color="purple" 
-                    size="32" 
+                    color="purple"
+                    size="32"
                     icon="mdi-bookmark-outline"
-                    @click="markVideo(dt.videoId, dt.bookmark), dt.bookmark=!dt.bookmark"
+                    @click="
+                      markVideo(dt.videoId, dt.bookmark),
+                        (dt.bookmark = !dt.bookmark)
+                    "
                   >
                   </v-icon>
-                  <v-icon 
-                    v-show="dt.bookmark" 
+                  <v-icon
+                    v-show="dt.bookmark"
                     class="icon"
-                    color="purple" 
-                    size="32" 
+                    color="purple"
+                    size="32"
                     icon="mdi-bookmark-check"
-                    @click="markVideo(dt.videoId, dt.bookmark), dt.bookmark=!dt.bookmark"
+                    @click="
+                      markVideo(dt.videoId, dt.bookmark),
+                        (dt.bookmark = !dt.bookmark)
+                    "
                   >
                   </v-icon>
-                
-                  <v-card 
-                    class="image-card" 
-                    :image="dt.thumbnailUrl.saveFilename" 
-                    width="180" 
+
+                  <v-card
+                    class="image-card"
+                    :image="dt.thumbnailUrl.saveFilename"
+                    width="180"
                     height="135"
-                    @click="storageStore.switchDisplay(1), selectVideo(dt.videoId)"
+                    @click="
+                      storageStore.goStorageVideoPlay(), selectVideo(dt.videoId)
+                    "
                   >
                   </v-card>
                   <v-checkbox
@@ -114,7 +119,6 @@ const selectVideo = async function (v_id) {
                   </div>
                 </div>
               </v-card>
-            
             </v-col>
           </v-row>
         </v-container>
@@ -124,34 +128,34 @@ const selectVideo = async function (v_id) {
 </template>
 
 <style scoped>
-.tool-bar>*{
+.tool-bar > * {
   margin: 8px;
 }
-.image-container{
+.image-container {
   position: relative;
 }
-.number{
+.number {
   position: absolute;
   top: 0%;
   left: 0%;
 }
-.icon{
+.icon {
   position: absolute;
   top: 0%;
   right: 0%;
 }
-.image-card{
+.image-card {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
-.check-box{
+.check-box {
   position: absolute;
   bottom: -16%;
   left: 0%;
 }
-.text-container{
+.text-container {
   position: absolute;
   bottom: -3%;
   left: 50%;

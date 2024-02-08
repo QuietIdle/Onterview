@@ -65,7 +65,25 @@ const router = createRouter({
       path: '/storage/video',
       name: 'storage-video',
       component: () => import('@/views/StorageVideoView.vue'),
-      meta: {layout: 'main'},
+      meta: { layout: 'main' },
+      redirect: { name: "video-list"},
+      children: [
+        {
+          path: "list",
+          name: "video-list",
+          component: () => import('@/components/storage/StorageVideoList.vue')
+        },
+        {
+          path: "grid",
+          name: "video-grid",
+          component: () => import('@/components/storage/StorageVideoGrid.vue')
+        },
+        {
+          path: "play",
+          name: "video-play",
+          component: () => import('@/components/storage/StorageVideoPlay.vue')
+        }
+      ]
     },
     {
       path: '/community',
