@@ -12,10 +12,8 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface InterviewRoomService {
-
-//     Page<InterviewRoomResponse> getInterviewRoomList(Long memberId, Pageable pageable);
-//     Page<InterviewRoomResponse> getSingleInterviewRoomList(Long memberId, Pageable pageable);
-//     Page<InterviewRoomResponse> getMultiInterviewRoomList(Long memberId, Pageable pageable);
+     Page<InterviewRoomResponse> getSingleInterviewRoomList(Long memberId, Pageable pageable);
+     Page<InterviewRoomResponse> getMultiInterviewRoomList(Long memberId, Pageable pageable);
 //     List<VideoStorageResponse> getSingleVideoList(Long memberId);
 //     List<VideoStorageResponse> getMultiVideoList(Long memberId);
 //     InterviewRoomDetailResponse getInterviewRoomDetail(Long memberId, Long interviewRoomId);
