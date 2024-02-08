@@ -12,24 +12,39 @@ const router = useRouter()
 const userStore = useUserStore()
 const interviewStore = useInterviewStore()
 
+// 1인 면접 진행 시간 스톱 워치
 const startTime = ref(Date.now())
 const timeDifference = ref(0)
 const timerId = ref(null)
 
-const questionList = ref([])
+// 스트리밍 영상 정보
 const mediaVideo = document.createElement('video')  // 비디오+오디오 스트리밍 영상(저장용)
 const mediaOnlyVideo = ref(null)                    // 비디오 스트리밍 영상(송출용)
+const isAcceptedPermission = ref(true)              // 카메라/마이크 웹 브라우저 권한 정보
+const isWebcamOn = ref(false)                       // 카메라 On/Off
+const isMicrophoneOn = ref(false)                   // 마이크 On/Off
+
+// 면접 문항 정보
+const questionList = ref([])
+const interviewQuestion = ref("\u00A0")
+
+// 녹화 영상 정보
 const filename = ref('')
 const endOfChunk = ref(0)  // chunk 전송 완료 여부 {0: 전송중, 1: 마지막 chunk}
-const isAcceptedPermission = ref(true)
-const isWebcamOn = ref(false)
-const isMicrophoneOn = ref(false)
-const isActiveTimer = ref(false)
-const isAbleInterview = ref(false)
-const isInterviewInProgress = ref(false)
+const recordTime = ref(0)  // 녹화 시간
+
+// 인터뷰 진행 정보
+const isAbleInterview = ref(false)            // 인터뷰 진행 가능 여부 정보 (카메라/마이크 On/Off 등 확인)
+const isActiveTimer = ref(false)              // 타이머 실행 정보
+const needResetTimer = ref(false)             // 타이머 리셋 요청
+const isInterviewInProgress = ref(false)      // 모의면접 진행 여부 정보
+
+// 다이얼로그
 const dialogRequestPermissionMedia = ref(false) // 처음 권한을 요청할 때
 const dialogDeniedPermissionMedia = ref(false)  // 권한 요청이 거부되었을 때
+const dialogIsDoneInterview = ref(false)        // 1인 면접이 종료되었을 때
 
+// 카메라 On/Off 정보
 const watchWebcamOn = watch(isWebcamOn, () => {
   if (isWebcamOn.value === true) {
     if (isMicrophoneOn.value === true) {
@@ -40,6 +55,7 @@ const watchWebcamOn = watch(isWebcamOn, () => {
   }
 })
 
+// 마이크 On/Off 정보
 const watchMicrophoneOn = watch(isMicrophoneOn, () => {
   if (isMicrophoneOn.value === true) {
     if (isWebcamOn.value === true) {
@@ -98,10 +114,12 @@ const setupMicrophone = function () {
   })
 }
 
+// 스톱워치 시간 정보
 const updateTime = function () {
   timeDifference.value = Math.floor((Date.now() - startTime.value) / 1000)
 }
 
+// 스톱워치 매초 업데이트
 const formatTime = function (seconds) {
   // 초를 'mm:ss' 형식의 문자열로 변환
   const minutes = Math.floor(seconds / 60)
@@ -133,6 +151,7 @@ const TTS = function (script) {
   })
 }
 
+// TTS 강제 종료
 const TTScancel = function () {
   if ('speechSynthesis' in window) {
     window.speechSynthesis.cancel();
@@ -152,11 +171,13 @@ const introduceInterviewSolo = async function () {
 // 면접 답변 진행 (타이머 On)
 const answerInterviewSolo = async function (script) {
   isActiveTimer.value = true
+  needResetTimer.value = false
 
   // 이벤트가 발생할 때까지 무한 루프로 대기
   while (isActiveTimer.value) {
     await sleep(100)  // 짧은 간격으로 확인
   }
+  needResetTimer.value = true
 }
 
 // 1인 면접 종료 전자 음성
@@ -168,11 +189,16 @@ const closingInterviewSolo = async function () {
 }
 
 // 하나의 면접 문항에 대한 인터뷰 진행
-const interviewOneQuestion = async function (script) {
-  await TTS(script)
+const interviewOneQuestion = async function (question) {
+  interviewQuestion.value = question.commonQuestion
+  recordTime.value = 0
+  const updateRecordTime = setInterval(recordTime.value++, 1000)
+  await TTS(question.commonQuestion)
   startRecord()
   await answerInterviewSolo()
-  saveRecording()
+  saveRecording(recordTime.value, question.commonQuestionId)
+  clearInterval(updateRecordTime)
+  interviewQuestion.value = "\u00A0"
 }
 
 // 면접 문항 조기 종료 (답변 완료)
@@ -213,23 +239,37 @@ const startInterview = async function () {
     isInterviewInProgress.value = true
     await introduceInterviewSolo()
     for (let i = 0; i < 5; i++) {
-      await interviewOneQuestion(questionList.value[i].commonQuestion)
+      await interviewOneQuestion(questionList.value[i])
+      if (isInterviewInProgress.value === false) break
       if (i < 4) {
         await TTS(`다음 질문입니다.`)
       }
     }
+
+    if (isInterviewInProgress.value === false) return
     await closingInterviewSolo()
     stopInterview()
+    dialogIsDoneInterview.value = true
   } catch (error) {
-    alert(`알 수 없는 이유로 모의 면접을 진행할 수 없습니다. \n관리자에게 문의해주세요.`)
-    console.error('오류 발생:', error)
+    // TTS 종료 에러 처리
+    if (error instanceof SpeechSynthesisErrorEvent && error.error === 'interrupted') {
+      // TTS 종료 에러 발생 시 처리할 작업 추가
+      console.log('TTS 가 종료되었습니다:', error)
+    } else {
+      // 기타 에러 처리
+      alert(`알 수 없는 이유로 모의 면접을 진행할 수 없습니다. \n관리자에게 문의해주세요.`)
+      console.error('오류 발생:', error)
+    }
   }
 }
 
+// 인터뷰 종료
 const stopInterview = async function () {
-  isInterviewInProgress.value = false
   TTScancel()
-  timerId.value = null
+  finishOneQuestion()
+  isInterviewInProgress.value = false
+  clearInterval(timerId.value)
+  timeDifference.value = 0
 }
 
 let recorder
@@ -249,7 +289,7 @@ const startRecord = async function () {
     if (e.data.size > 0) {
       recordedChunks.push(e.data)
     }
-    sendToServer(e.data, idx)
+    await sendToServer(e.data, idx)
 
     if (!isActiveTimer.value | idx > 25) {
       console.log(recorder)
@@ -269,12 +309,12 @@ const stopRecord = async function () {
 }
 
 // 녹화 영상 저장
-const saveRecording = async function () {
+const saveRecording = async function (videoLength, questionId) {
   const date = new Date().toLocaleString()
   const req_body = {
-    // questionId : 현재 면접 문항 id,
-    videoLength: 0,  // TODO
-    title: `${"현재 면접 문항 id"}-${date}`,
+    questionId: questionId,
+    videoLength: videoLength,
+    title: `${questionId}-${date}`,
     videoInformation: {
       saveFilename: `${filename.value}.mkv`,
       originFilename: `${filename.value}.mkv`,
@@ -283,16 +323,16 @@ const saveRecording = async function () {
       saveFilename: `${filename.value}.png`,
       originFilename: `${filename.value}.png`,
     },
-    category: 2,
   }
   try {
     const response = await apiMethods.saveVideo(req_body)
-    console.log('save successfully!', response.data)
+    console.log('save video information successfully!', response.data)
   } catch (error) {
     console.log(error)
   }
 }
 
+// 1인 면접 시작, 면접 문항 요청
 const requestInterviewQuestions = function () {
   return new Promise((resolve, reject) => {
     const payload = {
@@ -345,11 +385,17 @@ const sendToServer = async function (chunk, idx) {
   }
 }
 
+// 모의 면접 메인 페이지 이동
 const toInterviewMain = function () {
   router.push({ name: 'interview' })
 }
 
+const toStorageInterviewSolo = function () {
+  router.push({ name: "" })  // TODO
+}
+
 onMounted(() => {
+  // 카메라/마이크 권한 확인
   navigator.permissions.query({ name: 'camera' })
     .then(permissionStatus => {
       if (permissionStatus.state === 'granted') {
@@ -363,10 +409,6 @@ onMounted(() => {
     })
 })
 
-onUnmounted(() => {
-  // stopRecord()
-})
-
 </script>
 
 <template>
@@ -378,7 +420,7 @@ onUnmounted(() => {
         {{ formatTime(timeDifference) }}
       </div>
       <div class="mx-auto"></div>
-      <div v-if="isInterviewInProgress" class="px-4 py-2" style="border-left: 1px solid white;">
+      <div v-if="isInterviewInProgress" class="px-4 py-2" style="border-left: 1px solid white;" color="red">
         <v-btn variant="plain" @click="stopInterview">면접종료</v-btn>
       </div>
       <div class="px-4 py-2" style="border-left: 1px solid white; border-right: 1px solid white;">
@@ -387,19 +429,21 @@ onUnmounted(() => {
     </div>
 
     <div class="d-flex justify-center my-15">
-      <h1>면접 환경을 세팅해주세요!</h1>
+      <h1 v-if="!isInterviewInProgress">면접 환경을 세팅해주세요!</h1>
+      <h1 v-else>{{ interviewQuestion }}</h1>
     </div>
 
     <v-row class="text-center">
       <div class="d-flex flex-column align-center my-auto offset-1 v-col-3 py-0 px-0">
-        <TimerComponent :start-timer="isActiveTimer" @finish-timer="isActiveTimer = false" /><br>
+        <TimerComponent :start-timer="isActiveTimer" :reset-timer="needResetTimer"
+          @finish-timer="isActiveTimer = false" /><br>
         <div v-if="!isInterviewInProgress">
           <v-btn :disabled="!isAbleInterview" rounded="xl" size="x-large" class="active-btn mt-4 mx-2 px-15"
             @click="startInterview">면접 시작</v-btn>
         </div>
         <div v-else>
           <v-btn :disabled="!isActiveTimer" rounded="xl" size="x-large" class="active-btn mt-4 mx-2 px-15"
-            @click="finishInterview">답변 완료</v-btn>
+            @click="finishOneQuestion">답변 완료</v-btn>
         </div>
       </div>
       <div class="video-container offset-1 v-col-6">
@@ -410,7 +454,7 @@ onUnmounted(() => {
           <v-btn class="bg-primary" @click="requestPermissionMedia">마이크 및 카메라 활성화</v-btn>
         </div>
 
-        <div class="d-flex justify-center mt-3 text-black">
+        <div v-if="!isInterviewInProgress" class="d-flex justify-center mt-3 text-black">
           <!-- 웹캠/마이크 활성화 버튼 -->
           <v-col cols="auto">
             <v-btn v-if="!isWebcamOn" icon="mdi-video-off" size="large" class="bg-error mx-2"
@@ -428,7 +472,7 @@ onUnmounted(() => {
     </div>
   </div>
 
-  <!-- dialogRequestPermissionMedia -->
+  <!-- 카메라/마이크 권한 승인을 아직 하지 않았을 때 -->
   <v-dialog v-model="dialogRequestPermissionMedia" width="auto">
     <v-card class="py-5">
       <v-card-title class="text-primary text-center">
@@ -443,7 +487,7 @@ onUnmounted(() => {
     </v-card>
   </v-dialog>
 
-  <!-- dialogDeniedPermissionMedia -->
+  <!-- 카메라/마이크 권한을 거부했을 떄 -->
   <v-dialog v-model="dialogDeniedPermissionMedia" width="auto">
     <v-card class="py-5">
       <v-card-title class="text-primary text-center">
@@ -458,6 +502,29 @@ onUnmounted(() => {
       </v-card-actions>
     </v-card>
   </v-dialog>
+
+  <!-- 모의 면접 종료 다이얼로그 -->
+  <v-dialog v-model="dialogIsDoneInterview" width="auto" height="auto">
+    <v-card class="px-15 py-5 text-center" theme="dark">
+      <h3 class="mb-5">모의 면접이 종료되었습니다!</h3>
+      <div class="d-flex justify-center">
+        <v-btn :ripple="false" class="active-btn text-center mx-3 my-3" elevation="8"
+          @click="dialogIsDoneInterview = false" height="auto">
+          <div class="my-3">
+            <v-icon icon="mdi-reload" class="icon mb-3" size="100"></v-icon><br>
+            <p>다시하기</p>
+          </div>
+        </v-btn>
+        <v-btn :ripple="false" class="active-btn text-center mx-3 my-3" elevation="8" @click="toStorageInterviewSolo"
+          height="auto">
+          <div class="my-3">
+            <v-icon icon="mdi-playlist-play" class="icon mb-3" size="100"></v-icon>
+            <p>영상보기</p>
+          </div>
+        </v-btn>
+      </div>
+    </v-card>
+  </v-dialog>
 </template>
 
 <style scoped>
@@ -465,6 +532,12 @@ html,
 body {
   width: 100%;
   height: 100%;
+}
+
+h1 {
+  /* 요소의 최소 높이를 설정합니다. */
+  min-height: 20px;
+  /* 예시값 */
 }
 
 video {

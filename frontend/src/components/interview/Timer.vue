@@ -1,12 +1,13 @@
 <script setup>
-import { ref, watch, onUnmounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 
 const maxTime = 60
 const timerId = ref(null)
 const remainingTime = ref(maxTime)
 
 const props = defineProps({
-  startTimer: Boolean
+  startTimer: Boolean,
+  resetTimer: Boolean
 })
 
 const emit = defineEmits(['finishTimer'])
@@ -15,6 +16,13 @@ watch(() => props.startTimer, (newVal) => {
   if (newVal === true) {
     startTimer()
   } else {
+    stopTimer()
+    resetTimer()
+  }
+})
+
+watch(() => props.resetTimer, (newVal) => {
+  if (newVal === true) {
     resetTimer()
   }
 })
@@ -31,6 +39,7 @@ watch(remainingTime, (newVal) => {
   document.documentElement.style.setProperty('--offset', `${offset}px`)
 
   if (newVal === 0) {
+    stopTimer()
     resetTimer()
   }
 })
@@ -41,16 +50,24 @@ const startTimer = function () {
   }
 }
 
-const resetTimer = function () {
+const stopTimer = function () {
   clearInterval(timerId.value)
   timerId.value = null
-  remainingTime.value = maxTime
-  // 그래프 스타일을 초기값으로 설정
-  document.documentElement.style.setProperty('--offset', `292.5px`)
   emit('finishTimer')
 }
 
+const resetTimer = function () {
+  remainingTime.value = maxTime
+  const elapsedPercentage = ((maxTime - remainingTime.value) / maxTime) * 100
+  const offset = (292.5 * elapsedPercentage) / 100
+  document.documentElement.style.setProperty('--offset', `${offset}px`)
+}
+
 // 컴포넌트가 언마운트되면 타이머를 정리
+onMounted(() => {
+  resetTimer()
+})
+
 onUnmounted(() => {
   resetTimer()
 })
