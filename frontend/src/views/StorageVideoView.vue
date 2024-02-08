@@ -1,23 +1,4 @@
-<script setup>
-import { apiMethods } from '@/api/video'
-import { useStorageStore } from '@/stores/storage'
-import { onMounted } from 'vue'
-
-const storageStore = useStorageStore()
-
-const storageDisplay = async function () {
-  try {
-    const result = await apiMethods.getUserVideoAll()
-    storageStore.storageData.value = result.data
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-onMounted(() => {
-  storageDisplay()
-})
-</script>
+<script setup></script>
 
 <template>
   <!-- 전체보기, 내가 쓴 게시글 보기 토글 -->

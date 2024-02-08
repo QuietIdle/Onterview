@@ -1,7 +1,6 @@
 <script setup>
 import { useStorageStore } from '@/stores/storage'
-import videojs from 'video.js'
-import { onUpdated, onBeforeUnmount, ref, onMounted } from 'vue'
+import { onBeforeUnmount, ref, onMounted } from 'vue'
 import { fileServer } from '@/api/video'
 import { apiMethods } from '@/api/video'
 
@@ -99,7 +98,7 @@ onBeforeUnmount(() => {
   <div class="main-container d-flex justify-center">
     <div class="w-75">
       <div class="pa-2">
-        <v-btn @click="storageStore.switchDisplay(1)">목록 보기</v-btn>
+        <v-btn @click="storageStore.goStorageVideoList()">목록 보기</v-btn>
       </div>
 
       <div class="pa-2">

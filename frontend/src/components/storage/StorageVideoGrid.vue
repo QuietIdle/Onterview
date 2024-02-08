@@ -1,7 +1,11 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { apiMethods } from '@/api/video'
 import { useStorageStore } from '@/stores/storage'
+
+onMounted(() => {
+  storageStore.requestUserVideoAll()
+})
 
 const storageStore = useStorageStore()
 const selectedId = ref([])
@@ -30,7 +34,7 @@ const markVideo = async function (id, bool) {
 }
 
 const selectAll = function () {
-  for (const item of storageStore.storageData.value) {
+  for (const item of storageStore.storageData) {
     if (!selectedId.value.includes(item.videoId)) {
       selectedId.value.push(item.videoId)
     }
@@ -49,7 +53,7 @@ const selectVideo = async function (v_id) {
 
 <template>
   <div class="pa-10 d-flex justify-center w-screen h-screen">
-    <div class="w-75 bg-white">
+    <div class="w-75 bg-white overflow-auto">
       <div class="tool-bar d-flex align-center">
         <v-btn variant="tonal" @click="selectAll"> 전체 선택 </v-btn>
         <v-btn variant="tonal" @click="deleteVideo"> 삭제 </v-btn>
