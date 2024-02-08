@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -18,5 +19,5 @@ public class InterviewRoomRequest {
     private QuestionType questionType;
     private RoomType roomType;
     private int numToSelect = 5;
-    private List<Long> memberIdList;
+    private List<Long> memberIdList = new ArrayList<>();
 }
