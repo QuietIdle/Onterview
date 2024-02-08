@@ -7,9 +7,8 @@ const authToken = userStore.accessToken
 
 const api = localAxios()
 const api2 = axios.create({
-    // baseURL: 'http://i10a504.p.ssafy.io:8082/',
-    baseURL: 'http://70.12.247.60:8082/',
-    headers: {
+    baseURL: 'https://i10a504.p.ssafy.io/',
+    header: {
         "Authorization": `${authToken}`
     }
 });

@@ -159,7 +159,7 @@ const saveRecording = async function () {
   }
 
   const req_body = {
-    questionId : selfSpeechStore.selectedQuestion,
+    myQuestionId : selfSpeechStore.selectedQuestion,
     videoLength : time.value,
     title : `${title}-${date}`,
     videoInformation : {
@@ -170,8 +170,8 @@ const saveRecording = async function () {
         saveFilename: `${filename.value}.png`,
         originFilename: `${filename.value}.png`,
     },
-    category: 1,
   }
+  console.log(req_body)
   try {
     const response = await apiMethods.saveVideo(req_body)
     console.log('save successfully!', response.data)

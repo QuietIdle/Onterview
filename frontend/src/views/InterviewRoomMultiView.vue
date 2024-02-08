@@ -1,16 +1,24 @@
 <script setup>
+import {ref, watch} from 'vue'
 import interviewMultiInterviewer from "@/components/interview/interviewMultiInterviewer.vue";
 import interviewMultiOV from "@/components/interview/interviewMultiOV.vue";
 import { useRouter } from "vue-router";
-import { useInterviewStore } from "@/stores/interview";
+import { useInterviewStore, useWebsocketStore } from "@/stores/interview";
 
 const interviewStore = useInterviewStore()
+const websocketStore = useWebsocketStore()
 const router = useRouter()
 
 const goInterviewMain = function () {
   interviewStore.ov = false
   router.push({name: 'interview'})
 }
+
+watch(() => websocketStore.flag.room,
+  () => {
+    console.log("room event!")
+  }
+)
 </script>
 
 <template>
@@ -24,7 +32,7 @@ const goInterviewMain = function () {
       color="black" 
       style="border-bottom: 1px solid white;"
     >
-      <div class="d-flex align-center justify-center">
+      <div class="d-flex align-center justify-center" style="border: 0px">
         <div>{{ interviewStore.choice.type }}</div>
       </div>
 
@@ -34,7 +42,7 @@ const goInterviewMain = function () {
       </div>
 
       <div class="d-flex align-center px-3 w-75" style="font-size: large;" >
-        Q.평양냉면 맛있다 우래옥 을밀대
+        Q. {{ websocketStore.now.question.content }}
       </div>
 
       <button @click="goInterviewMain" class="d-flex justify-center align-center">
