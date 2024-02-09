@@ -24,8 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional
@@ -71,18 +70,11 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
     }
 
     private List<VideoStorageResponse> getInterviewVideoResponses(List<InterviewRoom> singleInterviewRoom) {
-        List<VideoStorageResponse> result = new ArrayList<>();
-        for (InterviewRoom interviewRoom : singleInterviewRoom) {
-            List<InterviewQuestion> interviewQuestionList = interviewRoom.getInterviewQuestionList();
-            for (InterviewQuestion interviewQuestion : interviewQuestionList) {
-                Video video = interviewQuestion.getVideo();
-                if (video != null) {
-                    VideoStorageResponse interviewVideoResponse = interviewRoomMapper.entityToInterviewVideoResponse(interviewQuestion, video);
-                    result.add(interviewVideoResponse);
-                }
-            }
-        }
-        return result;
+        return singleInterviewRoom.stream()
+                .flatMap(interviewRoom -> interviewRoom.getInterviewQuestionList().stream())
+                .filter(interviewQuestion -> Objects.nonNull(interviewQuestion.getVideo()))
+                .map(interviewQuestion -> interviewRoomMapper.entityToInterviewVideoResponse(interviewQuestion, interviewQuestion.getVideo()))
+                .toList();
     }
 
     @Override
