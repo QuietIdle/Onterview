@@ -1,4 +1,4 @@
-package com.quiet.onterview.matching;
+package com.quiet.onterview.websocket;
 
 import java.security.Principal;
 

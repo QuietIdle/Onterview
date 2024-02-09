@@ -1,4 +1,4 @@
-package com.quiet.onterview.matching.config;
+package com.quiet.onterview.websocket.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +23,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.setApplicationDestinationPrefixes("/pub")
-                .enableSimpleBroker("/sub");
+        registry.setApplicationDestinationPrefixes("/pub", "/server")
+                .enableSimpleBroker("/sub", "/client");
     }
 }

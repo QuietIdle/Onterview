@@ -18,13 +18,7 @@ public class MatchController {
 
     @MessageMapping("/enter")
     public void enter(@Payload MatchRequest matchRequest, Principal user) {
-        log.info("ENTER : {}", matchRequest);
+        log.info("ENTER MATCH : {}", matchRequest.toString());
         matchService.enter(matchRequest, user.getName());
-    }
-
-    @MessageMapping("/match")
-    public void waiting(@Payload MatchRequest matchRequest) {
-        log.info("MATCH : {}", matchRequest);
-        matchService.match(matchRequest);
     }
 }
