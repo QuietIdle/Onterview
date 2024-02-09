@@ -7,7 +7,6 @@ import com.quiet.onterview.interview.dto.response.InterviewRoomResponse;
 import com.quiet.onterview.interview.entity.InterviewQuestion;
 import com.quiet.onterview.interview.entity.InterviewRoom;
 import com.quiet.onterview.video.dto.response.VideoDetailResponse;
-import com.quiet.onterview.video.dto.response.VideoStorageResponse;
 import com.quiet.onterview.video.entity.Video;
 import com.quiet.onterview.video.mapper.VideoMapper;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +45,7 @@ public class InterviewRoomMapper {
     public InterviewRoomDetailResponse interviewRoomToInterviewRoomDetailResponse(InterviewRoom interviewRoom) {
         List<InterviewQuestion> interviewQuestionList = interviewRoom.getInterviewQuestionList();
         List<InterviewQuestionResponse> interviewQuestionResponseList = interviewQuestionList.stream()
+                .filter(interviewQuestion -> interviewQuestion.getVideo() != null)
                 .map(interviewQuestionMapper::interviewQuestionToInterviewQuestionResponse)
                 .toList();
 
@@ -62,15 +62,6 @@ public class InterviewRoomMapper {
                 .feedback(interviewRoom.getFeedback())
                 .interviewQuestionList(interviewQuestionResponseList)
                 .videoDetail(videoDetailResponse)
-                .build();
-    }
-    public VideoStorageResponse entityToInterviewVideoResponse(InterviewQuestion interviewQuestion, Video video) {
-
-        return VideoStorageResponse.builder()
-                .videoId(video.getVideoId())
-                .thumbnailUrl(video.getThumbnailUrl())
-                .title(video.getTitle())
-                .question(interviewQuestion.getCommonQuestion().getCommonQuestion())
                 .build();
     }
 }
