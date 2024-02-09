@@ -99,12 +99,18 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
     @Override
     public void deleteInterviewRoom(Long memberId, Long interviewRoomId) {
         InterviewRoom interviewRoom = interviewRoomRepository.findById(interviewRoomId).orElseThrow(InterviewRoomNotFoundException::new);
-        if (interviewRoom.getIntervieweeList().size() == 1) {
-            if (interviewRoom.getIntervieweeList().get(0).getMember().getMemberId().equals(memberId)) {
+        List<Interviewee> intervieweeList = interviewRoom.getIntervieweeList();
+
+        if (intervieweeList.stream().noneMatch(interviewee -> Objects.equals(interviewee.getMember().getMemberId(), memberId))) {
+            throw new InterviewRoomNotFoundException();
+        }
+
+        if (intervieweeList.size() == 1) {
+            if (intervieweeList.get(0).getMember().getMemberId().equals(memberId)) {
                 interviewRoomRepository.delete(interviewRoom);
             }
         } else {
-            for (Interviewee interviewee : interviewRoom.getIntervieweeList()) {
+            for (Interviewee interviewee : intervieweeList) {
                 if (interviewee.getMember().getMemberId().equals(memberId)) {
                     intervieweeRepository.delete(interviewee);
                 }
