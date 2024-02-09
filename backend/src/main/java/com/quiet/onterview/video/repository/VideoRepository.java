@@ -20,12 +20,12 @@ public interface VideoRepository extends JpaRepository<Video, Long> {
     @Query("SELECT v FROM Video v "
             + "join InterviewQuestion iq on v.interviewQuestion.interviewQuestionId = iq.interviewQuestionId "
             + "join Interviewee iv on iq.interviewee.intervieweeId = iv.intervieweeId and iv.member.memberId =:memberId "
-            + "join InterviewRoom ivr on iq.interviewRoom.interviewRoomId = ivr.interviewRoomId and ivr.roomType=:type")
+            + "join InterviewRoom ivr on iv.interviewRoom.interviewRoomId = ivr.interviewRoomId and ivr.roomType=:type")
     List<Video> findAllMultiVideoByMember(Long memberId, RoomType type);
 
     @Query("SELECT v FROM Video v "
             + "join InterviewQuestion iq on v.interviewQuestion.interviewQuestionId = iq.interviewQuestionId "
             + "join Interviewee iv on iq.interviewee.intervieweeId = iv.intervieweeId and iv.member.memberId =:memberId "
-            + "join InterviewRoom ivr on iq.interviewRoom.interviewRoomId = ivr.interviewRoomId and ivr.roomType=:type")
+            + "join InterviewRoom ivr on iv.interviewRoom.interviewRoomId = ivr.interviewRoomId and ivr.roomType=:type")
     List<Video> findAllSingleVideoByMember(Long memberId, RoomType type);
 }
