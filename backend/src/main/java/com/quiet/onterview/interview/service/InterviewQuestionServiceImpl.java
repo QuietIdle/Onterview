@@ -1,7 +1,7 @@
 package com.quiet.onterview.interview.service;
 
 import com.quiet.onterview.interview.entity.InterviewQuestion;
-import com.quiet.onterview.interview.entity.InterviewRoom;
+import com.quiet.onterview.interview.entity.Interviewee;
 import com.quiet.onterview.interview.repository.InterviewQuestionRepository;
 import com.quiet.onterview.question.entity.CommonQuestion;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +16,9 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
     private final InterviewQuestionRepository interviewQuestionRepository;
 
     @Override
-    public InterviewQuestion createInterviewQuestion(InterviewRoom interviewRoom, CommonQuestion commonQuestion) {
+    public InterviewQuestion createInterviewQuestion(Interviewee interviewee, CommonQuestion commonQuestion) {
         InterviewQuestion interviewQuestion = InterviewQuestion.builder()
-                .interviewRoom(interviewRoom)
+                .interviewee(interviewee)
                 .commonQuestion(commonQuestion)
                 .build();
         return interviewQuestionRepository.save(interviewQuestion);

@@ -14,7 +14,6 @@ public class InterviewRoomResponse {
     private Long interviewRoomId;
     private QuestionType questionType;
     private RoomType roomType;
-    private Integer numOfQuestion;
     private Integer runTime;
     private LocalDateTime createAt;
 }
