@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @Transactional
@@ -58,11 +57,14 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
         InterviewRoom interviewRoom = interviewRoomRepository.findById(interviewRoomId).orElseThrow(InterviewRoomNotFoundException::new);
         List<Interviewee> intervieweeList = interviewRoom.getIntervieweeList();
 
-        if (intervieweeList.stream().noneMatch(interviewee -> Objects.equals(interviewee.getMember().getMemberId(), memberId))) {
-            throw new InterviewRoomNotFoundException();
-        }
+        Interviewee foundInterviewee = intervieweeList.stream()
+                .filter(interviewee -> interviewee.getMember().getMemberId().equals(memberId))
+                .findFirst()
+                .orElseThrow(InterviewRoomNotFoundException::new);
 
-        return interviewRoomMapper.interviewRoomToInterviewRoomDetailResponse(interviewRoom);
+        List<InterviewQuestion> interviewQuestionList = foundInterviewee.getInterviewQuestionList();
+
+        return interviewRoomMapper.interviewRoomToInterviewRoomDetailResponse(interviewQuestionList, interviewRoom);
     }
 
     @Override
@@ -80,7 +82,7 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
             interviewRoom.addInterviewee(interviewee);
 
             for (CommonQuestion randomCommonQuestion : randomCommonQuestionList) {
-                InterviewQuestion interviewQuestion = interviewQuestionService.createInterviewQuestion(interviewRoom, randomCommonQuestion);
+                InterviewQuestion interviewQuestion = interviewQuestionService.createInterviewQuestion(interviewee, randomCommonQuestion);
                 interviewee.addInterviewQuestion(interviewQuestion);
             }
         }

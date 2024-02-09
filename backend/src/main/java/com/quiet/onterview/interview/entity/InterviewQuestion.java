@@ -1,7 +1,6 @@
 package com.quiet.onterview.interview.entity;
 
 import com.quiet.onterview.common.BaseEntity;
-import com.quiet.onterview.member.entity.Member;
 import com.quiet.onterview.question.entity.CommonQuestion;
 import com.quiet.onterview.video.entity.Video;
 import jakarta.persistence.*;
@@ -23,10 +22,6 @@ public class InterviewQuestion extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "INTERVIEW_QUESTION_ID")
     private Long interviewQuestionId;
-
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "INTERVIEW_ROOM_ID")
-    private InterviewRoom interviewRoom;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "COMMON_QUESTION_ID")

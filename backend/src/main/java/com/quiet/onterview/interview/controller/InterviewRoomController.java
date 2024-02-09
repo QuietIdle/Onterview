@@ -59,6 +59,13 @@ public class InterviewRoomController {
         return ResponseEntity.ok(interviewRoomService.createInterviewRoom(interviewRoomRequest));
     }
 
+    @Operation(summary = "POST 방식으로 다인 모의 면접장 생성 테스트용")
+    @PostMapping("/multiTest")
+    public ResponseEntity<List<CommonQuestionResponse>> registerMultiInterviewRoom(
+            @RequestBody InterviewRoomRequest interviewRoomRequest) {
+        return ResponseEntity.ok(interviewRoomService.createInterviewRoom(interviewRoomRequest));
+    }
+
     @Operation(summary = "DELETE 방식으로 모의 면접장 삭제")
     @DeleteMapping("/{interview_room_id}")
     public ResponseEntity<Long> deleteInterviewRoom(

@@ -26,7 +26,6 @@ public class InterviewRoomMapper {
         return InterviewRoom.builder()
                 .questionType(interviewRoomRequest.getQuestionType())
                 .roomType(interviewRoomRequest.getRoomType())
-                .interviewQuestionList(new ArrayList<>())
                 .intervieweeList(new ArrayList<>())
                 .build();
     }
@@ -38,12 +37,10 @@ public class InterviewRoomMapper {
                 .questionType(interviewRoom.getQuestionType())
                 .roomType(interviewRoom.getRoomType())
                 .createAt(interviewRoom.getCreateAt())
-                .numOfQuestion(interviewRoom.getInterviewQuestionList().size())
                 .build();
     }
 
-    public InterviewRoomDetailResponse interviewRoomToInterviewRoomDetailResponse(InterviewRoom interviewRoom) {
-        List<InterviewQuestion> interviewQuestionList = interviewRoom.getInterviewQuestionList();
+    public InterviewRoomDetailResponse interviewRoomToInterviewRoomDetailResponse(List<InterviewQuestion> interviewQuestionList, InterviewRoom interviewRoom) {
         List<InterviewQuestionResponse> interviewQuestionResponseList = interviewQuestionList.stream()
                 .filter(interviewQuestion -> interviewQuestion.getVideo() != null)
                 .map(interviewQuestionMapper::interviewQuestionToInterviewQuestionResponse)
