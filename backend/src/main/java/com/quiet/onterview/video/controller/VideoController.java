@@ -1,19 +1,18 @@
 package com.quiet.onterview.video.controller;
 
+import com.quiet.onterview.interview.entity.RoomType;
 import com.quiet.onterview.security.SecurityUser;
-import com.quiet.onterview.video.SpeechType;
-import com.quiet.onterview.video.dto.request.VideoDeleteRequest;
-import com.quiet.onterview.video.dto.request.VideoInformationRequest;
-import com.quiet.onterview.video.dto.request.VideoUpdateRequest;
+import com.quiet.onterview.video.dto.request.*;
 import com.quiet.onterview.video.dto.response.VideoDetailResponse;
 import com.quiet.onterview.video.dto.response.VideoInformationResponse;
 import com.quiet.onterview.video.service.VideoService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -35,10 +34,10 @@ public class VideoController {
 
     @GetMapping
     public ResponseEntity<List<VideoInformationResponse>> getAllMyVideoByCategory(
-            @RequestParam(name = "category") SpeechType speechType,
+            @RequestParam(name = "category") RoomType roomType,
             @AuthenticationPrincipal SecurityUser user) {
         List<VideoInformationResponse> videoInformationResponses = videoService.loadAllMyVideo(user,
-                speechType);
+                roomType);
         return ResponseEntity.ok(videoInformationResponses);
     }
 
