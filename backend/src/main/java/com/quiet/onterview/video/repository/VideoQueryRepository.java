@@ -2,6 +2,9 @@ package com.quiet.onterview.video.repository;
 
 
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.quiet.onterview.file.dto.response.FileInformationResponse;
 import com.quiet.onterview.file.entity.QFileInformation;
@@ -25,13 +28,13 @@ public class VideoQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public List<VideoInformationResponse> findAllInterviewVideoByMemberAndType(Long memberId, RoomType type) {
+    public List<VideoInformationResponse> findAllInterviewVideoByMemberAndType(Long memberId, RoomType roomType) {
         QFileInformation thumbnailUrl = new QFileInformation("thumbnailUrl");
         QFileInformation videoUrl = new QFileInformation("videoUrl");
-        return queryFactory
+        JPAQuery<VideoInformationResponse> query = queryFactory
                 .select(Projections.constructor(VideoInformationResponse.class,
                         video.videoId,
-                        video.interviewQuestion.interviewQuestionId,
+                        getQuestionIdByType(roomType),
                         video.title,
                         Projections.constructor(FileInformationResponse.class,
                                 video.thumbnailUrl.originFilename,
@@ -42,38 +45,46 @@ public class VideoQueryRepository {
                         video.feedback,
                         video.bookmark))
                 .from(video)
-                .leftJoin(video.interviewQuestion, interviewQuestion)
-                .leftJoin(interviewQuestion.interviewee, interviewee)
-                .leftJoin(interviewee.interviewRoom, interviewRoom)
                 .leftJoin(video.videoUrl, videoUrl)
-                .leftJoin(video.thumbnailUrl, thumbnailUrl)
-                .where(interviewee.member.memberId.eq(memberId).and(interviewRoom.roomType.eq(type)))
-                .fetch();
+                .leftJoin(video.thumbnailUrl, thumbnailUrl);
+
+        joinByRoomType(query, roomType);
+
+        query
+                .where(eqMemberId(roomType, memberId).and(eqRoomType(roomType)));
+        return query.fetch();
     }
 
-    public List<VideoInformationResponse> findAllSelfVideoByMemberAndType(Long memberId, RoomType type) {
-        QFileInformation thumbnailUrl = new QFileInformation("thumbnailUrl");
-        QFileInformation videoUrl = new QFileInformation("videoUrl");
-        return queryFactory
-                .select(Projections.constructor(VideoInformationResponse.class,
-                        video.videoId,
-                        video.myQuestion.myQuestionId,
-                        video.title,
-                        Projections.constructor(FileInformationResponse.class,
-                                video.thumbnailUrl.originFilename,
-                                video.thumbnailUrl.saveFilename),
-                        Projections.constructor(FileInformationResponse.class,
-                                video.videoUrl.originFilename,
-                                video.videoUrl.saveFilename),
-                        video.feedback,
-                        video.bookmark))
-                .from(video)
-                .innerJoin(video.interviewQuestion, interviewQuestion)
-                .leftJoin(video.myQuestion, myQuestion)
-                .leftJoin(myQuestion.myQuestionFolder, myQuestionFolder1)
-                .leftJoin(video.videoUrl, videoUrl)
-                .leftJoin(video.thumbnailUrl, thumbnailUrl)
-                .where(interviewee.member.memberId.eq(memberId))
-                .fetch();
+    private void joinByRoomType(JPAQuery<VideoInformationResponse> query, RoomType roomType) {
+        switch (roomType) {
+            case SELF -> query
+                    .leftJoin(video.myQuestion, myQuestion)
+                    .leftJoin(myQuestion.myQuestionFolder, myQuestionFolder1);
+            case MULTI, SINGLE -> query
+                    .leftJoin(video.interviewQuestion, interviewQuestion)
+                    .leftJoin(interviewQuestion.interviewee, interviewee)
+                    .leftJoin(interviewee.interviewRoom, interviewRoom);
+        }
+    }
+
+    private BooleanExpression eqRoomType(RoomType roomType) {
+        if (roomType == RoomType.SELF) {
+            return null;
+        }
+        return interviewRoom.roomType.eq(roomType);
+    }
+
+    private BooleanExpression eqMemberId(RoomType roomType, Long memberId) {
+        if (roomType == RoomType.SELF) {
+            return myQuestionFolder1.member.memberId.eq(memberId);
+        }
+        return interviewee.member.memberId.eq(memberId);
+    }
+
+    private NumberPath<Long> getQuestionIdByType(RoomType roomType) {
+        if (roomType == RoomType.SELF) {
+            return video.myQuestion.myQuestionId;
+        }
+        return video.interviewQuestion.interviewQuestionId;
     }
 }

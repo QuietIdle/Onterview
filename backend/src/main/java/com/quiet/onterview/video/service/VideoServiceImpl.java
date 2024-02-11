@@ -1,7 +1,5 @@
 package com.quiet.onterview.video.service;
 
-import com.quiet.onterview.common.BaseException;
-import com.quiet.onterview.common.ErrorCode;
 import com.quiet.onterview.file.service.FileService;
 import com.quiet.onterview.interview.entity.InterviewQuestion;
 import com.quiet.onterview.interview.entity.RoomType;
@@ -47,14 +45,7 @@ public class VideoServiceImpl implements VideoService {
     @Override
     @Transactional(readOnly = true)
     public List<VideoInformationResponse> loadAllMyVideo(SecurityUser user, RoomType roomType) {
-        switch (roomType) {
-            case SELF -> {
-                return videoQueryRepository.findAllSelfVideoByMemberAndType(user.getMemberId(), roomType);
-            }case MULTI, SINGLE -> {
-                return videoQueryRepository.findAllInterviewVideoByMemberAndType(user.getMemberId(), roomType);
-            }
-            default -> throw new BaseException(ErrorCode.VIDEO_NOT_FOUND);
-        }
+        return videoQueryRepository.findAllInterviewVideoByMemberAndType(user.getMemberId(), roomType);
     }
 
     @Override
