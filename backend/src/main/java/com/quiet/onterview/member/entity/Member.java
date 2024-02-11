@@ -18,11 +18,11 @@ import java.util.List;
 import lombok.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
 @AllArgsConstructor
 @Getter
 @Entity
 @ToString
+@Builder
 @Table(name = "member")
 public class Member {
 

@@ -1,9 +1,8 @@
 package com.quiet.onterview.member.mapper;
 
-import com.quiet.onterview.member.dto.response.MemberLoginResponse;
 import com.quiet.onterview.member.dto.request.MemberSignupRequest;
+import com.quiet.onterview.member.dto.response.MemberLoginResponse;
 import com.quiet.onterview.member.entity.Member;
-import java.util.ArrayList;
 import org.springframework.stereotype.Component;
 
 @Component
