@@ -19,9 +19,9 @@ public class WebsocketConnectHandShakeHandler extends DefaultHandshakeHandler {
     @Override
     protected Principal determineUser(ServerHttpRequest request, WebSocketHandler wsHandler,
             Map<String, Object> attributes) {
-        String sessionId = UUID.randomUUID().toString();
-        log.info("handshake sessionId : {}", sessionId);
-        return new StompUser(sessionId);
+        String stompId = UUID.randomUUID().toString();
+        log.info("handshake sessionId : {}", stompId);
+        return new StompUser(stompId);
     }
 
 }

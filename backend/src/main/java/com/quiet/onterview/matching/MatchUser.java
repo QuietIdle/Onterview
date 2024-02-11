@@ -10,7 +10,7 @@ import lombok.Getter;
 @Getter
 public class MatchUser {
     private String principal;
-    private String email;
+    private Long memberId;
     private String token;
 
 

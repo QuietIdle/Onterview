@@ -56,7 +56,7 @@ public class RoomRepository {
         Room room = Optional.ofNullable(rooms.get(sessionId))
                 .orElseThrow(RoomNotFoundException::new);
         try {
-            room.getUsers().remove(user);
+            room.getUsers().remove(MatchUser.builder().principal(user).build());
         } catch (Exception e) {
             throw new UserNotFoundException();
         }
@@ -73,15 +73,23 @@ public class RoomRepository {
 
     public String findRoomByUser(String user) {
         return rooms.keySet().stream()
-                .filter(sessionId -> rooms.get(sessionId).getUsers().contains(user))
+                .filter(sessionId -> rooms.get(sessionId).getUsers()
+                        .contains(MatchUser.builder().principal(user).build()))
                 .findFirst()
                 .orElseThrow(UserNotFoundException::new);
     }
 
 
     public int findIndexByUser(String sessionId, String user) {
-        return Optional.ofNullable(rooms.get(sessionId).getUsers().indexOf(user))
-                .orElseThrow(UserNotFoundException::new);
+        int idx = rooms.get(sessionId)
+                .getUsers()
+                .indexOf(
+                        MatchUser.builder().principal(user).build()
+                );
+        if (idx == -1) {
+            throw new UserNotFoundException();
+        }
+        return idx;
     }
 
     public List<Integer> shuffle(String sessionId) {

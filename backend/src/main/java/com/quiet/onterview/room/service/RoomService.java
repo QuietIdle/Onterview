@@ -35,7 +35,8 @@ public class RoomService {
         roomRepository.generate(sessionId, users, questions);
     }
 
-    public void leave(String sessionId, String user) {
+    public void leave(String user) {
+        String sessionId = roomRepository.findRoomByUser(user);
         int idx = roomRepository.findIndexByUser(sessionId, user);
         if (roomRepository.leave(sessionId, user)) {
             roomRepository.remove(sessionId);
@@ -67,9 +68,5 @@ public class RoomService {
             progressResponseBuilder.question(roomRepository.getQuestion(sessionId));
         }
         messageService.announceAll(ROOM_PREFIX + sessionId, progressResponseBuilder.build());
-    }
-
-    public String getSessionId(String user) {
-        return roomRepository.findRoomByUser(user);
     }
 }

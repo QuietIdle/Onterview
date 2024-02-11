@@ -22,7 +22,6 @@ public class AnnounceStep implements MatchStep {
     public void process(MatchingContext matchingContext) {
         List<MatchUser> matchUsers = matchingContext.getMatchUsers();
         AtomicInteger index = new AtomicInteger();
-        log.info("in Announce Step");
         matchUsers.forEach(matchUser -> messageAnnounce.announceToUser(
                 SUB_HEADER + matchingContext.getRoomId(),
                 matchUser.getPrincipal(),

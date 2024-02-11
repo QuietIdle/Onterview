@@ -2,6 +2,7 @@ package com.quiet.onterview.matching;
 
 import com.quiet.onterview.matching.dto.request.MatchRequest;
 import com.quiet.onterview.question.dto.response.CommonQuestionResponse;
+import java.security.Principal;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,9 +21,9 @@ public class MatchingContext {
     @Setter
     private List<CommonQuestionResponse> questions;
 
-    public MatchingContext(MatchRequest matchRequest, String user, String email) {
+    public MatchingContext(MatchRequest matchRequest, String principal, Long memberId) {
         this.roomId = matchRequest.getRoomId();
-        this.matchUser = MatchUser.builder().email(email).principal(user).build();
+        this.matchUser = MatchUser.builder().memberId(memberId).principal(principal).build();
         this.matchCount = matchRequest.getMatchCount();
         this.sessionId = null;
         this.matchUsers = null;

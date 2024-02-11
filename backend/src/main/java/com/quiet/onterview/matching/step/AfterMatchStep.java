@@ -35,7 +35,7 @@ public class AfterMatchStep implements MatchStep {
                 .roomType(RoomType.MULTI)
                 .questionType(intToQuestionType(matchingContext.getRoomId()))
                 .numToSelect(5)
-                .memberEmailList(matchUsers.stream().map(MatchUser::getEmail).toList())
+                .memberIdList(matchUsers.stream().map(MatchUser::getMemberId).toList())
                 .build()));
         roomService.generate(matchingContext.getSessionId(), matchUsers, matchingContext.getQuestions());
         matchStep.process(matchingContext);

@@ -13,16 +13,13 @@ import org.springframework.stereotype.Service;
 public class MatchService {
 
     private final MatchStep matchStep;
-    private final JwtTokenProvider jwtTokenProvider;
 
-    public MatchService(@Qualifier("beforeMatchStep") MatchStep matchStep, JwtTokenProvider jwtTokenProvider) {
+    public MatchService(@Qualifier("beforeMatchStep") MatchStep matchStep) {
         this.matchStep = matchStep;
-        this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public void enter(MatchRequest matchRequest, String user) {
-        MatchingContext matchingContext = new MatchingContext(matchRequest, user, jwtTokenProvider.getEmail(
-                matchRequest.getAccessToken()));
+    public void enter(MatchRequest matchRequest, String user, Long memberId) {
+        MatchingContext matchingContext = new MatchingContext(matchRequest, user, memberId);
         matchStep.process(matchingContext);
     }
 }

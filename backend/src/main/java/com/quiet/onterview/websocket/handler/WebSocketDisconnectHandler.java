@@ -20,8 +20,7 @@ public class WebSocketDisconnectHandler implements ApplicationListener<SessionDi
     public void onApplicationEvent(SessionDisconnectEvent event) {
         String user = event.getUser().getName();
         try {
-            String sessionId = roomService.getSessionId(user);
-            roomService.leave(sessionId, user);
+            roomService.leave(user);
         } catch (UserNotFoundException e) {
             matchRepository.leave(user);
         }
