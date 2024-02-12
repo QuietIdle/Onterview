@@ -9,7 +9,7 @@ import com.quiet.onterview.question.dto.response.MyAnswerAndVideoResponse;
 public interface MyQuestionService {
 
     MyAnswerAndVideoResponse getMyAnswerAndVideo(Long memberId, Long myQuestionId);
-    void createMyQuestion(MyQuestionRequest myQuestionRequest);
+    void createMyQuestion(Long memberId, MyQuestionRequest myQuestionRequest);
     void updateMyQuestion(Long memberId, Long myQuestionId, MyQuestionUpdateRequest myQuestionUpdateRequest);
     void updateMyAnswer(Long memberId, Long myQuestionId, MyAnswerUpdateRequest myAnswerUpdateRequest);
     void deleteMyQuestion(Long memberId, Long myQuestionId);

@@ -32,8 +32,10 @@ public class MyQuestionController {
 
     @Operation(summary = "POST 방식으로 나의 면접 질문 생성")
     @PostMapping
-    public ResponseEntity<Void> registerMyQuestion(@RequestBody MyQuestionRequest myQuestionRequest) {
-        myQuestionService.createMyQuestion(myQuestionRequest);
+    public ResponseEntity<Void> registerMyQuestion(
+            @AuthenticationPrincipal SecurityUser user,
+            @RequestBody MyQuestionRequest myQuestionRequest) {
+        myQuestionService.createMyQuestion(user.getMemberId(), myQuestionRequest);
         return ResponseEntity.ok().build();
     }
 

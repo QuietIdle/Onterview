@@ -5,8 +5,10 @@ import com.quiet.onterview.question.dto.request.MyQuestionMoveRequest;
 import com.quiet.onterview.question.dto.request.MyQuestionRequest;
 import com.quiet.onterview.question.dto.request.MyQuestionUpdateRequest;
 import com.quiet.onterview.question.dto.response.MyAnswerAndVideoResponse;
+import com.quiet.onterview.question.entity.CommonQuestion;
 import com.quiet.onterview.question.entity.MyQuestion;
 import com.quiet.onterview.question.entity.MyQuestionFolder;
+import com.quiet.onterview.question.exception.CommonQuestionNotFoundException;
 import com.quiet.onterview.question.exception.MyQuestionFolderNotFoundException;
 import com.quiet.onterview.question.exception.MyQuestionFolderNotMatchException;
 import com.quiet.onterview.question.exception.MyQuestionNotFoundException;
@@ -42,15 +44,23 @@ public class MyQuestionServiceImpl implements MyQuestionService{
     }
 
     @Override
-    public void createMyQuestion(MyQuestionRequest myQuestionRequest) {
+    public void createMyQuestion(Long memberId, MyQuestionRequest myQuestionRequest) {
+
+        if (myQuestionRequest.getQuestion() == null || myQuestionRequest.getQuestion().isBlank()) return;
+        if (myQuestionRequest.getMyQuestionFolderId() == null) throw new MyQuestionFolderNotFoundException();
+
+        MyQuestionFolder myQuestionFolder = myQuestionFolderRepository.findById(myQuestionRequest.getMyQuestionFolderId())
+                .filter(folder -> folder.getMember().getMemberId().equals(memberId))
+                .orElseThrow(MyQuestionFolderNotFoundException::new);
+
         MyQuestion myQuestion = myQuestionMapper.myQuestionRequestToEntity(myQuestionRequest);
+        myQuestion.changeMyQuestionFolder(myQuestionFolder);
 
-        Optional<MyQuestionFolder> myQuesitonFolder = myQuestionFolderRepository.findById(myQuestionRequest.getMyQuestionFolderId());
-        myQuesitonFolder.ifPresent(myQuestion::changeMyQuestionFolder);
-
-        Optional.ofNullable(myQuestionRequest.getCommonQuestionId())
-                .flatMap(commonQuestionRepository::findById)
-                .ifPresent(myQuestion::saveCommonQuestion);
+        if (myQuestionRequest.getCommonQuestionId() != null) {
+            CommonQuestion commonQuestion = commonQuestionRepository.findById(myQuestionRequest.getCommonQuestionId())
+                    .orElseThrow(CommonQuestionNotFoundException::new);
+            myQuestion.saveCommonQuestion(commonQuestion);
+        }
 
         myQuestionRepository.save(myQuestion);
     }
