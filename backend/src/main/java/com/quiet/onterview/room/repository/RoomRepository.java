@@ -1,6 +1,5 @@
 package com.quiet.onterview.room.repository;
 
-import com.quiet.onterview.interview.dto.response.InterviewQuestionCreateResponse;
 import com.quiet.onterview.matching.MatchUser;
 import com.quiet.onterview.matching.exception.UserNotFoundException;
 import com.quiet.onterview.question.dto.response.CommonQuestionResponse;
@@ -11,7 +10,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
