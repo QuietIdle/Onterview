@@ -2,6 +2,7 @@ package com.quiet.onterview.matching.controller;
 
 import com.quiet.onterview.matching.dto.request.MatchRequest;
 import com.quiet.onterview.matching.service.MatchService;
+import com.quiet.onterview.websocket.StompUser;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,13 +19,8 @@ public class MatchController {
 
     @MessageMapping("/enter")
     public void enter(@Payload MatchRequest matchRequest, Principal user) {
-        log.info("ENTER : {}", matchRequest);
-        matchService.enter(matchRequest, user.getName());
-    }
-
-    @MessageMapping("/match")
-    public void waiting(@Payload MatchRequest matchRequest) {
-        log.info("MATCH : {}", matchRequest);
-        matchService.match(matchRequest);
+        StompUser stompUser = (StompUser) user;
+        log.info("ENTER MATCH : {}", matchRequest.toString());
+        matchService.enter(matchRequest, stompUser.getName(), stompUser.getMemberId());
     }
 }

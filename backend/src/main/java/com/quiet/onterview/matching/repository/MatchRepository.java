@@ -1,6 +1,9 @@
 package com.quiet.onterview.matching.repository;
 
+import com.quiet.onterview.common.BaseException;
+import com.quiet.onterview.interview.entity.QuestionType;
 import com.quiet.onterview.interview.entity.RoomType;
+import com.quiet.onterview.matching.MatchUser;
 import com.quiet.onterview.matching.exception.UserNotFoundException;
 import jakarta.annotation.PostConstruct;
 import java.util.ArrayDeque;
@@ -11,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -25,52 +29,44 @@ import org.springframework.stereotype.Repository;
 public class MatchRepository {
 
     private int roomSize;
-    private Map<Integer, ArrayDeque<String>> waitingRooms;
-    private Set<String> completionRoom;
+    private Map<Integer, ArrayDeque<MatchUser>> waitingRooms;
 
     @PostConstruct
     private void init() {
-        waitingRooms = new HashMap<>();
-        roomSize = RoomType.values().length;
+        waitingRooms = new TreeMap<>();
+        roomSize = QuestionType.values().length;
         IntStream.range(1, roomSize + 1)
                 .forEach(i -> waitingRooms.put(i, new ArrayDeque<>()));
-        completionRoom = new TreeSet<>();
     }
 
-    public int enter(Integer roomId, String user) {
-        waitingRooms.get(roomId).add(user);
-        return waitingRooms.get(roomId).size();
+    public boolean isExist(Integer roomId, MatchUser matchUser) {
+        return waitingRooms.get(roomId).contains(matchUser);
     }
 
-    public void saveComplete(String user) {
-        completionRoom.add(user);
-    }
-
-    public boolean findComplete(String user) {
-        return completionRoom.stream().anyMatch(user::equals);
-    }
-    public void deleteComplete(String user) {
-        completionRoom.remove(user);
-    }
-
-    public int leave(Integer roomId, String user) {
-        waitingRooms.get(roomId).remove(user);
-        return waitingRooms.get(roomId).size();
+    public void enter(Integer roomId, MatchUser matchUser) {
+        waitingRooms.get(roomId).add(matchUser);
     }
 
     public boolean isMatch(Integer roomId, Integer matchCount) {
         return waitingRooms.get(roomId).size() >= matchCount;
     }
 
-    public int findRoom(String user) {
-        return IntStream.rangeClosed(1, RoomType.values().length)
-                .filter(i -> waitingRooms.get(i).contains(user))
+    public int leave(String user) {
+        int roomId = findRoom(user);
+        waitingRooms.get(roomId).removeIf(matchUser -> matchUser.getPrincipal().equals(user));
+        return waitingRooms.get(roomId).size();
+    }
+
+    private int findRoom(String user) {
+        return IntStream.rangeClosed(1, roomSize)
+                .filter(i -> waitingRooms.get(i)
+                        .contains(MatchUser.builder().principal(user).build()))
                 .findFirst().orElseThrow(UserNotFoundException::new);
     }
 
-    public List<String> getUsers(Integer roomId, Integer matchCount) {
-        List<String> result = new ArrayList<>();
-        Deque<String> users = waitingRooms.get(roomId);
+    public List<MatchUser> getUsers(Integer roomId, Integer matchCount) {
+        List<MatchUser> result = new ArrayList<>();
+        Deque<MatchUser> users = waitingRooms.get(roomId);
         while (matchCount-- > 0) {
             result.add(users.pollFirst());
         }
