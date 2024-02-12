@@ -7,12 +7,9 @@ import static org.springframework.messaging.simp.stomp.StompCommand.SUBSCRIBE;
 import com.quiet.onterview.common.ErrorCode;
 import com.quiet.onterview.member.entity.Member;
 import com.quiet.onterview.member.repository.MemberRepository;
-import com.quiet.onterview.security.SecurityMemberAuthentication;
-import com.quiet.onterview.security.SecurityUser;
 import com.quiet.onterview.security.exception.SecurityException;
 import com.quiet.onterview.security.jwt.JwtTokenProvider;
 import com.quiet.onterview.websocket.StompUser;
-import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
@@ -21,7 +18,6 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -53,6 +49,6 @@ public class WebSocketInterceptor implements ChannelInterceptor {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new SecurityException(ErrorCode.EMAIL_NOT_EXISTS));
         StompUser user = (StompUser) accessor.getUser();
-        user.setMember(member);
+        user.setMemberId(member.getMemberId());
     }
 }

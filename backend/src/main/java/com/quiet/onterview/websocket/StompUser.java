@@ -1,13 +1,12 @@
 package com.quiet.onterview.websocket;
 
-import com.quiet.onterview.member.entity.Member;
 import java.security.Principal;
 import lombok.Setter;
 
 public class StompUser implements Principal {
     private String name;
     @Setter
-    private Member member;
+    private Long memberId;
 
     public StompUser(String name) {
         this.name = name;
@@ -18,7 +17,7 @@ public class StompUser implements Principal {
         return name;
     }
 
-    public Member getMember() {
-        return member;
+    public Long getMemberId() {
+        return memberId;
     }
 }
