@@ -11,5 +11,4 @@ public class MatchRequest {
 
     private Integer roomId;
     private Integer matchCount;
-    private String accessToken;
 }
