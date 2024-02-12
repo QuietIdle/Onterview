@@ -1,20 +1,6 @@
 package com.quiet.onterview.video.repository;
 
 
-import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.NumberPath;
-import com.querydsl.jpa.impl.JPAQuery;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.quiet.onterview.file.dto.response.FileInformationResponse;
-import com.quiet.onterview.file.entity.QFileInformation;
-import com.quiet.onterview.interview.entity.RoomType;
-import com.quiet.onterview.video.dto.response.VideoInformationResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
-
-import java.util.List;
-
 import static com.quiet.onterview.interview.entity.QInterviewQuestion.interviewQuestion;
 import static com.quiet.onterview.interview.entity.QInterviewRoom.interviewRoom;
 import static com.quiet.onterview.interview.entity.QInterviewee.interviewee;
@@ -22,28 +8,32 @@ import static com.quiet.onterview.question.entity.QMyQuestion.myQuestion;
 import static com.quiet.onterview.question.entity.QMyQuestionFolder.myQuestionFolder1;
 import static com.quiet.onterview.video.entity.QVideo.video;
 
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.quiet.onterview.file.dto.response.FileInformationResponse;
+import com.quiet.onterview.file.entity.QFileInformation;
+import com.quiet.onterview.interview.entity.RoomType;
+import com.quiet.onterview.video.dto.response.VideoInformationResponse;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
 @RequiredArgsConstructor
 @Repository
 public class VideoQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public List<VideoInformationResponse> findAllInterviewVideoByMemberAndType(Long memberId, RoomType roomType) {
+    public List<VideoInformationResponse> findAllInterviewVideoByMemberAndType(Long memberId,
+            RoomType roomType) {
         QFileInformation thumbnailUrl = new QFileInformation("thumbnailUrl");
         QFileInformation videoUrl = new QFileInformation("videoUrl");
-        JPAQuery<VideoInformationResponse> query = queryFactory
-                .select(Projections.constructor(VideoInformationResponse.class,
-                        video.videoId,
-                        getQuestionIdByType(roomType),
-                        video.title,
-                        Projections.constructor(FileInformationResponse.class,
-                                video.thumbnailUrl.originFilename,
-                                video.thumbnailUrl.saveFilename),
-                        Projections.constructor(FileInformationResponse.class,
-                                video.videoUrl.originFilename,
-                                video.videoUrl.saveFilename),
-                        video.feedback,
-                        video.bookmark))
+
+        JPAQuery<VideoInformationResponse> query = getQuestionIdByType(roomType);
+
+        queryFactory
                 .from(video)
                 .leftJoin(video.videoUrl, videoUrl)
                 .leftJoin(video.thumbnailUrl, thumbnailUrl);
@@ -81,10 +71,21 @@ public class VideoQueryRepository {
         return interviewee.member.memberId.eq(memberId);
     }
 
-    private NumberPath<Long> getQuestionIdByType(RoomType roomType) {
-        if (roomType == RoomType.SELF) {
-            return video.myQuestion.myQuestionId;
-        }
-        return video.interviewQuestion.interviewQuestionId;
+    private JPAQuery<VideoInformationResponse> getQuestionIdByType(
+            RoomType roomType
+    ) {
+        return queryFactory.select(Projections.constructor(VideoInformationResponse.class,
+                video.videoId,
+                roomType == RoomType.SELF ? video.myQuestion.myQuestionId : null,
+                roomType == RoomType.SELF ? null : video.interviewQuestion.interviewQuestionId,
+                video.title,
+                Projections.constructor(FileInformationResponse.class,
+                        video.thumbnailUrl.originFilename,
+                        video.thumbnailUrl.saveFilename),
+                Projections.constructor(FileInformationResponse.class,
+                        video.videoUrl.originFilename,
+                        video.videoUrl.saveFilename),
+                video.feedback,
+                video.bookmark));
     }
 }
