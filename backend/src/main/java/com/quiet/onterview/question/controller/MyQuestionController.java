@@ -61,8 +61,10 @@ public class MyQuestionController {
 
     @Operation(summary = "DELETE 방식으로 나의 면접 문항 삭제")
     @DeleteMapping("/{my_question_id}")
-    public ResponseEntity<Void> deleteMyQuestion(@PathVariable("my_question_id") Long myQuestionId) {
-        myQuestionService.deleteMyQuestion(myQuestionId);
+    public ResponseEntity<Void> deleteMyQuestion(
+            @AuthenticationPrincipal SecurityUser user,
+            @PathVariable("my_question_id") Long myQuestionId) {
+        myQuestionService.deleteMyQuestion(user.getMemberId(), myQuestionId);
         return ResponseEntity.ok().build();
     }
 

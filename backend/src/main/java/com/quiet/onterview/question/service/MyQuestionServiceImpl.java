@@ -77,10 +77,11 @@ public class MyQuestionServiceImpl implements MyQuestionService{
     }
 
     @Override
-    public void deleteMyQuestion(Long myQuestionId) {
-        myQuestionRepository.delete(
-                myQuestionRepository.findById(myQuestionId)
-                .orElseThrow(MyQuestionNotFoundException::new));
+    public void deleteMyQuestion(Long memberId, Long myQuestionId) {
+        myQuestionRepository.findById(myQuestionId)
+                .filter(question -> question.getMyQuestionFolder().getMember().getMemberId().equals(memberId))
+                .orElseThrow(MyQuestionNotFoundException::new);
+        myQuestionRepository.deleteById(myQuestionId);
     }
 
     @Override
