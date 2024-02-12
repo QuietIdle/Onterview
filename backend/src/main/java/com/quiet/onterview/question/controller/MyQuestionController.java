@@ -51,10 +51,11 @@ public class MyQuestionController {
     @Operation(summary = "PATCH 방식으로 특정 면접 문항에 대한 답변 수정")
     @PatchMapping("/answer/{my_question_id}")
     public ResponseEntity<Void> updateMyAnswer(
+            @AuthenticationPrincipal SecurityUser user,
             @PathVariable("my_question_id") Long myQuestionId,
             @RequestBody MyAnswerUpdateRequest myAnswerUpdateRequest
     ) {
-        myQuestionService.updateMyAnswer(myQuestionId, myAnswerUpdateRequest);
+        myQuestionService.updateMyAnswer(user.getMemberId(), myQuestionId, myAnswerUpdateRequest);
         return ResponseEntity.ok().build();
     }
 

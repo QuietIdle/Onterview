@@ -67,9 +67,11 @@ public class MyQuestionServiceImpl implements MyQuestionService{
     }
 
     @Override
-    public void updateMyAnswer(Long myQuestionId, MyAnswerUpdateRequest myAnswerUpdateRequest) {
+    public void updateMyAnswer(Long memberId, Long myQuestionId, MyAnswerUpdateRequest myAnswerUpdateRequest) {
         MyQuestion myQuestion = myQuestionRepository.findById(myQuestionId)
+                .filter(question -> question.getMyQuestionFolder().getMember().getMemberId().equals(memberId))
                 .orElseThrow(MyQuestionNotFoundException::new);
+
         Optional.ofNullable(myAnswerUpdateRequest.getAnswer())
                 .ifPresent(myQuestion::updateMyAnswer);
     }
