@@ -11,6 +11,6 @@ public interface MyQuestionFolderService {
     List<MyQuestionFolderResponse> getMyQuestionFolder(Long memberId);
     List<VideoStorageResponse> getSelfVideoList(Long memberId);
     void createMyQuestionFolder(Long memberId, MyQuestionFolderRequest myQuestionFolderRequest);
-    void updateMyQuestionFolder(Long myQuestionFolderId, MyQuestionFolderRequest myQuestionFolderRequest);
+    void updateMyQuestionFolder(Long memberId, Long myQuestionFolderId, MyQuestionFolderRequest myQuestionFolderRequest);
     void deleteMyQuestionFolder(Long myQuestionFolderId);
 }
