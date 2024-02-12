@@ -8,6 +8,7 @@ import static com.quiet.onterview.question.entity.QMyQuestion.myQuestion;
 import static com.quiet.onterview.question.entity.QMyQuestionFolder.myQuestionFolder1;
 import static com.quiet.onterview.video.entity.QVideo.video;
 
+import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -31,9 +32,8 @@ public class VideoQueryRepository {
         QFileInformation thumbnailUrl = new QFileInformation("thumbnailUrl");
         QFileInformation videoUrl = new QFileInformation("videoUrl");
 
-        JPAQuery<VideoInformationResponse> query = getQuestionIdByType(roomType);
-
-        queryFactory
+        JPAQuery<VideoInformationResponse> query = queryFactory
+                .select(getVideoDtoByType(roomType))
                 .from(video)
                 .leftJoin(video.videoUrl, videoUrl)
                 .leftJoin(video.thumbnailUrl, thumbnailUrl);
@@ -43,6 +43,23 @@ public class VideoQueryRepository {
         query
                 .where(eqMemberId(roomType, memberId).and(eqRoomType(roomType)));
         return query.fetch();
+    }
+
+    private static ConstructorExpression<VideoInformationResponse> getVideoDtoByType(
+            RoomType roomType) {
+        return Projections.constructor(VideoInformationResponse.class,
+                video.videoId,
+                roomType == RoomType.SELF ? video.myQuestion.myQuestionId : null,
+                roomType == RoomType.SELF ? null : video.interviewQuestion.interviewQuestionId,
+                video.title,
+                Projections.constructor(FileInformationResponse.class,
+                        video.thumbnailUrl.originFilename,
+                        video.thumbnailUrl.saveFilename),
+                Projections.constructor(FileInformationResponse.class,
+                        video.videoUrl.originFilename,
+                        video.videoUrl.saveFilename),
+                video.feedback,
+                video.bookmark);
     }
 
     private void joinByRoomType(JPAQuery<VideoInformationResponse> query, RoomType roomType) {
@@ -69,23 +86,5 @@ public class VideoQueryRepository {
             return myQuestionFolder1.member.memberId.eq(memberId);
         }
         return interviewee.member.memberId.eq(memberId);
-    }
-
-    private JPAQuery<VideoInformationResponse> getQuestionIdByType(
-            RoomType roomType
-    ) {
-        return queryFactory.select(Projections.constructor(VideoInformationResponse.class,
-                video.videoId,
-                roomType == RoomType.SELF ? video.myQuestion.myQuestionId : null,
-                roomType == RoomType.SELF ? null : video.interviewQuestion.interviewQuestionId,
-                video.title,
-                Projections.constructor(FileInformationResponse.class,
-                        video.thumbnailUrl.originFilename,
-                        video.thumbnailUrl.saveFilename),
-                Projections.constructor(FileInformationResponse.class,
-                        video.videoUrl.originFilename,
-                        video.videoUrl.saveFilename),
-                video.feedback,
-                video.bookmark));
     }
 }
