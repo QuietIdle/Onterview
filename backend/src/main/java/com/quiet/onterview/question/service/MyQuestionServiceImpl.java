@@ -85,11 +85,13 @@ public class MyQuestionServiceImpl implements MyQuestionService{
     }
 
     @Override
-    public void moveMyQuestion(MyQuestionMoveRequest myQuestionMoveRequest) {
+    public void moveMyQuestion(Long memberId, MyQuestionMoveRequest myQuestionMoveRequest) {
         MyQuestion myQuestion = myQuestionRepository.findById(myQuestionMoveRequest.getMyQuestionId())
+                .filter(question -> question.getMyQuestionFolder().getMember().getMemberId().equals(memberId))
                 .orElseThrow(MyQuestionNotFoundException::new);
 
         MyQuestionFolder fromMyQuestionFolder = myQuestionFolderRepository.findById(myQuestionMoveRequest.getFromMyQuestionFolderId())
+                .filter(folder -> folder.getMember().getMemberId().equals(memberId))
                 .orElseThrow(MyQuestionFolderNotFoundException::new);
 
         if (!Objects.equals(myQuestion.getMyQuestionFolder(), fromMyQuestionFolder)) {
@@ -97,6 +99,7 @@ public class MyQuestionServiceImpl implements MyQuestionService{
         }
 
         MyQuestionFolder toMyQuestionFolder = myQuestionFolderRepository.findById(myQuestionMoveRequest.getToMyQuestionFolderId())
+                .filter(folder -> folder.getMember().getMemberId().equals(memberId))
                 .orElseThrow(MyQuestionFolderNotFoundException::new);
 
         myQuestion.moveMyQuestionFolder(fromMyQuestionFolder, toMyQuestionFolder);

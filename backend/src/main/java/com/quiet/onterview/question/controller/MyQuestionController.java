@@ -70,8 +70,10 @@ public class MyQuestionController {
 
     @Operation(summary = "PATCH 방식으로 나의 면접 질문 폴더간 이동")
     @PatchMapping("/move")
-    public ResponseEntity<Void> moveMyQuestion(@RequestBody MyQuestionMoveRequest myQuestionMoveRequest) {
-        myQuestionService.moveMyQuestion(myQuestionMoveRequest);
+    public ResponseEntity<Void> moveMyQuestion(
+            @AuthenticationPrincipal SecurityUser user,
+            @RequestBody MyQuestionMoveRequest myQuestionMoveRequest) {
+        myQuestionService.moveMyQuestion(user.getMemberId(), myQuestionMoveRequest);
         return ResponseEntity.ok().build();
     }
 }
