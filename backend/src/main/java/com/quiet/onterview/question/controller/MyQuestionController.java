@@ -6,10 +6,12 @@ import com.quiet.onterview.question.dto.request.MyQuestionRequest;
 import com.quiet.onterview.question.dto.request.MyQuestionUpdateRequest;
 import com.quiet.onterview.question.dto.response.MyAnswerAndVideoResponse;
 import com.quiet.onterview.question.service.MyQuestionService;
+import com.quiet.onterview.security.SecurityUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "my-question-controller", description = "나의 면접 문항 컨트롤러")
@@ -22,8 +24,10 @@ public class MyQuestionController {
 
     @Operation(summary = "GET 방식으로 특정 면접 문항에 대한 답변과 영상 조회")
     @GetMapping("/{my_question_id}")
-    public ResponseEntity<MyAnswerAndVideoResponse> getMyAnswerAndVideo(@PathVariable("my_question_id") Long myQuestionId) {
-        return ResponseEntity.ok(myQuestionService.getMyAnswerAndVideo(myQuestionId));
+    public ResponseEntity<MyAnswerAndVideoResponse> getMyAnswerAndVideo(
+            @AuthenticationPrincipal SecurityUser user,
+            @PathVariable("my_question_id") Long myQuestionId) {
+        return ResponseEntity.ok(myQuestionService.getMyAnswerAndVideo(user.getMemberId(), myQuestionId));
     }
 
     @Operation(summary = "POST 방식으로 나의 면접 질문 생성")

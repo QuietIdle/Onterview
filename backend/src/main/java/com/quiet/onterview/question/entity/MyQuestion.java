@@ -24,7 +24,7 @@ public class MyQuestion extends BaseEntity {
     private Long myQuestionId;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "MY_QUESTION_FOLDER_ID")
+    @JoinColumn(name = "MY_QUESTION_FOLDER_ID", nullable = false)
     private MyQuestionFolder myQuestionFolder;
 
     @Column(name = "QUESTION")

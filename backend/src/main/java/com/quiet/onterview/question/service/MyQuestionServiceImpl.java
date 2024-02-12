@@ -33,8 +33,11 @@ public class MyQuestionServiceImpl implements MyQuestionService{
 
     @Override
     @Transactional(readOnly = true)
-    public MyAnswerAndVideoResponse getMyAnswerAndVideo(Long myQuestionId) {
+    public MyAnswerAndVideoResponse getMyAnswerAndVideo(Long memberId, Long myQuestionId) {
         MyQuestion myQuestion = myQuestionRepository.findMyAnswerAndVideo(myQuestionId);
+        if (myQuestion == null || !myQuestion.getMyQuestionFolder().getMember().getMemberId().equals(memberId)) {
+            throw new MyQuestionNotFoundException();
+        }
         return myQuestionMapper.myQuestionToMyAnswerAndVideoResponse(myQuestion);
     }
 
