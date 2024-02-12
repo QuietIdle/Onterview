@@ -10,7 +10,7 @@ public interface MyQuestionService {
 
     MyAnswerAndVideoResponse getMyAnswerAndVideo(Long memberId, Long myQuestionId);
     void createMyQuestion(MyQuestionRequest myQuestionRequest);
-    void updateMyQuestion(Long myQuestionId, MyQuestionUpdateRequest myQuestionUpdateRequest);
+    void updateMyQuestion(Long memberId, Long myQuestionId, MyQuestionUpdateRequest myQuestionUpdateRequest);
     void updateMyAnswer(Long myQuestionId, MyAnswerUpdateRequest myAnswerUpdateRequest);
     void deleteMyQuestion(Long myQuestionId);
     void moveMyQuestion(MyQuestionMoveRequest myQuestionMoveRequest);

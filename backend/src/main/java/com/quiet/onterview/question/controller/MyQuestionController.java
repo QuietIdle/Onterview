@@ -40,10 +40,11 @@ public class MyQuestionController {
     @Operation(summary = "PATCH 방식으로 나의 면접 질문 수정")
     @PatchMapping("/{my_question_id}")
     public ResponseEntity<Void> updateMyQuestion(
+            @AuthenticationPrincipal SecurityUser user,
             @PathVariable("my_question_id") Long myQuestionId,
             @RequestBody MyQuestionUpdateRequest myQuestionUpdateRequest
     ) {
-        myQuestionService.updateMyQuestion(myQuestionId, myQuestionUpdateRequest);
+        myQuestionService.updateMyQuestion(user.getMemberId(), myQuestionId, myQuestionUpdateRequest);
         return ResponseEntity.ok().build();
     }
 
