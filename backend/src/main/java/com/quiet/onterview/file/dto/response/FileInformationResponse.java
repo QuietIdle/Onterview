@@ -1,10 +1,11 @@
 package com.quiet.onterview.file.dto.response;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
 @Builder
+@Setter
+@NoArgsConstructor
 public class FileInformationResponse {
 
     private String saveFilename;

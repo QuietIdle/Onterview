@@ -8,8 +8,8 @@ import static com.quiet.onterview.question.entity.QMyQuestion.myQuestion;
 import static com.quiet.onterview.question.entity.QMyQuestionFolder.myQuestionFolder1;
 import static com.quiet.onterview.video.entity.QVideo.video;
 
-import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.QBean;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -45,19 +45,19 @@ public class VideoQueryRepository {
         return query.fetch();
     }
 
-    private static ConstructorExpression<VideoInformationResponse> getVideoDtoByType(
+    private static QBean<VideoInformationResponse> getVideoDtoByType(
             RoomType roomType) {
-        return Projections.constructor(VideoInformationResponse.class,
+        return Projections.fields(VideoInformationResponse.class,
                 video.videoId,
-                roomType == RoomType.SELF ? video.myQuestion.myQuestionId : null,
-                roomType == RoomType.SELF ? null : video.interviewQuestion.interviewQuestionId,
+                roomType == RoomType.SELF ? video.myQuestion.myQuestionId.as("myQuestionId")
+                        : video.interviewQuestion.interviewQuestionId.as("interviewQuestionId"),
                 video.title,
-                Projections.constructor(FileInformationResponse.class,
+                Projections.fields(FileInformationResponse.class,
                         video.thumbnailUrl.originFilename,
-                        video.thumbnailUrl.saveFilename),
-                Projections.constructor(FileInformationResponse.class,
+                        video.thumbnailUrl.saveFilename).as("thumbnailUrl"),
+                Projections.fields(FileInformationResponse.class,
                         video.videoUrl.originFilename,
-                        video.videoUrl.saveFilename),
+                        video.videoUrl.saveFilename).as("fileUrl"),
                 video.feedback,
                 video.bookmark);
     }

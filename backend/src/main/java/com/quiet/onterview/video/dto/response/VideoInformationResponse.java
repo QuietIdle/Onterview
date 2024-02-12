@@ -2,10 +2,11 @@ package com.quiet.onterview.video.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.quiet.onterview.file.dto.response.FileInformationResponse;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
+@Setter
+@NoArgsConstructor
 public class VideoInformationResponse {
 
     private Long videoId;
@@ -20,7 +21,9 @@ public class VideoInformationResponse {
     private Boolean bookmark;
 
     @Builder
-    public VideoInformationResponse(Long videoId, Long myQuestionId, Long interviewQuestionId, String title, FileInformationResponse thumbnailUrl, FileInformationResponse fileUrl, String feedback, Boolean bookmark) {
+    public VideoInformationResponse(Long videoId, Long myQuestionId, Long interviewQuestionId,
+            String title, FileInformationResponse thumbnailUrl, FileInformationResponse fileUrl,
+            String feedback, Boolean bookmark) {
         this.videoId = videoId;
         this.myQuestionId = myQuestionId;
         this.interviewQuestionId = interviewQuestionId;
@@ -31,7 +34,9 @@ public class VideoInformationResponse {
         this.bookmark = bookmark;
     }
 
-    public VideoInformationResponse(Long videoId, Long interviewQuestionId, String title, FileInformationResponse thumbnailUrl, FileInformationResponse fileUrl, String feedback, Boolean bookmark) {
+    public VideoInformationResponse(Long videoId, Long interviewQuestionId, String title,
+            FileInformationResponse thumbnailUrl, FileInformationResponse fileUrl, String feedback,
+            Boolean bookmark) {
         this.videoId = videoId;
         this.interviewQuestionId = interviewQuestionId;
         this.title = title;
