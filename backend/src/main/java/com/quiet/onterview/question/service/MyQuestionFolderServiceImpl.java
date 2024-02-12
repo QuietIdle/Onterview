@@ -78,10 +78,11 @@ public class MyQuestionFolderServiceImpl implements MyQuestionFolderService {
     }
 
     @Override
-    public void deleteMyQuestionFolder(Long myQuestionFolderId) {
-        myQuestionFolderRepository.delete(
-                myQuestionFolderRepository.findById(myQuestionFolderId)
-                        .orElseThrow(MyQuestionFolderNotFoundException::new));
+    public void deleteMyQuestionFolder(Long memberId, Long myQuestionFolderId) {
+        myQuestionFolderRepository.findById(myQuestionFolderId)
+                .filter(folder -> folder.getMember().getMemberId().equals(memberId))
+                .orElseThrow(MyQuestionFolderNotFoundException::new);
+        myQuestionFolderRepository.deleteById(myQuestionFolderId);
     }
 
 }
