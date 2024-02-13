@@ -1,5 +1,6 @@
 <script setup>
 import helpImg1 from "@/assets/interview/interviewMultiHelp1.png"
+import helpImg2 from "@/assets/interview/interviewMultiHelp2.png"
 import helpImg3 from "@/assets/interview/interviewMultiHelp3.png"
 import helpImg5 from "@/assets/interview/interviewMultiHelp5.png"
 import { ref } from "vue";
@@ -13,7 +14,7 @@ const helpText = ref([
   {
     id: 2,
     text: "면접 문항마다 답변 순서가 랜덤으로 지정됩니다.",
-    img: "https://picsum.photos/200",
+    img: helpImg2,
   },
   {
     id: 3,

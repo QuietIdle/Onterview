@@ -39,19 +39,20 @@ const startMatch = function () {
   startTimer()
   time.value.match = true
 
-  //const socket = new WebSocket('wss://i10a504.p.ssafy.io/api/meeting/matching')
-  const socket = new WebSocket('ws://70.12.247.51:8081/api/meeting/matching')
+  const headers = {
+    Authorization: `${authToken}`
+  }
+  //const socket = new WebSocket('ws://70.12.247.51:8081/api/meeting/matching')
+  const socket = new WebSocket('wss://i10a504.p.ssafy.io/api/meeting/matching')
   stomp = Stomp.over(socket)
-  // const headers = {
-  //   Authorization: `${authToken}`
-  // }
-  stomp.connect({},
+
+  stomp.connect(headers,
     () => {
       stomp.subscribe(
         `/user/sub/${interviewStore.stompType}`,
         function (message) {
           websocketStore.roomData = JSON.parse(message.body)
-          console.log('token accepted successfully!', websocketStore.roomData)
+          //console.log('token accepted successfully!', websocketStore.roomData)
 
           interviewStore.dialog.wait = false
           stopTimer()
@@ -61,24 +62,18 @@ const startMatch = function () {
           websocketStore.stomp = stomp
 
           router.push({ name: 'interview-multi' })
-        }
+        },
+        headers
       )
 
       stomp.send(
         '/pub/enter',
-        {},
+        headers,
         JSON.stringify({
-          type: 'ENTER',
           roomId: interviewStore.stompType,
-          matchCount: 2,
-          accessToken: authToken,
+          matchCount: 4,
         })
       )
-      // stomp.send("/pub/match", {}, JSON.stringify({
-      // type: "MATCH",
-      // roomId: interviewStore.stompType,
-      // matchCount: 4,
-      // }))
     },
     (error) => {
       console.error(error)
@@ -114,7 +109,7 @@ const stopMatch = function () {
           <v-btn elevation="2"> 환경설정 </v-btn>
           <v-btn elevation="2"> 도움말 </v-btn>
         </v-btn-toggle>
-        <div v-if="!interviewStore.choice.typeDetail">
+        <div v-if="interviewStore.choice.type === '인성면접'">
           {{ interviewStore.choice.type }}
         </div>
         <div v-else>

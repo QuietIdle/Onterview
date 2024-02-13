@@ -16,6 +16,9 @@ const session = OV.initSession()
 const publisher = ref(undefined);
 const subscribers = ref([]);
 const myStream = ref(null)
+const headers = {
+    Authorization: userStore.accessToken
+}
 OV.enableProdMode()
 
 let recorder
@@ -50,7 +53,7 @@ const joinSession = async function () {
     myStream.value = Object(publisher.value.stream)
     
     subscribers.value.push({
-      subscriber: publisher.value,
+      sub: publisher.value,
       id: websocketStore.roomData.index,
     })
   })
@@ -59,7 +62,7 @@ const joinSession = async function () {
     const subscriber = session.subscribe(stream, stream.streamId);
     //console.log("Stream created by", stream, subscriber);
     subscribers.value.push({
-      subscriber: subscriber,
+      sub: subscriber,
       id: JSON.parse(subscriber.stream.connection.data).clientData.id,
     });
   });
@@ -141,29 +144,29 @@ const reArrangeById = (arr, idOrder) => {
 
 const changePosition = function (orders) {
   subscribers.value = reArrangeById(subscribers.value, orders)
-  console.log('changed!!!!!!!!!!!!!')
 }
 
 // 웹소켓 통신
-const sendMessage = async function (type, idx) {
-  await websocketStore.stomp.send(`/server/answer/${websocketStore.roomData.sessionId}`, {}, JSON.stringify({
+const sendMessage = async function (type) {
+  await websocketStore.stomp.send(`/server/answer/${websocketStore.roomData.sessionId}`, headers, JSON.stringify({
     type: type,
-    index: idx,  
   }))
 }
 
 const receive = async function (message) {
   const result = JSON.parse(message.body);
   websocketStore.message = result;
-  console.log(result);
 
   switch (result.type) {
     case 'ENTER':
       websocketStore.now.orders = result.orders;
+      websocketStore.now.question.commonQuestion = result.question.commonQuestion;
       websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
-      await interviewStore.TTS(interviewStore.script.enter)
-      changePosition(result.orders)
-      sendMessage('START')
+      // await interviewStore.TTS(interviewStore.script.enter)
+      setTimeout(() => {
+        changePosition(result.orders)
+        sendMessage('START')
+      }, 5000)
       break;
 
     case 'START':
@@ -171,21 +174,27 @@ const receive = async function (message) {
       break;
 
     case 'PROCEEDING':
-      websocketStore.now.turn = result.number + 1;
       websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
+      websocketStore.now.turn = result.number + 1;
       break;
 
     case 'TIMEOUT':
+      websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
+      websocketStore.now.turn = result.number + 1;
       break;
 
     case 'FINISH':
-      websocketStore.now.turn = result.number + 1;
       websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
-      
+      websocketStore.now.turn = result.number + 1;
+      websocketStore.now.question.commonQuestion = result.question.commonQuestion;
+
       websocketStore.now.orders = result.orders;
       await interviewStore.TTS(interviewStore.script.finish)
-      changePosition(result.orders);
-      sendMessage('START')
+      setTimeout(() => {
+        changePosition(result.orders);
+        sendMessage('START')
+        websocketStore.now.turn = -1
+      }, 3000)
       break;
 
     case 'END':
@@ -203,8 +212,8 @@ onMounted(() => {
   websocketStore.stomp.unsubscribe()
   websocketStore.stomp.subscribe(`/client/answer/${websocketStore.roomData.sessionId}`, function (message) {
     receive(message)
-  })
-  websocketStore.stomp.send(`/server/answer/${websocketStore.roomData.sessionId}`, {},
+  }, headers)
+  websocketStore.stomp.send(`/server/answer/${websocketStore.roomData.sessionId}`, headers,
     JSON.stringify({
       type: 'ENTER',
     })
@@ -227,20 +236,19 @@ watch(interviewStore.mediaToggle ,
 
 <template>
   <div class="w-100 h-100 d-flex align-center">
-    <v-btn @click="startRecording">g</v-btn>
-    <v-btn @click="stopRecording">s</v-btn>
     <div id="video-container" class="w-100 h-100 d-flex align-center justify-space-around">
-      <div v-for="(item, idx) in subscribers" :key="item.subscriber.stream.streamId" class="ma-2">
+      <div v-for="(item, idx) in subscribers" :key="item.sub.stream.streamId" class="ma-2">
         <div class="w-100 bg-grey-lighten-1 text-center my-1" style="border-radius: 12px;">{{ idx+1 }}번 째 답변자</div>
         <ov-video
-          :id="item.subscriber.stream.streamId"
-          :stream-manager="item.subscriber"
-          style="transform: rotateY(180deg);"
+          :id="item.sub.stream.streamId"
+          :stream-manager="item.sub"
           :muted="!interviewStore.mediaToggle.volume"
         />
         <div class="d-flex align-center">
-          <div>답변 중</div>
-          <div>{{ JSON.parse(item.subscriber.stream.connection.data).clientData.name }}</div>
+          <v-card v-if="idx === websocketStore.now.turn" class="pa-1" color="red-darken-1">답변 중</v-card>
+          <v-card v-else-if="idx < websocketStore.now.turn" class="pa-1" color="light-green-lighten-1">답변 완료</v-card>
+          <v-card v-else class="pa-1" color="light-blue-darken-1">답변 대기</v-card>
+          <div>{{ JSON.parse(item.sub.stream.connection.data).clientData.name }}</div>
         </div>
         
       </div>
@@ -250,4 +258,11 @@ watch(interviewStore.mediaToggle ,
 </template>
 
 <style scoped>
+video {
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+  /* Safari and Chrome */
+  -moz-transform: rotateY(180deg);
+  /* Firefox */
+}
 </style>

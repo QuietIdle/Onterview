@@ -36,7 +36,7 @@ const selectVideo = async function (v_id) {
 <div class="h-100">
   <v-sheet class="h-100" elevation="1" min-width="200">
     <v-slide-group class="h-100" v-model="model" show-arrows center-active>
-      <v-slide-group-item class="h-100" v-for="video in videos" :key="video.videoId" v-slot="{ isSelected, toggle }">
+      <v-slide-group-item v-for="video in videos" :key="video.videoId" v-slot="{ isSelected, toggle }">
         <v-card :color="isSelected ? 'primary' : 'grey-lighten-1'" class="ma-3 my-auto" width="150">
           <div class="d-flex flex-column align-center justify-center pa-1">
             <div class="thumbnail-container">

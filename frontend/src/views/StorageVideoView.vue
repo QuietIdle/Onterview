@@ -10,7 +10,7 @@ const storageStore = useStorageStore();
 
 const storageDisplay = async function() {
   try {
-    const result = await apiMethods.getUserVideoAll();
+    const result = await apiMethods.getUserVideoAll('SELF');
     storageStore.storageData.value = result.data;
   } catch (error) {
     console.log(error);
