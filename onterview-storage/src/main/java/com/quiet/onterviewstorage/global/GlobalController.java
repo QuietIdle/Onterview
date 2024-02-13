@@ -30,4 +30,14 @@ public class GlobalController {
                         e.getMessage()
                 ));
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<BaseExceptionResponse> handleException(Exception e) {
+        log.info("# Internal error: " + e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new BaseExceptionResponse(
+                        HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                        e.getMessage()
+                ));
+    }
 }
