@@ -56,9 +56,8 @@ const sendMessage = async function (type, idx) {
   
   await websocketStore.stomp.send(`/server/answer/${websocketStore.roomData.sessionId}`, {}, JSON.stringify({
     type: type,
-    index: idx,  
+    index: idx,
   }))
-  
 }
 
 watch(() => websocketStore.flag.interviewer, async () => {
@@ -68,17 +67,26 @@ watch(() => websocketStore.flag.interviewer, async () => {
       break;
 
     case 'START':
-      addLog(`${websocketStore.now.question}번 질문 시작!`)
+      if (websocketStore.now.question.id !== 0) {
+        addLog(`${websocketStore.now.question.id}번 질문 시작!`)
+      }
+      else {
+        addLog(`1분 자기 소개 시작!`)
+      }
       websocketStore.now.turn = 0
-      if(websocketStore.now.myTurn) addLog("당신의 차례입니다.") 
-      //await interviewStore.TTS(interviewStore.script.start)
+      if (websocketStore.myTurn) {
+        addLog("당신의 차례입니다.")
+      }
+      await interviewStore.TTS(interviewStore.script.start)
       setTimeout(goTimer, 2000)
       break;
 
     case 'PROCEEDING':
       isActiveTimer.value = false
       addLog(`${websocketStore.now.turn}번 째 참가자 답변 완료`)
-      if(websocketStore.now.myTurn) addLog("당신의 차례입니다.") 
+      if (websocketStore.myTurn) {
+        addLog("당신의 차례입니다.")
+      }
       //await interviewStore.TTS(interviewStore.script.proceeding)
       setTimeout(goTimer, 2000)
       break;
@@ -102,6 +110,8 @@ watch(() => websocketStore.flag.interviewer, async () => {
     case 'END':
       isActiveTimer.value = false
       websocketStore.now.turn = -1
+      websocketStore.stomp.disconnect()
+      addLog("수고 하셨습니다")
       alert('면접 종료!!!')
       break;
   }}
