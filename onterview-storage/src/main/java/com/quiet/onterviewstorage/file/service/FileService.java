@@ -33,6 +33,7 @@ public class FileService {
         Path path = Path.of(filePath, fileName);
         File file = new File(String.valueOf(path));
         if (!file.exists()) {
+            log.info(filePath + "/" + fileName + " not found");
             throw new BaseException(ErrorCode.FILE_NOT_FOUND);
         }
 
