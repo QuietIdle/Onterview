@@ -36,7 +36,7 @@ public class ChunkService {
         String username = request.getUsername();
 
         Path videoPath = createFolder(fileUtils.VIDEO_PATH, username, filename);
-        Path imagePath = createFolder(fileUtils.IMAGE_PATH, username, filename);
+        Path imagePath = createFolder(fileUtils.IMAGE_PATH);
 
         saveTempFile(file, chunkNumber, videoPath);
 
@@ -141,6 +141,16 @@ public class ChunkService {
 
     private Path createFolder(String subPath, String username, String filename) {
         Path path = Path.of(subPath, username, filename);
+        File dir = new File(String.valueOf(path));
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        return path;
+    }
+
+    private Path createFolder(String subPath) {
+        Path path = Path.of(subPath);
         File dir = new File(String.valueOf(path));
         if (!dir.exists()) {
             dir.mkdirs();
