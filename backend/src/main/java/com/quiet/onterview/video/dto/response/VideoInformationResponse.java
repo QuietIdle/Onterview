@@ -16,33 +16,25 @@ public class VideoInformationResponse {
     private Long interviewQuestionId;
     private String title;
     private FileInformationResponse thumbnailUrl;
-    private FileInformationResponse fileUrl;
-    private String feedback;
     private Boolean bookmark;
 
     @Builder
     public VideoInformationResponse(Long videoId, Long myQuestionId, Long interviewQuestionId,
-            String title, FileInformationResponse thumbnailUrl, FileInformationResponse fileUrl,
-            String feedback, Boolean bookmark) {
+            String title, FileInformationResponse thumbnailUrl, Boolean bookmark) {
         this.videoId = videoId;
         this.myQuestionId = myQuestionId;
         this.interviewQuestionId = interviewQuestionId;
         this.title = title;
         this.thumbnailUrl = thumbnailUrl;
-        this.fileUrl = fileUrl;
-        this.feedback = feedback;
         this.bookmark = bookmark;
     }
 
     public VideoInformationResponse(Long videoId, Long interviewQuestionId, String title,
-            FileInformationResponse thumbnailUrl, FileInformationResponse fileUrl, String feedback,
-            Boolean bookmark) {
+            FileInformationResponse thumbnailUrl, Boolean bookmark) {
         this.videoId = videoId;
         this.interviewQuestionId = interviewQuestionId;
         this.title = title;
         this.thumbnailUrl = thumbnailUrl;
-        this.fileUrl = fileUrl;
-        this.feedback = feedback;
         this.bookmark = bookmark;
     }
 }

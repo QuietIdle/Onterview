@@ -13,7 +13,6 @@ public class VideoDetailResponse {
     private Long interviewQuestionId;
     private String title;
     private FileInformationResponse videoUrl;
-    private FileInformationResponse thumbnailUrl;
     private String feedback;
     private Boolean bookmark;
 }

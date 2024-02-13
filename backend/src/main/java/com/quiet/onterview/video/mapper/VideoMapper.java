@@ -24,8 +24,6 @@ public class VideoMapper {
                 .videoId(video.getVideoId())
                 .interviewQuestionId(video.getInterviewQuestion().getInterviewQuestionId())
                 .title(video.getTitle())
-                .thumbnailUrl(
-                        fileInformationMapper.fileInformationToResponse(video.getThumbnailUrl()))
                 .feedback(video.getFeedback())
                 .bookmark(video.getBookmark())
                 .myQuestionId(video.getMyQuestion().getMyQuestionId())
@@ -68,7 +66,6 @@ public class VideoMapper {
                 .thumbnailUrl(
                         fileInformationMapper.imageInformationToResponse(video.getThumbnailUrl())
                 )
-                .feedback(video.getFeedback())
                 .bookmark(video.getBookmark())
                 .build();
     }
