@@ -21,14 +21,14 @@ public class AnnounceStep implements MatchStep {
     @Override
     public void process(MatchingContext matchingContext) {
         List<MatchUser> matchUsers = matchingContext.getMatchUsers();
-        AtomicInteger index = new AtomicInteger();
+        AtomicInteger index = new AtomicInteger(0);
         matchUsers.forEach(matchUser -> messageAnnounce.announceToUser(
                 SUB_HEADER + matchingContext.getRoomId(),
                 matchUser.getPrincipal(),
                 MatchResultResponse.builder()
                         .sessionId(matchingContext.getSessionId())
                         .token(matchUser.getToken())
-                        .index(index.incrementAndGet()).build())
+                        .index(index.getAndIncrement()).build())
         );
     }
 }
