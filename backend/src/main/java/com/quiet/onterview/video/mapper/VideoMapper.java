@@ -22,7 +22,14 @@ public class VideoMapper {
     public VideoDetailResponse videoToDetailResponse(Video video) {
         return VideoDetailResponse.builder()
                 .videoId(video.getVideoId())
-                .interviewQuestionId(video.getInterviewQuestion().getInterviewQuestionId())
+                .interviewQuestionId(
+                        Optional.ofNullable(video.getInterviewQuestion())
+                                .map(InterviewQuestion::getInterviewQuestionId).orElse(null)
+                )
+                .myQuestionId(
+                        Optional.ofNullable(video.getMyQuestion())
+                                .map(MyQuestion::getMyQuestionId).orElse(null)
+                )
                 .title(video.getTitle())
                 .feedback(video.getFeedback())
                 .bookmark(video.getBookmark())
