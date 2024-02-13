@@ -8,6 +8,7 @@ import com.quiet.onterview.video.dto.response.VideoDetailResponse;
 import com.quiet.onterview.video.dto.response.VideoInformationResponse;
 import com.quiet.onterview.video.entity.Video;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -55,11 +56,18 @@ public class VideoMapper {
     public VideoInformationResponse videoToInformationResponse(Video video) {
         return VideoInformationResponse.builder()
                 .videoId(video.getVideoId())
-                .interviewQuestionId(video.getInterviewQuestion().getInterviewQuestionId())
-                .myQuestionId(video.getMyQuestion().getMyQuestionId())
+                .interviewQuestionId(
+                        Optional.ofNullable(video.getInterviewQuestion())
+                                .map(InterviewQuestion::getInterviewQuestionId).orElse(null)
+                )
+                .myQuestionId(
+                        Optional.ofNullable(video.getMyQuestion())
+                                .map(MyQuestion::getMyQuestionId).orElse(null)
+                )
                 .title(video.getTitle())
                 .thumbnailUrl(
-                        fileInformationMapper.imageInformationToResponse(video.getThumbnailUrl()))
+                        fileInformationMapper.imageInformationToResponse(video.getThumbnailUrl())
+                )
                 .feedback(video.getFeedback())
                 .bookmark(video.getBookmark())
                 .build();

@@ -24,13 +24,13 @@ public class InterviewQuestion extends BaseEntity {
     private Long interviewQuestionId;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "INTERVIEW_ROOM_ID")
-    private InterviewRoom interviewRoom;
-
-    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "COMMON_QUESTION_ID")
     private CommonQuestion commonQuestion;
 
     @OneToOne(mappedBy = "interviewQuestion", cascade = PERSIST, orphanRemoval = true)
     private Video video;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "INTERVIEWEE_ID")
+    private Interviewee interviewee;
 }

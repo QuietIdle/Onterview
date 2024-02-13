@@ -4,10 +4,8 @@ import com.quiet.onterview.interview.dto.request.InterviewRoomRequest;
 import com.quiet.onterview.interview.dto.response.InterviewQuestionResponse;
 import com.quiet.onterview.interview.dto.response.InterviewRoomDetailResponse;
 import com.quiet.onterview.interview.dto.response.InterviewRoomResponse;
-import com.quiet.onterview.video.dto.response.VideoStorageResponse;
 import com.quiet.onterview.interview.entity.InterviewQuestion;
 import com.quiet.onterview.interview.entity.InterviewRoom;
-import com.quiet.onterview.member.entity.Member;
 import com.quiet.onterview.video.dto.response.VideoDetailResponse;
 import com.quiet.onterview.video.entity.Video;
 import com.quiet.onterview.video.mapper.VideoMapper;
@@ -24,12 +22,11 @@ public class InterviewRoomMapper {
     private final InterviewQuestionMapper interviewQuestionMapper;
     private final VideoMapper videoMapper;
 
-    public InterviewRoom interviewRoomRequestToEntity(Member member, InterviewRoomRequest interviewRoomRequest) {
+    public InterviewRoom interviewRoomRequestToEntity(InterviewRoomRequest interviewRoomRequest) {
         return InterviewRoom.builder()
-                .member(member)
-                .interviewQuestionList(new ArrayList<>())
                 .questionType(interviewRoomRequest.getQuestionType())
                 .roomType(interviewRoomRequest.getRoomType())
+                .intervieweeList(new ArrayList<>())
                 .build();
     }
 
@@ -40,13 +37,12 @@ public class InterviewRoomMapper {
                 .questionType(interviewRoom.getQuestionType())
                 .roomType(interviewRoom.getRoomType())
                 .createAt(interviewRoom.getCreateAt())
-                .numOfQuestion(interviewRoom.getInterviewQuestionList().size())
                 .build();
     }
 
-    public InterviewRoomDetailResponse interviewRoomToInterviewRoomDetailResponse(InterviewRoom interviewRoom) {
-        List<InterviewQuestion> interviewQuestionList = interviewRoom.getInterviewQuestionList();
+    public InterviewRoomDetailResponse interviewRoomToInterviewRoomDetailResponse(List<InterviewQuestion> interviewQuestionList, InterviewRoom interviewRoom) {
         List<InterviewQuestionResponse> interviewQuestionResponseList = interviewQuestionList.stream()
+                .filter(interviewQuestion -> interviewQuestion.getVideo() != null)
                 .map(interviewQuestionMapper::interviewQuestionToInterviewQuestionResponse)
                 .toList();
 
@@ -63,15 +59,6 @@ public class InterviewRoomMapper {
                 .feedback(interviewRoom.getFeedback())
                 .interviewQuestionList(interviewQuestionResponseList)
                 .videoDetail(videoDetailResponse)
-                .build();
-    }
-    public VideoStorageResponse entityToInterviewVideoResponse(InterviewQuestion interviewQuestion, Video video) {
-
-        return VideoStorageResponse.builder()
-                .videoId(video.getVideoId())
-                .thumbnailUrl(video.getThumbnailUrl())
-                .title(video.getTitle())
-                .question(interviewQuestion.getCommonQuestion().getCommonQuestion())
                 .build();
     }
 }

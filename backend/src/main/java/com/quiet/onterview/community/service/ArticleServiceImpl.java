@@ -72,9 +72,9 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<ArticleListResponse> getAllMyArticle(Long memberId, String order) {
-        List<Article> articleList = getArticleList(memberId, order);
+    public List<ArticleListResponse> getAllMyArticle(Long memberId, String order, String category, String query) {
         List<ArticleListResponse> articleListResponse = new ArrayList<>();
+        List<Article> articleList = articleRepository.searchByCategorySortByOrder(memberId, order, category, query);
         articleList.stream().forEach(article ->
                 articleListResponse.add(articleMapper.articleToArticleListResponse(article)));
         return articleListResponse;
@@ -97,29 +97,11 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<ArticleListResponse> getAllArticle(String order) {
-        List<Article> articleList = getArticleList(null, order);
+    public List<ArticleListResponse> getAllArticle(String order, String category, String query) {
         List<ArticleListResponse> articleListResponse = new ArrayList<>();
+        List<Article> articleList = articleRepository.searchByCategorySortByOrder(null, order, category, query);
         articleList.stream().forEach(article ->
                 articleListResponse.add(articleMapper.articleToArticleListResponse(article)));
         return articleListResponse;
-    }
-
-    private List<Article> getArticleList(Long memberId, String order) {
-        List<Article> articleList = new ArrayList<>();
-        if(order.equals("recent")) {
-            articleList = (memberId==null) ?
-                    articleRepository.findAllByOrderByCreateAtAsc()
-                    : articleRepository.findByMember_MemberIdOrderByCreateAtAsc(memberId);
-        } else if(order.equals("like")) {
-            articleList = (memberId==null) ?
-                    articleRepository.findAllByOrderByLikeCountDesc()
-                    : articleRepository.findByMember_MemberIdOrderByLikeCountDesc(memberId);
-        } else if(order.equals("comment")) {
-            articleList = (memberId==null) ?
-                    articleRepository.findAllByOrderByCommentCountDesc()
-                    : articleRepository.findByMember_MemberIdOrderByCommentCountDesc(memberId);
-        }
-        return articleList;
     }
 }

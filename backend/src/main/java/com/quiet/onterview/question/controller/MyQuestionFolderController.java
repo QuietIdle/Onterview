@@ -45,17 +45,20 @@ public class MyQuestionFolderController {
     @Operation(summary = "PATCH 방식으로 나의 면접 질문 폴더명 수정")
     @PatchMapping("/{my_question_folder_id}")
     public ResponseEntity<Void> updateMyQuestion(
+            @AuthenticationPrincipal SecurityUser user,
             @PathVariable("my_question_folder_id") Long myQuestionFolderId,
             @RequestBody MyQuestionFolderRequest myQuestionFolderRequest
     ) {
-        myQuestionFolderService.updateMyQuestionFolder(myQuestionFolderId, myQuestionFolderRequest);
+        myQuestionFolderService.updateMyQuestionFolder(user.getMemberId(), myQuestionFolderId, myQuestionFolderRequest);
         return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "DELETE 방식으로 나의 면접 질문 폴더 삭제")
     @DeleteMapping("/{my_question_folder_id}")
-    public ResponseEntity<Void> deleteMyQuestionFolder(@PathVariable("my_question_folder_id") Long myQuestionFolderId) {
-        myQuestionFolderService.deleteMyQuestionFolder(myQuestionFolderId);
+    public ResponseEntity<Void> deleteMyQuestionFolder(
+            @AuthenticationPrincipal SecurityUser user,
+            @PathVariable("my_question_folder_id") Long myQuestionFolderId) {
+        myQuestionFolderService.deleteMyQuestionFolder(user.getMemberId(), myQuestionFolderId);
         return ResponseEntity.ok().build();
     }
 
