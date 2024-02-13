@@ -68,18 +68,21 @@ public class MyQuestionFolderServiceImpl implements MyQuestionFolderService {
     }
 
     @Override
-    public void updateMyQuestionFolder(Long myQuestionFolderId, MyQuestionFolderRequest myQuestionFolderRequest) {
+    public void updateMyQuestionFolder(Long memberId, Long myQuestionFolderId, MyQuestionFolderRequest myQuestionFolderRequest) {
         MyQuestionFolder myQuestionFolder = myQuestionFolderRepository.findById(myQuestionFolderId)
+                .filter(folder -> folder.getMember().getMemberId().equals(memberId))
                 .orElseThrow(MyQuestionFolderNotFoundException::new);
+
         Optional.ofNullable(myQuestionFolderRequest.getMyQuestionFolder())
                 .ifPresent(myQuestionFolder::updateMyQuestionFolder);
     }
 
     @Override
-    public void deleteMyQuestionFolder(Long myQuestionFolderId) {
-        myQuestionFolderRepository.delete(
-                myQuestionFolderRepository.findById(myQuestionFolderId)
-                        .orElseThrow(MyQuestionFolderNotFoundException::new));
+    public void deleteMyQuestionFolder(Long memberId, Long myQuestionFolderId) {
+        myQuestionFolderRepository.findById(myQuestionFolderId)
+                .filter(folder -> folder.getMember().getMemberId().equals(memberId))
+                .orElseThrow(MyQuestionFolderNotFoundException::new);
+        myQuestionFolderRepository.deleteById(myQuestionFolderId);
     }
 
 }

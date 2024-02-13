@@ -1,5 +1,6 @@
 package com.quiet.onterview.interview.entity;
 
+import com.quiet.onterview.common.BaseEntity;
 import com.quiet.onterview.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,7 +17,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Entity
 @Builder
 @Table(name = "INTERVIEWEE")
-public class Interviewee {
+public class Interviewee extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
