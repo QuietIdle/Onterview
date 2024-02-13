@@ -42,7 +42,7 @@ watch(() => websocketStore.flag.room,
       </div>
 
       <div class="d-flex align-center px-3 w-75" style="font-size: large;" >
-        Q. {{ websocketStore.now.question.content }}
+        Q. {{ websocketStore.now.question.commonQuestion }}
       </div>
 
       <button @click="goInterviewMain" class="d-flex justify-center align-center">

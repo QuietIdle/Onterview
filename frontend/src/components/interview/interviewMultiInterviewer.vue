@@ -2,14 +2,19 @@
 import { ref, watch } from "vue";
 import mainImg from '@/assets/interview/interviewMainIcon.png'
 import { useInterviewStore, useWebsocketStore } from "@/stores/interview";
+import { useUserStore } from "@/stores/user"
 import interviewMultiHelpModal from "@/components/interview/interviewMultiHelpModal.vue"
 import TimerComponent from '@/components/interview/Timer.vue'
 
+const userStore = useUserStore()
 const interviewStore = useInterviewStore()
 const websocketStore = useWebsocketStore()
 
 const isActiveTimer = ref(false)
 const logMessages = ref([])
+const headers = {
+    Authorization: userStore.accessToken
+}
 
 const addLog = function (text) {
   logMessages.value.push({
@@ -39,12 +44,6 @@ const openHelp = function () {
 
 const finishAnswer = async function () {
   
-  // websocketStore.stomp.send(`/server/answer/${websocketStore.roomData.sessionId}`, {},
-  //   JSON.stringify({
-  //     type: 'PROCEEDING',
-  //     index: websocketStore.roomData.index,
-  //   })
-  // )
   await sendMessage('PROCEEDING', websocketStore.now.turn)
 }
 
@@ -54,7 +53,7 @@ const goTimer = function () {
 
 const sendMessage = async function (type, idx) {
   
-  await websocketStore.stomp.send(`/server/answer/${websocketStore.roomData.sessionId}`, {}, JSON.stringify({
+  await websocketStore.stomp.send(`/server/answer/${websocketStore.roomData.sessionId}`, headers, JSON.stringify({
     type: type,
     index: idx,
   }))
@@ -104,7 +103,6 @@ watch(() => websocketStore.flag.interviewer, async () => {
         addLog(`1분 자기 소개 종료`)
       }
       websocketStore.now.question.id += 1;
-      websocketStore.now.turn = -1
       break;
 
     case 'END':
