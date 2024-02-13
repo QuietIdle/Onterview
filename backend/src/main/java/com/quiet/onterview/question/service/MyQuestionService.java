@@ -8,10 +8,10 @@ import com.quiet.onterview.question.dto.response.MyAnswerAndVideoResponse;
 
 public interface MyQuestionService {
 
-    MyAnswerAndVideoResponse getMyAnswerAndVideo(Long myQuestionId);
-    void createMyQuestion(MyQuestionRequest myQuestionRequest);
-    void updateMyQuestion(Long myQuestionId, MyQuestionUpdateRequest myQuestionUpdateRequest);
-    void updateMyAnswer(Long myQuestionId, MyAnswerUpdateRequest myAnswerUpdateRequest);
-    void deleteMyQuestion(Long myQuestionId);
-    void moveMyQuestion(MyQuestionMoveRequest myQuestionMoveRequest);
+    MyAnswerAndVideoResponse getMyAnswerAndVideo(Long memberId, Long myQuestionId);
+    void createMyQuestion(Long memberId, MyQuestionRequest myQuestionRequest);
+    void updateMyQuestion(Long memberId, Long myQuestionId, MyQuestionUpdateRequest myQuestionUpdateRequest);
+    void updateMyAnswer(Long memberId, Long myQuestionId, MyAnswerUpdateRequest myAnswerUpdateRequest);
+    void deleteMyQuestion(Long memberId, Long myQuestionId);
+    void moveMyQuestion(Long memberId, MyQuestionMoveRequest myQuestionMoveRequest);
 }

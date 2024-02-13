@@ -1,8 +1,8 @@
-package com.quiet.onterview.matching.handler;
+package com.quiet.onterview.websocket.handler;
 
 import com.quiet.onterview.matching.exception.UserNotFoundException;
-import com.quiet.onterview.matching.service.MatchManager;
-import java.security.Principal;
+import com.quiet.onterview.matching.repository.MatchRepository;
+import com.quiet.onterview.room.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
@@ -14,15 +14,16 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 @RequiredArgsConstructor
 public class WebSocketDisconnectHandler implements ApplicationListener<SessionDisconnectEvent> {
 
-    private final MatchManager matchManager;
+    private final MatchRepository matchRepository;
+    private final RoomService roomService;
     @Override
     public void onApplicationEvent(SessionDisconnectEvent event) {
-        Principal user = event.getUser();
+        String user = event.getUser().getName();
         try {
-            matchManager.deleteComplete(user.getName());
+            roomService.leave(user);
         } catch (UserNotFoundException e) {
-            matchManager.leave(user.getName());
+            matchRepository.leave(user);
         }
-        log.info("disconnect sessionId : {}", user.getName());
+        log.info("disconnect sessionId : {}", user);
     }
 }

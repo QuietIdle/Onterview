@@ -8,29 +8,14 @@ import com.quiet.onterview.video.mapper.VideoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
 @RequiredArgsConstructor
 public class InterviewQuestionMapper {
 
     private final VideoMapper videoMapper;
 
-    public InterviewQuestionResponse interviewQuestionToInterviewQuestionResponse(
-            InterviewQuestion interviewQuestion) {
+    public InterviewQuestionResponse interviewQuestionToInterviewQuestionResponse(InterviewQuestion interviewQuestion) {
         Video video = interviewQuestion.getVideo();
-
-        InterviewQuestionResponse.InterviewQuestionResponseBuilder responseBuilder =
-                InterviewQuestionResponse.builder()
-                        .interviewQuestionId(interviewQuestion.getInterviewQuestionId())
-                        .commonQuestionId(
-                                interviewQuestion.getCommonQuestion().getCommonQuestionId())
-                        .commonQuestion(interviewQuestion.getCommonQuestion().getCommonQuestion());
-
-        Optional.ofNullable(video)
-                .ifPresent(o -> responseBuilder.videoInformation(
-                        videoMapper.videoToInformationResponse(o))
-                );
         VideoInformationResponse videoInformationResponse = videoMapper.videoToInformationResponse(video);
 
         return InterviewQuestionResponse.builder()
