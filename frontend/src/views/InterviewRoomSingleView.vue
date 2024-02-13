@@ -312,7 +312,7 @@ const stopRecord = async function () {
 const saveRecording = async function (videoLength, questionId) {
   const date = new Date().toLocaleString()
   const req_body = {
-    questionId: questionId,
+    interviewQuestionId: questionId,
     videoLength: videoLength,
     title: `${questionId}-${date}`,
     videoInformation: {
@@ -585,7 +585,7 @@ video {
 
 .video-activate {
   position: absolute;
-  top: 50%;
+  top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
