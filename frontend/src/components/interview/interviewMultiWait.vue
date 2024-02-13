@@ -43,7 +43,7 @@ const startMatch = function () {
   const headers = {
     Authorization: `${authToken}`
   }
-  const socket = new WebSocket('ws://70.12.247.51:8081/api/meeting/matching')
+  const socket = new WebSocket('wss://i10a504.p.ssafy.io/api/meeting/matching')
   stomp = Stomp.over(socket)
 
   stomp.connect(headers,
@@ -52,7 +52,7 @@ const startMatch = function () {
         `/user/sub/${interviewStore.stompType}`,
         function (message) {
           websocketStore.roomData = JSON.parse(message.body)
-          console.log('token accepted successfully!', websocketStore.roomData)
+          //console.log('token accepted successfully!', websocketStore.roomData)
 
           interviewStore.dialog.wait = false
           stopTimer()

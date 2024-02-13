@@ -8,7 +8,8 @@ const authToken = userStore.accessToken
 const api = localAxios()
 const api2 = axios.create({
     baseURL: 'https://i10a504.p.ssafy.io/',
-    header: {
+    //baseURL: 'http://70.12.247.60:8082/',
+    headers: {
         "Authorization": `${authToken}`
     }
 });
@@ -25,7 +26,7 @@ export const apiMethods = {
         return api.get(`/api/my-question/${q_id}`)
     },
     getUserVideoAll: function (category) {
-        return api.get(`/api/video/${category}`)
+        return api.get(`/api/video?category=${category}`)
     },
     deleteVideos: function (v_ids) {
         return api.post('/api/video/delete', v_ids)
