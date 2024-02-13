@@ -2,6 +2,7 @@ package com.quiet.onterview.question.mapper;
 
 import com.quiet.onterview.question.dto.request.MyQuestionRequest;
 import com.quiet.onterview.question.dto.response.MyAnswerAndVideoResponse;
+import com.quiet.onterview.question.dto.response.MyQuestionWithFolderResponse;
 import com.quiet.onterview.question.dto.response.MyQuestionResponse;
 import com.quiet.onterview.question.entity.CommonQuestion;
 import com.quiet.onterview.question.entity.MyQuestion;
@@ -24,6 +25,14 @@ public class MyQuestionMapper {
                 .commonQuestionId(Optional.ofNullable(myQuestion.getCommonQuestion())
                         .map(CommonQuestion::getCommonQuestionId)
                         .orElse(null))
+                .myQuestionId(myQuestion.getMyQuestionId())
+                .question(myQuestion.getQuestion())
+                .build();
+    }
+
+    public MyQuestionWithFolderResponse myQuestionToMyQuestionByFolderResponse(MyQuestion myQuestion) {
+        return MyQuestionWithFolderResponse.builder()
+                .myQuestionFolderId(myQuestion.getMyQuestionFolder().getMyQuestionFolderId())
                 .myQuestionId(myQuestion.getMyQuestionId())
                 .question(myQuestion.getQuestion())
                 .build();
