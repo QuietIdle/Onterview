@@ -7,11 +7,13 @@ import BtnImg3 from "@/assets/interview/interviewMainBtnIcon3.png"
 import BtnImg4 from "@/assets/interview/interviewMainBtnIcon4.png"
 import { useRouter } from "vue-router"
 import { useInterviewStore } from "@/stores/interview"
+import { useUserStore } from "@/stores/user"
 import interviewMultiHelpModal from "@/components/interview/interviewMultiHelpModal.vue"
 import interviewMultiWait from "@/components/interview/interviewMultiWait.vue"
 
 const router = useRouter()
 const interviewStore = useInterviewStore()
+const userStore = useUserStore()
 
 const steps = ref(["면접 인원 선택", "면접 유형 선택", "시작하기"])
 const peopleCount = ref(interviewStore.choice.people === 'MULTI')  // 1인 - 다인
@@ -34,6 +36,12 @@ const chooseType = function (val) {
 }
 
 const enter = function () {
+
+  if (userStore.accessToken === null) {
+    alert('로그인이 필요합니다!')
+    router.push({ name: 'login' })
+    return;
+  }
 
   if (interviewStore.choice.people === 'MULTI') {
     interviewStore.dialog.wait = true
