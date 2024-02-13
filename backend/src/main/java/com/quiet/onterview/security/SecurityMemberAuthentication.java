@@ -1,11 +1,13 @@
 package com.quiet.onterview.security;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import lombok.Getter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.util.StringUtils;
 
 
 /**
@@ -24,10 +26,12 @@ import org.springframework.security.core.GrantedAuthority;
 public class SecurityMemberAuthentication implements Authentication, CredentialsContainer {
 
     private SecurityUser securityUser;
+    private Collection<GrantedAuthority> authorities;
     private boolean authenticated = false;
 
     public SecurityMemberAuthentication(SecurityUser securityUser) {
         this.securityUser = securityUser;
+        this.authorities = createAuthorities(securityUser.getRoles());
         setAuthenticated(true);
     }
 
@@ -37,6 +41,7 @@ public class SecurityMemberAuthentication implements Authentication, Credentials
 
     public void setSecurityUser(SecurityUser securityUser) {
         this.securityUser = securityUser;
+        this.authorities = createAuthorities(securityUser.getRoles());
         setAuthenticated(true);
     }
     @Override
@@ -46,7 +51,7 @@ public class SecurityMemberAuthentication implements Authentication, Credentials
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.EMPTY_LIST;
+        return this.authorities;
     }
 
     @Override
@@ -71,7 +76,7 @@ public class SecurityMemberAuthentication implements Authentication, Credentials
 
     @Override
     public String getName() {
-        return null;
+        return securityUser.getEmail();
     }
 
     @Override
@@ -85,5 +90,16 @@ public class SecurityMemberAuthentication implements Authentication, Credentials
         if (secret instanceof CredentialsContainer) {
             ((CredentialsContainer) secret).eraseCredentials();
         }
+    }
+
+    private Collection<GrantedAuthority> createAuthorities(String roles) {
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        for(String role : roles.split(",")) {
+            if(!StringUtils.hasText(role)) {
+                continue;
+            }
+            authorities.add(new SimpleGrantedAuthority(role));
+        }
+        return authorities;
     }
 }
