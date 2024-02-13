@@ -4,20 +4,17 @@ import com.quiet.onterview.question.dto.request.CommonQuestionFolderRequest;
 import com.quiet.onterview.question.dto.response.CommonQuestionFolderResponse;
 import com.quiet.onterview.question.entity.CommonQuestion;
 import com.quiet.onterview.question.entity.CommonQuestionFolder;
-import com.quiet.onterview.question.exception.CommonQuestionFolderNotFoundException;
-import com.quiet.onterview.question.exception.InvalidSelectionCountException;
-import com.quiet.onterview.question.exception.QuestionFolderEmptyException;
+import com.quiet.onterview.question.exception.*;
 import com.quiet.onterview.question.mapper.CommonQuestionFolderMapper;
 import com.quiet.onterview.question.mapper.CommonQuestionMapper;
 import com.quiet.onterview.question.repository.CommonQuestionFolderRepository;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -38,23 +35,34 @@ public class CommonQuestionFolderServiceImpl implements CommonQuestionFolderServ
     }
 
     @Override
-    public CommonQuestionFolderResponse getOneCommonQuestionFolderInfo(Long commonQuestionFolderId) {
-        CommonQuestionFolder commonQuestionFolder = commonQuestionFolderRepository.findOneCommonQuestionFolderInfo(commonQuestionFolderId)
+    public CommonQuestionFolderResponse getOneCommonQuestionFolderInfo(
+            Long commonQuestionFolderId
+    ) {
+        CommonQuestionFolder commonQuestionFolder = commonQuestionFolderRepository.findOneCommonQuestionFolderInfo(
+                        commonQuestionFolderId)
                 .orElseThrow(CommonQuestionFolderNotFoundException::new);
 
-        return commonQuestionFolderMapper.commonQuestionFolderToCommonQuestionFolderResponse(commonQuestionFolder);
+        return commonQuestionFolderMapper.commonQuestionFolderToCommonQuestionFolderResponse(
+                commonQuestionFolder);
     }
 
 
     @Override
-    public void createCommonQuestionFolder(CommonQuestionFolderRequest commonQuestionFolderRequest) {
-        CommonQuestionFolder commonQuestionFolder = commonQuestionFolderMapper.commonQuestionFolderRequestToEntity(commonQuestionFolderRequest);
+    public void createCommonQuestionFolder(
+            CommonQuestionFolderRequest commonQuestionFolderRequest
+    ) {
+        CommonQuestionFolder commonQuestionFolder = commonQuestionFolderMapper.commonQuestionFolderRequestToEntity(
+                commonQuestionFolderRequest);
         commonQuestionFolderRepository.save(commonQuestionFolder);
     }
 
     @Override
-    public void updateCommonQuestionFolder(Long commonQuestionFolderId, CommonQuestionFolderRequest commonQuestionFolderRequest) {
-        CommonQuestionFolder commonQuestionFolder = commonQuestionFolderRepository.findById(commonQuestionFolderId)
+    public void updateCommonQuestionFolder(
+            Long commonQuestionFolderId,
+            CommonQuestionFolderRequest commonQuestionFolderRequest
+    ) {
+        CommonQuestionFolder commonQuestionFolder = commonQuestionFolderRepository.findById(
+                        commonQuestionFolderId)
                 .orElseThrow(CommonQuestionFolderNotFoundException::new);
         Optional.ofNullable(commonQuestionFolderRequest.getCommonQuestionFolder())
                 .ifPresent(commonQuestionFolder::updateCommonQuestionFolder);
@@ -68,25 +76,33 @@ public class CommonQuestionFolderServiceImpl implements CommonQuestionFolderServ
     }
 
     @Override
-    public List<CommonQuestion> getRandomCommonQuestionList(String commonQuestionFolderName, int numToSelect) {
-        CommonQuestionFolder commonQuestionFolder = commonQuestionFolderRepository.findInterviewQuestionFolder(commonQuestionFolderName)
-                .orElseThrow(CommonQuestionFolderNotFoundException::new);
+    public List<CommonQuestion> getRandomCommonQuestionList(
+            String commonQuestionFolderName,
+            int numToSelect
+    ) {
+        CommonQuestionFolder commonQuestionFolder =
+                commonQuestionFolderRepository.findInterviewQuestionFolder(commonQuestionFolderName)
+                        .orElseThrow(CommonQuestionFolderNotFoundException::new);
 
         List<CommonQuestion> allQuestions = commonQuestionFolder.getCommonQuestionList();
 
-        if (allQuestions.isEmpty()) throw new QuestionFolderEmptyException();
-        if (numToSelect > allQuestions.size()) throw new InvalidSelectionCountException();
+        if (allQuestions.isEmpty()) {
+            throw new QuestionFolderEmptyException();
+        }
+        if (numToSelect > allQuestions.size()) {
+            throw new InvalidSelectionCountException();
+        }
 
-        List<CommonQuestion> shuffledQuestions = new ArrayList<>(allQuestions.subList(2, allQuestions.size()));
-        Collections.shuffle(shuffledQuestions);
-        shuffledQuestions = shuffledQuestions.stream().limit(numToSelect - 2).toList();
-
-        List<CommonQuestion> selectedQuestions = new ArrayList<>();
-        selectedQuestions.add(allQuestions.get(0));
-        selectedQuestions.addAll(shuffledQuestions);
-        selectedQuestions.add(allQuestions.get(1));
-
-        return selectedQuestions;
+        return Stream.concat(
+                Stream.of(allQuestions.get(0)),
+                Stream.concat(
+                        allQuestions.stream()
+                                .skip(2).toList()
+                                .stream()
+                                .limit(numToSelect - 2),
+                        Stream.of(allQuestions.get(1))
+                )
+        ).collect(Collectors.toList());
     }
 
 }

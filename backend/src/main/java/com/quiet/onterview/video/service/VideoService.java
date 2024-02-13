@@ -1,5 +1,6 @@
 package com.quiet.onterview.video.service;
 
+import com.quiet.onterview.interview.entity.RoomType;
 import com.quiet.onterview.security.SecurityUser;
 import com.quiet.onterview.video.SpeechType;
 import com.quiet.onterview.video.dto.request.*;
@@ -11,7 +12,7 @@ public interface VideoService {
 
     VideoDetailResponse loadVideoInformation(Long videoId);
 
-    List<VideoInformationResponse> loadAllMyVideo(SecurityUser email, SpeechType speechType);
+    List<VideoInformationResponse> loadAllMyVideo(SecurityUser email, RoomType roomType);
 
     void createVideoInformation(VideoInformationRequest videoInformationRequest);
 

@@ -1,7 +1,5 @@
 package com.quiet.onterview.video.service;
 
-import com.quiet.onterview.common.BaseException;
-import com.quiet.onterview.common.ErrorCode;
 import com.quiet.onterview.file.service.FileService;
 import com.quiet.onterview.interview.entity.InterviewQuestion;
 import com.quiet.onterview.interview.entity.RoomType;
@@ -9,19 +7,20 @@ import com.quiet.onterview.interview.repository.InterviewQuestionRepository;
 import com.quiet.onterview.question.entity.MyQuestion;
 import com.quiet.onterview.question.repository.MyQuestionRepository;
 import com.quiet.onterview.security.SecurityUser;
-import com.quiet.onterview.video.SpeechType;
 import com.quiet.onterview.video.dto.request.*;
 import com.quiet.onterview.video.dto.response.VideoDetailResponse;
 import com.quiet.onterview.video.dto.response.VideoInformationResponse;
 import com.quiet.onterview.video.entity.Video;
 import com.quiet.onterview.video.exception.VideoNotFoundException;
 import com.quiet.onterview.video.mapper.VideoMapper;
+import com.quiet.onterview.video.repository.VideoQueryRepository;
 import com.quiet.onterview.video.repository.VideoRepository;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -29,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class VideoServiceImpl implements VideoService {
 
     private final VideoRepository videoRepository;
+    private final VideoQueryRepository videoQueryRepository;
     private final MyQuestionRepository myQuestionRepository;
     private final InterviewQuestionRepository interviewQuestionRepository;
     private final VideoMapper videoMapper;
@@ -44,20 +44,8 @@ public class VideoServiceImpl implements VideoService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<VideoInformationResponse> loadAllMyVideo(SecurityUser user, SpeechType speechType) {
-        if (speechType == SpeechType.SELF) {
-            return videoMapper.allVideoToInformationResponse(
-                    videoRepository.findAllSelfVideoByMember(user.getMemberId()));
-        } else if (speechType == SpeechType.MULTI) {
-            return videoMapper.allVideoToInformationResponse(
-                    videoRepository.findAllMultiVideoByMember(
-                            user.getMemberId(), RoomType.MULTI));
-        } else if (speechType == SpeechType.SINGLE) {
-            return videoMapper.allVideoToInformationResponse(
-                    videoRepository.findAllSingleVideoByMember(
-                            user.getMemberId(), RoomType.SINGLE));
-        }
-        throw new BaseException(ErrorCode.VIDEO_NOT_FOUND);
+    public List<VideoInformationResponse> loadAllMyVideo(SecurityUser user, RoomType roomType) {
+        return videoQueryRepository.findAllInterviewVideoByMemberAndType(user.getMemberId(), roomType);
     }
 
     @Override
