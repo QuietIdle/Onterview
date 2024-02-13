@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class SecurityMemberDetail implements UserDetails {
 
     private SecurityUser securityUser;
+    private Collection<GrantedAuthority> authorities;
 
     public SecurityMemberDetail(SecurityUser securityUser) {
         this.securityUser = securityUser;
@@ -16,7 +17,7 @@ public class SecurityMemberDetail implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return this.authorities;
     }
 
     @Override
