@@ -4,13 +4,14 @@ import mainImg from '@/assets/interview/interviewMainIcon.png'
 import { useInterviewStore, useWebsocketStore } from "@/stores/interview";
 import { useUserStore } from "@/stores/user"
 import interviewMultiHelpModal from "@/components/interview/interviewMultiHelpModal.vue"
-import TimerComponent from '@/components/interview/Timer.vue'
+import TimerComponent from '@/components/interview/Timer2.vue'
 
 const userStore = useUserStore()
 const interviewStore = useInterviewStore()
 const websocketStore = useWebsocketStore()
 
 const isActiveTimer = ref(false)
+const needResetTimer = ref(false)
 const logMessages = ref([])
 const headers = {
     Authorization: userStore.accessToken
@@ -42,11 +43,13 @@ const openHelp = function () {
   interviewStore.dialog.help = true
 }
 
-const finishAnswer = async function () { 
+const finishAnswer = async function () {
   await sendMessage('PROCEEDING', websocketStore.now.turn)
 }
 const timeOut = async function () {
-  await sendMessage('TIMEOUT', websocketStore.now.turn)
+  if (websocketStore.myTurn) {
+    await sendMessage('TIMEOUT', websocketStore.now.turn)
+  }
 }
 
 const goTimer = function () {
@@ -151,7 +154,8 @@ watch(() => websocketStore.flag.interviewer, async () => {
       <div class="d-flex flex-column align-center my-auto offset-1 v-col-3 py-0 px-0">
         <TimerComponent 
           :start-timer="isActiveTimer" 
-          @finish-timer="alert('www')"
+          :reset-timer="needResetTimer"
+          @finish-timer="timeOut"
           style="width: 150px; height: 150px;" 
         />
         <v-btn 

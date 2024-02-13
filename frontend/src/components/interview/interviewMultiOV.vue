@@ -174,19 +174,19 @@ const receive = async function (message) {
       break;
 
     case 'PROCEEDING':
-      websocketStore.now.turn = result.number + 1;
       websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
+      websocketStore.now.turn = result.number + 1;
       break;
 
     case 'TIMEOUT':
-      websocketStore.now.turn = result.number + 1;
       websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
+      websocketStore.now.turn = result.number + 1;
       break;
 
     case 'FINISH':
+      websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
       websocketStore.now.turn = result.number + 1;
       websocketStore.now.question.commonQuestion = result.question.commonQuestion;
-      websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
 
       websocketStore.now.orders = result.orders;
       await interviewStore.TTS(interviewStore.script.finish)
