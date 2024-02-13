@@ -42,9 +42,11 @@ const openHelp = function () {
   interviewStore.dialog.help = true
 }
 
-const finishAnswer = async function () {
-  
+const finishAnswer = async function () { 
   await sendMessage('PROCEEDING', websocketStore.now.turn)
+}
+const timeOut = async function () {
+  await sendMessage('TIMEOUT', websocketStore.now.turn)
 }
 
 const goTimer = function () {
@@ -91,6 +93,13 @@ watch(() => websocketStore.flag.interviewer, async () => {
       break;
 
     case 'TIMEOUT':
+      isActiveTimer.value = false
+      addLog(`${websocketStore.now.turn}번 째 참가자 시간 초과!`)
+      if (websocketStore.myTurn) {
+        addLog("당신의 차례입니다.")
+      }
+      //await interviewStore.TTS(interviewStore.script.proceeding)
+      setTimeout(goTimer, 2000)
       break;
 
     case 'FINISH':
@@ -140,7 +149,11 @@ watch(() => websocketStore.flag.interviewer, async () => {
       </div>
 
       <div class="d-flex flex-column align-center my-auto offset-1 v-col-3 py-0 px-0">
-        <TimerComponent :start-timer="isActiveTimer" style="width: 150px; height: 150px;" />
+        <TimerComponent 
+          :start-timer="isActiveTimer" 
+          @finish-timer="alert('www')"
+          style="width: 150px; height: 150px;" 
+        />
         <v-btn 
           v-if="websocketStore.myTurn"
           @click="finishAnswer" 

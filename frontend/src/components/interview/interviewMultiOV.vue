@@ -179,6 +179,8 @@ const receive = async function (message) {
       break;
 
     case 'TIMEOUT':
+      websocketStore.now.turn = result.number + 1;
+      websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
       break;
 
     case 'FINISH':

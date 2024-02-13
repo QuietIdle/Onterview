@@ -9,6 +9,26 @@ const interviewStore = useInterviewStore()
 const websocketStore = useWebsocketStore()
 const router = useRouter()
 
+// 1인 면접 진행 시간 스톱 워치
+const startTime = ref(Date.now())
+const timeDifference = ref(0)
+const timerId = ref(null)
+
+const updateTime = function () {
+  timeDifference.value = Math.floor((Date.now() - startTime.value) / 1000)
+}
+
+// 스톱워치 실행
+startTime.value = Date.now()
+timerId.value = setInterval(updateTime, 1000)
+
+const formatTime = function (seconds) {
+  // 초를 'mm:ss' 형식의 문자열로 변환
+  const minutes = Math.floor(seconds / 60)
+  const remainingSeconds = seconds % 60
+  return `${minutes < 10 ? '0' + minutes : minutes}:${remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds}`
+}
+
 const goInterviewMain = function () {
   interviewStore.ov = false
   router.push({name: 'interview'})
@@ -37,8 +57,8 @@ watch(() => websocketStore.flag.room,
       </div>
 
       <div class="d-flex align-center">
-        <v-icon icon="mdi-record" color="#FA3F3F"></v-icon>
-        time
+        <v-icon icon="mdi-radiobox-marked" class="mx-1" color="red"></v-icon>
+        {{ formatTime(timeDifference) }}
       </div>
 
       <div class="d-flex align-center px-3 w-75" style="font-size: large;" >
