@@ -42,7 +42,6 @@ const startMatch = function () {
   const headers = {
     Authorization: `${authToken}`
   }
-  //const socket = new WebSocket('ws://70.12.247.51:8081/api/meeting/matching')
   const socket = new WebSocket('wss://i10a504.p.ssafy.io/api/meeting/matching')
   stomp = Stomp.over(socket)
 
@@ -100,12 +99,7 @@ const stopMatch = function () {
       <v-card-title class="text-center"> 다인 모의 면접 대기실 </v-card-title>
       <v-divider class="border-opacity-100"></v-divider>
       <div class="mt-5 d-flex justify-space-between">
-        <v-btn-toggle
-          v-model="selectedTab"
-          mandatory
-          color="purple-darken-3"
-          class="btn-container"
-        >
+        <v-btn-toggle v-model="selectedTab" mandatory color="purple-darken-3" class="btn-container">
           <v-btn elevation="2"> 환경설정 </v-btn>
           <v-btn elevation="2"> 도움말 </v-btn>
         </v-btn-toggle>
@@ -129,37 +123,14 @@ const stopMatch = function () {
       </v-card-text>
 
       <v-card-actions class="d-flex flex-row-reverse btns">
-        <v-btn
-          @click="stopMatch"
-          class="ma-1"
-          rounded
-          elevation="4"
-          size="x-large"
-          style="background-color: #9b9b9b"
-          >매칭취소</v-btn
-        >
-        <v-btn
-          v-if="!time.match"
-          @click="startMatch"
-          class="ma-1"
-          rounded
-          elevation="4"
-          size="x-large"
-          style="background-color: #a069b3"
-          >매칭시작</v-btn
-        >
-        <v-btn
-          v-else
-          class="ma-1"
-          rounded
-          elevation="4"
-          size="x-large"
-          style="background-color: #a069b3"
-          disabled
-          >매칭 대기 시간
+        <v-btn @click="stopMatch" class="ma-1" rounded elevation="4" size="x-large"
+          style="background-color: #9b9b9b">매칭취소</v-btn>
+        <v-btn v-if="!time.match" @click="startMatch" class="ma-1" rounded elevation="4" size="x-large"
+          style="background-color: #a069b3">매칭시작</v-btn>
+        <v-btn v-else class="ma-1" rounded elevation="4" size="x-large" style="background-color: #a069b3" disabled>매칭 대기
+          시간
           {{ String(Math.floor(time.second / 60)).padStart(2, '0') }} :
-          {{ String(time.second % 60).padStart(2, '0') }}</v-btn
-        >
+          {{ String(time.second % 60).padStart(2, '0') }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
