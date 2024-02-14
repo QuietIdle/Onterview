@@ -70,11 +70,12 @@ const requestLogin = function () {
 </script>
 
 <template>
-  <div class="body d-flex">
-    <div class="v-col-5 bg-indigo"></div>
+  <div class="container d-flex">
+    <div class="left v-col-5 bg-indigo">
+    </div>
     <div class="offset-1 v-col-4 mt-15">
-      <div class="text-center my-10">
-        <img class="mb-5" src="@/assets/logo.png" width="200px">
+      <div class="text-center my-15">
+        <img class="my-10" src="@/assets/logo.png" width="200px">
         <h2 class="mb-2">로그인</h2>
         <h4 class="text-grey">이메일과 비밀번호를 입력해주세요.</h4>
       </div>
@@ -86,7 +87,7 @@ const requestLogin = function () {
           <v-text-field v-model="email" label="example@onterview.com" id="email"></v-text-field>
 
           <label for="password">비밀번호</label>
-          <v-text-field v-model="password" label="비밀번호" type="password" id="password"></v-text-field>
+          <v-text-field v-model="password" label="비밀번호" type="password" id="password" class="mb-10"></v-text-field>
 
           <v-btn type="submit" block class="mt-2 py-5">
             <h3>로그인</h3>
@@ -100,10 +101,9 @@ const requestLogin = function () {
           </div>
         </v-btn> -->
 
-        <p class="text-center mt-5">
-          <!-- 온터뷰가 처음인가요? -->
-          <!-- <v-btn variant="text"> 비밀번호 찾기 </v-btn>
-          <span class="text-grey">|</span> -->
+        <p class="text-center py-5">
+          <!-- <span>온터뷰가 처음인가요?</span> -->
+          <!-- <v-btn variant="text"> 비밀번호 찾기 </v-btn> -->
           <v-btn variant="text" @click="toRegister" style="color: #BB66FF">
             <h3> 회원가입 </h3>
           </v-btn>
@@ -125,8 +125,16 @@ a {
   text-decoration: none;
 }
 
-.body {
+.container {
   min-height: 100vh;
+}
+
+.left {
+  background-image: url("@/assets/main/introduceImage4.png");
+  background-size: cover;
+  /* 이미지를 컨테이너에 맞게 조정 */
+  background-position: center;
+  /* 이미지를 가운데 정렬 */
 }
 
 .kakao {
