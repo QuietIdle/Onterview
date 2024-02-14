@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onBeforeUnmount } from 'vue';
 import { useSelfSpeechStore } from '@/stores/selfSpeech';
 import VideoThumbnail from "@/components/video/VideoThumbnail.vue";
 import { apiMethods } from "@/api/video";
@@ -56,6 +56,11 @@ const saveScript = async function () {
     console.log(error)
   }
 }
+
+onBeforeUnmount(() => {
+  selfSpeechStore.selectedQuestion = -1;
+  selfSpeechStore.listIdx = 1;
+})
 </script>
 
 <template>
@@ -80,7 +85,7 @@ const saveScript = async function () {
       <div v-if="selfSpeechStore.listIdx === 1">
         <v-container fluid>
           <v-textarea counter="200" :counter-max="maxCounter" label="답변" :rules="rules"
-            v-model="selfSpeechStore.questionData.answer" no-resize @blur="saveScript">
+            v-model="selfSpeechStore.questionData.answer" no-resize :disabled="selfSpeechStore.selectedQuestion===-1" @blur="saveScript">
             {{ selfSpeechStore.questionData.answer }}
           </v-textarea>
         </v-container>
@@ -88,13 +93,15 @@ const saveScript = async function () {
 
       <!-- 썸네일 -->
       <div v-else-if="selfSpeechStore.listIdx === 2" class="h-100">
-        <VideoThumbnail />
+        <v-container fluid>
+          <VideoThumbnail />
+        </v-container>
       </div>
 
       <!-- 자가 진단 -->
       <div v-else-if="selfSpeechStore.listIdx === 3">
         <v-container fluid>
-          <v-textarea counter="20" :counter-max="maxCounter" label="자가진단" :rules="rules"
+          <v-textarea counter="200" :counter-max="maxCounter" label="자가진단" :rules="rules"
             v-model="selfSpeechStore.videoData.feedback" no-resize @blur="saveFeedback">
             {{ selfSpeechStore.videoData.feedback }}
           </v-textarea>
