@@ -1,12 +1,8 @@
 package com.quiet.onterview.question.controller;
 
 import com.quiet.onterview.question.dto.request.CommonQuestionFolderRequest;
-import com.quiet.onterview.question.dto.request.MyQuestionFolderRequest;
 import com.quiet.onterview.question.dto.response.CommonQuestionFolderResponse;
-import com.quiet.onterview.question.dto.response.CommonQuestionResponse;
-import com.quiet.onterview.question.dto.response.MyQuestionFolderResponse;
 import com.quiet.onterview.question.service.CommonQuestionFolderService;
-import com.quiet.onterview.question.service.MyQuestionFolderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +18,17 @@ import java.util.List;
 public class CommonQuestionFolderController {
     private final CommonQuestionFolderService commonQuestionFolderService;
 
-    @Operation(summary = "GET 방식으로 모든 빈출 면접 폴더별 질문 리스트 조회")
+    @Operation(summary = "GET 방식으로 빈출 면접 폴더별 질문 리스트 전체 조회 & 키워드 조회")
     @GetMapping
-    public ResponseEntity<List<CommonQuestionFolderResponse>> getAllCommonQuestionFolderInfo() {
-        return ResponseEntity.ok(commonQuestionFolderService.getAllCommonQuestionFolderInfo());
+    public ResponseEntity<List<CommonQuestionFolderResponse>> getAllCommonQuestionFolderInfo(
+            @RequestParam(name = "keyword", required = false) String keyword
+    ) {
+        if (keyword == null) {
+            return ResponseEntity.ok(commonQuestionFolderService.getCommonQuestionByFolder());
+        } else {
+            return ResponseEntity.ok(commonQuestionFolderService.getCommonQuestionByFolderByKeyword(keyword));
+        }
+
     }
 
     @Operation(summary = "GET 방식으로 특정 빈출 면접 폴더의 질문 리스트 조회")
