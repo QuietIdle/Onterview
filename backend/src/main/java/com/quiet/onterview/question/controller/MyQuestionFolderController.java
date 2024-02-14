@@ -21,10 +21,16 @@ import java.util.List;
 public class MyQuestionFolderController {
     private final MyQuestionFolderService myQuestionFolderService;
 
-    @Operation(summary = "GET 방식으로 나의 면접 문항 폴더별 질문 리스트 조회")
+    @Operation(summary = "GET 방식으로 나의 면접 문항 폴더별 질문 리스트 전체 조회 & 키워드 조회")
     @GetMapping
-    public ResponseEntity<List<MyQuestionFolderResponse>> getMyQuestionList(@AuthenticationPrincipal SecurityUser user) {
-        return ResponseEntity.ok(myQuestionFolderService.getMyQuestionFolder(user.getMemberId()));
+    public ResponseEntity<List<MyQuestionFolderResponse>> getMyQuestionList(
+            @AuthenticationPrincipal SecurityUser user,
+            @RequestParam(name = "keyword", required = false) String keyword) {
+        if (keyword == null) {
+            return ResponseEntity.ok(myQuestionFolderService.getMyQuestionByFolder(user.getMemberId()));
+        } else {
+            return ResponseEntity.ok(myQuestionFolderService.getMyQuestionByFolderByKeyword(user.getMemberId(), keyword));
+        }
     }
 
     @Operation(summary = "GET 방식으로 셀프 스피치 영상 전체 조회")

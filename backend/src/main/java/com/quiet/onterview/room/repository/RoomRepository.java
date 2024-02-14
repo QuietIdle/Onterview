@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReferenceArray;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -36,10 +37,10 @@ public class RoomRepository {
         return proceedingCount - leaveCount;
     }
 
-    private Integer calc(boolean[] src) {
+    private Integer calc(AtomicReferenceArray<Boolean> src) {
         int count = 0;
-        for (boolean c : src) {
-            if (c) {
+        for (int i = 0; i < src.length(); i++) {
+            if (src.get(i)) {
                 count++;
             }
         }
@@ -112,10 +113,10 @@ public class RoomRepository {
     }
 
     public List<Integer> shuffle(String sessionId) {
-        boolean[] leave = rooms.get(sessionId).getIsLeave();
+        AtomicReferenceArray<Boolean> leave = rooms.get(sessionId).getIsLeave();
         List<Integer> orders = new ArrayList<>();
-        for (int i = 0; i < leave.length; i++) {
-            if (leave[i]) {
+        for (int i = 0; i < leave.length(); i++) {
+            if (leave.get(i)) {
                 continue;
             }
             orders.add(i);

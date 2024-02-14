@@ -2,12 +2,15 @@ package com.quiet.onterview.question.service;
 
 import com.quiet.onterview.question.dto.request.CommonQuestionFolderRequest;
 import com.quiet.onterview.question.dto.response.CommonQuestionFolderResponse;
+import com.quiet.onterview.question.dto.response.CommonQuestionResponse;
 import com.quiet.onterview.question.entity.CommonQuestion;
 import com.quiet.onterview.question.entity.CommonQuestionFolder;
 import com.quiet.onterview.question.exception.*;
 import com.quiet.onterview.question.mapper.CommonQuestionFolderMapper;
 import com.quiet.onterview.question.mapper.CommonQuestionMapper;
 import com.quiet.onterview.question.repository.CommonQuestionFolderRepository;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,11 +30,33 @@ public class CommonQuestionFolderServiceImpl implements CommonQuestionFolderServ
 
     @Override
     @Transactional(readOnly = true)
-    public List<CommonQuestionFolderResponse> getAllCommonQuestionFolderInfo() {
-        List<CommonQuestionFolder> commonQuestionFolderList = commonQuestionFolderRepository.findAllCommonQuestionFolderInfo();
+    public List<CommonQuestionFolderResponse> getCommonQuestionByFolder() {
+        List<CommonQuestionFolder> commonQuestionFolderList = commonQuestionFolderRepository.findCommonQuestionByFolder();
         return commonQuestionFolderList.stream()
                 .map(commonQuestionFolderMapper::commonQuestionFolderToCommonQuestionFolderResponse)
                 .toList();
+    }
+
+    @Override
+    public List<CommonQuestionFolderResponse> getCommonQuestionByFolderByKeyword(String keyword) {
+        List<CommonQuestionFolderResponse> result = new ArrayList<>();
+        List<Long> commonQuestionFolderIdList = commonQuestionFolderRepository.findCommonQuestionFolderIdList();
+
+        for (Long folderId : commonQuestionFolderIdList) {
+            List<CommonQuestion> commonQuestionList = commonQuestionFolderRepository.findCommonQuestionByFolderByKeyword(folderId, keyword);
+
+            if (!commonQuestionList.isEmpty()) {
+                List<CommonQuestionResponse> commonQuestionResponsesList = commonQuestionList.stream()
+                        .map(commonQuestionMapper::commonQuestionToCommonQuestionResponse)
+                        .toList();
+                result.add(CommonQuestionFolderResponse.builder()
+                        .commonQuestionFolderId(folderId)
+                        .commonQuestionFolder(commonQuestionList.get(0).getCommonQuestionFolder().getCommonQuestionFolder())
+                        .commonQuestionList(commonQuestionResponsesList)
+                        .build());
+            }
+        }
+        return result;
     }
 
     @Override
