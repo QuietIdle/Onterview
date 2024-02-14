@@ -84,6 +84,16 @@ const leaveSession = () => {
 
     websocketStore.stomp.disconnect()
   }
+
+  websocketStore.now = {
+    turn: -1,
+    question: {
+      id: 0,
+      commonQuestion: "",
+    },
+    orders: [],
+    people: 4,
+  }
 };
 
 //녹화 기능
@@ -124,7 +134,7 @@ const sendToServer = async function(chunk, idx) {
     }))
     // axios를 사용하여 POST 요청을 서버로 보냄
     const response = await fileServer.uploadVideo(formData);
-    console.log(`Chunk ${chunk}`, response);
+    //console.log(`Chunk ${idx}`, response);
     if (response.status === 200) {
       console.log('upload success', response.data);
     }

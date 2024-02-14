@@ -143,6 +143,16 @@ const stopRecording = async function () {
 //   dialog.value = false
 //   dialog2.value = true
 // }
+const refreshVideo = async function () {
+  try {
+    const result = await apiMethods.getVideoAll(
+      selfSpeechStore.selectedQuestion
+    )
+    selfSpeechStore.questionData = result.data
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 const saveRecording = async function () {
   const date = new Date().toLocaleString()
@@ -176,7 +186,7 @@ const saveRecording = async function () {
   }
   dialog.value = false
   startVideo()
-  questionStore.requestMyQuestionList()
+  refreshVideo()
 }
 
 const cancelRecording = async function () {
@@ -255,7 +265,6 @@ onBeforeUnmount(() => {
         </div>
       </div>
     </div>
-
 
   </div>
 

@@ -21,7 +21,7 @@ export const apiMethods = {
         return api.get(`/api/video/${v_id}`)
     },
     getVideoAll: function (q_id) {
-        console.log('request get all videos')
+        //console.log('request get all videos')
         return api.get(`/api/my-question/${q_id}`)
     },
     getUserVideoAll: function (category) {
