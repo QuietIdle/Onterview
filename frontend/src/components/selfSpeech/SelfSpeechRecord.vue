@@ -101,7 +101,6 @@ const sendToServer = async function (chunk, idx) {
 
     const jsonData = {
       filename: filename.value,
-      username: userStore.email || "null",
       chunkNumber: idx,
       endOfChunk: flag.value,
     }
@@ -118,7 +117,6 @@ const sendToServer = async function (chunk, idx) {
     }
   } catch (error) {
     console.error('Error sending chunk to server:', error);
-    alert('업로드 실패입니다')
   }
 }
 
@@ -184,7 +182,7 @@ const saveRecording = async function () {
 const cancelRecording = async function () {
   try {
     dialog.value = false
-    const res = await fileServer.cancelUpload(userStore.email || "null", filename.value)
+    const res = await fileServer.cancelUpload(filename.value)
     console.log(res.data)
   } catch (error) {
     console.log(error)

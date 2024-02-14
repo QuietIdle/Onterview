@@ -3,9 +3,10 @@ import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import { OpenVidu } from 'openvidu-browser';
 import { useInterviewStore, useWebsocketStore } from "@/stores/interview";
 import { useUserStore } from "@/stores/user"
-import { apiMethods, fileServer } from "@/api/video";
+import { fileServer } from "@/api/video";
 import OvVideo from "@/components/interview/OvVideo.vue";
 import { v4 as uuidv4 } from 'uuid'
+import logo from '@/assets/logo.png'
 
 const userStore = useUserStore()
 const websocketStore = useWebsocketStore()
@@ -16,6 +17,8 @@ const session = OV.initSession()
 const publisher = ref(undefined);
 const subscribers = ref([]);
 const myStream = ref(null)
+const dialog = ref(false)
+const loading = ref(false)
 const headers = {
     Authorization: userStore.accessToken
 }
@@ -24,13 +27,14 @@ OV.enableProdMode()
 let recorder
 let recordedChunks = [];
 let endOfChunk = 0;
-const filename = ref(null)
+const file = ref({
+  filename: null,
+  time: null,
+  title: null,
+})
+const uploadData = ref([])
 
-const num = String(websocketStore.roomData.index)
-// 디버깅용 이름
-const name = num + num + num + num
-//const name = userStore.nickname
-
+const name = userStore.nickname
 
 // 방 입장
 const joinSession = async function () {
@@ -86,7 +90,8 @@ const leaveSession = () => {
 
 const startRecording = function() {
   const myVideoStream = document.querySelector(`#${myStream.value.streamId}`).captureStream()
-  filename.value = uuidv4();
+  file.value.filename = uuidv4();
+  file.value.time = new Date()
   endOfChunk = 0
   let idxOfChunk = 0
   recordedChunks.length = 0
@@ -110,8 +115,7 @@ const sendToServer = async function(chunk, idx) {
     formData.append('chunk', chunk);
 
     const jsonData = {
-      filename: filename.value,
-      username: userStore.email || "null",
+      filename: file.value.filename,
       chunkNumber: idx,
       endOfChunk: endOfChunk,
     }
@@ -131,11 +135,51 @@ const sendToServer = async function(chunk, idx) {
 
 const stopRecording = function () {
   endOfChunk = 1;
-  
   recorder.stop();
   recordedChunks.length = 0
+
+  const videoLength = Math.floor((new Date() - file.value.time) / 1000)
+
+  const req_body = {
+    title: websocketStore.now.question.commonQuestion,
+    videoLength: videoLength,
+    videoUrl: {
+      saveFilename: `${file.value.filename}.mkv`,
+      originFilename: `${file.value.filename}.mkv`,
+    },
+    thumbUrl: {
+      saveFilename: `${file.value.filename}.png`,
+      originFilename: `${file.value.filename}.png`,
+    },
+  }
+  uploadData.value.push(req_body)
 }
 
+const saveRecording = async function () {
+
+  try {
+    await websocketStore.stomp.send(`/server/answer/${websocketStore.roomData.sessionId}`, headers, JSON.stringify({
+      type: 'SAVE',
+      index: websocketStore.roomData.index,
+      videos: uploadData.value,
+    }))
+    loading.value = true
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const cancelRecording = async function () {
+  loading.value = true
+  try {
+    for (let i = 0; i < uploadData.value.length; i++){
+      await fileServer.cancelUpload(uploadData.value[i].filename)
+    }
+    dialog.value = false
+  } catch (error) {
+    console.log(error)
+  }
+}
 // 순서 재배치
 const reArrangeById = (arr, idOrder) => {
   // 주어진 ID 배열의 순서대로 배열을 재배치하는 함수
@@ -150,6 +194,7 @@ const changePosition = function (orders) {
 const sendMessage = async function (type) {
   await websocketStore.stomp.send(`/server/answer/${websocketStore.roomData.sessionId}`, headers, JSON.stringify({
     type: type,
+    index: websocketStore.roomData.index,
   }))
 }
 
@@ -162,7 +207,7 @@ const receive = async function (message) {
       websocketStore.now.orders = result.orders;
       websocketStore.now.question.commonQuestion = result.question.commonQuestion;
       websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
-      // await interviewStore.TTS(interviewStore.script.enter)
+      await interviewStore.TTS(interviewStore.script.enter)
       setTimeout(() => {
         changePosition(result.orders)
         sendMessage('START')
@@ -175,17 +220,17 @@ const receive = async function (message) {
 
     case 'PROCEEDING':
       websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
-      websocketStore.now.turn = result.number + 1;
+      websocketStore.now.turn = result.number + 1
       break;
 
     case 'TIMEOUT':
       websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
-      websocketStore.now.turn = result.number + 1;
+      websocketStore.now.turn = result.number + 1
       break;
 
     case 'FINISH':
       websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
-      websocketStore.now.turn = result.number + 1;
+      websocketStore.now.turn = result.number + 1
       websocketStore.now.question.commonQuestion = result.question.commonQuestion;
 
       websocketStore.now.orders = result.orders;
@@ -197,7 +242,14 @@ const receive = async function (message) {
       }, 3000)
       break;
 
+    case 'SAVED':
+      console.log('saved!', result)
+      loading.value = false
+      dialog.value = false
+      break;
+
     case 'END':
+      dialog.value = true
       websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
       break;
 
@@ -233,17 +285,30 @@ watch(interviewStore.mediaToggle ,
     }
   }
 )
+
+// 녹화
+watch(() => websocketStore.flag.record,
+  (newVal) => {
+    if (newVal) {
+      startRecording()
+    }
+    else {
+      stopRecording()
+    }
+  }
+)
 </script>
 
 <template>
   <div class="w-100 h-100 d-flex align-center">
+    <v-btn @click="dialog=!dialog"></v-btn>
     <div id="video-container" class="w-100 h-100 d-flex align-center justify-space-around">
       <div v-for="(item, idx) in subscribers" :key="item.sub.stream.streamId" class="ma-2">
         <div class="w-100 bg-grey-lighten-1 text-center my-1" style="border-radius: 12px;">{{ idx+1 }}번 째 답변자</div>
         <ov-video
           :id="item.sub.stream.streamId"
           :stream-manager="item.sub"
-          :muted="!interviewStore.mediaToggle.volume | (item.sub.id===websocketStore.roomData.index)"
+          :muted="!interviewStore.mediaToggle.volume || (item.sub.id===websocketStore.roomData.index)"
         />
         <div class="d-flex align-center">
           <v-card v-if="idx === websocketStore.now.turn" class="pa-1" color="red-darken-1">답변 중</v-card>
@@ -256,6 +321,25 @@ watch(interviewStore.mediaToggle ,
     </div>
 
   </div>
+
+  <v-dialog v-model="dialog" width="auto">
+    <v-card class="text-center px-10 py-3">
+      <v-card-title><v-img :src="logo"></v-img></v-card-title>
+      <v-divider class="border-opacity-100"></v-divider>
+      <v-card-text>
+        면접이 종료 되었습니다.<br>면접 영상을 저장 하시겠습니까?
+      </v-card-text>
+      <div class="d-flex justify-center">
+        <v-card-actions>
+          <v-btn color="purple-lighten-1" variant="flat" block @click="saveRecording" width="100" v-if="!loading">저장하기</v-btn>
+          <v-btn color="purple-lighten-1" variant="flat" block @click="saveRecording" width="100" disabled v-else>저장중...</v-btn>
+        </v-card-actions>
+        <v-card-actions>
+          <v-btn color="grey-lighten-1" variant="flat" block @click="cancelRecording" width="100">나가기</v-btn>
+        </v-card-actions>
+      </div>
+    </v-card>
+  </v-dialog>
 </template>
 
 <style scoped>
