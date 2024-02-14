@@ -34,11 +34,7 @@ const file = ref({
 })
 const uploadData = ref([])
 
-const num = String(websocketStore.roomData.index)
-// 디버깅용 이름
-const name = num + num + num + num
-//const name = userStore.nickname
-
+const name = userStore.nickname
 
 // 방 입장
 const joinSession = async function () {
