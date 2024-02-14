@@ -63,14 +63,10 @@ const saveScript = async function () {
     <!-- 전환 탭 -->
     <v-card class="text-center" min-width="120" max-height="120" variant="text">
       <template v-for="item in items" :key="item.id">
-<<<<<<< Updated upstream
         <v-list-item @click="switchTab(item.id)" v-if="item.id === 3 && selfSpeechStore.display" disabled>
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item>
         <v-list-item @click="switchTab(item.id)" v-if="item.id === 2 && selfSpeechStore.selectedQuestion === -1" disabled>
-=======
-        <v-list-item @click="switchTab(item.id)" v-if="item.id == 3 && selfSpeechStore.display" disabled>
->>>>>>> Stashed changes
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item>
         <v-list-item @click="switchTab(item.id)" v-else>
@@ -83,11 +79,7 @@ const saveScript = async function () {
     <div class="content-container w-100 h-100">
       <div v-if="selfSpeechStore.listIdx === 1">
         <v-container fluid>
-<<<<<<< Updated upstream
           <v-textarea counter="200" :counter-max="maxCounter" label="답변" :rules="rules"
-=======
-          <v-textarea counter="20" :counter-max="maxCounter" label="답변" :rules="rules"
->>>>>>> Stashed changes
             v-model="selfSpeechStore.questionData.answer" no-resize @blur="saveScript">
             {{ selfSpeechStore.questionData.answer }}
           </v-textarea>

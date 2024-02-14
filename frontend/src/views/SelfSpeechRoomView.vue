@@ -42,10 +42,7 @@ body {
   /* border: 1px solid black; */
   width: 100%;
   height: 100%;
-<<<<<<< Updated upstream
   overflow: hidden;
   /* 브라우저의 기본 스크롤 바를 숨김 */
-=======
->>>>>>> Stashed changes
 }
 </style>
