@@ -3,7 +3,6 @@ package com.quiet.onterview.common;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.client.support.HttpAccessor;
 
 @Getter
 @AllArgsConstructor
@@ -38,9 +37,13 @@ public enum ErrorCode {
     USER_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "NOT_FOUND_USER"),
 
     /**
+     * Interviewee
+     */
+    INTERVIEWEE_NOT_FOUND(HttpStatus.NOT_FOUND, "INTERVIEWEE_NOT_FOUND"),
+
+    /**
      * InterviewRoom
      */
-
     INTERVIEW_ROOM_NOT_FOUND(HttpStatus.BAD_REQUEST, "INTERVIEW_ROOM_NOT_FOUND"),
 
     /**
