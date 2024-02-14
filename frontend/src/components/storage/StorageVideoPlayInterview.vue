@@ -94,12 +94,12 @@ const requestInterviewDetail = async function () {
   }
 }
 
-const requestVideo = async function (videoId) {
+const requestVideo = async function (video) {
   try {
-    const res = await apiMethods.getVideo(videoId)
+    selectVideo.value = video
+    const res = await apiMethods.getVideo(video.videoInformation.videoId)
     video.value = res.data
     console.log(video.value)
-
     await getAllChunks(video.value.videoUrl.saveFilename, 0)
   } catch (error) {
     console.log(error)
@@ -118,13 +118,16 @@ const requestAllChunks = async function () {
 // patch
 const isEditTitle = ref(false)
 const editableTitle = ref('')
+const selectVideo = ref({})
 
 const saveFeedback = async function () {
   try {
-    const result = await apiMethods.patchVideo(interviewList.value.videoId, {
-      feedback: interviewList.value.feedback
-    })
-    console.log(result.data)
+    const result = await apiMethods.patchVideo(
+      selectVideo.value.videoInformation.videoId,
+      {
+        feedback: selectVideo.value.feedback
+      }
+    )
   } catch (error) {
     console.log(error)
   }
@@ -152,13 +155,17 @@ const requestUpdateVideoTitle = async function () {
 
 <template>
   <v-container>
-    <div>
-      <v-btn @click="storageStore.goStorageVideoList()">목록 보기</v-btn>
-    </div>
-
     <v-row>
       <!-- 영상, 자가진단 -->
       <v-col cols="8">
+        <div class="d-flex justify-space-between align-end">
+          <h3>
+            {{ interviewList.questionType }}
+          </h3>
+          <div>
+            {{ interviewList.createAt }}
+          </div>
+        </div>
         <div class="d-flex flex-column justify-center">
           <div class="d-flex justify-center align-center"></div>
           <v-row>
@@ -188,8 +195,8 @@ const requestUpdateVideoTitle = async function () {
                 @blur="saveFeedback"
                 style="background-color: white"
                 rows="5"
+                v-model="selectVideo.feedback"
               >
-                v-model="interviewList.value.feedback"
               </v-textarea>
             </v-col>
           </v-row>
@@ -198,6 +205,13 @@ const requestUpdateVideoTitle = async function () {
 
       <!-- 재생목록 -->
       <v-col cols="4">
+        <div class="d-flex justify-end mb-2">
+          <v-btn
+            @click="storageStore.goStorageVideoList()"
+            density="comfortable"
+            >목록 보기</v-btn
+          >
+        </div>
         <div
           class="rounded-lg"
           style="
@@ -217,7 +231,7 @@ const requestUpdateVideoTitle = async function () {
               <div
                 class="playlist d-flex align-center pa-3"
                 style="font-size: 0.9rem; color: gray"
-                @click="requestVideo(video.videoInformation.videoId)"
+                @click="requestVideo(video)"
               >
                 <div style="width: 5%; font-size: 0.7rem">></div>
                 <div style="width: 50%" class="mr-3">
