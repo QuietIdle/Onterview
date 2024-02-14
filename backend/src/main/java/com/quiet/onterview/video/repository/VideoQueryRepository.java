@@ -4,6 +4,7 @@ package com.quiet.onterview.video.repository;
 import static com.quiet.onterview.interview.entity.QInterviewQuestion.interviewQuestion;
 import static com.quiet.onterview.interview.entity.QInterviewRoom.interviewRoom;
 import static com.quiet.onterview.interview.entity.QInterviewee.interviewee;
+import static com.quiet.onterview.question.entity.QCommonQuestion.commonQuestion1;
 import static com.quiet.onterview.question.entity.QMyQuestion.myQuestion;
 import static com.quiet.onterview.question.entity.QMyQuestionFolder.myQuestionFolder1;
 import static com.quiet.onterview.video.entity.QVideo.video;
@@ -16,6 +17,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.quiet.onterview.file.dto.response.FileInformationResponse;
 import com.quiet.onterview.file.entity.QFileInformation;
 import com.quiet.onterview.interview.entity.RoomType;
+import com.quiet.onterview.question.entity.QCommonQuestion;
 import com.quiet.onterview.video.dto.response.VideoInformationResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -55,8 +57,8 @@ public class VideoQueryRepository {
                 roomType == RoomType.SELF ? video.myQuestion.myQuestionId.as("myQuestionId")
                         : video.interviewQuestion.interviewQuestionId.as("interviewQuestionId"),
                 video.title,
-                roomType == RoomType.SELF ? video.myQuestion.question
-                        : video.interviewQuestion.commonQuestion,
+                (roomType == RoomType.SELF ? video.myQuestion.question
+                        : video.interviewQuestion.commonQuestion.commonQuestion).as("question"),
                 Projections.fields(FileInformationResponse.class,
                         video.thumbnailUrl.originFilename,
                         video.thumbnailUrl.saveFilename).as("thumbnailUrl"),
@@ -71,6 +73,7 @@ public class VideoQueryRepository {
                     .leftJoin(myQuestion.myQuestionFolder, myQuestionFolder1);
             case MULTI, SINGLE -> query
                     .leftJoin(video.interviewQuestion, interviewQuestion)
+                    .leftJoin(interviewQuestion.commonQuestion, commonQuestion1)
                     .leftJoin(interviewQuestion.interviewee, interviewee)
                     .leftJoin(interviewee.interviewRoom, interviewRoom);
         }
