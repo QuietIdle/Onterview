@@ -35,7 +35,7 @@ public class ChunkService {
         String filename = request.getFilename();
         String username = request.getUsername();
 
-        Path videoPath = createFolder(fileUtils.VIDEO_PATH, username, filename);
+        Path videoPath = createFolder(fileUtils.VIDEO_PATH, filename);
         Path imagePath = createFolder(fileUtils.IMAGE_PATH);
 
         saveTempFile(file, chunkNumber, videoPath);
@@ -57,10 +57,10 @@ public class ChunkService {
     }
 
     public Optional<ResourceDto> getStreamResource(
-            HttpHeaders headers, String filename, String username
+            HttpHeaders headers, String filename
     ) throws IOException {
         Path path = Paths.get(
-                String.valueOf(Path.of(fileUtils.VIDEO_PATH, username, filename.split("\\.")[0])),
+                String.valueOf(Path.of(fileUtils.VIDEO_PATH, filename.split("\\.")[0])),
                 filename);
 
         Resource resource = new FileSystemResource(path);
@@ -139,8 +139,8 @@ public class ChunkService {
         Files.write(tempFilePath, file.getBytes());
     }
 
-    private Path createFolder(String subPath, String username, String filename) {
-        Path path = Path.of(subPath, username, filename);
+    private Path createFolder(String subPath, String filename) {
+        Path path = Path.of(subPath, filename);
         File dir = new File(String.valueOf(path));
         if (!dir.exists()) {
             dir.mkdirs();

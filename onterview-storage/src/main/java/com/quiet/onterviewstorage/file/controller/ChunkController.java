@@ -34,11 +34,10 @@ public class ChunkController {
     @GetMapping("/stream/{filename}/{username}")
     public ResponseEntity<ResourceRegion> streamVideo(
             @RequestHeader HttpHeaders headers,
-            @PathVariable String filename,
-            @PathVariable String username
+            @PathVariable String filename
     ) throws IOException {
         Optional<ResourceDto> isDone = chunkService.getStreamResource(headers,
-                filename, username);
+                filename);
 
         return isDone.map(resourceDto -> ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
                 .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES))
