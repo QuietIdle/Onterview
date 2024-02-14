@@ -32,6 +32,9 @@ public class Interviewee extends BaseEntity {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
+    @Column(name = "FEEDBACK")
+    private String feedback;
+
     @OneToMany(mappedBy = "interviewee", cascade = CascadeType.PERSIST, orphanRemoval = true)
     List<InterviewQuestion> interviewQuestionList = new ArrayList<>();
 

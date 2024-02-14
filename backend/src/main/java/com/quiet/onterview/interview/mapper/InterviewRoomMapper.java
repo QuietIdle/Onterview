@@ -56,7 +56,6 @@ public class InterviewRoomMapper {
                 .roomType(interviewRoom.getRoomType())
                 .runTime(interviewRoom.getRuntime())
                 .createAt(interviewRoom.getCreateAt())
-                .feedback(interviewRoom.getFeedback())
                 .interviewQuestionList(interviewQuestionResponseList)
                 .videoDetail(videoDetailResponse)
                 .build();

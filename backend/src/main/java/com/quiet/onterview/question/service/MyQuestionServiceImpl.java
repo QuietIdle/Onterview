@@ -5,6 +5,7 @@ import com.quiet.onterview.question.dto.request.MyQuestionMoveRequest;
 import com.quiet.onterview.question.dto.request.MyQuestionRequest;
 import com.quiet.onterview.question.dto.request.MyQuestionUpdateRequest;
 import com.quiet.onterview.question.dto.response.MyAnswerAndVideoResponse;
+import com.quiet.onterview.question.dto.response.MyQuestionWithFolderResponse;
 import com.quiet.onterview.question.entity.CommonQuestion;
 import com.quiet.onterview.question.entity.MyQuestion;
 import com.quiet.onterview.question.entity.MyQuestionFolder;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -32,6 +34,22 @@ public class MyQuestionServiceImpl implements MyQuestionService{
     private final MyQuestionRepository myQuestionRepository;
     private final CommonQuestionRepository commonQuestionRepository;
     private final MyQuestionMapper myQuestionMapper;
+
+    @Override
+    public List<MyQuestionWithFolderResponse> getAllMyQuestion(Long memberId) {
+        List<MyQuestion> myQuestionList = myQuestionRepository.getAllMyQuestion(memberId);
+        return myQuestionList.stream()
+                .map(myQuestionMapper::myQuestionToMyQuestionByFolderResponse)
+                .toList();
+    }
+
+    @Override
+    public List<MyQuestionWithFolderResponse> getMyQuestionByKeyword(Long memberId, String keyword) {
+        List<MyQuestion> myQuestionList = myQuestionRepository.getMyQuestionByKeyword(memberId, keyword);
+        return myQuestionList.stream()
+                .map(myQuestionMapper::myQuestionToMyQuestionByFolderResponse)
+                .toList();
+    }
 
     @Override
     @Transactional(readOnly = true)

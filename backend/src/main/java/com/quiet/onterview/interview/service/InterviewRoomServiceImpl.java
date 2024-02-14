@@ -3,6 +3,7 @@ package com.quiet.onterview.interview.service;
 import com.quiet.onterview.common.BaseException;
 import com.quiet.onterview.common.ErrorCode;
 import com.quiet.onterview.interview.dto.request.InterviewRoomRequest;
+import com.quiet.onterview.interview.dto.response.InterviewQuestionCreateResponse;
 import com.quiet.onterview.interview.dto.response.InterviewRoomDetailResponse;
 import com.quiet.onterview.interview.dto.response.InterviewRoomResponse;
 import com.quiet.onterview.interview.entity.InterviewQuestion;
@@ -14,7 +15,6 @@ import com.quiet.onterview.interview.repository.InterviewRoomRepository;
 import com.quiet.onterview.interview.repository.IntervieweeRepository;
 import com.quiet.onterview.member.entity.Member;
 import com.quiet.onterview.member.repository.MemberRepository;
-import com.quiet.onterview.question.dto.response.CommonQuestionResponse;
 import com.quiet.onterview.question.entity.CommonQuestion;
 import com.quiet.onterview.question.mapper.CommonQuestionMapper;
 import com.quiet.onterview.question.service.CommonQuestionFolderService;
@@ -24,8 +24,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @Transactional
@@ -69,7 +69,7 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
     }
 
     @Override
-    public List<CommonQuestionResponse> createInterviewRoom(InterviewRoomRequest interviewRoomRequest) {
+    public List<List<InterviewQuestionCreateResponse>> createInterviewRoom(InterviewRoomRequest interviewRoomRequest) {
 
         InterviewRoom interviewRoom = interviewRoomMapper.interviewRoomRequestToEntity(interviewRoomRequest);
 
@@ -77,10 +77,13 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
         int numToSelect = interviewRoomRequest.getNumToSelect();
         List<CommonQuestion> randomCommonQuestionList = commonQuestionFolderService.getRandomCommonQuestionList(commonQuestionFolderName, numToSelect);
 
+        List<Interviewee> interviewees = new ArrayList<>();
+
         for (Long memberId : interviewRoomRequest.getMemberIdList()) {
             Member member = memberRepository.findById(memberId).orElseThrow(() -> new BaseException(ErrorCode.MEMBERID_NOT_EXISTS));
             Interviewee interviewee = intervieweeService.createInterviewee(member);
             interviewRoom.addInterviewee(interviewee);
+            interviewees.add(interviewee);
 
             for (CommonQuestion randomCommonQuestion : randomCommonQuestionList) {
                 InterviewQuestion interviewQuestion = interviewQuestionService.createInterviewQuestion(interviewee, randomCommonQuestion);
@@ -90,10 +93,16 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
 
         interviewRoomRepository.save(interviewRoom);
 
-        return randomCommonQuestionList
-                .stream()
-                .map(commonQuestionMapper::commonQuestionToCommonQuestionResponse)
-                .toList();
+        return interviewees.stream()
+                .map(interviewee -> interviewee.getInterviewQuestionList().stream()
+                        .map(interviewQuestion -> InterviewQuestionCreateResponse
+                                .builder()
+                                .interviewQuestionId(interviewQuestion.getInterviewQuestionId())
+                                .commonQuestionId(interviewQuestion.getCommonQuestion().getCommonQuestionId())
+                                .commonQuestion(interviewQuestion.getCommonQuestion().getCommonQuestion())
+                                .build())
+                        .toList()
+                ).toList();
     }
 
     @Override

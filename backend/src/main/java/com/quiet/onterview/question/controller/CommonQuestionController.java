@@ -1,13 +1,16 @@
 package com.quiet.onterview.question.controller;
 
-import com.quiet.onterview.question.dto.request.*;
-import com.quiet.onterview.question.dto.response.MyAnswerAndVideoResponse;
+import com.quiet.onterview.question.dto.request.CommonQuestionRequest;
+import com.quiet.onterview.question.dto.request.CommonQuestionUpdateRequest;
+import com.quiet.onterview.question.dto.response.CommonQuestionWithFolderResponse;
 import com.quiet.onterview.question.service.CommonQuestionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "common-question-controller", description = "빈출 면접 문항 컨트롤러")
 @RestController
@@ -16,6 +19,17 @@ import org.springframework.web.bind.annotation.*;
 public class CommonQuestionController {
 
     private final CommonQuestionService commonQuestionService;
+
+    @Operation(summary = "GET 방식으로 빈출 면접 질문 전체 조회")
+    @GetMapping
+    public ResponseEntity<List<CommonQuestionWithFolderResponse>> getCommonQuestionList(
+            @RequestParam(name = "keyword", required = false) String keyword) {
+        if (keyword == null) {
+            return ResponseEntity.ok(commonQuestionService.getAllCommonQuestion());
+        } else {
+            return ResponseEntity.ok(commonQuestionService.getCommonQuestionByKeyword(keyword));
+        }
+    }
 
     @Operation(summary = "POST 방식으로 빈출 면접 질문 생성")
     @PostMapping

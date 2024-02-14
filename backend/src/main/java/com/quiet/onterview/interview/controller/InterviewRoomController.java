@@ -1,6 +1,7 @@
 package com.quiet.onterview.interview.controller;
 
 import com.quiet.onterview.interview.dto.request.InterviewRoomRequest;
+import com.quiet.onterview.interview.dto.response.InterviewQuestionCreateResponse;
 import com.quiet.onterview.interview.dto.response.InterviewRoomDetailResponse;
 import com.quiet.onterview.interview.dto.response.InterviewRoomResponse;
 import com.quiet.onterview.interview.service.InterviewRoomService;
@@ -52,7 +53,7 @@ public class InterviewRoomController {
 
     @Operation(summary = "POST 방식으로 1인 모의 면접장 생성")
     @PostMapping
-    public ResponseEntity<List<CommonQuestionResponse>> registerInterviewRoom(
+    public ResponseEntity<List<List<InterviewQuestionCreateResponse>>> registerInterviewRoom(
             @AuthenticationPrincipal SecurityUser user,
             @RequestBody InterviewRoomRequest interviewRoomRequest) {
         interviewRoomRequest.getMemberIdList().add(user.getMemberId());
@@ -61,7 +62,7 @@ public class InterviewRoomController {
 
     @Operation(summary = "POST 방식으로 다인 모의 면접장 생성 테스트용")
     @PostMapping("/multiTest")
-    public ResponseEntity<List<CommonQuestionResponse>> registerMultiInterviewRoom(
+    public ResponseEntity<List<List<InterviewQuestionCreateResponse>>> registerMultiInterviewRoom(
             @RequestBody InterviewRoomRequest interviewRoomRequest) {
         return ResponseEntity.ok(interviewRoomService.createInterviewRoom(interviewRoomRequest));
     }
