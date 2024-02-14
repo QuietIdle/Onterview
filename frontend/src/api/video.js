@@ -28,6 +28,7 @@ export const apiMethods = {
         return api.get(`/api/video?category=${category.toUpperCase()}`)
     },
     deleteVideos: function (v_ids) {
+        api.defaults.headers.common['Authorization'] = `${authToken}`
         return api.post('/api/video/delete', v_ids)
     },
     patchVideo: function (v_id, req_body) {
@@ -35,6 +36,13 @@ export const apiMethods = {
     },
     saveVideo: function (req_body) {
         return api.post(`/api/video`, req_body)
+    },
+    getInterviewList: function (roomType) {
+        console.log(roomType)
+        return api.get(`/api/interview-room?roomType=${roomType.toUpperCase()}`)
+    },
+    getInterviewDetail: function (interviewRoomId) {
+        return api.get(`/api/interview-room/${interviewRoomId}`)
     }
 }
 

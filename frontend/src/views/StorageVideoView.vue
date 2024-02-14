@@ -31,7 +31,8 @@ onMounted(() => {
           inactive: storageStore.roomType !== 'single'
         }"
         @click="
-          (storageStore.roomType = 'single'), storageStore.requestUserVideoAll()
+          (storageStore.roomType = 'single'),
+            storageStore.requestInterviewList()
         "
       >
         1인 모의 면접
@@ -43,7 +44,7 @@ onMounted(() => {
           inactive: storageStore.roomType !== 'multi'
         }"
         @click="
-          (storageStore.roomType = 'multi'), storageStore.requestUserVideoAll()
+          (storageStore.roomType = 'multi'), storageStore.requestInterviewList()
         "
       >
         다인 모의 면접

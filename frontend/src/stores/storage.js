@@ -11,10 +11,24 @@ export const useStorageStore = defineStore('storage', () => {
   const videoData = ref({});
 
   const requestUserVideoAll = async function () {
+    router.push({ name: 'video-list' })
+
     try {
       const result = await apiMethods.getUserVideoAll(roomType.value)
       storageData.value = result.data
-      console.log(roomType.value, storageData.value)
+      console.log('request user video all', roomType.value, storageData.value)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const requestInterviewList = async function () {
+    router.push({ name: 'video-list-interview' })
+
+    try {
+      const result = await apiMethods.getInterviewList(roomType.value)
+      storageData.value = result.data
+      console.log(roomType.value, result.data)
     } catch (error) {
       console.log(error)
     }
@@ -33,6 +47,9 @@ export const useStorageStore = defineStore('storage', () => {
   const goStorageVideoPlay = function (videoId) {
     router.push({ name: 'video-play', params: {videoId: videoId} })
   }
+  const goStorageVideoPlayInterview = function (interviewRoomId) {
+    router.push({ name: 'video-play-interview', params: {interviewRoomId: interviewRoomId} })
+  }
 
   return {
     roomType,
@@ -42,5 +59,7 @@ export const useStorageStore = defineStore('storage', () => {
     goStorageVideoList,
     goStorageVideoGrid,
     goStorageVideoPlay,
+    goStorageVideoPlayInterview,
+    requestInterviewList,
   }
 })

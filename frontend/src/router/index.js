@@ -82,7 +82,17 @@ const router = createRouter({
           path: "play/:videoId",
           name: "video-play",
           component: () => import('@/components/storage/StorageVideoPlay.vue')
-        }
+        },
+        {
+          path: "list/interview",
+          name: "video-list-interview",
+          component: () => import('@/components/storage/StorageVideoListInterview.vue')
+        },
+        {
+          path: "play/interview/:interviewRoomId",
+          name: "video-play-interview",
+          component: () => import('@/components/storage/StorageVideoPlayInterview.vue')
+        },
       ]
     },
     {
