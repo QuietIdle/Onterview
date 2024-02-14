@@ -6,6 +6,7 @@ import com.quiet.onterview.member.entity.Member;
 import com.quiet.onterview.member.repository.MemberRepository;
 import com.quiet.onterview.question.dto.request.MyQuestionFolderRequest;
 import com.quiet.onterview.question.dto.response.MyQuestionFolderResponse;
+import com.quiet.onterview.question.dto.response.MyQuestionResponse;
 import com.quiet.onterview.question.entity.MyQuestion;
 import com.quiet.onterview.question.entity.MyQuestionFolder;
 import com.quiet.onterview.question.exception.MyQuestionFolderNotFoundException;
@@ -34,17 +35,40 @@ public class MyQuestionFolderServiceImpl implements MyQuestionFolderService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<MyQuestionFolderResponse> getMyQuestionFolder(Long memberId) {
-        List<MyQuestionFolder> myQuestionFolderList = myQuestionFolderRepository.findMyQuestionFolder(memberId);
+    public List<MyQuestionFolderResponse> getMyQuestionByFolder(Long memberId) {
+        List<MyQuestionFolder> myQuestionFolderList = myQuestionFolderRepository.findMyQuestionByFolder(memberId);
         return myQuestionFolderList.stream()
                 .map(myQuestionFolderMapper::myQuestionFolderToMyQuestionFolderResponse)
                 .toList();
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<MyQuestionFolderResponse> getMyQuestionByFolderByKeyword(Long memberId, String keyword) {
+        List<MyQuestionFolderResponse> result = new ArrayList<>();
+        List<Long> myQuestionFolderIdList = myQuestionFolderRepository.findMyQuestionFolderIdList(memberId);
+
+        for (Long folderId : myQuestionFolderIdList) {
+            List<MyQuestion> myQuestionList = myQuestionFolderRepository.findMyQuestionByFolderByKeyword(memberId, folderId, keyword);
+
+            if (!myQuestionList.isEmpty()) {
+                List<MyQuestionResponse> myQuestionResponsesList = myQuestionList.stream()
+                        .map(myQuestionMapper::myQuestionToMyQuestionResponse)
+                        .toList();
+                result.add(MyQuestionFolderResponse.builder()
+                        .myQuestionFolderId(folderId)
+                        .myQuestionFolder(myQuestionList.get(0).getMyQuestionFolder().getMyQuestionFolder())
+                        .myQuestionList(myQuestionResponsesList)
+                        .build());
+            }
+        }
+        return result;
+    }
+
+    @Override
     public List<VideoStorageResponse> getSelfVideoList(Long memberId) {
         List<VideoStorageResponse> result = new ArrayList<>();
-        List<MyQuestionFolder> myQuestionFolderList = myQuestionFolderRepository.findMyQuestionFolder(memberId);
+        List<MyQuestionFolder> myQuestionFolderList = myQuestionFolderRepository.findMyQuestionByFolder(memberId);
         for (MyQuestionFolder myQuestionFolder : myQuestionFolderList) {
             List<MyQuestion> myQuestionList = myQuestionFolder.getMyQuestionList();
             for (MyQuestion myQuestion : myQuestionList) {
