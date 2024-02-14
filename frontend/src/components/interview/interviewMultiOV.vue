@@ -231,17 +231,17 @@ const receive = async function (message) {
 
     case 'PROCEEDING':
       websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
-      websocketStore.now.turn = result.number + 1
+      websocketStore.now.turn = result.number
       break;
 
     case 'TIMEOUT':
       websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
-      websocketStore.now.turn = result.number + 1
+      websocketStore.now.turn = result.number
       break;
 
     case 'FINISH':
       websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
-      websocketStore.now.turn = result.number + 1
+      websocketStore.now.turn = result.number
       websocketStore.now.question.commonQuestion = result.question.commonQuestion;
 
       websocketStore.now.orders = result.orders;
@@ -319,7 +319,7 @@ watch(() => websocketStore.flag.record,
         <ov-video
           :id="item.sub.stream.streamId"
           :stream-manager="item.sub"
-          :muted="!interviewStore.mediaToggle.volume || (item.sub.id===websocketStore.roomData.index)"
+          :muted="item.sub.id===websocketStore.roomData.index"
         />
         <div class="d-flex align-center">
           <v-card v-if="idx === websocketStore.now.turn" class="pa-1" color="red-darken-1">답변 중</v-card>
