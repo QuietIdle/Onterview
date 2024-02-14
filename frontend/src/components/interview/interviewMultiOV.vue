@@ -3,7 +3,7 @@ import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import { OpenVidu } from 'openvidu-browser';
 import { useInterviewStore, useWebsocketStore } from "@/stores/interview";
 import { useUserStore } from "@/stores/user"
-import { apiMethods, fileServer } from "@/api/video";
+import { fileServer } from "@/api/video";
 import OvVideo from "@/components/interview/OvVideo.vue";
 import { v4 as uuidv4 } from 'uuid'
 import logo from '@/assets/logo.png'
@@ -287,16 +287,16 @@ watch(interviewStore.mediaToggle ,
 )
 
 // 녹화
-// watch(() => websocketStore.flag.record,
-//   (newVal, oldVal) => {
-//     if (newVal) {
-//       startRecording()
-//     }
-//     else {
-//       stopRecording()
-//     }
-//   }
-// )
+watch(() => websocketStore.flag.record,
+  (newVal) => {
+    if (newVal) {
+      startRecording()
+    }
+    else {
+      stopRecording()
+    }
+  }
+)
 </script>
 
 <template>
