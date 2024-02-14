@@ -59,8 +59,8 @@ const openHelp = function () {
 </script>
 
 <template>
-  <div class="pa-10 d-flex justify-center align-center">
-    <div class="mr-3" style="font-size: 32px;">
+  <div class="pa-3 d-flex justify-center align-center">
+    <div class="mr-3" style="font-size: 24px;">
       모의 면접관과 <br> 함께하는 <br> 모의 면접 <br> 시작하기
     </div>
     <div class="ml-3">
@@ -79,17 +79,19 @@ const openHelp = function () {
 
       <div class="item">
         <div class="item-body">
-          <button class="btn d-flex justify-center align-center ma-2" :class="{ isSelect: !peopleCount }"
-            @click="choosePeople(false)">
-            <h2 class="mx-5">1인</h2>
-            <div class="w-25 ma-2"><v-img :src="BtnImg1"></v-img></div>
-          </button>
+          <div class="fit">
+            <button class="btn d-flex justify-center align-center ma-2 my-4" :class="{ isSelect: !peopleCount }"
+              @click="choosePeople(false)">
+              <h3 class="mx-5">1인</h3>
+              <div class="w-25 ma-2"><v-img :src="BtnImg1"></v-img></div>
+            </button>
 
-          <button class="btn d-flex justify-center align-center ma-2" :class="{ isSelect: peopleCount }"
-            @click="choosePeople(true)">
-            <h2 class="mx-5">4인</h2>
-            <div class="w-25 ma-2"><v-img :src="BtnImg2"></v-img></div>
-          </button>
+            <button class="btn d-flex justify-center align-center ma-2 my-4" :class="{ isSelect: peopleCount }"
+              @click="choosePeople(true)">
+              <h3 class="mx-5">4인</h3>
+              <div class="w-25 ma-2"><v-img :src="BtnImg2"></v-img></div>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -98,20 +100,20 @@ const openHelp = function () {
           <div class="fit d-flex justify-center align-center">
             <button class="btn d-flex justify-center align-center ma-2"
               :class="{ isSelect: interviewStore.choice.typeDetail === '' }" @click="chooseType(false, '')">
-              <h2 class="mx-5">인성면접</h2>
+              <h3 class="mx-5">인성면접</h3>
               <div class="w-25 ma-2"><v-img :src="BtnImg4"></v-img></div>
             </button>
           </div>
-          <div class="job d-flex justify-center align-center">
-            <button class="btn d-flex justify-center align-center flex-column ma-2 ml-0"
+          <div class="job d-flex justify-center align-center ma-2">
+            <button class="btn sub-btn d-flex justify-center align-center flex-column mx-2"
               :class="{ isSelect: interviewStore.choice.typeDetail === 'FRONTEND' }"
               @click="chooseType(true, 'FRONTEND')">
-              <h2 class="mx-5">프론트엔드</h2>
+              <h3 class="mx-5">프론트엔드</h3>
               <div class="w-25 ma-2"><v-img :src="frontEndImg"></v-img></div>
             </button>
-            <button class="btn d-flex justify-center align-center flex-column ma-2 mr-0"
+            <button class="btn sub-btn d-flex justify-center align-center flex-column mx-2"
               :class="{ isSelect: interviewStore.choice.typeDetail === 'BACKEND' }" @click="chooseType(true, 'BACKEND')">
-              <h2 class="mx-5">백엔드</h2>
+              <h3 class="mx-5">백엔드</h3>
               <div class="w-25 ma-1"><v-img :src="backEndImg"></v-img></div>
             </button>
           </div>
@@ -166,24 +168,27 @@ const openHelp = function () {
 }
 
 .btn {
-  width: 90%;
+  width: 50vh;
   border: 0;
   font-weight: bold;
   cursor: pointer;
   background-color: #fff;
   border-radius: 6px;
-  /* height: 30vh; */
-  height: 220px;
-  /* 내용물의 높이를 100px로 고정 */
+  height: 25vh;
+  /* height: 220px; */
 }
 
-.fit {
+.sub-btn {
+  width: 24vh;
+}
+
+/* .fit {
   width: 100%;
 }
 
 .job {
   width: 90%;
-}
+} */
 
 .enter {
   background-color: #B3ABD6;
