@@ -33,7 +33,6 @@ public class VideoMapper {
                 .title(video.getTitle())
                 .feedback(video.getFeedback())
                 .bookmark(video.getBookmark())
-                .myQuestionId(video.getMyQuestion().getMyQuestionId())
                 .videoUrl(fileInformationMapper.fileInformationToResponse(video.getVideoUrl()))
                 .build();
     }
