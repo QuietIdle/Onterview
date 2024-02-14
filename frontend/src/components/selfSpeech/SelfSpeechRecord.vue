@@ -103,7 +103,6 @@ const sendToServer = async function(chunk, idx) {
 
     const jsonData = {
       filename: filename.value,
-      username: userStore.email || "null",
       chunkNumber: idx,
       endOfChunk: flag.value,
     }
@@ -186,7 +185,7 @@ const saveRecording = async function () {
 const cancelRecording = async function () {
   try {
     dialog.value = false
-    const res = await fileServer.cancelUpload(userStore.email || "null", filename.value)
+    const res = await fileServer.cancelUpload(filename.value)
     console.log(res.data)
   } catch (error) {
     console.log(error)

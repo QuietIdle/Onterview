@@ -70,7 +70,7 @@ const startMatch = function () {
         headers,
         JSON.stringify({
           roomId: interviewStore.stompType,
-          matchCount: 4,
+          matchCount: 1,
         })
       )
     },
