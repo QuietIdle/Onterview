@@ -8,7 +8,8 @@ import java.util.List;
 
 public interface MyQuestionFolderService {
 
-    List<MyQuestionFolderResponse> getMyQuestionFolder(Long memberId);
+    List<MyQuestionFolderResponse> getMyQuestionByFolder(Long memberId);
+    List<MyQuestionFolderResponse> getMyQuestionByFolderByKeyword(Long memberId, String keyword);
     List<VideoStorageResponse> getSelfVideoList(Long memberId);
     void createMyQuestionFolder(Long memberId, MyQuestionFolderRequest myQuestionFolderRequest);
     void updateMyQuestionFolder(Long memberId, Long myQuestionFolderId, MyQuestionFolderRequest myQuestionFolderRequest);
