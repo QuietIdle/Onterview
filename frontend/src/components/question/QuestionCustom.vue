@@ -220,9 +220,18 @@ const search = ref('')
 
             <!-- 폴더에 질문이 없는 경우 -->
             <template v-if="folder.myQuestionList.length == 0">
-              <v-expansion-panel-text class="text-grey"
-                >질문을 추가해주세요</v-expansion-panel-text
+              <draggable
+                :list="['질문을 생성해주세요.']"
+                group="question"
+                @change="(event) => log(event, folder)"
+                item-key="myQuestionId"
               >
+                <template #item="{ element }">
+                  <v-expansion-panel-text class="text-grey">
+                    {{ element }}
+                  </v-expansion-panel-text>
+                </template>
+              </draggable>
             </template>
 
             <!-- 폴더에 질문이 있는 경우 -->
