@@ -134,7 +134,7 @@ watch(() => selfSpeechStore.videoData,
     </div>
 
     <div class="btn-container w-100 d-flex align-center">
-      <v-btn class="mx-3 my-5" @click="markVideo(selfSpeechStore.videoData.videoId,selfSpeechStore.videoData.bookmark)">
+      <v-btn class="mx-3 my-5" @click="markVideo(selfSpeechStore.videoData.videoId,selfSpeechStore.videoData.bookmark), selfSpeechStore.videoData.bookmark=!selfSpeechStore.videoData.bookmark">
         <v-icon color="purple" size="32" icon="mdi-bookmark-outline" v-if="!selfSpeechStore.videoData.bookmark"></v-icon>
         <v-icon color="purple" size="32" icon="mdi-bookmark-check" v-else></v-icon>
         <div v-if="!selfSpeechStore.videoData.bookmark">북마크 추가</div>
