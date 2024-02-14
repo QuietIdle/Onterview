@@ -6,13 +6,7 @@ import { apiMethods } from '@/api/video'
 export const useStorageStore = defineStore('storage', () => {
   const storageData = ref([]);
       
-  const videoData = ref({
-    feedback: "자가진단진단",
-    bookmark: false,
-    videoUrl: {
-      saveFilename: "",
-    }
-  });
+  const videoData = ref({});
 
   const requestUserVideoAll = async function (speechType) {
     try {
@@ -24,7 +18,6 @@ export const useStorageStore = defineStore('storage', () => {
     }
   }
 
-
   const router = useRouter()
 
   const goStorageVideoList = function () {
@@ -35,8 +28,8 @@ export const useStorageStore = defineStore('storage', () => {
     router.push({name: 'video-grid'})
   }
   
-  const goStorageVideoPlay = function () {
-    router.push({name: 'video-play'})
+  const goStorageVideoPlay = function (videoId) {
+    router.push({ name: 'video-play', params: {videoId: videoId} })
   }
 
   return {

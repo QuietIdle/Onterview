@@ -1,9 +1,8 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { useStorageStore } from '@/stores/storage'
 
 const storageStore = useStorageStore()
-// const speechType = ref('self') // single, multi
 
 onMounted(() => {
   storageStore.requestUserVideoAll('self')

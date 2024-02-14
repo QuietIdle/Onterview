@@ -85,7 +85,7 @@ const router = createRouter({
           component: () => import('@/components/storage/StorageVideoGrid.vue')
         },
         {
-          path: "play",
+          path: "play/:videoId",
           name: "video-play",
           component: () => import('@/components/storage/StorageVideoPlay.vue')
         }
