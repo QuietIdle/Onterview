@@ -36,7 +36,7 @@ services:
     environment:
       - TZ=Asia/Seoul
     volumes:
-      - /var/lib/video:/video
+      - /var/lib/file:/file
     expose:
       - 8082
 
