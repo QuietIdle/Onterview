@@ -253,6 +253,15 @@ const receive = async function (message) {
       }, 3000)
       break;
 
+    case 'SAVED':
+      if (result.index === websocketStore.roomData.index) {
+        console.log('saved!', message.body)
+        loading.value = false
+        dialog.value = false
+        websocketStore.stomp.disconnect()
+      }
+      break;
+
     case 'END':
       dialog.value = true
       websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
@@ -267,13 +276,6 @@ onMounted(() => {
   joinSession()
 
   websocketStore.stomp.unsubscribe()
-
-  websocketStore.stomp.subscribe(`/user/client/answer/${websocketStore.roomData.sessionId}`, function (message) {
-    console.log('saved!', message.body)
-    loading.value = false
-    dialog.value = false
-    websocketStore.stomp.disconnect()
-  }, headers) // 개인용
 
   websocketStore.stomp.subscribe(`/client/answer/${websocketStore.roomData.sessionId}`, function (message) {
     receive(message)
