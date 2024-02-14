@@ -2,14 +2,20 @@
 import { ref, watch } from "vue";
 import mainImg from '@/assets/interview/interviewMainIcon.png'
 import { useInterviewStore, useWebsocketStore } from "@/stores/interview";
+import { useUserStore } from "@/stores/user"
 import interviewMultiHelpModal from "@/components/interview/interviewMultiHelpModal.vue"
-import TimerComponent from '@/components/interview/Timer.vue'
+import TimerComponent from '@/components/interview/Timer2.vue'
 
+const userStore = useUserStore()
 const interviewStore = useInterviewStore()
 const websocketStore = useWebsocketStore()
 
 const isActiveTimer = ref(false)
+const needResetTimer = ref(false)
 const logMessages = ref([])
+const headers = {
+    Authorization: userStore.accessToken
+}
 
 const addLog = function (text) {
   logMessages.value.push({
@@ -38,14 +44,12 @@ const openHelp = function () {
 }
 
 const finishAnswer = async function () {
-  
-  // websocketStore.stomp.send(`/server/answer/${websocketStore.roomData.sessionId}`, {},
-  //   JSON.stringify({
-  //     type: 'PROCEEDING',
-  //     index: websocketStore.roomData.index,
-  //   })
-  // )
   await sendMessage('PROCEEDING', websocketStore.now.turn)
+}
+const timeOut = async function () {
+  if (websocketStore.myTurn) {
+    await sendMessage('TIMEOUT', websocketStore.now.turn)
+  }
 }
 
 const goTimer = function () {
@@ -54,11 +58,10 @@ const goTimer = function () {
 
 const sendMessage = async function (type, idx) {
   
-  await websocketStore.stomp.send(`/server/answer/${websocketStore.roomData.sessionId}`, {}, JSON.stringify({
+  await websocketStore.stomp.send(`/server/answer/${websocketStore.roomData.sessionId}`, headers, JSON.stringify({
     type: type,
-    index: idx,  
+    index: idx,
   }))
-  
 }
 
 watch(() => websocketStore.flag.interviewer, async () => {
@@ -68,22 +71,38 @@ watch(() => websocketStore.flag.interviewer, async () => {
       break;
 
     case 'START':
-      addLog(`${websocketStore.now.question}번 질문 시작!`)
+      if (websocketStore.now.question.id !== 0) {
+        addLog(`${websocketStore.now.question.id}번 질문 시작!`)
+      }
+      else {
+        addLog(`1분 자기 소개 시작!`)
+      }
       websocketStore.now.turn = 0
-      if(websocketStore.now.myTurn) addLog("당신의 차례입니다.") 
-      //await interviewStore.TTS(interviewStore.script.start)
+      if (websocketStore.myTurn) {
+        addLog("당신의 차례입니다.")
+      }
+      await interviewStore.TTS(interviewStore.script.start)
       setTimeout(goTimer, 2000)
       break;
 
     case 'PROCEEDING':
       isActiveTimer.value = false
       addLog(`${websocketStore.now.turn}번 째 참가자 답변 완료`)
-      if(websocketStore.now.myTurn) addLog("당신의 차례입니다.") 
+      if (websocketStore.myTurn) {
+        addLog("당신의 차례입니다.")
+      }
       //await interviewStore.TTS(interviewStore.script.proceeding)
       setTimeout(goTimer, 2000)
       break;
 
     case 'TIMEOUT':
+      isActiveTimer.value = false
+      addLog(`${websocketStore.now.turn}번 째 참가자 시간 초과!`)
+      if (websocketStore.myTurn) {
+        addLog("당신의 차례입니다.")
+      }
+      //await interviewStore.TTS(interviewStore.script.proceeding)
+      setTimeout(goTimer, 2000)
       break;
 
     case 'FINISH':
@@ -96,12 +115,13 @@ watch(() => websocketStore.flag.interviewer, async () => {
         addLog(`1분 자기 소개 종료`)
       }
       websocketStore.now.question.id += 1;
-      websocketStore.now.turn = -1
       break;
 
     case 'END':
       isActiveTimer.value = false
       websocketStore.now.turn = -1
+      websocketStore.stomp.disconnect()
+      addLog("수고 하셨습니다")
       alert('면접 종료!!!')
       break;
   }}
@@ -132,7 +152,12 @@ watch(() => websocketStore.flag.interviewer, async () => {
       </div>
 
       <div class="d-flex flex-column align-center my-auto offset-1 v-col-3 py-0 px-0">
-        <TimerComponent :start-timer="isActiveTimer" style="width: 150px; height: 150px;" />
+        <TimerComponent 
+          :start-timer="isActiveTimer" 
+          :reset-timer="needResetTimer"
+          @finish-timer="timeOut"
+          style="width: 150px; height: 150px;" 
+        />
         <v-btn 
           v-if="websocketStore.myTurn"
           @click="finishAnswer" 

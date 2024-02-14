@@ -51,7 +51,6 @@ let recorder;
 let recordedChunks = [];
 
 const startVideo = function () {
-  
   navigator.mediaDevices.getUserMedia({
     audio: true,
     video: {
@@ -117,19 +116,20 @@ const sendToServer = async function(chunk, idx) {
     if (response.status === 200) {
       console.log('upload success', response.data);
       uploadData.value = response.data;
+      dialog.value = true;
     }
   } catch (error) {
     console.error('Error sending chunk to server:', error);
+    alert('업로드 실패입니다')
   }
 }
 
-const stopRecording = function () {
+const stopRecording = async function () {
   mediaToggle.value.play = false;
   flag.value = 1;
-  dialog.value = true;
   const previewPlayer = document.querySelector("#my-video");
   previewPlayer.srcObject.getTracks().forEach(track => track.stop());
-  recorder.stop();
+  await recorder.stop();
   recordedChunks.length = 0
   stopTimer();
   time.value = 0;
@@ -171,7 +171,7 @@ const saveRecording = async function () {
         originFilename: `${filename.value}.png`,
     },
   }
-  console.log(req_body)
+  //console.log(req_body)
   try {
     const response = await apiMethods.saveVideo(req_body)
     console.log('save successfully!', response.data)
@@ -239,7 +239,7 @@ onBeforeUnmount(() => {
   </div>
 
   <div class="w-100 text-center pa-1">
-    <video id="my-video" autoplay></video>
+    <video id="my-video" autoplay muted="true"></video>
   </div>
 
   <div class="btn-container w-100 d-flex align-center">
@@ -312,5 +312,12 @@ onBeforeUnmount(() => {
 }
 .timer{
   color: white;
+}
+video {
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+  /* Safari and Chrome */
+  -moz-transform: rotateY(180deg);
+  /* Firefox */
 }
 </style>

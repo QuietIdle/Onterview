@@ -9,7 +9,7 @@ export const useInterviewStore = defineStore('interview', () => {
   const choice = ref({
     people: 'SINGLE',
     type: '인성면접',
-    typeDetail: 'FIT'
+    typeDetail: ''
   })
   const stompType = computed(() => {
     if (choice.value.type === '인성면접') return 1
@@ -33,7 +33,7 @@ export const useInterviewStore = defineStore('interview', () => {
 
   const TTS = function (script) {
     return new Promise((resolve, reject) => {
-      
+      mediaToggle.value.audio = false
       const synth = window.speechSynthesis
       const utterance = new SpeechSynthesisUtterance(script)
   
@@ -46,7 +46,7 @@ export const useInterviewStore = defineStore('interview', () => {
       };
   
       synth.speak(utterance)
-      
+      mediaToggle.value.audio = true
     })
   }
 
@@ -72,10 +72,10 @@ export const useWebsocketStore = defineStore('websocket', () => {
     turn: -1,
     question: {
       id: 0,
-      content: "1분 자기소개",
+      commonQuestion: "",
     },
     orders: [],
-    people: 3,
+    people: 4,
   })
   const myTurn = computed(() => {
     if(now.value.turn === -1) return false

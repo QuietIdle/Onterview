@@ -185,7 +185,9 @@ const closingInterviewSolo = async function () {
   const TTSscript = `
     수고하셨습니다. 모의 면접을 종료합니다.
     `
+  interviewQuestion.value = TTSscript
   await TTS(TTSscript)
+  interviewQuestion.value = "\u00A0"
 }
 
 // 하나의 면접 문항에 대한 인터뷰 진행
@@ -312,7 +314,8 @@ const stopRecord = async function () {
 const saveRecording = async function (videoLength, questionId) {
   const date = new Date().toLocaleString()
   const req_body = {
-    questionId: questionId,
+    interviewQuestionId: questionId,
+    questionId: null,
     videoLength: videoLength,
     title: `${questionId}-${date}`,
     videoInformation: {
@@ -336,7 +339,7 @@ const saveRecording = async function (videoLength, questionId) {
 const requestInterviewQuestions = function () {
   return new Promise((resolve, reject) => {
     const payload = {
-      questionType: interviewStore.choice.typeDetail,
+      questionType: interviewStore.choice.typeDetail === "" ? "FIT" : interviewStore.choice.typeDetail,
       roomType: interviewStore.choice.people,
       numToSelect: 5,
 
@@ -344,7 +347,7 @@ const requestInterviewQuestions = function () {
 
     const success = function (response) {
       questionList.value = response.data
-      // console.log(response.data)
+      console.log(response.data)
       resolve(response); // 응답 데이터를 반환합니다.
     }
 
@@ -409,6 +412,15 @@ onMounted(() => {
     })
 })
 
+
+onUnmounted(() => {
+  if (mediaVideo.srcObject) {
+    mediaVideo.srcObject.getTracks().forEach(track => {
+      track.stop()
+    })
+    mediaVideo.srcObject = null
+  }
+})
 </script>
 
 <template>
@@ -447,9 +459,9 @@ onMounted(() => {
         </div>
       </div>
       <div class="video-container offset-1 v-col-6">
-        <video ref="mediaOnlyVideo" autoplay></video>
+        <video ref="mediaOnlyVideo" autoplay color="black"></video>
 
-        <div v-if="!isAcceptedPermission" class="video-activate text-black">
+        <div v-if="!isAcceptedPermission" class="video-activate text-white">
           <h3 class="mb-5">마이크와 카메라를 활성화 하면<br>모의 면접을 진행할 수 있어요!</h3>
           <v-btn class="bg-primary" @click="requestPermissionMedia">마이크 및 카메라 활성화</v-btn>
         </div>
@@ -546,6 +558,7 @@ video {
   /* Safari and Chrome */
   -moz-transform: rotateY(180deg);
   /* Firefox */
+  background-color: black;
 }
 
 .active-btn {
@@ -575,7 +588,7 @@ video {
 
 .video-activate {
   position: absolute;
-  top: 50%;
+  top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
