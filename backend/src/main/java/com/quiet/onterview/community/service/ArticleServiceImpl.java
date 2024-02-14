@@ -38,12 +38,27 @@ public class ArticleServiceImpl implements ArticleService {
     public ArticlePostResponse postArticle(Long memberId, ArticlePostRequest articlePostRequest) {
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new BaseException(ErrorCode.USER_NOT_EXISTS));
-        Video video = videoRepository.findById(articlePostRequest.getVideoId()).orElseThrow(() ->
-                new VideoNotFoundException());
-        if(!video.getMyQuestion().getMyQuestionFolder().getMember().getMemberId().equals(memberId)) {
-            throw new BaseException(ErrorCode.REQUEST_CONDITION_NOT_MATCHES);
+        Video video = videoRepository.findById(articlePostRequest.getVideoId()).orElseThrow(
+                VideoNotFoundException::new);
+
+        switch (articlePostRequest.getRoomType()) {
+            case SELF -> {
+                if (!video.getMyQuestion().getMyQuestionFolder().getMember().getMemberId()
+                        .equals(memberId)) {
+                    throw new BaseException(ErrorCode.REQUEST_CONDITION_NOT_MATCHES);
+                }
+            }
+
+            case SINGLE, MULTI -> {
+                if (!video.getInterviewQuestion().getInterviewee().getMember().getMemberId()
+                        .equals(memberId)) {
+                    throw new BaseException(ErrorCode.REQUEST_CONDITION_NOT_MATCHES);
+                }
+            }
         }
-        Article article = articleMapper.articlePostRequestToArticle(member, video, articlePostRequest);
+
+        Article article = articleMapper.articlePostRequestToArticle(member, video,
+                articlePostRequest);
         return articleMapper.articleToArticlePostResponse(articleRepository.save(article));
     }
 
