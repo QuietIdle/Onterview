@@ -7,17 +7,7 @@ const userStore = useUserStore()
 const formRef = ref(null)
 const nickname = ref(userStore.nickname)
 const updateBtnActivated = ref(true)
-// const fileInput = ref(null)
-
-// const fileRules = [
-//   (value) => {
-//     return !value || !value.length || value[0].size < 1000000 || '파일 크기는 1MB 이하여야 합니다.'
-//   },
-// ]
-// const selectedImage = ref(null)
-// const openFileInput = function () {
-//   fileInput.value.click()
-// }
+const dialog = ref(false)
 
 const watchNickname = watch(nickname, () => {
   if (nickname.value != userStore.nickname.value) {
@@ -57,7 +47,7 @@ const requestUpdateUserNickname = function () {
       }
 
       const success = function () {
-        alert('닉네임을 성공적으로 변경했습니다!')
+        dialog.value = true
         updateBtnActivated.value = true
         userStore.nickname = nickname.value
       }
@@ -77,23 +67,6 @@ const requestUpdateUserNickname = function () {
 
 <template>
   <div class="profile px-5">
-    <!-- <h3 class="mb-5">프로필 이미지</h3>
-    <v-row>
-      <v-col class="v-col-2">
-        <v-avatar color="surface-variant" size="100"></v-avatar>
-      </v-col>
-      <v-col class="v-col-9">
-        <div>
-          <v-file-input ref="fileInput" :rules="fileRules" accept="image/png, image/jpg, image/jpeg"
-            v-model="selectedImage"></v-file-input>
-          <v-btn rounded="lg" @click="openFileInput">변경</v-btn>
-          v-if 적용 후 이미지가 등록되어 있을 때만 삭제 버튼 노출
-          <v-btn class="ma-2" rounded="lg">삭제</v-btn>
-        </div>
-        <h6 class="text-grey">확장자: png, jpg, jpeg / 용량: 1MB 이하</h6>
-
-      </v-col>
-    </v-row> -->
     <v-sheet width="90%" class="mx-auto my-10">
       <h3 class="mt-5">닉네임</h3>
       <h6 class="text-grey">한글 2~8자 이하</h6>
@@ -107,6 +80,19 @@ const requestUpdateUserNickname = function () {
       </v-form>
     </v-sheet>
 
+    <v-dialog v-model="dialog" width="auto">
+      <v-card class="pa-3 text-center text-success" title="✔ 성공!">
+        <v-card-text class="mt-3 text-black">
+          닉네임을 성공적으로 변경했습니다!
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="grey" variant="text" @click="dialog = false">
+            닫기
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 

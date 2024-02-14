@@ -50,19 +50,16 @@ const requestDeleteUser = function () {
       <v-form class="mt-5" ref="formRef" fast-fail @submit.prevent="requestDeleteUser">
         <v-text-field v-model="password" type="password" label="비밀번호"></v-text-field>
         <div class="d-flex justify-center">
-          <v-dialog v-model="dialog" persistent width="auto">
+          <v-dialog v-model="dialog" width="auto">
             <template v-slot:activator="{ props }">
               <v-btn color="red" class="mt-2 px-15" @click="dialog = true" :disabled="deleteBtnActivated" v-bind="props">
                 회원 탈퇴
               </v-btn>
             </template>
 
-            <v-card>
-              <v-card-title class="text-h5">
-                정말 계정을 삭제하시겠습니까?
-              </v-card-title>
-              <v-card-text>
-                탈퇴 후 해당 데이터는 복구할 수 없습니다.
+            <v-card class="pa-3 text-center" title="정말 삭제하시나요?😢">
+              <v-card-text class="mt-3">
+                탈퇴 후 모든 데이터는 복구할 수 없어요.
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -72,12 +69,10 @@ const requestDeleteUser = function () {
                 <v-btn color="red" variant="text" @click="requestDeleteUser">
                   삭제
                 </v-btn>
+                <v-spacer></v-spacer>
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <!-- <v-btn type="submit" class="d-flex justify-center mt-2 px-15" :disabled="deleteBtnActivated" color="red">
-            <h3>회원 탈퇴</h3>
-          </v-btn> -->
         </div>
       </v-form>
     </v-sheet>

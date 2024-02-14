@@ -10,6 +10,7 @@ const userStore = useUserStore()
 const interviewStore = useInterviewStore()
 const websocketStore = useWebsocketStore()
 
+const btnActive = ref(false)
 const isActiveTimer = ref(false)
 const needResetTimer = ref(false)
 const logMessages = ref([])
@@ -56,6 +57,7 @@ const timeOut = async function () {
 
 const goTimer = function () {
   isActiveTimer.value = true
+  btnActive.value = true
 }
 
 const sendMessage = async function (type) {
@@ -90,6 +92,7 @@ watch(() => websocketStore.flag.interviewer, async () => {
 
     case 'PROCEEDING':
       isActiveTimer.value = false
+      btnActive.value = false
       addLog(`${websocketStore.now.turn}번 째 참가자 답변 완료`)
       if (websocketStore.myTurn) {
         addLog("당신의 차례입니다.")
@@ -101,6 +104,7 @@ watch(() => websocketStore.flag.interviewer, async () => {
 
     case 'TIMEOUT':
       isActiveTimer.value = false
+      btnActive.value = false
       addLog(`${websocketStore.now.turn}번 째 참가자 시간 초과!`)
       if (websocketStore.myTurn) {
         addLog("당신의 차례입니다.")
@@ -112,6 +116,7 @@ watch(() => websocketStore.flag.interviewer, async () => {
 
     case 'FINISH':
       isActiveTimer.value = false
+      btnActive.value = false
       addLog(`${websocketStore.now.turn}번 째 참가자 답변 완료`)
       if (websocketStore.now.question.id !== 0) {
         addLog(`${websocketStore.now.question.id}번 질문 종료...`)
@@ -124,6 +129,7 @@ watch(() => websocketStore.flag.interviewer, async () => {
 
     case 'END':
       isActiveTimer.value = false
+      btnActive.value = false
       websocketStore.now.turn = -1
       addLog("수고 하셨습니다")
       break;
@@ -164,7 +170,7 @@ watch(() => websocketStore.flag.interviewer, async () => {
         <v-btn 
           v-if="websocketStore.myTurn"
           @click="finishAnswer" 
-          :disabled="!isActiveTimer" 
+          :disabled="!btnActive" 
           rounded="xl" 
           size="x-large" 
           class="active-btn mt-4 mx-2 px-15"
@@ -184,9 +190,9 @@ watch(() => websocketStore.flag.interviewer, async () => {
       </div> -->
 
       <div class="btn-container d-flex flex-column h-100">
-        <v-btn class="ma-3" @click="controlMedia(0)" v-if="interviewStore.mediaToggle.video" icon="mdi-video" color="grey-lighten-1"></v-btn>
+        <v-btn class="ma-3" @click="controlMedia(0)" v-if="interviewStore.mediaToggle.video" icon="mdi-video" color="red-darken-1"></v-btn>
         <v-btn class="ma-3" @click="controlMedia(0)" v-else icon="mdi-video-off" color="grey-lighten-1"></v-btn>
-        <v-btn class="ma-3" @click="controlMedia(1)" v-if="interviewStore.mediaToggle.audio" icon="mdi-microphone" color="grey-lighten-1"></v-btn>
+        <v-btn class="ma-3" @click="controlMedia(1)" v-if="interviewStore.mediaToggle.audio" icon="mdi-microphone" color="red-darken-1"></v-btn>
         <v-btn class="ma-3" @click="controlMedia(1)" v-else icon="mdi-microphone-off" color="grey-lighten-1"></v-btn>
         <v-btn class="ma-3" @click="openHelp" icon="mdi-help" color="grey-lighten-1"></v-btn>
       </div>

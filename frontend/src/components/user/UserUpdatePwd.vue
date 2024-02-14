@@ -1,9 +1,7 @@
 <script setup>
 import { ref } from 'vue'
-import { useUserStore } from '@/stores/user.js'
 import { patchChangeUserPwd } from '@/api/user.js'
 
-const userStore = useUserStore()
 const formRef = ref(null)
 const original = ref(null)
 const password = ref(null)
@@ -125,18 +123,15 @@ const requestUserPwdChange = function () {
       </v-form>
     </v-sheet>
 
-    <v-dialog v-model="dialog" width="500">
-      <template v-slot:default="{ dialog }">
-        <v-card title="Dialog">
-          <v-card-text>비밀번호 변경을 완료했습니다.</v-card-text>
+    <v-dialog v-model="dialog" width="auto">
+      <v-card class="text-center text-success" title="✔ 성공!">
+        <v-card-text class="text-black mt-3">비밀번호 변경을 완료했습니다.</v-card-text>
 
-          <v-card-actions>
-            <v-spacer></v-spacer>
-
-            <v-btn text="닫기" @click="closeDialog"></v-btn>
-          </v-card-actions>
-        </v-card>
-      </template>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text="닫기" @click="closeDialog"></v-btn>
+        </v-card-actions>
+      </v-card>
     </v-dialog>
   </div>
 </template>
