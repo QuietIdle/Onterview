@@ -128,7 +128,6 @@ watch(() => websocketStore.flag.interviewer, async () => {
     case 'END':
       isActiveTimer.value = false
       websocketStore.now.turn = -1
-      websocketStore.stomp.disconnect()
       addLog("수고 하셨습니다")
       break;
   }}

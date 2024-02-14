@@ -124,7 +124,7 @@ const sendToServer = async function(chunk, idx) {
     }))
     // axios를 사용하여 POST 요청을 서버로 보냄
     const response = await fileServer.uploadVideo(formData);
-    //console.log('Chunk sent successfully!', response);
+    console.log(`Chunk ${chunk}`, response);
     if (response.status === 200) {
       console.log('upload success', response.data);
     }
@@ -179,6 +179,7 @@ const cancelRecording = async function () {
   } catch (error) {
     console.log(error)
   }
+  websocketStore.stomp.disconnect()
 }
 // 순서 재배치
 const reArrangeById = (arr, idOrder) => {
@@ -246,6 +247,7 @@ const receive = async function (message) {
       console.log('saved!', result)
       loading.value = false
       dialog.value = false
+      websocketStore.stomp.disconnect()
       break;
 
     case 'END':
@@ -301,7 +303,6 @@ watch(() => websocketStore.flag.record,
 
 <template>
   <div class="w-100 h-100 d-flex align-center">
-    <v-btn @click="dialog=!dialog"></v-btn>
     <div id="video-container" class="w-100 h-100 d-flex align-center justify-space-around">
       <div v-for="(item, idx) in subscribers" :key="item.sub.stream.streamId" class="ma-2">
         <div class="w-100 bg-grey-lighten-1 text-center my-1" style="border-radius: 12px;">{{ idx+1 }}번 째 답변자</div>

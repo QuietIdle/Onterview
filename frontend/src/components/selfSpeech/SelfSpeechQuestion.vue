@@ -84,7 +84,7 @@ const selectQuestion = async function (ele) {
           @click="dialog = false"
         ></v-icon>
       </v-card-title>
-      <v-card-text class="bg-white">
+      <v-card-text>
         <div class="w-100 h-100">
           <StorageQuestionView />
         </div>
