@@ -48,7 +48,7 @@ const saveFeedback = async function () {
 const saveScript = async function () {
   if (selfSpeechStore.questionData.answer.length > maxCounter.value) return
   try {
-    await patchUpdateMyQuestionAnswer({
+    await patchUpdateMyQuestionAnswer(selfSpeechStore.questionData.myQuestionId ,{
       answer: selfSpeechStore.questionData.answer,
     })
     console.log("save answer succesfully!")

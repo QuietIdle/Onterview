@@ -42,15 +42,15 @@ export const fileServer = {
     uploadVideo: function (formData) {
         return api2.post(`/api-file/chunk/upload`, formData)
     },
-    playVideo: function (filename, username, st, ed) {
-        return api2.get(`/api-file/chunk/stream/${filename}/${username}`, {
+    playVideo: function (filename, st, ed) {
+        return api2.get(`/api-file/chunk/stream/${filename}`, {
             responseType: 'arraybuffer',
             headers: {
                 Range: `bytes=${st}-${ed}`,
             }
         });
     },
-    cancelUpload: function (username, fileName) {
-        return api2.delete(`/api-file/chunk?username=${username}&fileName=${fileName}`)
+    cancelUpload: function (fileName) {
+        return api2.delete(`/api-file/chunk?fileName=${fileName}`)
     },
 }
