@@ -30,7 +30,6 @@ onBeforeUnmount(() => {
 let player
 const videoPlayer = ref(undefined)
 const maxCounter = ref(20)
-const video = ref({})
 
 const rules = ref([
   (v) => {
@@ -96,11 +95,12 @@ const requestInterviewDetail = async function () {
 
 const requestVideo = async function (video) {
   try {
-    selectVideo.value = video
+    // selectVideo.value = video
     const res = await apiMethods.getVideo(video.videoInformation.videoId)
-    video.value = res.data
-    console.log(video.value)
-    await getAllChunks(video.value.videoUrl.saveFilename, 0)
+    selectVideo.value = res.data
+    console.log(selectVideo.value, '선택')
+
+    await getAllChunks(selectVideo.value.videoUrl.saveFilename, 0)
   } catch (error) {
     console.log(error)
   }
@@ -118,16 +118,13 @@ const requestAllChunks = async function () {
 // patch
 const isEditTitle = ref(false)
 const editableTitle = ref('')
-const selectVideo = ref({})
+const selectVideo = ref({ videoId: null })
 
 const saveFeedback = async function () {
   try {
-    const result = await apiMethods.patchVideo(
-      selectVideo.value.videoInformation.videoId,
-      {
-        feedback: selectVideo.value.feedback
-      }
-    )
+    const result = await apiMethods.patchVideo(selectVideo.value.videoId, {
+      feedback: selectVideo.value.feedback
+    })
   } catch (error) {
     console.log(error)
   }
@@ -229,18 +226,26 @@ const requestUpdateVideoTitle = async function () {
               :key="video.videoInformation.videoId"
             >
               <div
-                class="playlist d-flex align-center pa-3"
+                class="playlist d-flex align-center pa-2"
                 style="font-size: 0.9rem; color: gray"
                 @click="requestVideo(video)"
               >
-                <div style="width: 5%; font-size: 0.7rem">></div>
-                <div style="width: 50%" class="mr-3">
+                <div
+                  v-if="selectVideo.videoId === video.videoInformation.videoId"
+                  style="width: 5%; font-size: 0.7rem"
+                >
+                  >
+                </div>
+                <div v-else style="width: 5%; font-size: 0.7rem"></div>
+                <div style="width: 30%" class="mr-3">
                   <v-img
                     :src="video.videoInformation.thumbnailUrl.saveFilename"
                     class="rounded-lg"
                   ></v-img>
                 </div>
-                <div style="width: 45%">{{ video.commonQuestion }}</div>
+                <div style="width: 65%">
+                  {{ video.commonQuestion }}
+                </div>
               </div>
             </div>
           </div>
