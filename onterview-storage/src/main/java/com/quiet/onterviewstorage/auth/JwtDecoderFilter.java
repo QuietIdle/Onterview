@@ -22,7 +22,8 @@ public class JwtDecoderFilter extends OncePerRequestFilter {
         String receivedToken = request.getHeader(AUTHORIZATION_HEADER);
 
         try {
-            if (jwtDecoder.validateToken(receivedToken)) {
+            if (request.getRequestURI().startsWith("/api-file/file") ||
+                    jwtDecoder.validateToken(receivedToken)) {
                 filterChain.doFilter(request, response);
             }
         } catch (JwtException e) {

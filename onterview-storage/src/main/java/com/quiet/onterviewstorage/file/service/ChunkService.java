@@ -33,34 +33,33 @@ public class ChunkService {
         int chunkNumber = request.getChunkNumber();
         int endOfChunk = request.getEndOfChunk();
         String filename = request.getFilename();
-        String username = request.getUsername();
 
-        Path videoPath = createFolder(fileUtils.VIDEO_PATH, username, filename);
-        Path imagePath = createFolder(fileUtils.IMAGE_PATH, username, filename);
+        Path videoPath = createFolder(fileUtils.VIDEO_PATH, filename);
+        Path imagePath = createFolder(fileUtils.IMAGE_PATH);
 
         saveTempFile(file, chunkNumber, videoPath);
 
         // 파일이 전송중인 경우
         if (endOfChunk == 0) {
-            log.info(String.format("%s's chunk %s.%d saved ", username, filename, chunkNumber));
+            log.info(String.format("chunk %s.%d saved ", filename, chunkNumber));
             return HttpStatus.PARTIAL_CONTENT;
         }
 
         Path mergedVideoPath = mergeTempFile(file, videoPath, filename, chunkNumber);
-        log.info(String.format("%s's %s saved", username, filename));
+        log.info(String.format("%s saved", filename));
 
         String createdThumbnail = fFmpegManager.createThumbnail(mergedVideoPath, imagePath,
                 filename);
-        log.info(String.format("%s's thumbnail %s saved", username, createdThumbnail));
+        log.info(String.format("thumbnail %s saved", createdThumbnail));
 
         return HttpStatus.OK;
     }
 
     public Optional<ResourceDto> getStreamResource(
-            HttpHeaders headers, String filename, String username
+            HttpHeaders headers, String filename
     ) throws IOException {
         Path path = Paths.get(
-                String.valueOf(Path.of(fileUtils.VIDEO_PATH, username, filename.split("\\.")[0])),
+                String.valueOf(Path.of(fileUtils.VIDEO_PATH, filename.split("\\.")[0])),
                 filename);
 
         Resource resource = new FileSystemResource(path);
@@ -90,8 +89,8 @@ public class ChunkService {
         ));
     }
 
-    public void delete(String username, String fileName) {
-        Path path = Path.of(fileUtils.VIDEO_PATH, username, fileName);
+    public void delete(String fileName) {
+        Path path = Path.of(fileUtils.VIDEO_PATH, fileName);
         File folder = new File(String.valueOf(path));
 
         if (folder.exists()) {
@@ -139,8 +138,18 @@ public class ChunkService {
         Files.write(tempFilePath, file.getBytes());
     }
 
-    private Path createFolder(String subPath, String username, String filename) {
-        Path path = Path.of(subPath, username, filename);
+    private Path createFolder(String subPath, String filename) {
+        Path path = Path.of(subPath, filename);
+        File dir = new File(String.valueOf(path));
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        return path;
+    }
+
+    private Path createFolder(String subPath) {
+        Path path = Path.of(subPath);
         File dir = new File(String.valueOf(path));
         if (!dir.exists()) {
             dir.mkdirs();

@@ -30,12 +30,10 @@ public class VideoQueryRepository {
     public List<VideoInformationResponse> findAllInterviewVideoByMemberAndType(Long memberId,
             RoomType roomType) {
         QFileInformation thumbnailUrl = new QFileInformation("thumbnailUrl");
-        QFileInformation videoUrl = new QFileInformation("videoUrl");
 
         JPAQuery<VideoInformationResponse> query = queryFactory
                 .select(getVideoDtoByType(roomType))
                 .from(video)
-                .leftJoin(video.videoUrl, videoUrl)
                 .leftJoin(video.thumbnailUrl, thumbnailUrl);
 
         joinByRoomType(query, roomType);
@@ -55,9 +53,6 @@ public class VideoQueryRepository {
                 Projections.fields(FileInformationResponse.class,
                         video.thumbnailUrl.originFilename,
                         video.thumbnailUrl.saveFilename).as("thumbnailUrl"),
-                Projections.fields(FileInformationResponse.class,
-                        video.videoUrl.originFilename,
-                        video.videoUrl.saveFilename).as("fileUrl"),
                 video.feedback,
                 video.bookmark);
     }

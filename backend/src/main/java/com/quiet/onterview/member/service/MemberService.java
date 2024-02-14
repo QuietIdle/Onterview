@@ -4,6 +4,9 @@ import com.quiet.onterview.common.BaseException;
 import com.quiet.onterview.member.dto.request.MemberModifyNicknameRequest;
 import com.quiet.onterview.member.dto.request.MemberWithdrawRequest;
 import com.quiet.onterview.member.dto.response.MemberModifyNicknameResponse;
+import com.quiet.onterview.question.dto.request.MyQuestionFolderRequest;
+import com.quiet.onterview.question.entity.MyQuestionFolder;
+import com.quiet.onterview.question.service.MyQuestionFolderService;
 import com.quiet.onterview.security.jwt.JwtTokenProvider;
 import com.quiet.onterview.member.dto.request.MemberLoginRequest;
 import com.quiet.onterview.member.dto.response.MemberLoginResponse;
@@ -28,6 +31,7 @@ public class MemberService {
     private final MemberMapper memberMapper;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final MyQuestionFolderService myQuestionFolderService;
 
     public void signUpByEmail(MemberSignupRequest memberSignupRequest) {
         if(!isEmailAvailable(memberSignupRequest.getEmail())) {
@@ -41,6 +45,8 @@ public class MemberService {
         }
         Member member = memberRepository.save(memberMapper.memberSignupRequestToMember(memberSignupRequest));
         updatePassword(member.getMemberId(), member.getPassword());
+
+        myQuestionFolderService.createMyQuestionFolder(member.getMemberId(),new MyQuestionFolderRequest("기본 폴더"));
     }
 
     public MemberLoginResponse login(MemberLoginRequest memberLoginRequest) {

@@ -22,10 +22,15 @@ public class VideoMapper {
     public VideoDetailResponse videoToDetailResponse(Video video) {
         return VideoDetailResponse.builder()
                 .videoId(video.getVideoId())
-                .interviewQuestionId(video.getInterviewQuestion().getInterviewQuestionId())
+                .interviewQuestionId(
+                        Optional.ofNullable(video.getInterviewQuestion())
+                                .map(InterviewQuestion::getInterviewQuestionId).orElse(null)
+                )
+                .myQuestionId(
+                        Optional.ofNullable(video.getMyQuestion())
+                                .map(MyQuestion::getMyQuestionId).orElse(null)
+                )
                 .title(video.getTitle())
-                .thumbnailUrl(
-                        fileInformationMapper.fileInformationToResponse(video.getThumbnailUrl()))
                 .feedback(video.getFeedback())
                 .bookmark(video.getBookmark())
                 .myQuestionId(video.getMyQuestion().getMyQuestionId())
@@ -68,7 +73,6 @@ public class VideoMapper {
                 .thumbnailUrl(
                         fileInformationMapper.imageInformationToResponse(video.getThumbnailUrl())
                 )
-                .feedback(video.getFeedback())
                 .bookmark(video.getBookmark())
                 .build();
     }

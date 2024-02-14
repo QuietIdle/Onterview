@@ -1,5 +1,6 @@
 package com.quiet.onterview.security.config;
 
+import com.quiet.onterview.member.entity.Role;
 import com.quiet.onterview.member.repository.MemberRepository;
 import com.quiet.onterview.security.SecurityEntryPoint;
 import com.quiet.onterview.security.exception.SecurityExceptionHandler;
@@ -49,6 +50,10 @@ public class SecurityConfiguration {
                                 .requestMatchers("/api/meeting/matching").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/community").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/interview-room").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/common-question-folder").hasAuthority(Role.ROLE_ADMIN.name())
+                                .requestMatchers(HttpMethod.DELETE, "/api/common-question-folder/*").hasAuthority(Role.ROLE_ADMIN.name())
+                                .requestMatchers(HttpMethod.PATCH, "/api/common-question-folder/*").hasAuthority(Role.ROLE_ADMIN.name())
+                                .requestMatchers("/api/common-question").hasAuthority(Role.ROLE_ADMIN.name())
                                 .anyRequest().authenticated());
         return http.build();
     }
