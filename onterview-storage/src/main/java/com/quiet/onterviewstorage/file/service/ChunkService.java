@@ -33,7 +33,6 @@ public class ChunkService {
         int chunkNumber = request.getChunkNumber();
         int endOfChunk = request.getEndOfChunk();
         String filename = request.getFilename();
-        String username = request.getUsername();
 
         Path videoPath = createFolder(fileUtils.VIDEO_PATH, filename);
         Path imagePath = createFolder(fileUtils.IMAGE_PATH);
@@ -42,16 +41,16 @@ public class ChunkService {
 
         // 파일이 전송중인 경우
         if (endOfChunk == 0) {
-            log.info(String.format("%s's chunk %s.%d saved ", username, filename, chunkNumber));
+            log.info(String.format("chunk %s.%d saved ", filename, chunkNumber));
             return HttpStatus.PARTIAL_CONTENT;
         }
 
         Path mergedVideoPath = mergeTempFile(file, videoPath, filename, chunkNumber);
-        log.info(String.format("%s's %s saved", username, filename));
+        log.info(String.format("%s saved", filename));
 
         String createdThumbnail = fFmpegManager.createThumbnail(mergedVideoPath, imagePath,
                 filename);
-        log.info(String.format("%s's thumbnail %s saved", username, createdThumbnail));
+        log.info(String.format("thumbnail %s saved", createdThumbnail));
 
         return HttpStatus.OK;
     }
