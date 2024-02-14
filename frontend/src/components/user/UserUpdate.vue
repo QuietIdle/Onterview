@@ -58,11 +58,12 @@ const requestUpdateUserNickname = function () {
 
       const success = function () {
         alert('닉네임을 성공적으로 변경했습니다!')
-        userStore.nickname.value = nickname.value
+        updateBtnActivated.value = true
+        userStore.nickname = nickname.value
       }
 
       const error = function (error) {
-        alert(error.response.data.errorMessage)
+        alert(error)
         console.log(error)
       }
 
