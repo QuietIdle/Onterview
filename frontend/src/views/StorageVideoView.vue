@@ -1,41 +1,49 @@
 <script setup>
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useStorageStore } from '@/stores/storage'
 
 const storageStore = useStorageStore()
+const roomType = ref('self')
 
 onMounted(() => {
-  storageStore.requestUserVideoAll('self')
+  storageStore.requestUserVideoAll(roomType.value)
 })
 </script>
 
 <template>
   <!-- 전체보기, 내가 쓴 게시글 보기 토글 -->
   <v-container>
-    <v-row justify="end">
-      <v-btn
-        density="compact"
-        variant="plain"
-        :href="'#셀프스피치'"
-        @click="storageStore.requestUserVideoAll('self')"
-        >셀프 스피치</v-btn
+    <v-row justify="end" align="center">
+      <div
+        :class="{ active: roomType === 'self', inactive: roomType !== 'self' }"
+        @click="(roomType = 'self'), storageStore.requestUserVideoAll(roomType)"
       >
+        셀프 스피치
+      </div>
       <div style="color: rgb(190, 190, 190)">|</div>
-      <v-btn
-        density="compact"
-        variant="plain"
-        :href="'#1인모의면접'"
-        @click="storageStore.requestUserVideoAll('single')"
-        >1인 모의 면접</v-btn
+      <div
+        :class="{
+          active: roomType === 'single',
+          inactive: roomType !== 'single'
+        }"
+        @click="
+          (roomType = 'single'), storageStore.requestUserVideoAll(roomType)
+        "
       >
+        1인 모의 면접
+      </div>
       <div style="color: rgb(190, 190, 190)">|</div>
-      <v-btn
-        density="compact"
-        variant="plain"
-        :href="'#다인모의면접'"
-        @click="storageStore.requestUserVideoAll('multi')"
-        >다인 모의 면접</v-btn
+      <div
+        :class="{
+          active: roomType === 'multi',
+          inactive: roomType !== 'multi'
+        }"
+        @click="
+          (roomType = 'multi'), storageStore.requestUserVideoAll(roomType)
+        "
       >
+        다인 모의 면접
+      </div>
     </v-row>
   </v-container>
 
@@ -44,4 +52,19 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.active {
+  font-size: 0.9rem;
+  margin: auto 10px;
+}
+
+.inactive {
+  font-size: 0.9rem;
+  margin: auto 10px;
+  color: grey;
+}
+
+.inactive:hover {
+  color: black;
+}
+</style>

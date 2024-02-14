@@ -11,16 +11,21 @@ import { fileServer } from '@/api/video'
 import unlikeButton from '@/assets/community/unlikeButton.svg'
 import likeButton from '@/assets/community/likeButton.svg'
 
+// store
+import { useUserStore } from '@/stores/user'
+
 // component
 import CommunityModalUpdate from '@/components/community/modal/CommunityModalUpdate.vue'
 import CommunityModalDelete from '@/components/community/modal/CommunityModalDelete.vue'
+
+const userStore = useUserStore()
 
 onMounted(async () => {
   await requestPostDetail()
 
   try {
-    // await getAllChunks('59755822-3226-49f0-bac9-2ee7c44b5de2.mkv', 0)
     await getAllChunks(postDetail.value.videoInfo.videoUrl.saveFilename, 0)
+    console.log(postDetail.value.videoInfo.videoUrl.saveFilename)
   } catch (error) {
     console.warn(error)
   }
@@ -78,7 +83,7 @@ const getAllChunks = async function (filename) {
     try {
       const response = await fileServer.playVideo(
         filename,
-        'test@test.com',
+        userStore.email,
         start,
         end
       )
@@ -151,6 +156,7 @@ const getAllChunks = async function (filename) {
             :src="urlRef"
             controls="true"
             style="max-width: 80%; min-width: 100px"
+            class="rounded-lg"
           ></video>
         </div>
       </v-col>
