@@ -216,6 +216,7 @@ onMounted(() => {
   websocketStore.stomp.send(`/server/answer/${websocketStore.roomData.sessionId}`, headers,
     JSON.stringify({
       type: 'ENTER',
+      index: websocketStore.roomData.index,
     })
   )
 })
@@ -242,13 +243,13 @@ watch(interviewStore.mediaToggle ,
         <ov-video
           :id="item.sub.stream.streamId"
           :stream-manager="item.sub"
-          :muted="!interviewStore.mediaToggle.volume"
+          :muted="!interviewStore.mediaToggle.volume | (item.sub.id===websocketStore.roomData.index)"
         />
         <div class="d-flex align-center">
           <v-card v-if="idx === websocketStore.now.turn" class="pa-1" color="red-darken-1">답변 중</v-card>
           <v-card v-else-if="idx < websocketStore.now.turn" class="pa-1" color="light-green-lighten-1">답변 완료</v-card>
           <v-card v-else class="pa-1" color="light-blue-darken-1">답변 대기</v-card>
-          <div>{{ JSON.parse(item.sub.stream.connection.data).clientData.name }}</div>
+          <div class="mx-2">{{ JSON.parse(item.sub.stream.connection.data).clientData.name }}</div>
         </div>
         
       </div>

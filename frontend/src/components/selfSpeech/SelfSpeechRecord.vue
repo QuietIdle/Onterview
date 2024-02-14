@@ -239,7 +239,7 @@ onBeforeUnmount(() => {
   </div>
 
   <div class="w-100 text-center pa-1">
-    <video id="my-video" autoplay></video>
+    <video id="my-video" autoplay muted="true"></video>
   </div>
 
   <div class="btn-container w-100 d-flex align-center">
