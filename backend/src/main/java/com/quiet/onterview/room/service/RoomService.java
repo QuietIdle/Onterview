@@ -2,6 +2,7 @@ package com.quiet.onterview.room.service;
 
 import static com.quiet.onterview.room.RoomStatus.ENTER;
 import static com.quiet.onterview.room.RoomStatus.FINISH;
+import static com.quiet.onterview.room.RoomStatus.SAVED;
 
 import com.quiet.onterview.interview.dto.response.InterviewQuestionCreateResponse;
 import com.quiet.onterview.matching.MatchUser;
@@ -16,6 +17,7 @@ import com.quiet.onterview.room.repository.RoomRepository;
 import com.quiet.onterview.video.dto.request.VideoInformationRequest;
 import com.quiet.onterview.video.service.VideoService;
 import com.quiet.onterview.websocket.MessageAnnounce;
+import com.quiet.onterview.websocket.StompUser;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +52,7 @@ public class RoomService {
                 RoomLeaveResponse.builder().idx(idx).build());
     }
 
-    public void process(String sessionId, UserRequestMessage userRequestMessage) {
+    public void process(String sessionId, UserRequestMessage userRequestMessage, String user) {
         RoomStatus roomStatus = userRequestMessage.getType();
         Integer idx = userRequestMessage.getIndex();
         RoomProgressResponseBuilder progressResponseBuilder = RoomProgressResponse.builder()
@@ -75,7 +77,11 @@ public class RoomService {
             progressResponseBuilder.orders(roomRepository.shuffle(sessionId));
             progressResponseBuilder.question(roomRepository.getQuestion(sessionId));
         }
-        messageService.announceAll(ROOM_PREFIX + sessionId, progressResponseBuilder.build());
+        if (type == SAVED) {
+            messageService.announceToUser(ROOM_PREFIX + sessionId, user, progressResponseBuilder.build());
+        } else {
+            messageService.announceAll(ROOM_PREFIX + sessionId, progressResponseBuilder.build());
+        }
     }
 
     private RoomStatus save(String sessionId, UserRequestMessage userRequestMessage) {
@@ -98,6 +104,6 @@ public class RoomService {
                         .videoInformation(video.getVideoUrl())
                         .build()
         ));
-        return RoomStatus.SAVED;
+        return SAVED;
     }
 }
