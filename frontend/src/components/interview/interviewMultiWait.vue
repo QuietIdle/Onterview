@@ -94,7 +94,7 @@ const stopMatch = function () {
 </script>
 
 <template>
-  <v-dialog v-model="interviewStore.dialog.wait" fullscreen>
+  <v-dialog v-model="interviewStore.dialog.wait" fullscreen persistent>
     <v-card class="bg-purple-lighten-4 pa-5">
       <v-card-title class="text-center"> 다인 모의 면접 대기실 </v-card-title>
       <v-divider class="border-opacity-100"></v-divider>
