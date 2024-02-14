@@ -1,14 +1,14 @@
 package com.quiet.onterview.community.mapper;
 
+import static com.quiet.onterview.utils.DateFormatter.communityDateFormatter;
+
 import com.quiet.onterview.community.dto.request.ArticlePostRequest;
-import com.quiet.onterview.community.dto.response.ArticleInfoResponse;
-import com.quiet.onterview.community.dto.response.ArticleListResponse;
-import com.quiet.onterview.community.dto.response.ArticlePostResponse;
+import com.quiet.onterview.community.dto.response.*;
 import com.quiet.onterview.community.entity.Article;
 import com.quiet.onterview.member.entity.Member;
+import com.quiet.onterview.utils.DateFormatter;
 import com.quiet.onterview.video.entity.Video;
 import com.quiet.onterview.video.mapper.VideoMapper;
-import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ArticleMapper {
 
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
     private final VideoMapper videoMapper;
 
     public ArticleListResponse articleToArticleListResponse(Article article) {
@@ -26,7 +25,7 @@ public class ArticleMapper {
                 .title(article.getTitle())
                 .likeCount(article.getLikeCount())
                 .commentCount(article.getCommentCount())
-                .writtenDate(article.getCreateAt().format(formatter))
+                .writtenDate(article.getCreateAt().format(communityDateFormatter))
                 .build();
     }
 
@@ -50,11 +49,12 @@ public class ArticleMapper {
                 .content(article.getContent())
                 .likeCount(article.getLikeCount())
                 .commentCount(article.getCommentCount())
-                .writtenDate(article.getCreateAt().format(formatter))
+                .writtenDate(article.getCreateAt().format(communityDateFormatter))
                 .build();
     }
 
-    public ArticleInfoResponse articleToArticleInfoResponse(Article article, Long memberId, Boolean isLikedByMe) {
+    public ArticleInfoResponse articleToArticleInfoResponse(Article article, Long memberId,
+            Boolean isLikedByMe) {
         return ArticleInfoResponse.builder()
                 .title(article.getTitle())
                 .writerNickname(article.getMember().getNickname())
@@ -63,7 +63,7 @@ public class ArticleMapper {
                 .isMyArticle(article.getMember().getMemberId().equals(memberId))
                 .likeCount(article.getLikeCount())
                 .isLiked(isLikedByMe)
-                .writtenDate(article.getCreateAt().format(formatter))
+                .writtenDate(article.getCreateAt().format(DateFormatter.communityDateFormatter))
                 .build();
     }
 }
