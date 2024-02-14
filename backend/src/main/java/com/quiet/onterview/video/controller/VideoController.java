@@ -6,13 +6,12 @@ import com.quiet.onterview.video.dto.request.*;
 import com.quiet.onterview.video.dto.response.VideoDetailResponse;
 import com.quiet.onterview.video.dto.response.VideoInformationResponse;
 import com.quiet.onterview.video.service.VideoService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -35,9 +34,11 @@ public class VideoController {
     @GetMapping
     public ResponseEntity<List<VideoInformationResponse>> getAllMyVideoByCategory(
             @RequestParam(name = "category") RoomType roomType,
+            @RequestParam(name = "keyword", required = false) String keyword,
+            @RequestParam(name = "bookmark", required = false) Integer bookmark,
             @AuthenticationPrincipal SecurityUser user) {
         List<VideoInformationResponse> videoInformationResponses = videoService.loadAllMyVideo(user,
-                roomType);
+                roomType, keyword, bookmark);
         return ResponseEntity.ok(videoInformationResponses);
     }
 

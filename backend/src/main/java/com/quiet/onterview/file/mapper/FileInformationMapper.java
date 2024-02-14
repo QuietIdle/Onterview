@@ -1,26 +1,21 @@
 package com.quiet.onterview.file.mapper;
 
+
+import com.quiet.onterview.file.FileUtils;
 import com.quiet.onterview.file.dto.request.FileInformationRequest;
 import com.quiet.onterview.file.dto.response.FileInformationResponse;
 import com.quiet.onterview.file.entity.FileInformation;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class FileInformationMapper {
 
-    @Value("${file.base-url}")
-    private String baseUrl;
-    @Value("${file.file-key}")
-    private String fileKey;
-    @Value("${file.file-path-query}")
-    private String filePathQuery;
-    @Value("${file.file-name-query}")
-    private String fileNameQuery;
-    @Value("${file.file-path}")
-    private String filePath;
+    private final FileUtils fileUtils;
 
-    public FileInformation fileInformationRequestToEntity(FileInformationRequest fileInformationRequest) {
+    public FileInformation fileInformationRequestToEntity(
+            FileInformationRequest fileInformationRequest) {
         return FileInformation.builder()
                 .originFilename(fileInformationRequest.getOriginFilename())
                 .saveFilename(fileInformationRequest.getSaveFilename())
@@ -37,11 +32,7 @@ public class FileInformationMapper {
     public FileInformationResponse imageInformationToResponse(FileInformation fileInformation) {
         return FileInformationResponse.builder()
                 .originFilename(fileInformation.getOriginFilename())
-                .saveFilename(thumbnailUrl(fileInformation.getSaveFilename()))
+                .saveFilename(fileUtils.thumbnailUrl(fileInformation.getSaveFilename()))
                 .build();
-    }
-
-    private String thumbnailUrl(String filename) {
-        return baseUrl + "/" + fileKey + "?" + filePathQuery + "=" + filePath + "&" + fileNameQuery + "=" + filename;
     }
 }

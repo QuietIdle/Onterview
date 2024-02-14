@@ -1,5 +1,7 @@
 package com.quiet.onterview.video.service;
 
+import com.quiet.onterview.file.FileUtils;
+import com.quiet.onterview.file.dto.response.FileInformationResponse;
 import com.quiet.onterview.file.service.FileService;
 import com.quiet.onterview.interview.entity.InterviewQuestion;
 import com.quiet.onterview.interview.entity.RoomType;
@@ -15,12 +17,11 @@ import com.quiet.onterview.video.exception.VideoNotFoundException;
 import com.quiet.onterview.video.mapper.VideoMapper;
 import com.quiet.onterview.video.repository.VideoQueryRepository;
 import com.quiet.onterview.video.repository.VideoRepository;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -33,6 +34,7 @@ public class VideoServiceImpl implements VideoService {
     private final InterviewQuestionRepository interviewQuestionRepository;
     private final VideoMapper videoMapper;
     private final FileService fileService;
+    private final FileUtils fileUtils;
 
     @Override
     @Transactional(readOnly = true)
@@ -44,8 +46,15 @@ public class VideoServiceImpl implements VideoService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<VideoInformationResponse> loadAllMyVideo(SecurityUser user, RoomType roomType) {
-        return videoQueryRepository.findAllInterviewVideoByMemberAndType(user.getMemberId(), roomType);
+    public List<VideoInformationResponse> loadAllMyVideo(SecurityUser user, RoomType roomType,
+            String keyword, Integer bookmark) {
+        return videoQueryRepository.findAllInterviewVideoByMemberAndType(user.getMemberId(),
+                        roomType, keyword, bookmark)
+                .stream().peek(videoInformationResponse -> {
+                    FileInformationResponse thumbnailUrl = videoInformationResponse.getThumbnailUrl();
+                    thumbnailUrl.setSaveFilename(
+                            fileUtils.thumbnailUrl(thumbnailUrl.getSaveFilename()));
+                }).toList();
     }
 
     @Override
