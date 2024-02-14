@@ -185,7 +185,9 @@ const closingInterviewSolo = async function () {
   const TTSscript = `
     수고하셨습니다. 모의 면접을 종료합니다.
     `
+  interviewQuestion.value = TTSscript
   await TTS(TTSscript)
+  interviewQuestion.value = "\u00A0"
 }
 
 // 하나의 면접 문항에 대한 인터뷰 진행
@@ -313,6 +315,7 @@ const saveRecording = async function (videoLength, questionId) {
   const date = new Date().toLocaleString()
   const req_body = {
     interviewQuestionId: questionId,
+    questionId: null,
     videoLength: videoLength,
     title: `${questionId}-${date}`,
     videoInformation: {
@@ -336,7 +339,7 @@ const saveRecording = async function (videoLength, questionId) {
 const requestInterviewQuestions = function () {
   return new Promise((resolve, reject) => {
     const payload = {
-      questionType: interviewStore.choice.typeDetail,
+      questionType: interviewStore.choice.typeDetail === "" ? "FIT" : interviewStore.choice.typeDetail,
       roomType: interviewStore.choice.people,
       numToSelect: 5,
 
@@ -344,7 +347,7 @@ const requestInterviewQuestions = function () {
 
     const success = function (response) {
       questionList.value = response.data
-      // console.log(response.data)
+      console.log(response.data)
       resolve(response); // 응답 데이터를 반환합니다.
     }
 
