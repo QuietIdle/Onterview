@@ -232,7 +232,11 @@ onBeforeUnmount(() => {
 <template>
   <div class="container">
     <div class="nav-bar d-flex align-center">
+<<<<<<< Updated upstream
       <h3 class="mx-5 my-4">Q. {{ selfSpeechStore.questionData.question }}</h3>
+=======
+      <h3 class="ma-3 mx-5">Q. {{ selfSpeechStore.questionData.question }}</h3>
+>>>>>>> Stashed changes
       <v-icon class="exit-btn ma-1 ml-auto" color="black" size="32" icon="mdi-close-circle-outline"
         @click="goSelfSpeechMain"></v-icon>
     </div>
@@ -242,6 +246,7 @@ onBeforeUnmount(() => {
         <video id="my-video" autoplay muted></video>
 
         <div class="d-flex align-center">
+<<<<<<< Updated upstream
           <v-btn class="ma-3" @click="startRecording" v-if="!mediaToggle.play" icon="mdi-play" color="red"
             :disabled="!mediaToggle.video || !mediaToggle.audio || selfSpeechStore.selectedQuestion === -1"></v-btn>
           <v-btn class="ma-3" variant="tonal" @click="stopRecording" v-else icon="mdi-stop" color="red"></v-btn>
@@ -251,6 +256,15 @@ onBeforeUnmount(() => {
             <v-btn class="ma-3" @click="controlMedia(1)" v-if="mediaToggle.audio" icon="mdi-microphone"></v-btn>
             <v-btn class="ma-3" @click="controlMedia(1)" v-else icon="mdi-microphone-off" color="blue"></v-btn>
           </div>
+=======
+          <v-btn class="ma-3" @click="controlMedia(0)" v-if="mediaToggle.video" icon="mdi-video"></v-btn>
+          <v-btn class="ma-3" @click="controlMedia(0)" v-else icon="mdi-video-off" color="blue"></v-btn>
+          <v-btn class="ma-3" @click="controlMedia(1)" v-if="mediaToggle.audio" icon="mdi-microphone"></v-btn>
+          <v-btn class="ma-3" @click="controlMedia(1)" v-else icon="mdi-microphone-off" color="blue"></v-btn>
+          <v-btn class="ma-3" @click="startRecording" v-if="!mediaToggle.play" icon="mdi-play" color="red"
+            :disabled="!mediaToggle.video || !mediaToggle.audio || selfSpeechStore.selectedQuestion === -1"></v-btn>
+          <v-btn class="ma-3" variant="tonal" @click="stopRecording" v-else icon="mdi-stop" color="red"></v-btn>
+>>>>>>> Stashed changes
           <div class="timer ml-10" v-if="!mediaToggle.play"></div>
           <div class="timer ml-10" v-else-if="(time % 60) >= 10">{{ Math.floor(time / 60) }}:{{ time % 60 }}</div>
           <div class="timer ml-10" v-else>{{ Math.floor(time / 60) }}:0{{ time % 60 }}</div>
