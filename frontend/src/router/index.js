@@ -55,12 +55,6 @@ const router = createRouter({
       component: () => import('@/views/SelfSpeechRoomView.vue'),
       meta: {layout: ''},
     },
-    // {
-    //   path: '/meeting/room/solo',
-    //   name: 'meeting-room-solo',
-    //   component: () => import('@/views/MeetingRoomSoloview.vue'),
-    //   meta: {layout: ''},
-    // },
     {
       path: '/storage/question',
       name: 'storage-question',

@@ -6,7 +6,7 @@ import { apiMethods } from "@/api/video";
 import { patchUpdateMyQuestionAnswer } from "@/api/question";
 
 const selfSpeechStore = useSelfSpeechStore();
-const maxCounter = ref(20);
+const maxCounter = ref(1500);
 
 const items = ref([
   {
@@ -23,7 +23,7 @@ const items = ref([
   },
 ])
 
-const switchTab = function(page) {
+const switchTab = function (page) {
   selfSpeechStore.listIdx = page;
 }
 const rules = ref([
@@ -34,7 +34,7 @@ const rules = ref([
 ])
 
 const saveFeedback = async function () {
-  if(selfSpeechStore.videoData.feedback.length > maxCounter.value) return
+  if (selfSpeechStore.videoData.feedback.length > maxCounter.value) return
   try {
     await apiMethods.patchVideo(selfSpeechStore.videoData.videoId, {
       feedback: selfSpeechStore.videoData.feedback,
@@ -46,7 +46,7 @@ const saveFeedback = async function () {
 }
 
 const saveScript = async function () {
-  if(selfSpeechStore.questionData.answer.length > maxCounter.value) return
+  if (selfSpeechStore.questionData.answer.length > maxCounter.value) return
   try {
     await patchUpdateMyQuestionAnswer({
       answer: selfSpeechStore.questionData.answer,
@@ -59,62 +59,53 @@ const saveScript = async function () {
 </script>
 
 <template>
-    <div class="d-flex align-center justify-center w-100 h-25">
-      <!-- 전환 탭 -->
-      <v-card class="text-center" min-width="120" max-height="120" variant="text">
-        <template v-for="item in items" :key="item.id">
-          <v-list-item @click="switchTab(item.id)" v-if="item.id==3 && selfSpeechStore.display" disabled>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="switchTab(item.id)" v-else>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item>
-        </template>
-      </v-card>
+  <div class="container d-flex align-center justify-center">
+    <!-- 전환 탭 -->
+    <v-card class="text-center" min-width="120" max-height="120" variant="text">
+      <template v-for="item in items" :key="item.id">
+        <v-list-item @click="switchTab(item.id)" v-if="item.id === 3 && selfSpeechStore.display" disabled>
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item>
+        <v-list-item @click="switchTab(item.id)" v-if="item.id === 2 && selfSpeechStore.selectedQuestion === -1" disabled>
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item>
+        <v-list-item @click="switchTab(item.id)" v-else>
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item>
+      </template>
+    </v-card>
 
-      <!-- 답변 스크립트 -->
-      <div class="content-container w-100 h-100">
-        <div v-if="selfSpeechStore.listIdx===1">
-          <v-container fluid>
-            <v-textarea
-              counter="20"
-              :counter-max="maxCounter"
-              label="답변"
-              :rules="rules"
-              v-model="selfSpeechStore.questionData.answer"
-              no-resize
-              @blur="saveScript"
-            >
+    <!-- 답변 스크립트 -->
+    <div class="content-container w-100 h-100">
+      <div v-if="selfSpeechStore.listIdx === 1">
+        <v-container fluid>
+          <v-textarea counter="200" :counter-max="maxCounter" label="답변" :rules="rules"
+            v-model="selfSpeechStore.questionData.answer" no-resize @blur="saveScript">
             {{ selfSpeechStore.questionData.answer }}
-            </v-textarea>
-          </v-container>
-        </div>
+          </v-textarea>
+        </v-container>
+      </div>
 
-        <!-- 썸네일 -->
-        <div v-else-if="selfSpeechStore.listIdx===2" class="h-100">
-          <VideoThumbnail />
-        </div>
+      <!-- 썸네일 -->
+      <div v-else-if="selfSpeechStore.listIdx === 2" class="h-100">
+        <VideoThumbnail />
+      </div>
 
-        <!-- 자가 진단 -->
-        <div v-else-if="selfSpeechStore.listIdx===3">
-          <v-container fluid>
-            <v-textarea
-              counter="20"
-              :counter-max="maxCounter"
-              label="자가진단"
-              :rules="rules"
-              v-model="selfSpeechStore.videoData.feedback"
-              no-resize
-              @blur="saveFeedback"
-            >
+      <!-- 자가 진단 -->
+      <div v-else-if="selfSpeechStore.listIdx === 3">
+        <v-container fluid>
+          <v-textarea counter="20" :counter-max="maxCounter" label="자가진단" :rules="rules"
+            v-model="selfSpeechStore.videoData.feedback" no-resize @blur="saveFeedback">
             {{ selfSpeechStore.videoData.feedback }}
-            </v-textarea>
-          </v-container>
-        </div>
+          </v-textarea>
+        </v-container>
       </div>
     </div>
+  </div>
 </template>
 
 <style scoped>
-
+.container {
+  background-color: #EAEAEA;
+}
 </style>
