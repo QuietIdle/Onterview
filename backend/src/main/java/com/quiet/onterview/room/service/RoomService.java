@@ -2,6 +2,7 @@ package com.quiet.onterview.room.service;
 
 import static com.quiet.onterview.room.RoomStatus.ENTER;
 import static com.quiet.onterview.room.RoomStatus.FINISH;
+import static com.quiet.onterview.room.RoomStatus.SAVED;
 
 import com.quiet.onterview.interview.dto.response.InterviewQuestionCreateResponse;
 import com.quiet.onterview.matching.MatchUser;
@@ -74,6 +75,9 @@ public class RoomService {
         if (type == ENTER || type == FINISH) {
             progressResponseBuilder.orders(roomRepository.shuffle(sessionId));
             progressResponseBuilder.question(roomRepository.getQuestion(sessionId));
+        } else if (type == SAVED) {
+            progressResponseBuilder.number(null);
+            progressResponseBuilder.index(idx);
         }
         messageService.announceAll(ROOM_PREFIX + sessionId, progressResponseBuilder.build());
     }
@@ -85,11 +89,11 @@ public class RoomService {
         AtomicInteger questionIndex = new AtomicInteger(0);
         List<InterviewQuestionCreateResponse> interviewQuestionCreateResponses = room.getQuestions()
                 .get(userIndex);
-        userRequestMessage.getVideo().forEach(video -> videoService.createVideoInformation(
+        userRequestMessage.getVideos().forEach(video -> videoService.createVideoInformation(
                 VideoInformationRequest.builder()
                         .interviewQuestionId(
                                 interviewQuestionCreateResponses.get(
-                                        questionIndex.getAndIncrement())
+                                                questionIndex.getAndIncrement())
                                         .getInterviewQuestionId()
                         )
                         .title(video.getTitle())
@@ -98,6 +102,6 @@ public class RoomService {
                         .videoInformation(video.getVideoUrl())
                         .build()
         ));
-        return RoomStatus.SAVED;
+        return SAVED;
     }
 }
