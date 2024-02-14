@@ -157,7 +157,7 @@ const stopRecording = function () {
       saveFilename: `${file.value.filename}.mkv`,
       originFilename: `${file.value.filename}.mkv`,
     },
-    thumbUrl: {
+    thumbnailUrl: {
       saveFilename: `${file.value.filename}.png`,
       originFilename: `${file.value.filename}.png`,
     },
@@ -241,7 +241,7 @@ const receive = async function (message) {
 
     case 'FINISH':
       websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
-      websocketStore.now.turn = result.number
+      websocketStore.now.turn += 1
       websocketStore.now.question.commonQuestion = result.question.commonQuestion;
 
       websocketStore.now.orders = result.orders;
@@ -333,7 +333,7 @@ watch(() => websocketStore.flag.record,
 
   </div>
 
-  <v-dialog v-model="dialog" width="auto">
+  <v-dialog v-model="dialog" width="auto" persistent>
     <v-card class="text-center px-10 py-3">
       <v-card-title><v-img :src="logo"></v-img></v-card-title>
       <v-divider class="border-opacity-100"></v-divider>
