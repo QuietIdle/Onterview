@@ -9,6 +9,7 @@ import {
 import { ref } from 'vue'
 
 import logo from '@/assets/logo.png'
+import profile from '@/assets/profile.png'
 import { useUserStore } from '@/stores/user'
 
 const dropdownMenu = ref(null)
@@ -20,13 +21,7 @@ const userStore = useUserStore()
     <template #logo>
       <TheDropDownNavbarLogo>
         <RouterLink to="/">
-          <v-img
-            class="logo"
-            :width="150"
-            aspect-ratio="16/9"
-            cover
-            :src="logo"
-          ></v-img>
+          <v-img class="logo" :width="150" aspect-ratio="16/9" cover :src="logo"></v-img>
         </RouterLink>
       </TheDropDownNavbarLogo>
     </template>
@@ -45,11 +40,7 @@ const userStore = useUserStore()
     </RouterLink>
     <TheDropDownMenu v-else text="마이페이지" ref="dropdownMenu">
       <v-list>
-        <v-list-item
-          :prepend-avatar="logo"
-          title="관리자님"
-          subtitle="환영합니다"
-        >
+        <v-list-item :prepend-avatar="profile" :title="userStore.nickname + ' 님'" subtitle="환영합니다!">
         </v-list-item>
       </v-list>
       <TheDropDownItem link="/mypage">나의 정보 수정</TheDropDownItem>
