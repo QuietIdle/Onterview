@@ -286,16 +286,17 @@ watch(interviewStore.mediaToggle ,
   }
 )
 
-watch(() => websocketStore.flag.record,
-  (newVal, oldVal) => {
-    if (newVal) {
-      startRecording()
-    }
-    else {
-      stopRecording()
-    }
-  }
-)
+// 녹화
+// watch(() => websocketStore.flag.record,
+//   (newVal, oldVal) => {
+//     if (newVal) {
+//       startRecording()
+//     }
+//     else {
+//       stopRecording()
+//     }
+//   }
+// )
 </script>
 
 <template>
