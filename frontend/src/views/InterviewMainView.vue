@@ -3,8 +3,9 @@ import { ref } from "vue"
 import mainImg from '@/assets/interview/interviewMainIcon.png'
 import BtnImg1 from "@/assets/interview/interviewMainBtnIcon1.png"
 import BtnImg2 from "@/assets/interview/interviewMainBtnIcon2.png"
-import BtnImg3 from "@/assets/interview/interviewMainBtnIcon3.png"
 import BtnImg4 from "@/assets/interview/interviewMainBtnIcon4.png"
+import frontEndImg from "@/assets/interview/front-end.png"
+import backEndImg from "@/assets/interview/back-end.png"
 import { useRouter } from "vue-router"
 import { useInterviewStore } from "@/stores/interview"
 import { useUserStore } from "@/stores/user"
@@ -17,18 +18,18 @@ const userStore = useUserStore()
 
 const steps = ref(["면접 인원 선택", "면접 유형 선택", "시작하기"])
 const peopleCount = ref(interviewStore.choice.people === 'MULTI')  // 1인 - 다인
-const type = ref(interviewStore.choice.type === '직무면접')  // 면접 유형
+const type = ref('')  // 면접 유형
 
 const choosePeople = function (val) {
   peopleCount.value = val
   interviewStore.choice.people = peopleCount.value ? 'MULTI' : 'SINGLE'
 }
 
-const chooseType = function (val) {
+const chooseType = function (val, detail) {
   type.value = val
   if (val) {
     interviewStore.choice.type = '직무면접'
-    interviewStore.choice.typeDetail = 'BACKEND'
+    interviewStore.choice.typeDetail = detail
   } else {
     interviewStore.choice.type = '인성면접'
     interviewStore.choice.typeDetail = ''
@@ -78,15 +79,15 @@ const openHelp = function () {
 
       <div class="item">
         <div class="item-body">
-          <button class="btn d-flex justify-center align-center" :class="{ isSelect: !peopleCount }"
+          <button class="btn d-flex justify-center align-center ma-2" :class="{ isSelect: !peopleCount }"
             @click="choosePeople(false)">
-            <div class="w-25 ma-2">1인</div>
+            <h2 class="mx-5">1인</h2>
             <div class="w-25 ma-2"><v-img :src="BtnImg1"></v-img></div>
           </button>
 
-          <button class="btn d-flex justify-center align-center" :class="{ isSelect: peopleCount }"
+          <button class="btn d-flex justify-center align-center ma-2" :class="{ isSelect: peopleCount }"
             @click="choosePeople(true)">
-            <div class="w-25 ma-2">3인~4인</div>
+            <h2 class="mx-5">4인</h2>
             <div class="w-25 ma-2"><v-img :src="BtnImg2"></v-img></div>
           </button>
         </div>
@@ -94,20 +95,24 @@ const openHelp = function () {
 
       <div class="item">
         <div class="item-body">
-          <div class="job">
-            <button :class="{ isSelect: type }" @click="chooseType(true)" class="btn job-btn">
-              <div class="w-50 ma-1">직무면접</div>
-              <div class="w-50 ma-1"><v-img :src="BtnImg3"></v-img></div>
+          <div class="fit d-flex justify-center align-center">
+            <button class="btn d-flex justify-center align-center ma-2"
+              :class="{ isSelect: interviewStore.choice.typeDetail === '' }" @click="chooseType(false, '')">
+              <h2 class="mx-5">인성면접</h2>
+              <div class="w-25 ma-2"><v-img :src="BtnImg4"></v-img></div>
             </button>
-            <v-radio-group class="job-detail" v-if="type" v-model="interviewStore.choice.typeDetail">
-              <v-radio label="백엔드" value="BACKEND"></v-radio>
-              <v-radio label="프론트엔드" value="FRONTEND"></v-radio>
-            </v-radio-group>
           </div>
-          <div class="fit">
-            <button class="btn fit-btn" :class="{ isSelect: !type }" @click="chooseType(false)">
-              <div class="w-25 ma-1">인성면접</div>
-              <div class="ma-1" style="width: 35%;"><v-img :src="BtnImg4"></v-img></div>
+          <div class="job d-flex justify-center align-center">
+            <button class="btn d-flex justify-center align-center flex-column ma-2 ml-0"
+              :class="{ isSelect: interviewStore.choice.typeDetail === 'FRONTEND' }"
+              @click="chooseType(true, 'FRONTEND')">
+              <h2 class="mx-5">프론트엔드</h2>
+              <div class="w-25 ma-2"><v-img :src="frontEndImg"></v-img></div>
+            </button>
+            <button class="btn d-flex justify-center align-center flex-column ma-2 mr-0"
+              :class="{ isSelect: interviewStore.choice.typeDetail === 'BACKEND' }" @click="chooseType(true, 'BACKEND')">
+              <h2 class="mx-5">백엔드</h2>
+              <div class="w-25 ma-1"><v-img :src="backEndImg"></v-img></div>
             </button>
           </div>
         </div>
@@ -153,7 +158,7 @@ const openHelp = function () {
 
 .item-body {
   background-color: #E0DCF2;
-  height: 70vh;
+  height: 60vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -161,46 +166,23 @@ const openHelp = function () {
 }
 
 .btn {
-  margin: 0.8em;
   width: 90%;
   border: 0;
   font-weight: bold;
   cursor: pointer;
   background-color: #fff;
   border-radius: 6px;
-  height: 30vh;
+  /* height: 30vh; */
+  height: 220px;
+  /* 내용물의 높이를 100px로 고정 */
 }
 
 .fit {
   width: 100%;
 }
 
-.fit-btn {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
 .job {
-  width: 100%;
-  display: flex;
-}
-
-.job-btn {
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.job-detail {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 0 0.5em;
+  width: 90%;
 }
 
 .enter {
@@ -224,9 +206,5 @@ const openHelp = function () {
 
 .isSelect {
   border: 0.2em solid #8A439C;
-}
-
-.btns>* {
-  color: white;
 }
 </style>
