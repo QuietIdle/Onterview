@@ -8,6 +8,7 @@ import {
 } from 'vue3-dropdown-navbar'
 import { ref } from 'vue'
 
+import logo from '@/assets/logo.png'
 import profile from '@/assets/profile.png'
 import { useUserStore } from '@/stores/user'
 
