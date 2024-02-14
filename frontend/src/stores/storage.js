@@ -4,15 +4,17 @@ import { defineStore } from 'pinia'
 import { apiMethods } from '@/api/video'
 
 export const useStorageStore = defineStore('storage', () => {
+  const roomType = ref('self')
+
   const storageData = ref([]);
       
   const videoData = ref({});
 
-  const requestUserVideoAll = async function (speechType) {
+  const requestUserVideoAll = async function () {
     try {
-      const result = await apiMethods.getUserVideoAll(speechType)
+      const result = await apiMethods.getUserVideoAll(roomType.value)
       storageData.value = result.data
-      console.log(speechType, storageData.value)
+      console.log(roomType.value, storageData.value)
     } catch (error) {
       console.log(error)
     }
@@ -33,6 +35,7 @@ export const useStorageStore = defineStore('storage', () => {
   }
 
   return {
+    roomType,
     storageData,
     videoData,
     requestUserVideoAll,
