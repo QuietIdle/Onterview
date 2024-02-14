@@ -20,11 +20,9 @@ public class RoomController {
     @MessageMapping("/answer/{sessionId}")
     public void answer(
             @DestinationVariable String sessionId,
-            @Payload UserRequestMessage roomProgressRequest,
-            Principal principal
+            @Payload UserRequestMessage roomProgressRequest
     ) {
-        log.info("ROOM ANSWER PROCESS : {}, REQUEST TYPE : {}", sessionId, roomProgressRequest.getType());
-        roomService.process(sessionId, roomProgressRequest, principal.getName());
+        roomService.process(sessionId, roomProgressRequest);
     }
 
 }

@@ -17,7 +17,6 @@ import com.quiet.onterview.room.repository.RoomRepository;
 import com.quiet.onterview.video.dto.request.VideoInformationRequest;
 import com.quiet.onterview.video.service.VideoService;
 import com.quiet.onterview.websocket.MessageAnnounce;
-import com.quiet.onterview.websocket.StompUser;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +51,7 @@ public class RoomService {
                 RoomLeaveResponse.builder().idx(idx).build());
     }
 
-    public void process(String sessionId, UserRequestMessage userRequestMessage, String user) {
+    public void process(String sessionId, UserRequestMessage userRequestMessage) {
         RoomStatus roomStatus = userRequestMessage.getType();
         Integer idx = userRequestMessage.getIndex();
         RoomProgressResponseBuilder progressResponseBuilder = RoomProgressResponse.builder()
@@ -76,12 +75,11 @@ public class RoomService {
         if (type == ENTER || type == FINISH) {
             progressResponseBuilder.orders(roomRepository.shuffle(sessionId));
             progressResponseBuilder.question(roomRepository.getQuestion(sessionId));
+        } else if (type == SAVED) {
+            progressResponseBuilder.number(null);
+            progressResponseBuilder.index(idx);
         }
-        if (type == SAVED) {
-            messageService.announceToUser(ROOM_PREFIX + sessionId, user, progressResponseBuilder.build());
-        } else {
-            messageService.announceAll(ROOM_PREFIX + sessionId, progressResponseBuilder.build());
-        }
+        messageService.announceAll(ROOM_PREFIX + sessionId, progressResponseBuilder.build());
     }
 
     private RoomStatus save(String sessionId, UserRequestMessage userRequestMessage) {
@@ -95,7 +93,7 @@ public class RoomService {
                 VideoInformationRequest.builder()
                         .interviewQuestionId(
                                 interviewQuestionCreateResponses.get(
-                                        questionIndex.getAndIncrement())
+                                                questionIndex.getAndIncrement())
                                         .getInterviewQuestionId()
                         )
                         .title(video.getTitle())
