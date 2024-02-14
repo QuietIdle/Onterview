@@ -1,6 +1,7 @@
 package com.quiet.onterview.room.repository;
 
 import com.quiet.onterview.interview.dto.response.InterviewQuestionCreateResponse;
+import com.quiet.onterview.interview.exception.InterviewQuestionNotFoundException;
 import com.quiet.onterview.matching.MatchUser;
 import com.quiet.onterview.matching.exception.UserNotFoundException;
 import com.quiet.onterview.question.dto.response.CommonQuestionResponse;
@@ -65,7 +66,10 @@ public class RoomRepository {
 
     private boolean allFinish(String sessionId) {
         Room room = rooms.get(sessionId);
-        return room.getQuestions().size() == room.getQuestionIdx();
+        return room.getQuestions().stream()
+                .findFirst()
+                .orElseThrow(InterviewQuestionNotFoundException::new)
+                .size() == room.getQuestionIdx();
     }
 
     public Boolean leave(String sessionId, Integer idx) {

@@ -62,6 +62,7 @@ public class ChunkService {
                 String.valueOf(Path.of(fileUtils.VIDEO_PATH, filename.split("\\.")[0])),
                 filename);
 
+        log.info("#stream resource path: " + path);
         Resource resource = new FileSystemResource(path);
 
         long chunkSize = 1024 * 1024;
@@ -72,9 +73,6 @@ public class ChunkService {
 
         long rangeLength = calculateRangeLength(httpRange, contentLength, chunkSize);
         long rangeStart = httpRange.getRangeStart(contentLength);
-
-        log.info("contentLength " + contentLength);
-        log.info("rangeStart: " + rangeStart);
         if (rangeStart > contentLength) {
             return Optional.empty();
         }

@@ -31,7 +31,7 @@ public class ChunkController {
         return ResponseEntity.status(uploadStatus).build();
     }
 
-    @GetMapping("/stream/{filename}/{username}")
+    @GetMapping("/stream/{filename}")
     public ResponseEntity<ResourceRegion> streamVideo(
             @RequestHeader HttpHeaders headers,
             @PathVariable String filename
