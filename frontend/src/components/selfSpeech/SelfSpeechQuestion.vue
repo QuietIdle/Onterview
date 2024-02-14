@@ -19,7 +19,7 @@ onMounted(() => {
   questionStore.requestMyQuestionList()
 })
 
-const selectQuestion = async function(ele) {
+const selectQuestion = async function (ele) {
   selfSpeechStore.selectedQuestion = ele.myQuestionId
   try {
     const result = await apiMethods.getVideoAll(selfSpeechStore.selectedQuestion);
@@ -32,26 +32,18 @@ const selectQuestion = async function(ele) {
 
 <template>
   <div class="question-title pa-3 d-flex align-center justify-space-between">
-    <div>나의 면접 문항 목록</div>
+    <h3>나의 면접 문항 목록</h3>
     <v-btn color="grey-lighten-1" @click="dialog = true">관리</v-btn>
   </div>
   <div style="max-height: 80%; overflow-y: auto">
     <v-expansion-panels variant="accordion">
-      <v-expansion-panel
-        v-for="folder in myQuestionList"
-        :key="folder.myQuestionFolderId"
-        :title="folder.myQuestionFolder"
-        :value="folder.myQuestionFolderId"
-      >
-        <draggable
-          :list="folder.myQuestionList"
-          :group="{ name: 'question', pull: 'clone', put: false }"
-          item-key="myQuestionId"
-          :disabled="true"
-        >
+      <v-expansion-panel v-for="folder in myQuestionList" :key="folder.myQuestionFolderId"
+        :title="folder.myQuestionFolder" :value="folder.myQuestionFolderId">
+        <draggable :list="folder.myQuestionList" :group="{ name: 'question', pull: 'clone', put: false }"
+          item-key="myQuestionId" :disabled="true">
           <template #item="{ element }">
             <v-expansion-panel-text class="my-question" @click="selectQuestion(element)">
-              {{ element.question }}
+              <h3>{{ element.question }}</h3>
             </v-expansion-panel-text>
           </template>
         </draggable>
@@ -62,7 +54,8 @@ const selectQuestion = async function(ele) {
   <v-dialog v-model="dialog">
     <v-card class="bg-purple-lighten-4 pa-5">
       <v-card-title class="d-flex flex-row-reverse">
-        <v-icon class="exit-btn ma-1 ml-auto" color="black" size="32" icon="mdi-close-circle-outline" @click="dialog = false"></v-icon>
+        <v-icon class="exit-btn ma-1 ml-auto" color="black" size="32" icon="mdi-close-circle-outline"
+          @click="dialog = false"></v-icon>
       </v-card-title>
       <v-card-text class="bg-white">
         <div class="w-100 h-100">
@@ -71,7 +64,6 @@ const selectQuestion = async function(ele) {
       </v-card-text>
     </v-card>
   </v-dialog>
-
 </template>
 
 <style scoped>
@@ -79,8 +71,9 @@ const selectQuestion = async function(ele) {
   background-color: #7d797f;
   color: white;
 }
-.my-question{
-    cursor: pointer;
-    font-size: 12px;
+
+.my-question {
+  cursor: pointer;
+  font-size: 12px;
 }
 </style>

@@ -10,32 +10,39 @@ const selfSpeechStore = useSelfSpeechStore();
 </script>
 
 <template>
-  <div class="main-container w-screen h-screen d-flex ma-5">
+  <div class="container d-flex">
 
-    <div class="w-25">
-      <SelfSpeechQuestion />
-    </div>
-
-    <div class="w-75">
-      <div class="h-75">
-        <div v-if="selfSpeechStore.display" class="h-100">
+    <v-row no-gutters>
+      <v-col cols="3">
+        <SelfSpeechQuestion />
+      </v-col>
+      <v-col class="d-flex flex-column">
+        <div v-if="selfSpeechStore.display" class="flex-grow-1">
           <SelfSpeechRecord />
         </div>
-        <div v-else class="h-100">
+        <div v-else class="flex-grow-1">
           <VideoPlay />
         </div>
-      </div>
-
-      <SelfSpeechTab />
-    </div>
+        <div class="flex-grow-1">
+          <SelfSpeechTab />
+        </div>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
 <style scoped>
-.main-container>*{
-  border: 1px solid black;
+html,
+body {
+  width: 100%;
+  height: 100%;
 }
-/* *{
-  border: 1px solid black;
-} */
+
+.container {
+  /* border: 1px solid black; */
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  /* 브라우저의 기본 스크롤 바를 숨김 */
+}
 </style>

@@ -32,16 +32,16 @@ const uploadData = ref(null);
 const flag = ref(0); // chunk 전송 완료 여부
 
 const goSelfSpeechMain = function () {
-  router.push({name: 'selfspeech-main'})
+  router.push({ name: 'selfspeech-main' })
 }
 
-const startTimer = function() {
+const startTimer = function () {
   time.value++;
   stopTimer();
   timerId = setTimeout(startTimer, 1000); // 스탑워치 주기 1초
 }
 
-const stopTimer = function() {
+const stopTimer = function () {
   if (timerId !== null) {
     clearTimeout(timerId);
   }
@@ -51,12 +51,10 @@ let recorder;
 let recordedChunks = [];
 
 const startVideo = function () {
+
   navigator.mediaDevices.getUserMedia({
     audio: true,
-    video: {
-      width: { min: 150, ideal: 360, max: 600 },
-      height: { min: 100, ideal: 240, max: 390 },
-    },
+    video: { width: 1280, height: 720 },
   })
     .then(stream => {
       const previewPlayer = document.querySelector("#my-video");
@@ -95,7 +93,7 @@ const startRecording = function () {
   startTimer();
 }
 
-const sendToServer = async function(chunk, idx) {
+const sendToServer = async function (chunk, idx) {
   try {
     // FormData를 생성하고 녹화된 데이터를 추가
     const formData = new FormData();
@@ -159,16 +157,16 @@ const saveRecording = async function () {
   }
 
   const req_body = {
-    myQuestionId : selfSpeechStore.selectedQuestion,
-    videoLength : time.value,
-    title : `${title}-${date}`,
-    videoInformation : {
-        saveFilename: `${filename.value}.mkv`,
-        originFilename: `${filename.value}.mkv`,
+    myQuestionId: selfSpeechStore.selectedQuestion,
+    videoLength: time.value,
+    title: `${title}-${date}`,
+    videoInformation: {
+      saveFilename: `${filename.value}.mkv`,
+      originFilename: `${filename.value}.mkv`,
     },
-    thumbnailInformation : {
-        saveFilename: `${filename.value}.png`,
-        originFilename: `${filename.value}.png`,
+    thumbnailInformation: {
+      saveFilename: `${filename.value}.png`,
+      originFilename: `${filename.value}.png`,
     },
   }
   //console.log(req_body)
@@ -224,54 +222,62 @@ onMounted(() => {
 onBeforeUnmount(() => {
   const previewPlayer = document.querySelector("#my-video")
   if (previewPlayer.srcObject) {
-      const tracks = previewPlayer.srcObject.getTracks();
-      tracks.forEach(track => track.stop());
-      previewPlayer.srcObject = null;
+    const tracks = previewPlayer.srcObject.getTracks();
+    tracks.forEach(track => track.stop());
+    previewPlayer.srcObject = null;
   }
 })
 </script>
 
 <template>
-<div class="container h-100 d-flex flex-column justify-space-between">
-  <div class="nav-bar d-flex align-center">
-    <div class="ma-1">{{ selfSpeechStore.questionData.question }}</div>
-    <v-icon class="exit-btn ma-1 ml-auto" color="black" size="32" icon="mdi-close-circle-outline" @click="goSelfSpeechMain"></v-icon>
-  </div>
-
-  <div class="w-100 text-center pa-1">
-    <video id="my-video" autoplay muted="true"></video>
-  </div>
-
-  <div class="btn-container w-100 d-flex align-center">
-    <v-btn class="ma-3" @click="controlMedia(0)" v-if="mediaToggle.video" icon="mdi-video"></v-btn>
-    <v-btn class="ma-3" @click="controlMedia(0)" v-else icon="mdi-video-off" color="blue"></v-btn>
-    <v-btn class="ma-3" @click="controlMedia(1)" v-if="mediaToggle.audio" icon="mdi-microphone"></v-btn>
-    <v-btn class="ma-3" @click="controlMedia(1)" v-else icon="mdi-microphone-off" color="blue"></v-btn>
-    <v-btn class="ma-3" @click="startRecording" v-if="!mediaToggle.play" icon="mdi-play" color="red" :disabled="!mediaToggle.video||!mediaToggle.audio||selfSpeechStore.selectedQuestion===-1"></v-btn>
-    <v-btn class="ma-3" variant="tonal" @click="stopRecording" v-else icon="mdi-stop" color="red"></v-btn>
-    <div class="timer ml-10" v-if="!mediaToggle.play"></div>
-    <div class="timer ml-10" v-else-if="(time%60)>=10">{{ Math.floor(time/60) }}:{{ time%60 }}</div>
-    <div class="timer ml-10" v-else>{{ Math.floor(time/60) }}:0{{ time%60 }}</div>
-  </div>
-</div>
-
-<v-dialog v-model="dialog" width="auto">
-  <v-card>
-    <v-card-text>
-      저장 하시겠습니까?
-    </v-card-text>
-    <div class="d-flex">
-      <v-card-actions>
-        <v-btn color="primary" block @click="saveRecording">저장</v-btn>
-      </v-card-actions>
-      <v-card-actions>
-        <v-btn color="warning" block @click="cancelRecording">다시 연습</v-btn>
-      </v-card-actions>
+  <div class="container">
+    <div class="nav-bar d-flex align-center">
+      <h3 class="mx-5 my-4">Q. {{ selfSpeechStore.questionData.question }}</h3>
+      <v-icon class="exit-btn ma-1 ml-auto" color="black" size="32" icon="mdi-close-circle-outline"
+        @click="goSelfSpeechMain"></v-icon>
     </div>
-  </v-card>
-</v-dialog>
 
-<!-- <v-dialog v-model="dialog2" width="auto">
+    <div class="d-flex justify-center">
+      <div class="video-container text-center pa-3">
+        <video id="my-video" autoplay muted></video>
+
+        <div class="d-flex align-center">
+          <v-btn class="ma-3" @click="startRecording" v-if="!mediaToggle.play" icon="mdi-play" color="red"
+            :disabled="!mediaToggle.video || !mediaToggle.audio || selfSpeechStore.selectedQuestion === -1"></v-btn>
+          <v-btn class="ma-3" variant="tonal" @click="stopRecording" v-else icon="mdi-stop" color="red"></v-btn>
+          <div v-if="!mediaToggle.play">
+            <v-btn class="ma-3" @click="controlMedia(0)" v-if="mediaToggle.video" icon="mdi-video"></v-btn>
+            <v-btn class="ma-3" @click="controlMedia(0)" v-else icon="mdi-video-off" color="blue"></v-btn>
+            <v-btn class="ma-3" @click="controlMedia(1)" v-if="mediaToggle.audio" icon="mdi-microphone"></v-btn>
+            <v-btn class="ma-3" @click="controlMedia(1)" v-else icon="mdi-microphone-off" color="blue"></v-btn>
+          </div>
+          <div class="timer ml-10" v-if="!mediaToggle.play"></div>
+          <div class="timer ml-10" v-else-if="(time % 60) >= 10">{{ Math.floor(time / 60) }}:{{ time % 60 }}</div>
+          <div class="timer ml-10" v-else>{{ Math.floor(time / 60) }}:0{{ time % 60 }}</div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <v-dialog v-model="dialog" width="auto">
+    <v-card>
+      <v-card-text>
+        저장 하시겠습니까?
+      </v-card-text>
+      <div class="d-flex">
+        <v-card-actions>
+          <v-btn color="primary" block @click="saveRecording">저장</v-btn>
+        </v-card-actions>
+        <v-card-actions>
+          <v-btn color="warning" block @click="cancelRecording">다시 연습</v-btn>
+        </v-card-actions>
+      </div>
+    </v-card>
+  </v-dialog>
+
+  <!-- <v-dialog v-model="dialog2" width="auto">
   <v-card>
     <v-sheet width="500px" class="mx-auto">
       <v-form validate-on="submit lazy">
@@ -298,26 +304,41 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.nav-bar{
-  border: 1px solid black;
+.nav-bar {
+  /* border: 1px solid black; */
   background-color: #f0f0f0;
 }
-.container{
+
+.container {
   background-color: black;
 }
-#my-video{
+
+.video-container {
+  width: 70%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.video-container video {
   width: 100%;
-  height: 390px;
+  height: auto;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
   background-color: black;
 }
-.timer{
+
+.timer {
   color: white;
 }
+
 video {
   transform: rotateY(180deg);
   -webkit-transform: rotateY(180deg);
   /* Safari and Chrome */
   -moz-transform: rotateY(180deg);
   /* Firefox */
+  background-color: black;
 }
 </style>
