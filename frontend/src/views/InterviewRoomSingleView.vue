@@ -198,7 +198,7 @@ const interviewOneQuestion = async function (question) {
   await TTS(question.commonQuestion)
   startRecord()
   await answerInterviewSolo()
-  saveRecording(recordTime.value, question.commonQuestionId)
+  saveRecording(recordTime.value, question.interviewQuestionId)
   clearInterval(updateRecordTime)
   interviewQuestion.value = "\u00A0"
 }
@@ -346,7 +346,8 @@ const requestInterviewQuestions = function () {
     }
 
     const success = function (response) {
-      questionList.value = response.data
+      console.log(response.data[0])
+      questionList.value = response.data[0]
       console.log(response.data)
       resolve(response); // 응답 데이터를 반환합니다.
     }
@@ -394,7 +395,7 @@ const toInterviewMain = function () {
 }
 
 const toStorageInterviewSolo = function () {
-  router.push({ name: "" })  // TODO
+  router.push({ name: "video-list" })
 }
 
 onMounted(() => {
