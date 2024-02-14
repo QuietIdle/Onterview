@@ -1,14 +1,12 @@
 package com.quiet.onterview.room.dto.request;
 
 import com.quiet.onterview.room.RoomStatus;
-import lombok.AllArgsConstructor;
+import java.util.List;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
-public class RoomProgressRequest {
+public class UserRequestMessage {
     RoomStatus type;
     Integer index;
+    List<UserVideoRequestMessage> video;
 }

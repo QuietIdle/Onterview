@@ -3,17 +3,21 @@ package com.quiet.onterview.room.service;
 import static com.quiet.onterview.room.RoomStatus.ENTER;
 import static com.quiet.onterview.room.RoomStatus.FINISH;
 
+import com.quiet.onterview.interview.dto.response.InterviewQuestionCreateResponse;
 import com.quiet.onterview.matching.MatchUser;
 import com.quiet.onterview.matching.exception.TypeMismatchException;
-import com.quiet.onterview.question.dto.response.CommonQuestionResponse;
+import com.quiet.onterview.room.Room;
 import com.quiet.onterview.room.RoomStatus;
-import com.quiet.onterview.room.dto.request.RoomProgressRequest;
+import com.quiet.onterview.room.dto.request.UserRequestMessage;
 import com.quiet.onterview.room.dto.response.RoomLeaveResponse;
 import com.quiet.onterview.room.dto.response.RoomProgressResponse;
 import com.quiet.onterview.room.dto.response.RoomProgressResponse.RoomProgressResponseBuilder;
 import com.quiet.onterview.room.repository.RoomRepository;
+import com.quiet.onterview.video.dto.request.VideoInformationRequest;
+import com.quiet.onterview.video.service.VideoService;
 import com.quiet.onterview.websocket.MessageAnnounce;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,12 +29,13 @@ public class RoomService {
 
     private final String ROOM_PREFIX = "/client/answer/";
     private final RoomRepository roomRepository;
+    private final VideoService videoService;
     private final MessageAnnounce messageService;
 
     public void generate(
             String sessionId,
             List<MatchUser> users,
-            List<CommonQuestionResponse> questions
+            List<List<InterviewQuestionCreateResponse>> questions
     ) {
         roomRepository.generate(sessionId, users, questions);
     }
@@ -38,22 +43,25 @@ public class RoomService {
     public void leave(String user) {
         String sessionId = roomRepository.findRoomByUser(user);
         int idx = roomRepository.findIndexByUser(sessionId, user);
-        if (roomRepository.leave(sessionId, user)) {
+        if (roomRepository.leave(sessionId, idx)) {
             roomRepository.remove(sessionId);
         }
-        messageService.announceAll(ROOM_PREFIX + sessionId, RoomLeaveResponse.builder().idx(idx).build());
+        messageService.announceAll(ROOM_PREFIX + sessionId,
+                RoomLeaveResponse.builder().idx(idx).build());
     }
 
-    public void process(String sessionId, RoomProgressRequest roomProgressRequest) {
-        RoomStatus roomStatus = roomProgressRequest.getType();
+    public void process(String sessionId, UserRequestMessage userRequestMessage) {
+        RoomStatus roomStatus = userRequestMessage.getType();
+        Integer idx = userRequestMessage.getIndex();
         RoomProgressResponseBuilder progressResponseBuilder = RoomProgressResponse.builder()
                 .type(roomStatus)
-                .number(roomProgressRequest.getIndex());
+                .number(idx);
 
-        RoomStatus type = switch (roomProgressRequest.getType()) {
-            case ENTER -> roomRepository.enter(sessionId);
-            case START -> roomRepository.start(sessionId);
-            case PROCEEDING, TIMEOUT -> roomRepository.proceeding(sessionId, roomStatus);
+        RoomStatus type = switch (userRequestMessage.getType()) {
+            case ENTER -> roomRepository.enter(sessionId, idx);
+            case START -> roomRepository.start(sessionId, idx);
+            case PROCEEDING, TIMEOUT -> roomRepository.proceeding(sessionId, roomStatus, idx);
+            case SAVE -> save(sessionId, userRequestMessage);
             default -> throw new TypeMismatchException();
         };
 
@@ -62,11 +70,34 @@ public class RoomService {
         }
 
         progressResponseBuilder.type(type);
-        progressResponseBuilder.number(roomProgressRequest.getIndex());
+        progressResponseBuilder.number(roomRepository.calc(sessionId));
         if (type == ENTER || type == FINISH) {
             progressResponseBuilder.orders(roomRepository.shuffle(sessionId));
             progressResponseBuilder.question(roomRepository.getQuestion(sessionId));
         }
         messageService.announceAll(ROOM_PREFIX + sessionId, progressResponseBuilder.build());
+    }
+
+    private RoomStatus save(String sessionId, UserRequestMessage userRequestMessage) {
+        Room room = roomRepository.findRoomByKey(sessionId);
+        int userIndex = userRequestMessage.getIndex();
+
+        AtomicInteger questionIndex = new AtomicInteger(0);
+        List<InterviewQuestionCreateResponse> interviewQuestionCreateResponses = room.getQuestions()
+                .get(userIndex);
+        userRequestMessage.getVideo().forEach(video -> videoService.createVideoInformation(
+                VideoInformationRequest.builder()
+                        .interviewQuestionId(
+                                interviewQuestionCreateResponses.get(
+                                        questionIndex.getAndIncrement())
+                                        .getInterviewQuestionId()
+                        )
+                        .title(video.getTitle())
+                        .videoLength(video.getVideoLength())
+                        .thumbnailInformation(video.getThumbnailUrl())
+                        .videoInformation(video.getVideoUrl())
+                        .build()
+        ));
+        return RoomStatus.SAVED;
     }
 }

@@ -1,18 +1,18 @@
 package com.quiet.onterview.room.repository;
 
+import com.quiet.onterview.interview.dto.response.InterviewQuestionCreateResponse;
 import com.quiet.onterview.matching.MatchUser;
 import com.quiet.onterview.matching.exception.UserNotFoundException;
 import com.quiet.onterview.question.dto.response.CommonQuestionResponse;
 import com.quiet.onterview.room.Room;
 import com.quiet.onterview.room.RoomStatus;
 import com.quiet.onterview.room.exception.RoomNotFoundException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -23,22 +23,39 @@ public class RoomRepository {
     public void generate(
             String sessionId,
             List<MatchUser> users,
-            List<CommonQuestionResponse> questions
+            List<List<InterviewQuestionCreateResponse>> questions
     ) {
-        Room room = new Room(users, 0, 0, questions);
+        Room room = new Room(users, questions);
         rooms.put(sessionId, room);
     }
 
-    public RoomStatus start(String sessionId) {
-        return rooms.get(sessionId).count() ? RoomStatus.START : null;
+    public Integer calc(String sessionId) {
+        Room room = rooms.get(sessionId);
+        Integer proceedingCount = calc(room.getChecked());
+        Integer leaveCount = calc(room.getIsLeave());
+        return proceedingCount - leaveCount;
     }
 
-    public RoomStatus enter(String sessionId) {
-        return rooms.get(sessionId).count() ? RoomStatus.ENTER : null;
+    private Integer calc(boolean[] src) {
+        int count = 0;
+        for (boolean c : src) {
+            if (c) {
+                count++;
+            }
+        }
+        return count;
     }
 
-    public RoomStatus proceeding(String sessionId, RoomStatus roomStatus) {
-        boolean count = rooms.get(sessionId).count();
+    public RoomStatus start(String sessionId, Integer idx) {
+        return rooms.get(sessionId).count(idx) ? RoomStatus.START : null;
+    }
+
+    public RoomStatus enter(String sessionId, Integer idx) {
+        return rooms.get(sessionId).count(idx) ? RoomStatus.ENTER : null;
+    }
+
+    public RoomStatus proceeding(String sessionId, RoomStatus roomStatus, Integer idx) {
+        boolean count = rooms.get(sessionId).count(idx);
         if (allFinish(sessionId) && count) {
             return RoomStatus.END;
         }
@@ -50,15 +67,15 @@ public class RoomRepository {
         return room.getQuestions().size() == room.getQuestionIdx();
     }
 
-    public Boolean leave(String sessionId, String user) {
+    public Boolean leave(String sessionId, Integer idx) {
         Room room = Optional.ofNullable(rooms.get(sessionId))
                 .orElseThrow(RoomNotFoundException::new);
         try {
-            room.getUsers().remove(MatchUser.builder().principal(user).build());
+            rooms.get(sessionId).leave(idx);
         } catch (Exception e) {
             throw new UserNotFoundException();
         }
-        return room.getUsers().isEmpty();
+        return room.isAllLeave();
     }
 
     public void remove(String sessionId) {
@@ -90,11 +107,21 @@ public class RoomRepository {
         return idx;
     }
 
+    public Room findRoomByKey(String sessionId) {
+        return Optional.ofNullable(rooms.get(sessionId)).orElseThrow(RoomNotFoundException::new);
+    }
+
     public List<Integer> shuffle(String sessionId) {
-        int size = rooms.get(sessionId).getUsers().size();
-        List<Integer> result = IntStream.range(0, size).boxed().collect(Collectors.toList());
-        Collections.shuffle(result);
-        return result;
+        boolean[] leave = rooms.get(sessionId).getIsLeave();
+        List<Integer> orders = new ArrayList<>();
+        for (int i = 0; i < leave.length; i++) {
+            if (leave[i]) {
+                continue;
+            }
+            orders.add(i);
+        }
+        Collections.shuffle(orders);
+        return orders;
     }
 
     public CommonQuestionResponse getQuestion(String sessionId) {

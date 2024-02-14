@@ -1,5 +1,6 @@
 package com.quiet.onterview.matching;
 
+import com.quiet.onterview.interview.dto.response.InterviewQuestionCreateResponse;
 import com.quiet.onterview.matching.dto.request.MatchRequest;
 import com.quiet.onterview.question.dto.response.CommonQuestionResponse;
 import java.security.Principal;
@@ -19,7 +20,7 @@ public class MatchingContext {
     @Setter
     private List<MatchUser> matchUsers;
     @Setter
-    private List<CommonQuestionResponse> questions;
+    private List<List<InterviewQuestionCreateResponse>> questions;
 
     public MatchingContext(MatchRequest matchRequest, String principal, Long memberId) {
         this.roomId = matchRequest.getRoomId();
