@@ -166,90 +166,109 @@ const search = ref('')
   </div>
   <div style="max-height: 80%; overflow-y: auto; overflow-x: hidden">
     <v-expansion-panels variant="accordion" multiple>
-      <v-expansion-panel
-        v-for="folder in myQuestionList"
-        :key="folder.myQuestionFolderId"
-      >
-        <v-hover v-slot="{ isHovering, props }">
-          <v-expansion-panel-title v-bind="props" color="grey-lighten-2">
-            <v-col cols="auto">
-              <v-img
-                v-if="isHovering"
-                width="20"
-                :src="editImage"
-                @click.stop="enableEditingMyQuestionFolder(folder)"
-              ></v-img>
-              <v-img v-else width="20" :src="folderImage"></v-img>
-            </v-col>
-            <v-col class="d-flex align-center">
-              <template v-if="folder.isEditing">
-                <v-text-field
-                  single-line
-                  variant="solo"
-                  density="compact"
-                  hide-details
-                  v-model="folder.editableQuestion"
-                  @blur="requestUpdateMyQuestionFolder(folder)"
-                  @keyup.enter="requestUpdateMyQuestionFolder(folder)"
-                ></v-text-field>
-              </template>
-              <template v-else>
-                {{ folder.myQuestionFolder }}
-              </template>
-            </v-col>
-            <v-col cols="auto" class="d-flex align-center">
-              <QuestionModalCreate
-                content="질문"
-                :my-question-folder-id="folder.myQuestionFolderId"
-              />
-              <QuestionModalDelete
-                content="폴더"
-                :my-question-folder-id="folder.myQuestionFolderId"
-                :my-question-folder="folder.myQuestionFolder"
-              />
-            </v-col>
-          </v-expansion-panel-title>
+      <!-- 폴더가 없는 경우 -->
+      <template v-if="myQuestionList.length == 0">
+        <div class="text-grey" style="margin-top: 25vh">
+          새 폴더를 생성해주세요
+        </div>
+      </template>
+      <!-- 폴더가 있는 경우 -->
+      <template v-else>
+        <v-expansion-panel
+          v-for="folder in myQuestionList"
+          :key="folder.myQuestionFolderId"
+        >
+          <v-hover v-slot="{ isHovering, props }">
+            <v-expansion-panel-title v-bind="props" color="grey-lighten-2">
+              <v-col cols="auto">
+                <v-img
+                  v-if="isHovering"
+                  width="20"
+                  :src="editImage"
+                  @click.stop="enableEditingMyQuestionFolder(folder)"
+                ></v-img>
+                <v-img v-else width="20" :src="folderImage"></v-img>
+              </v-col>
+              <v-col class="d-flex align-center">
+                <template v-if="folder.isEditing">
+                  <v-text-field
+                    single-line
+                    variant="solo"
+                    density="compact"
+                    hide-details
+                    v-model="folder.editableQuestion"
+                    @blur="requestUpdateMyQuestionFolder(folder)"
+                    @keyup.enter="requestUpdateMyQuestionFolder(folder)"
+                  ></v-text-field>
+                </template>
+                <template v-else>
+                  {{ folder.myQuestionFolder }}
+                </template>
+              </v-col>
+              <v-col cols="auto" class="d-flex align-center">
+                <QuestionModalCreate
+                  content="질문"
+                  :my-question-folder-id="folder.myQuestionFolderId"
+                />
+                <QuestionModalDelete
+                  content="폴더"
+                  :my-question-folder-id="folder.myQuestionFolderId"
+                  :my-question-folder="folder.myQuestionFolder"
+                />
+              </v-col>
+            </v-expansion-panel-title>
 
-          <draggable
-            :list="folder.myQuestionList"
-            group="question"
-            @change="(event) => log(event, folder)"
-            item-key="myQuestionId"
-          >
-            <template #item="{ element }">
-              <v-expansion-panel-text>
-                <v-row class="d-flex">
-                  <v-col
-                    class="d-flex align-center"
-                    @dblclick="enableEditingMyQuestion(element)"
-                  >
-                    <template v-if="element.isEditing">
-                      <v-text-field
-                        single-line
-                        variant="solo"
-                        density="compact"
-                        hide-details
-                        v-model="element.editableQuestion"
-                        @keyup.enter="requestUpdateMyQuestion(element)"
-                        @blur="requestUpdateMyQuestion(element)"
-                      ></v-text-field>
-                    </template>
-                    <template v-else>
-                      {{ element.question }}
-                    </template>
-                  </v-col>
-                  <v-col cols="auto">
-                    <QuestionModalDelete
-                      content="파일"
-                      :my-question="element"
-                    />
-                  </v-col>
-                </v-row>
-              </v-expansion-panel-text>
+            <!-- 폴더에 질문이 없는 경우 -->
+            <template v-if="folder.myQuestionList.length == 0">
+              <v-expansion-panel-text class="text-grey"
+                >질문을 추가해주세요</v-expansion-panel-text
+              >
             </template>
-          </draggable>
-        </v-hover>
-      </v-expansion-panel>
+
+            <!-- 폴더에 질문이 있는 경우 -->
+            <template v-else>
+              <draggable
+                :list="folder.myQuestionList"
+                group="question"
+                @change="(event) => log(event, folder)"
+                item-key="myQuestionId"
+              >
+                <template #item="{ element }">
+                  <v-expansion-panel-text>
+                    <v-row class="d-flex">
+                      <v-col
+                        class="d-flex align-center"
+                        @dblclick="enableEditingMyQuestion(element)"
+                      >
+                        <template v-if="element.isEditing">
+                          <v-text-field
+                            single-line
+                            variant="solo"
+                            density="compact"
+                            hide-details
+                            v-model="element.editableQuestion"
+                            @keyup.enter="requestUpdateMyQuestion(element)"
+                            @blur="requestUpdateMyQuestion(element)"
+                          ></v-text-field>
+                        </template>
+                        <template v-else>
+                          {{ element.question }}
+                        </template>
+                      </v-col>
+                      <v-col cols="auto">
+                        <QuestionModalDelete
+                          content="파일"
+                          :my-question="element"
+                        />
+                      </v-col>
+                    </v-row>
+                  </v-expansion-panel-text>
+                </template>
+              </draggable>
+            </template>
+          </v-hover>
+        </v-expansion-panel>
+      </template>
     </v-expansion-panels>
   </div>
 </template>
@@ -277,6 +296,10 @@ const search = ref('')
 .v-expansion-panel-text :deep(.v-expansion-panel-text__wrapper) {
   padding: 4px 24px 8px !important;
   box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2);
+}
+
+.text-grey {
+  color: rgb(193, 193, 193);
 }
 </style>
 
