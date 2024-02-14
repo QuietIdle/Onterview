@@ -16,7 +16,6 @@ public class FileDto {
     @RequiredArgsConstructor
     public static class VideoRequest {
 
-        private final String username;
         private final String filename;
         private final int chunkNumber;
         private final int endOfChunk;
