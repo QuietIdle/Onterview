@@ -25,7 +25,7 @@ export const apiMethods = {
         return api.get(`/api/my-question/${q_id}`)
     },
     getUserVideoAll: function (category) {
-        return api.get(`/api/video?category=${category}`)
+        return api.get(`/api/video?category=${category.toUpperCase()}`)
     },
     deleteVideos: function (v_ids) {
         return api.post('/api/video/delete', v_ids)
