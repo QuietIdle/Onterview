@@ -117,7 +117,6 @@ const sendToServer = async function (chunk, idx) {
     }
   } catch (error) {
     console.error('Error sending chunk to server:', error);
-    alert('업로드 실패입니다')
   }
 }
 
