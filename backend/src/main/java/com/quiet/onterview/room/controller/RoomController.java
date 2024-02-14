@@ -23,7 +23,7 @@ public class RoomController {
             @Payload UserRequestMessage roomProgressRequest,
             Principal principal
     ) {
-        log.info("ROOM ANSWER PROCESS : {}, REQUEST TYPE : {}", sessionId, roomProgressRequest.getType());
+        log.info("Principal : {}", principal.getName());
         roomService.process(sessionId, roomProgressRequest, principal.getName());
     }
 

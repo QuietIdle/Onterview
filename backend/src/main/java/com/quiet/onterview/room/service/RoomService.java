@@ -17,7 +17,6 @@ import com.quiet.onterview.room.repository.RoomRepository;
 import com.quiet.onterview.video.dto.request.VideoInformationRequest;
 import com.quiet.onterview.video.service.VideoService;
 import com.quiet.onterview.websocket.MessageAnnounce;
-import com.quiet.onterview.websocket.StompUser;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
