@@ -15,6 +15,7 @@ public class VideoInformationResponse {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long interviewQuestionId;
     private String title;
+    private String question;
     private FileInformationResponse thumbnailUrl;
     private Boolean bookmark;
 

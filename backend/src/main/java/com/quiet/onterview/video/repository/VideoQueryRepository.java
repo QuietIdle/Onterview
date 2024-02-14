@@ -28,7 +28,7 @@ public class VideoQueryRepository {
     private final JPAQueryFactory queryFactory;
 
     public List<VideoInformationResponse> findAllInterviewVideoByMemberAndType(Long memberId,
-            RoomType roomType) {
+            RoomType roomType, String keyword, Integer bookmark) {
         QFileInformation thumbnailUrl = new QFileInformation("thumbnailUrl");
 
         JPAQuery<VideoInformationResponse> query = queryFactory
@@ -39,7 +39,12 @@ public class VideoQueryRepository {
         joinByRoomType(query, roomType);
 
         query
-                .where(eqMemberId(roomType, memberId).and(eqRoomType(roomType)));
+                .where(
+                        eqMemberId(roomType, memberId)
+                                .and(eqRoomType(roomType))
+                                .and(likeKeyword(keyword, roomType))
+                                .and(eqBookmark(bookmark))
+                );
         return query.fetch();
     }
 
@@ -50,6 +55,8 @@ public class VideoQueryRepository {
                 roomType == RoomType.SELF ? video.myQuestion.myQuestionId.as("myQuestionId")
                         : video.interviewQuestion.interviewQuestionId.as("interviewQuestionId"),
                 video.title,
+                roomType == RoomType.SELF ? video.myQuestion.question
+                        : video.interviewQuestion.commonQuestion,
                 Projections.fields(FileInformationResponse.class,
                         video.thumbnailUrl.originFilename,
                         video.thumbnailUrl.saveFilename).as("thumbnailUrl"),
@@ -66,6 +73,31 @@ public class VideoQueryRepository {
                     .leftJoin(video.interviewQuestion, interviewQuestion)
                     .leftJoin(interviewQuestion.interviewee, interviewee)
                     .leftJoin(interviewee.interviewRoom, interviewRoom);
+        }
+    }
+
+    private BooleanExpression eqBookmark(Integer bookmark) {
+        if (bookmark == null || bookmark == 0) {
+            return null;
+        }
+        return video.bookmark.eq(true);
+    }
+
+    private BooleanExpression likeKeyword(String keyword, RoomType roomType) {
+        if (keyword == null) {
+            return null;
+        }
+
+        switch (roomType) {
+            case SELF -> {
+                return video.myQuestion.question.contains(keyword);
+            }
+            case SINGLE, MULTI -> {
+                return video.interviewQuestion.commonQuestion.commonQuestion.contains(keyword);
+            }
+            default -> {
+                return null;
+            }
         }
     }
 
