@@ -37,9 +37,6 @@ const controlMedia = function (com) {
   else if (com === 1) {
     interviewStore.mediaToggle.audio = !interviewStore.mediaToggle.audio
   }
-  else if (com === 2) {
-    interviewStore.mediaToggle.volume = !interviewStore.mediaToggle.volume
-  }
 }
 
 const openHelp = function () {
@@ -174,7 +171,7 @@ watch(() => websocketStore.flag.interviewer, async () => {
         >답변 완료</v-btn>
       </div>
 
-      <div>
+      <!-- <div>
         <div>
           현재 턴 : {{ websocketStore.now.turn }}
         </div>
@@ -184,15 +181,13 @@ watch(() => websocketStore.flag.interviewer, async () => {
         <div>
           내 번호 : {{ websocketStore.roomData.index }}
         </div>
-      </div>
+      </div> -->
 
       <div class="btn-container d-flex flex-column h-100">
         <v-btn class="ma-3" @click="controlMedia(0)" v-if="interviewStore.mediaToggle.video" icon="mdi-video" color="grey-lighten-1"></v-btn>
         <v-btn class="ma-3" @click="controlMedia(0)" v-else icon="mdi-video-off" color="grey-lighten-1"></v-btn>
         <v-btn class="ma-3" @click="controlMedia(1)" v-if="interviewStore.mediaToggle.audio" icon="mdi-microphone" color="grey-lighten-1"></v-btn>
         <v-btn class="ma-3" @click="controlMedia(1)" v-else icon="mdi-microphone-off" color="grey-lighten-1"></v-btn>
-        <v-btn class="ma-3" @click="controlMedia(2)" v-if="interviewStore.mediaToggle.volume" icon="mdi-volume-high" color="grey-lighten-1"></v-btn>
-        <v-btn class="ma-3" @click="controlMedia(2)" v-else icon="mdi-volume-off" color="grey-lighten-1"></v-btn>
         <v-btn class="ma-3" @click="openHelp" icon="mdi-help" color="grey-lighten-1"></v-btn>
       </div>
     </div>
