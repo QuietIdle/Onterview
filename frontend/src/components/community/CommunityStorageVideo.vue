@@ -36,7 +36,7 @@ const selectVideo = function (video) {
       <v-card class="mx-3 my-2" width="200" @click="selectVideo(video)">
         <v-img
           class="thumbnail"
-          :src="`https://i10a504.p.ssafy.io/api-file/file?filePath=file/image&amp;fileName=${video.thumbnailUrl.saveFilename}`"
+          :src="`${video.thumbnailUrl.saveFilename}`"
           height="105px"
           cover
         >

@@ -37,11 +37,11 @@ const selectVideo = async function (v_id) {
   <v-sheet class="h-100" elevation="1" min-width="200">
     <v-slide-group class="h-100" v-model="model" show-arrows center-active>
       <v-slide-group-item v-for="video in videos" :key="video.videoId" v-slot="{ isSelected, toggle }">
-        <v-card :color="isSelected ? 'primary' : 'grey-lighten-1'" class="ma-3 my-auto" width="150">
+        <v-card :color="isSelected ? 'primary' : 'grey-lighten-1'" class="ma-3" width="150">
           <div class="d-flex flex-column align-center justify-center pa-1">
-            <div class="thumbnail-container">
+            <div class="thumbnail-container d-flex flex-column align-center">
               <v-img :src="video.thumbnailUrl.saveFilename" width="120" height="80" class="img-container" @click="toggle(), selectVideo(video.videoId)"></v-img>
-              <div>{{video.title}}</div>
+              <div style="font-size: 12px;">{{video.title}}</div>
               <v-icon 
                 v-show="!video.bookmark" 
                 class="icon"
@@ -73,12 +73,12 @@ const selectVideo = async function (v_id) {
 .img-container{
   cursor: pointer;
 }
-  .thumbnail-container{
-    position: relative;
-  }
-  .icon{
-    position: absolute;
-    top: 0%;
-    left: 0%;
-  }
+.thumbnail-container{
+  position: relative;
+}
+.icon{
+  position: absolute;
+  top: -5%;
+  left: -5%;
+}
 </style>

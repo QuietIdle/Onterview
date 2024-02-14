@@ -18,6 +18,9 @@ const headers = {
 }
 
 const addLog = function (text) {
+  if (logMessages.value.length > 5) {
+    logMessages.value.shift()
+  }
   logMessages.value.push({
     message: text,
   })
@@ -34,9 +37,6 @@ const controlMedia = function (com) {
   else if (com === 1) {
     interviewStore.mediaToggle.audio = !interviewStore.mediaToggle.audio
   }
-  else if (com === 2) {
-    interviewStore.mediaToggle.volume = !interviewStore.mediaToggle.volume
-  }
 }
 
 const openHelp = function () {
@@ -44,11 +44,13 @@ const openHelp = function () {
 }
 
 const finishAnswer = async function () {
-  await sendMessage('PROCEEDING', websocketStore.now.turn)
+  websocketStore.flag.record = false
+  await sendMessage('PROCEEDING')
 }
 const timeOut = async function () {
   if (websocketStore.myTurn) {
-    await sendMessage('TIMEOUT', websocketStore.now.turn)
+    websocketStore.flag.record = false
+    await sendMessage('TIMEOUT')
   }
 }
 
@@ -56,11 +58,11 @@ const goTimer = function () {
   isActiveTimer.value = true
 }
 
-const sendMessage = async function (type, idx) {
+const sendMessage = async function (type) {
   
   await websocketStore.stomp.send(`/server/answer/${websocketStore.roomData.sessionId}`, headers, JSON.stringify({
     type: type,
-    index: idx,
+    index: websocketStore.roomData.index,
   }))
 }
 
@@ -80,6 +82,7 @@ watch(() => websocketStore.flag.interviewer, async () => {
       websocketStore.now.turn = 0
       if (websocketStore.myTurn) {
         addLog("당신의 차례입니다.")
+        websocketStore.flag.record = true
       }
       await interviewStore.TTS(interviewStore.script.start)
       setTimeout(goTimer, 2000)
@@ -90,6 +93,7 @@ watch(() => websocketStore.flag.interviewer, async () => {
       addLog(`${websocketStore.now.turn}번 째 참가자 답변 완료`)
       if (websocketStore.myTurn) {
         addLog("당신의 차례입니다.")
+        websocketStore.flag.record = true
       }
       //await interviewStore.TTS(interviewStore.script.proceeding)
       setTimeout(goTimer, 2000)
@@ -100,6 +104,7 @@ watch(() => websocketStore.flag.interviewer, async () => {
       addLog(`${websocketStore.now.turn}번 째 참가자 시간 초과!`)
       if (websocketStore.myTurn) {
         addLog("당신의 차례입니다.")
+        websocketStore.flag.record = true
       }
       //await interviewStore.TTS(interviewStore.script.proceeding)
       setTimeout(goTimer, 2000)
@@ -120,9 +125,7 @@ watch(() => websocketStore.flag.interviewer, async () => {
     case 'END':
       isActiveTimer.value = false
       websocketStore.now.turn = -1
-      websocketStore.stomp.disconnect()
       addLog("수고 하셨습니다")
-      alert('면접 종료!!!')
       break;
   }}
 )
@@ -168,7 +171,7 @@ watch(() => websocketStore.flag.interviewer, async () => {
         >답변 완료</v-btn>
       </div>
 
-      <div>
+      <!-- <div>
         <div>
           현재 턴 : {{ websocketStore.now.turn }}
         </div>
@@ -178,15 +181,13 @@ watch(() => websocketStore.flag.interviewer, async () => {
         <div>
           내 번호 : {{ websocketStore.roomData.index }}
         </div>
-      </div>
+      </div> -->
 
       <div class="btn-container d-flex flex-column h-100">
         <v-btn class="ma-3" @click="controlMedia(0)" v-if="interviewStore.mediaToggle.video" icon="mdi-video" color="grey-lighten-1"></v-btn>
         <v-btn class="ma-3" @click="controlMedia(0)" v-else icon="mdi-video-off" color="grey-lighten-1"></v-btn>
         <v-btn class="ma-3" @click="controlMedia(1)" v-if="interviewStore.mediaToggle.audio" icon="mdi-microphone" color="grey-lighten-1"></v-btn>
         <v-btn class="ma-3" @click="controlMedia(1)" v-else icon="mdi-microphone-off" color="grey-lighten-1"></v-btn>
-        <v-btn class="ma-3" @click="controlMedia(2)" v-if="interviewStore.mediaToggle.volume" icon="mdi-volume-high" color="grey-lighten-1"></v-btn>
-        <v-btn class="ma-3" @click="controlMedia(2)" v-else icon="mdi-volume-off" color="grey-lighten-1"></v-btn>
         <v-btn class="ma-3" @click="openHelp" icon="mdi-help" color="grey-lighten-1"></v-btn>
       </div>
     </div>

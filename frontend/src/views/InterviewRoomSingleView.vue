@@ -6,6 +6,7 @@ import TimerComponent from '@/components/interview/Timer.vue'
 import { apiMethods, fileServer } from "@/api/video"
 import { useUserStore } from "@/stores/user"
 import { useInterviewStore } from "@/stores/interview"
+import { useStorageStore } from "@/stores/storage"
 import { postInterviewQuestions } from '@/api/interview'
 
 const router = useRouter()
@@ -395,6 +396,8 @@ const toInterviewMain = function () {
 }
 
 const toStorageInterviewSolo = function () {
+  const storageStore = useStorageStore()
+  storageStore.roomType = 'single'
   router.push({ name: "video-list" })
 }
 

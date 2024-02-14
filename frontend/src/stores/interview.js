@@ -64,6 +64,7 @@ export const useWebsocketStore = defineStore('websocket', () => {
   const flag = ref({
     interviewer: true,
     room: true,
+    record: false,
   })
   const message = ref({
     type: undefined,

@@ -79,7 +79,7 @@ const selectVideo = async function (v_id) {
           <v-card class="mx-3 my-2" width="230" @click="selectVideo(video)">
             <v-img
               class="thumbnail"
-              :src="`https://i10a504.p.ssafy.io/api-file/file?filePath=file/image&amp;fileName=${video.thumbnailUrl.saveFilename}`"
+              :src="`${video.thumbnailUrl.saveFilename}`"
               height="150px"
               cover
               @click.stop="storageStore.goStorageVideoPlay(video.videoId)"

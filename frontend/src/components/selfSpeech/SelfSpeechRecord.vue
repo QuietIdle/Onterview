@@ -101,7 +101,6 @@ const sendToServer = async function (chunk, idx) {
 
     const jsonData = {
       filename: filename.value,
-      username: userStore.email || "null",
       chunkNumber: idx,
       endOfChunk: flag.value,
     }
@@ -118,7 +117,6 @@ const sendToServer = async function (chunk, idx) {
     }
   } catch (error) {
     console.error('Error sending chunk to server:', error);
-    alert('업로드 실패입니다')
   }
 }
 
@@ -145,6 +143,16 @@ const stopRecording = async function () {
 //   dialog.value = false
 //   dialog2.value = true
 // }
+const refreshVideo = async function () {
+  try {
+    const result = await apiMethods.getVideoAll(
+      selfSpeechStore.selectedQuestion
+    )
+    selfSpeechStore.questionData = result.data
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 const saveRecording = async function () {
   const date = new Date().toLocaleString()
@@ -178,13 +186,13 @@ const saveRecording = async function () {
   }
   dialog.value = false
   startVideo()
-  questionStore.requestMyQuestionList()
+  refreshVideo()
 }
 
 const cancelRecording = async function () {
   try {
     dialog.value = false
-    const res = await fileServer.cancelUpload(userStore.email || "null", filename.value)
+    const res = await fileServer.cancelUpload(filename.value)
     console.log(res.data)
   } catch (error) {
     console.log(error)
@@ -257,7 +265,6 @@ onBeforeUnmount(() => {
         </div>
       </div>
     </div>
-
 
   </div>
 

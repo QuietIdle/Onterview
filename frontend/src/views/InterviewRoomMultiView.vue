@@ -34,6 +34,8 @@ const goInterviewMain = function () {
   router.push({name: 'interview'})
 }
 
+interviewStore.ov = true
+
 watch(() => websocketStore.flag.room,
   () => {
     console.log("room event!")

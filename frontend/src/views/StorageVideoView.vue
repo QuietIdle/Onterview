@@ -3,10 +3,9 @@ import { ref, onMounted } from 'vue'
 import { useStorageStore } from '@/stores/storage'
 
 const storageStore = useStorageStore()
-const roomType = ref('self')
 
 onMounted(() => {
-  storageStore.requestUserVideoAll(roomType.value)
+  storageStore.requestUserVideoAll()
 })
 </script>
 
@@ -15,19 +14,24 @@ onMounted(() => {
   <v-container>
     <v-row justify="end" align="center">
       <div
-        :class="{ active: roomType === 'self', inactive: roomType !== 'self' }"
-        @click="(roomType = 'self'), storageStore.requestUserVideoAll(roomType)"
+        :class="{
+          active: storageStore.roomType === 'self',
+          inactive: storageStore.roomType !== 'self'
+        }"
+        @click="
+          (storageStore.roomType = 'self'), storageStore.requestUserVideoAll()
+        "
       >
         셀프 스피치
       </div>
       <div style="color: rgb(190, 190, 190)">|</div>
       <div
         :class="{
-          active: roomType === 'single',
-          inactive: roomType !== 'single'
+          active: storageStore.roomType === 'single',
+          inactive: storageStore.roomType !== 'single'
         }"
         @click="
-          (roomType = 'single'), storageStore.requestUserVideoAll(roomType)
+          (storageStore.roomType = 'single'), storageStore.requestUserVideoAll()
         "
       >
         1인 모의 면접
@@ -35,11 +39,11 @@ onMounted(() => {
       <div style="color: rgb(190, 190, 190)">|</div>
       <div
         :class="{
-          active: roomType === 'multi',
-          inactive: roomType !== 'multi'
+          active: storageStore.roomType === 'multi',
+          inactive: storageStore.roomType !== 'multi'
         }"
         @click="
-          (roomType = 'multi'), storageStore.requestUserVideoAll(roomType)
+          (storageStore.roomType = 'multi'), storageStore.requestUserVideoAll()
         "
       >
         다인 모의 면접
