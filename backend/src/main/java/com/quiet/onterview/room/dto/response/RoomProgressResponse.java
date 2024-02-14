@@ -16,7 +16,7 @@ import lombok.ToString;
 public class RoomProgressResponse {
     RoomStatus type;
     @JsonInclude(Include.NON_NULL)
-    Integer number;
+    Integer number; //현재 진행 완료한 사람 수
     @JsonInclude(Include.NON_NULL)
     List<Integer> orders;
     @JsonInclude(Include.NON_NULL)
