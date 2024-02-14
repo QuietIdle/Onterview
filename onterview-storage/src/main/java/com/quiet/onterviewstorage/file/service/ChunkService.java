@@ -90,8 +90,8 @@ public class ChunkService {
         ));
     }
 
-    public void delete(String username, String fileName) {
-        Path path = Path.of(fileUtils.VIDEO_PATH, username, fileName);
+    public void delete(String fileName) {
+        Path path = Path.of(fileUtils.VIDEO_PATH, fileName);
         File folder = new File(String.valueOf(path));
 
         if (folder.exists()) {

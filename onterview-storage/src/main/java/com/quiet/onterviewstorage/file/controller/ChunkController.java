@@ -49,10 +49,9 @@ public class ChunkController {
 
     @DeleteMapping
     public ResponseEntity<?> chunkDelete(
-            @RequestParam("username") String username,
             @RequestParam("fileName") String fileName
     ) {
-        chunkService.delete(username, fileName);
+        chunkService.delete(fileName);
         return ResponseEntity.noContent().build();
     }
 }
