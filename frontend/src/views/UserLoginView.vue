@@ -1,10 +1,16 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 
+const router = useRouter()
 const userStore = useUserStore()
 const email = ref('')
 const password = ref('')
+
+const toRegister = function () {
+  router.push({ name: 'register' })
+}
 
 const emailRules = [
   (value) => {
@@ -87,17 +93,20 @@ const requestLogin = function () {
           </v-btn>
         </v-form>
 
-        <v-btn type="submit" block class="kakao mt-5 py-5">
+        <!-- <v-btn type="submit" block class="kakao mt-5 py-5">
           <div class="d-flex" justify="center">
             <img src="@/assets/kakao-logo.png" width="20px">
             <h3 class="mx-2">카카오 로그인</h3>
           </div>
-        </v-btn>
+        </v-btn> -->
 
         <p class="text-center mt-5">
-          <a href="#"> 비밀번호 찾기 </a>
-          <span class="text-grey">|</span>
-          <a href="/register"> 회원가입 </a>
+          <!-- 온터뷰가 처음인가요? -->
+          <!-- <v-btn variant="text"> 비밀번호 찾기 </v-btn>
+          <span class="text-grey">|</span> -->
+          <v-btn variant="text" @click="toRegister" style="color: #BB66FF">
+            <h3> 회원가입 </h3>
+          </v-btn>
         </p>
 
       </v-sheet>

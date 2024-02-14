@@ -55,6 +55,12 @@ const router = createRouter({
       component: () => import('@/views/SelfSpeechRoomView.vue'),
       meta: {layout: ''},
     },
+    // {
+    //   path: '/meeting/room/solo',
+    //   name: 'meeting-room-solo',
+    //   component: () => import('@/views/MeetingRoomSoloview.vue'),
+    //   meta: {layout: ''},
+    // },
     {
       path: '/storage/question',
       name: 'storage-question',
@@ -65,7 +71,49 @@ const router = createRouter({
       path: '/storage/video',
       name: 'storage-video',
       component: () => import('@/views/StorageVideoView.vue'),
-      meta: {layout: 'main'},
+      meta: { layout: 'main' },
+      redirect: { name: "video-list"},
+      children: [
+        {
+          path: "list",
+          name: "video-list",
+          component: () => import('@/components/storage/StorageVideoList.vue')
+        },
+        {
+          path: "grid",
+          name: "video-grid",
+          component: () => import('@/components/storage/StorageVideoGrid.vue')
+        },
+        {
+          path: "play/:videoId",
+          name: "video-play",
+          component: () => import('@/components/storage/StorageVideoPlay.vue')
+        }
+      ]
+    },
+    {
+      path: '/community',
+      name: 'community',
+      component: () => import('@/views/CommunityView.vue'),
+      meta: { layout: 'main' },
+      redirect: { name: "community-list" },
+      children: [
+        {
+          path: "list",
+          name: "community-list",
+          component: () => import('@/components/community/CommunityList.vue')
+        },
+        {
+          path: "detail/:articleId",
+          name: "community-detail",
+          component: () => import('@/components/community/CommunityDetail.vue')
+        },
+        {
+          path: "write",
+          name: "community-write",
+          component: () => import('@/components/community/CommunityWrite.vue')
+        }
+      ]
     },
     {
       path: '/interview',
@@ -92,7 +140,7 @@ router.beforeEach((to, from) => {
   const userStore = useUserStore()
 
   if (userStore.accessToken === null) {
-    if (to.name === 'mypage' || to.name === 'selfspeech-room' || to.name === 'storage-question' || to.name === 'storage-video') {
+    if (to.name === 'mypage' || to.name === 'selfspeech-room' || to.name === 'storage-question' || to.name === 'storage-video' || to.name === 'interview-single') {
       alert('로그인이 필요합니다!')
       return { name: 'login' }
     }

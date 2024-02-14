@@ -7,16 +7,17 @@ import BtnImg3 from "@/assets/interview/interviewMainBtnIcon3.png"
 import BtnImg4 from "@/assets/interview/interviewMainBtnIcon4.png"
 import { useRouter } from "vue-router"
 import { useInterviewStore } from "@/stores/interview"
+import { useUserStore } from "@/stores/user"
 import interviewMultiHelpModal from "@/components/interview/interviewMultiHelpModal.vue"
 import interviewMultiWait from "@/components/interview/interviewMultiWait.vue"
 
 const router = useRouter()
 const interviewStore = useInterviewStore()
+const userStore = useUserStore()
 
 const steps = ref(["면접 인원 선택", "면접 유형 선택", "시작하기"])
-const peopleCount = ref(false)  // 1인 - 다인
-const type = ref(false)  // 면접 유형
-
+const peopleCount = ref(interviewStore.choice.people === 'MULTI')  // 1인 - 다인
+const type = ref(interviewStore.choice.type === '직무면접')  // 면접 유형
 
 const choosePeople = function (val) {
   peopleCount.value = val
@@ -30,17 +31,23 @@ const chooseType = function (val) {
     interviewStore.choice.typeDetail = 'BACKEND'
   } else {
     interviewStore.choice.type = '인성면접'
-    interviewStore.choice.typeDetail = 'FIT'
+    interviewStore.choice.typeDetail = ''
   }
 }
 
 const enter = function () {
 
+  if (userStore.accessToken === null) {
+    alert('로그인이 필요합니다!')
+    router.push({ name: 'login' })
+    return;
+  }
+
   if (interviewStore.choice.people === 'MULTI') {
     interviewStore.dialog.wait = true
   }
   else {
-    alert('1인 방')
+    router.push('/interview/single')
   }
 }
 
@@ -89,7 +96,7 @@ const openHelp = function () {
         <div class="item-body">
           <div class="job">
             <button :class="{ isSelect: type }" @click="chooseType(true)" class="btn job-btn">
-              <div class="w-50 ma-1">직무</div>
+              <div class="w-50 ma-1">직무면접</div>
               <div class="w-50 ma-1"><v-img :src="BtnImg3"></v-img></div>
             </button>
             <v-radio-group class="job-detail" v-if="type" v-model="interviewStore.choice.typeDetail">
@@ -99,7 +106,7 @@ const openHelp = function () {
           </div>
           <div class="fit">
             <button class="btn fit-btn" :class="{ isSelect: !type }" @click="chooseType(false)">
-              <div class="w-25 ma-1">인성</div>
+              <div class="w-25 ma-1">인성면접</div>
               <div class="ma-1" style="width: 35%;"><v-img :src="BtnImg4"></v-img></div>
             </button>
           </div>

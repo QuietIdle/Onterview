@@ -3,6 +3,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { apiMethods, fileServer } from "@/api/video";
 import { useSelfSpeechStore } from "@/stores/selfSpeech";
 import { useUserStore } from "@/stores/user";
+import { useQuestionStore } from "@/stores/question";
 import { useRouter } from 'vue-router'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -25,6 +26,7 @@ const filename = ref("")
 
 const selfSpeechStore = useSelfSpeechStore();
 const userStore = useUserStore()
+const questionStore = useQuestionStore()
 const uploadData = ref(null);
 
 const flag = ref(0); // chunk 전송 완료 여부
@@ -49,7 +51,6 @@ let recorder;
 let recordedChunks = [];
 
 const startVideo = function () {
-  
   navigator.mediaDevices.getUserMedia({
     audio: true,
     video: {
@@ -115,19 +116,20 @@ const sendToServer = async function(chunk, idx) {
     if (response.status === 200) {
       console.log('upload success', response.data);
       uploadData.value = response.data;
+      dialog.value = true;
     }
   } catch (error) {
     console.error('Error sending chunk to server:', error);
+    alert('업로드 실패입니다')
   }
 }
 
-const stopRecording = function () {
+const stopRecording = async function () {
   mediaToggle.value.play = false;
   flag.value = 1;
-  dialog.value = true;
   const previewPlayer = document.querySelector("#my-video");
   previewPlayer.srcObject.getTracks().forEach(track => track.stop());
-  recorder.stop();
+  await recorder.stop();
   recordedChunks.length = 0
   stopTimer();
   time.value = 0;
@@ -148,10 +150,18 @@ const stopRecording = function () {
 
 const saveRecording = async function () {
   const date = new Date().toLocaleString()
+  let title = ""
+  if (selfSpeechStore.questionData.question.length > 10) {
+    title = selfSpeechStore.questionData.question.substring(0, 10) + "..."
+  }
+  else {
+    title = selfSpeechStore.questionData.question
+  }
+
   const req_body = {
-    questionId : selfSpeechStore.selectedQuestion,
+    myQuestionId : selfSpeechStore.selectedQuestion,
     videoLength : time.value,
-    title : `${selfSpeechStore.questionData.question}-${date}`,
+    title : `${title}-${date}`,
     videoInformation : {
         saveFilename: `${filename.value}.mkv`,
         originFilename: `${filename.value}.mkv`,
@@ -160,8 +170,8 @@ const saveRecording = async function () {
         saveFilename: `${filename.value}.png`,
         originFilename: `${filename.value}.png`,
     },
-    category: 1,
   }
+  //console.log(req_body)
   try {
     const response = await apiMethods.saveVideo(req_body)
     console.log('save successfully!', response.data)
@@ -170,6 +180,7 @@ const saveRecording = async function () {
   }
   dialog.value = false
   startVideo()
+  questionStore.requestMyQuestionList()
 }
 
 const cancelRecording = async function () {
@@ -228,7 +239,7 @@ onBeforeUnmount(() => {
   </div>
 
   <div class="w-100 text-center pa-1">
-    <video id="my-video" autoplay></video>
+    <video id="my-video" autoplay muted="true"></video>
   </div>
 
   <div class="btn-container w-100 d-flex align-center">
@@ -301,5 +312,12 @@ onBeforeUnmount(() => {
 }
 .timer{
   color: white;
+}
+video {
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+  /* Safari and Chrome */
+  -moz-transform: rotateY(180deg);
+  /* Firefox */
 }
 </style>

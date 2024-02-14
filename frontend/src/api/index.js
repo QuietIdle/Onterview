@@ -1,11 +1,11 @@
 import axios from "axios"
 
-const localURL = 'http://i10a504.p.ssafy.io:8081/';
+const deploymentURL = 'https://i10a504.p.ssafy.io/'
 
 // local vue api axios instance
 function localAxios() {
   const instance = axios.create({
-    baseURL: localURL,
+    baseURL: deploymentURL,
     headers: {
       "Content-Type": "application/json;charset=utf-8",
     },
