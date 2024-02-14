@@ -134,7 +134,7 @@ router.beforeEach((to, from) => {
   const userStore = useUserStore()
 
   if (userStore.accessToken === null) {
-    if (to.name === 'mypage' || to.name === 'selfspeech-room' || to.name === 'storage-question' || to.name === 'storage-video' || to.name === 'interview-single') {
+    if (to.name === 'mypage' || to.name === 'selfspeech-room' || to.name === 'storage-question' || to.name === 'storage-video' || to.name === 'interview-single' || to.name === 'community-detail' || to.name === 'community-write' || to.name === 'video-list' || to.name === 'video-grid') {
       alert('로그인이 필요합니다!')
       return { name: 'login' }
     }
