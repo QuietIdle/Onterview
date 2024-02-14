@@ -14,10 +14,11 @@ import com.querydsl.core.types.QBean;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.quiet.onterview.common.BaseException;
+import com.quiet.onterview.common.ErrorCode;
 import com.quiet.onterview.file.dto.response.FileInformationResponse;
 import com.quiet.onterview.file.entity.QFileInformation;
 import com.quiet.onterview.interview.entity.RoomType;
-import com.quiet.onterview.question.entity.QCommonQuestion;
 import com.quiet.onterview.video.dto.response.VideoInformationResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -99,7 +100,7 @@ public class VideoQueryRepository {
                 return video.interviewQuestion.commonQuestion.commonQuestion.contains(keyword);
             }
             default -> {
-                return null;
+                throw new BaseException(ErrorCode.ROOM_NOT_FOUND);
             }
         }
     }
