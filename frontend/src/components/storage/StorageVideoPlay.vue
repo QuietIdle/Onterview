@@ -1,10 +1,28 @@
 <script setup>
 import { useStorageStore } from '@/stores/storage'
+import { useUserStore } from '@/stores/user'
 import { onBeforeUnmount, ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { fileServer } from '@/api/video'
 import { apiMethods } from '@/api/video'
+import editImage from '@/assets/question/editImage.png'
 
 const storageStore = useStorageStore()
+const userStore = useUserStore()
+
+const route = useRoute()
+const videoId = route.params.videoId
+
+onMounted(async () => {
+  await requestVideo(videoId)
+  await requestAllChunks()
+})
+
+onBeforeUnmount(() => {
+  if (player) {
+    player.dispose()
+  }
+})
 
 let player
 const videoPlayer = ref(undefined)
@@ -19,17 +37,6 @@ const rules = ref([
     )
   }
 ])
-
-const saveFeedback = async function () {
-  try {
-    const result = await apiMethods.patchVideo(storageStore.videoData.videoId, {
-      feedback: storageStore.videoData.feedback
-    })
-    console.log(result.data)
-  } catch (error) {
-    console.log(error)
-  }
-}
 
 // video
 const isCompleted = ref(false)
@@ -48,7 +55,7 @@ const getAllChunks = async function (filename) {
     try {
       const response = await fileServer.playVideo(
         filename,
-        'test@test.com',
+        userStore.email,
         start,
         end
       )
@@ -72,64 +79,131 @@ const getAllChunks = async function (filename) {
         // else reRenderVideo(url)
       }
     } catch (error) {
-      console.error('영상 가져오기 실패', error)
+      console.error('호제야...', error)
       break
     }
   }
 }
 
-onMounted(async () => {
+const requestVideo = async function (videoId) {
   try {
-    await getAllChunks('59755822-3226-49f0-bac9-2ee7c44b5de2.mkv', 0)
-    // await getAllChunks(postDetail.value.videoInfo.videoUrl.saveFilename, 0)
+    const res = await apiMethods.getVideo(videoId)
+    storageStore.videoData = res.data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const requestAllChunks = async function () {
+  try {
+    await getAllChunks(storageStore.videoData.videoUrl.saveFilename, 0)
+    console.log(storageStore.videoData.videoUrl.saveFilename)
   } catch (error) {
     console.warn(error)
   }
-})
+}
 
-onBeforeUnmount(() => {
-  if (player) {
-    player.dispose()
+// patch
+const isEditTitle = ref(false)
+const editableTitle = ref('')
+
+const saveFeedback = async function () {
+  try {
+    const result = await apiMethods.patchVideo(storageStore.videoData.videoId, {
+      feedback: storageStore.videoData.feedback
+    })
+    console.log(result.data)
+  } catch (error) {
+    console.log(error)
   }
-})
+}
+
+const enableEditVideoTitle = function () {
+  isEditTitle.value = true
+  editableTitle.value = storageStore.videoData.title
+}
+
+const requestUpdateVideoTitle = async function () {
+  try {
+    const result = await apiMethods.patchVideo(videoId, {
+      title: editableTitle.value
+    })
+    console.log(result.data)
+    requestVideo(videoId)
+  } catch (error) {
+    console.log(error)
+  }
+
+  isEditTitle.value = false
+}
 </script>
 
 <template>
-  <div class="main-container d-flex justify-center">
-    <div class="w-75">
-      <div class="pa-2">
-        <v-btn @click="storageStore.goStorageVideoList()">목록 보기</v-btn>
-      </div>
+  <v-container class="d-flex flex-column justify-center">
+    <div>
+      <v-btn @click="storageStore.goStorageVideoList()">목록 보기</v-btn>
+    </div>
+    <div class="d-flex justify-center align-center mt-3">
+      <template v-if="isEditTitle">
+        <v-text-field
+          v-model="editableTitle"
+          label="제목 수정"
+          single-line
+          variant="solo"
+          density="compact"
+          hide-details
+          @blur="requestUpdateVideoTitle()"
+          @keyup.enter="requestUpdateVideoTitle()"
+        ></v-text-field>
+      </template>
+      <template v-else>
+        <div>
+          {{ storageStore.videoData.title }}
+        </div>
+        <div class="ml-2">
+          <v-img
+            :src="editImage"
+            height="20"
+            width="20"
+            @click="enableEditVideoTitle()"
+          ></v-img>
+        </div>
+      </template>
+    </div>
 
-      <div class="pa-2">
-        <div class="empty-player-container d-flex justify-center align-center">
+    <v-row>
+      <v-col cols="12">
+        <div
+          class="d-flex justify-center bg-white py-3 my-1 rounded-lg"
+          style="border: 3px solid rgb(213, 213, 213)"
+        >
           <video
-            ref="videoPlayer"
-            class="video-js vjs-big-play-centered"
             id="my-video"
-            data-setup='{"width": 640}'
-            controls
-            width="640"
-            height="360"
+            :src="urlRef"
+            controls="true"
+            style="max-width: 80%; min-width: 100px"
+            class="rounded-lg"
           ></video>
         </div>
-      </div>
+      </v-col>
+    </v-row>
 
-      <v-container fluid>
+    <v-row>
+      <v-col cols="12" class="mb-10">
         <v-textarea
-          counter="20"
-          :counter-max="maxCounter"
           label="자가진단"
-          :rules="rules"
-          v-model="storageStore.videoData.feedback"
+          placeholder="나의 답변 영상을 보고 피드백을 남겨보세요"
           no-resize
+          variant="outlined"
+          v-model="storageStore.videoData.feedback"
           @blur="saveFeedback"
+          style="background-color: white"
+          rows="10"
         >
-          {{ storageStore.videoData.feedback }}
         </v-textarea>
-      </v-container>
-    </div>
-  </div>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <style scoped>
@@ -143,8 +217,11 @@ onBeforeUnmount(() => {
   position: relative;
 }
 #my-video {
-  width: 640px;
+  /* width: 640px;
   height: 360px;
-  background-color: #f0f0f0;
+  background-color: #f0f0f0; */
+}
+:deep(.v-input__details) {
+  display: none;
 }
 </style>

@@ -4,6 +4,7 @@ import { apiMethods } from '@/api/video'
 import { useStorageStore } from '@/stores/storage'
 
 const storageStore = useStorageStore()
+
 const selectedId = ref([])
 const isSelectedAll = ref(false)
 
@@ -83,21 +84,20 @@ const selectVideo = async function (v_id) {
               <th class="text-left">북마크</th>
             </tr>
           </thead>
-          <tbody>
-            <tr v-for="(dt, n) in storageStore.storageData" :key="n" hover>
+          <tbody v-for="(dt, n) in storageStore.storageData" :key="n" hover>
+            <tr
+              class="list-item"
+              @click="storageStore.goStorageVideoPlay(dt.videoId)"
+            >
               <td>
                 <v-checkbox
+                  @click.stop
                   v-model="selectedId"
                   :value="dt.videoId"
                 ></v-checkbox>
               </td>
               <td>{{ n + 1 }}</td>
-              <td
-                @click="
-                  storageStore.goStorageVideoPlay(), selectVideo(dt.videoId)
-                "
-                class="list-item"
-              >
+              <td>
                 {{ dt.title }}
               </td>
               <td>{{ dt.question }}</td>
@@ -107,7 +107,7 @@ const selectVideo = async function (v_id) {
                   color="purple"
                   size="32"
                   icon="mdi-bookmark-outline"
-                  @click="
+                  @click.stop="
                     markVideo(dt.videoId, dt.bookmark),
                       (dt.bookmark = !dt.bookmark)
                   "
@@ -118,7 +118,7 @@ const selectVideo = async function (v_id) {
                   color="purple"
                   size="32"
                   icon="mdi-bookmark-check"
-                  @click="
+                  @click.stop="
                     markVideo(dt.videoId, dt.bookmark),
                       (dt.bookmark = !dt.bookmark)
                   "
@@ -139,6 +139,10 @@ const selectVideo = async function (v_id) {
 }
 .list-item {
   cursor: pointer;
+}
+
+.list-item:hover {
+  background-color: rgb(242, 242, 242);
 }
 
 :deep(.v-input__details) {

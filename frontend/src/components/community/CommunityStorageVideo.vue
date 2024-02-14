@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { getSelfSpeechVideoList, getInterviewVideoList } from '@/api/community'
+import { apiMethods } from '@/api/video'
 import selectButton from '@/assets/community/selectButton.svg'
 
 const props = defineProps({
@@ -9,28 +9,15 @@ const props = defineProps({
 })
 
 onMounted(() => {
-  if (props.roomType == 'selfspeech') {
-    requestSelfSpeechVideoList()
-  } else {
-    requestInterviewVideoList()
-  }
+  requestStorageVideoList()
 })
 
-const requestSelfSpeechVideoList = async function () {
+const requestStorageVideoList = async function () {
   try {
-    const response = await getSelfSpeechVideoList()
+    const response = await apiMethods.getUserVideoAll(props.roomType)
     videoList.value = response.data
   } catch (error) {
-    console.error('셀프 스피치 영상목록 조회 실패', error)
-  }
-}
-
-const requestInterviewVideoList = async function () {
-  try {
-    const response = await getInterviewVideoList(props.roomType)
-    videoList.value = response.data
-  } catch (error) {
-    console.error('모의 면접 영상목록 조회 실패', error)
+    console.error('영상 목록 조회 실패', error)
   }
 }
 
@@ -49,7 +36,7 @@ const selectVideo = function (video) {
       <v-card class="mx-3 my-2" width="200" @click="selectVideo(video)">
         <v-img
           class="thumbnail"
-          :src="video.thumbnailUrl.saveFilename"
+          :src="`https://i10a504.p.ssafy.io/api-file/file?filePath=file/image&amp;fileName=${video.thumbnailUrl.saveFilename}`"
           height="105px"
           cover
         >
