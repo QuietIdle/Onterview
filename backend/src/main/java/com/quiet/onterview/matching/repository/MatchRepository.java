@@ -1,23 +1,15 @@
 package com.quiet.onterview.matching.repository;
 
-import com.quiet.onterview.common.BaseException;
 import com.quiet.onterview.interview.entity.QuestionType;
-import com.quiet.onterview.interview.entity.RoomType;
 import com.quiet.onterview.matching.MatchUser;
 import com.quiet.onterview.matching.exception.UserNotFoundException;
 import jakarta.annotation.PostConstruct;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,11 +21,11 @@ import org.springframework.stereotype.Repository;
 public class MatchRepository {
 
     private int roomSize;
-    private Map<Integer, ArrayDeque<MatchUser>> waitingRooms;
+    private ConcurrentMap<Integer, ArrayDeque<MatchUser>> waitingRooms;
 
     @PostConstruct
     private void init() {
-        waitingRooms = new TreeMap<>();
+        waitingRooms = new ConcurrentHashMap<>();
         roomSize = QuestionType.values().length;
         IntStream.range(1, roomSize + 1)
                 .forEach(i -> waitingRooms.put(i, new ArrayDeque<>()));

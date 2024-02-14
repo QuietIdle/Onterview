@@ -5,6 +5,7 @@ import com.quiet.onterview.question.dto.request.MyQuestionMoveRequest;
 import com.quiet.onterview.question.dto.request.MyQuestionRequest;
 import com.quiet.onterview.question.dto.request.MyQuestionUpdateRequest;
 import com.quiet.onterview.question.dto.response.MyAnswerAndVideoResponse;
+import com.quiet.onterview.question.dto.response.MyQuestionWithFolderResponse;
 import com.quiet.onterview.question.service.MyQuestionService;
 import com.quiet.onterview.security.SecurityUser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "my-question-controller", description = "나의 면접 문항 컨트롤러")
 @RestController
 @RequestMapping("/api/my-question")
@@ -21,6 +24,18 @@ import org.springframework.web.bind.annotation.*;
 public class MyQuestionController {
 
     private final MyQuestionService myQuestionService;
+
+    @Operation(summary = "GET 방식으로 나의 면접 질문 전체 조회 & 키워드 조회")
+    @GetMapping
+    public ResponseEntity<List<MyQuestionWithFolderResponse>> getMyQuestionList(
+            @AuthenticationPrincipal SecurityUser user,
+            @RequestParam(name = "keyword", required = false) String keyword) {
+        if (keyword == null) {
+            return ResponseEntity.ok(myQuestionService.getAllMyQuestion(user.getMemberId()));
+        } else {
+            return ResponseEntity.ok(myQuestionService.getMyQuestionByKeyword(user.getMemberId(), keyword));
+        }
+    }
 
     @Operation(summary = "GET 방식으로 특정 면접 문항에 대한 답변과 영상 조회")
     @GetMapping("/{my_question_id}")

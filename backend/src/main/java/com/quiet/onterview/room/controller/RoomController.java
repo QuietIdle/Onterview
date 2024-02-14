@@ -1,6 +1,6 @@
 package com.quiet.onterview.room.controller;
 
-import com.quiet.onterview.room.dto.request.RoomProgressRequest;
+import com.quiet.onterview.room.dto.request.UserRequestMessage;
 import com.quiet.onterview.room.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ public class RoomController {
     @MessageMapping("/answer/{sessionId}")
     public void answer(
             @DestinationVariable String sessionId,
-            @Payload RoomProgressRequest roomProgressRequest
+            @Payload UserRequestMessage roomProgressRequest
     ) {
         log.info("ROOM ANSWER PROCESS : {}, REQUEST TYPE : {}", sessionId, roomProgressRequest.getType());
         roomService.process(sessionId, roomProgressRequest);
