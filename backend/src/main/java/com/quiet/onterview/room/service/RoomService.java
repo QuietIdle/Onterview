@@ -85,7 +85,7 @@ public class RoomService {
         AtomicInteger questionIndex = new AtomicInteger(0);
         List<InterviewQuestionCreateResponse> interviewQuestionCreateResponses = room.getQuestions()
                 .get(userIndex);
-        userRequestMessage.getVideo().forEach(video -> videoService.createVideoInformation(
+        userRequestMessage.getVideos().forEach(video -> videoService.createVideoInformation(
                 VideoInformationRequest.builder()
                         .interviewQuestionId(
                                 interviewQuestionCreateResponses.get(

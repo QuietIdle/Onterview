@@ -8,5 +8,5 @@ import lombok.Getter;
 public class UserRequestMessage {
     RoomStatus type;
     Integer index;
-    List<UserVideoRequestMessage> video;
+    List<UserVideoRequestMessage> videos;
 }
