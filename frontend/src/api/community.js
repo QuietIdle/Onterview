@@ -54,16 +54,6 @@ const patchLikePost = function (articleId) {
     return api.patch(`/api/community/like/${articleId}`)
 }
 
-// video
-const getInterviewVideoList = function (roomType) {
-    api.defaults.headers.common["Authorization"] = userStore.accessToken
-    return api.get(`api/interview-room/video?roomType=${roomType}`)
-}
-
-const getSelfSpeechVideoList = function () {  
-    api.defaults.headers.common["Authorization"] = userStore.accessToken
-    return api.get(`/api/my-question-folder/video`)
-}
 
 export {
     getAllPostList,
@@ -76,6 +66,4 @@ export {
     postCreateMyComment,
     deleteDeleteMyComment,
     patchLikePost,
-    getInterviewVideoList,
-    getSelfSpeechVideoList,
 }

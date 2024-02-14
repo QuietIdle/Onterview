@@ -37,11 +37,7 @@ const userStore = useUserStore()
       <TheDropDownItem link="/storage/question">
         면접 문항 목록
       </TheDropDownItem>
-      <TheDropDownMenu text="녹화 영상 목록">
-        <TheDropDownItem link="/storage/video"> 셀프 스피치 </TheDropDownItem>
-        <TheDropDownItem link="/"> 1인 모의 면접 </TheDropDownItem>
-        <TheDropDownItem link="/"> 다인 모의 면접 </TheDropDownItem>
-      </TheDropDownMenu>
+      <TheDropDownItem link="/storage/video"> 녹화 문항 목록 </TheDropDownItem>
     </TheDropDownMenu>
 
     <RouterLink v-if="userStore.accessToken === null" to="/login">

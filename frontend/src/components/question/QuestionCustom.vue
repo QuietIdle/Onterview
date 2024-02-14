@@ -100,8 +100,12 @@ const log = async function (event, folder) {
 }
 
 const enableEditingMyQuestion = function (element) {
-  element.isEditing = true
-  element.editableQuestion = element.question
+  if (element.commonQuestionId) {
+    alert('공통 면접 질문은 수정할 수 없습니다. ')
+  } else {
+    element.isEditing = true
+    element.editableQuestion = element.question
+  }
 }
 
 const requestUpdateMyQuestion = async function (element) {
@@ -130,7 +134,10 @@ const requestUpdateMyQuestionFolder = async function (folder) {
 
   try {
     const payload = { myQuestionFolder: folder.editableQuestion }
-    const response = await patchUpdateMyQuestionFolder(folder.myQuestionFolderId, payload)
+    const response = await patchUpdateMyQuestionFolder(
+      folder.myQuestionFolderId,
+      payload
+    )
     console.log('response upadte my question folder', response)
 
     questionStore.requestMyQuestionList()
@@ -159,7 +166,10 @@ const search = ref('')
   </div>
   <div style="max-height: 80%; overflow-y: auto; overflow-x: hidden">
     <v-expansion-panels variant="accordion" multiple>
-      <v-expansion-panel v-for="folder in myQuestionList" :key="folder.myQuestionFolderId">
+      <v-expansion-panel
+        v-for="folder in myQuestionList"
+        :key="folder.myQuestionFolderId"
+      >
         <v-hover v-slot="{ isHovering, props }">
           <v-expansion-panel-title v-bind="props" color="grey-lighten-2">
             <v-col cols="auto">
@@ -174,6 +184,10 @@ const search = ref('')
             <v-col class="d-flex align-center">
               <template v-if="folder.isEditing">
                 <v-text-field
+                  single-line
+                  variant="solo"
+                  density="compact"
+                  hide-details
                   v-model="folder.editableQuestion"
                   @blur="requestUpdateMyQuestionFolder(folder)"
                   @keyup.enter="requestUpdateMyQuestionFolder(folder)"
@@ -205,9 +219,16 @@ const search = ref('')
             <template #item="{ element }">
               <v-expansion-panel-text>
                 <v-row class="d-flex">
-                  <v-col class="d-flex align-center" @dblclick="enableEditingMyQuestion(element)">
+                  <v-col
+                    class="d-flex align-center"
+                    @dblclick="enableEditingMyQuestion(element)"
+                  >
                     <template v-if="element.isEditing">
                       <v-text-field
+                        single-line
+                        variant="solo"
+                        density="compact"
+                        hide-details
                         v-model="element.editableQuestion"
                         @keyup.enter="requestUpdateMyQuestion(element)"
                         @blur="requestUpdateMyQuestion(element)"
@@ -218,7 +239,10 @@ const search = ref('')
                     </template>
                   </v-col>
                   <v-col cols="auto">
-                    <QuestionModalDelete content="파일" :my-question="element" />
+                    <QuestionModalDelete
+                      content="파일"
+                      :my-question="element"
+                    />
                   </v-col>
                 </v-row>
               </v-expansion-panel-text>

@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { postCreateMyPost } from '@/api/community'
-import CommunityStorageVideo from '@/components/community/CommunityStoageVideo.vue'
+import CommunityStorageVideo from '@/components/community/CommunityStorageVideo.vue'
 
 const router = useRouter()
 
@@ -61,7 +61,7 @@ const goCommunityDetail = function (articleId) {
     <v-window v-model="tab">
       <v-window-item :value="1">
         <CommunityStorageVideo
-          room-type="selfspeech"
+          room-type="self"
           :select-video-id="selectVideoId"
           @select-video="(video) => selectVideo(video)"
         />
