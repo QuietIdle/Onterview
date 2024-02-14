@@ -130,7 +130,6 @@ watch(() => websocketStore.flag.interviewer, async () => {
       websocketStore.now.turn = -1
       websocketStore.stomp.disconnect()
       addLog("수고 하셨습니다")
-      alert('면접 종료!!!')
       break;
   }}
 )

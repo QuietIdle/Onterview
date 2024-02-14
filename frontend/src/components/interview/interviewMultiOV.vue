@@ -18,6 +18,7 @@ const publisher = ref(undefined);
 const subscribers = ref([]);
 const myStream = ref(null)
 const dialog = ref(false)
+const loading = ref(false)
 const headers = {
     Authorization: userStore.accessToken
 }
@@ -26,7 +27,12 @@ OV.enableProdMode()
 let recorder
 let recordedChunks = [];
 let endOfChunk = 0;
-const filename = ref(null)
+const file = ref({
+  filename: null,
+  time: null,
+  title: null,
+})
+const uploadData = ref([])
 
 const num = String(websocketStore.roomData.index)
 // 디버깅용 이름
@@ -88,7 +94,8 @@ const leaveSession = () => {
 
 const startRecording = function() {
   const myVideoStream = document.querySelector(`#${myStream.value.streamId}`).captureStream()
-  filename.value = uuidv4();
+  file.value.filename = uuidv4();
+  file.value.time = new Date()
   endOfChunk = 0
   let idxOfChunk = 0
   recordedChunks.length = 0
@@ -112,7 +119,7 @@ const sendToServer = async function(chunk, idx) {
     formData.append('chunk', chunk);
 
     const jsonData = {
-      filename: filename.value,
+      filename: file.value.filename,
       chunkNumber: idx,
       endOfChunk: endOfChunk,
     }
@@ -132,11 +139,51 @@ const sendToServer = async function(chunk, idx) {
 
 const stopRecording = function () {
   endOfChunk = 1;
-  
   recorder.stop();
   recordedChunks.length = 0
+
+  const videoLength = Math.floor((new Date() - file.value.time) / 1000)
+
+  const req_body = {
+    title: websocketStore.now.question.commonQuestion,
+    videoLength: videoLength,
+    videoUrl: {
+      saveFilename: `${file.value.filename}.mkv`,
+      originFilename: `${file.value.filename}.mkv`,
+    },
+    thumbUrl: {
+      saveFilename: `${file.value.filename}.png`,
+      originFilename: `${file.value.filename}.png`,
+    },
+  }
+  uploadData.value.push(req_body)
 }
 
+const saveRecording = async function () {
+
+  try {
+    await websocketStore.stomp.send(`/server/answer/${websocketStore.roomData.sessionId}`, headers, JSON.stringify({
+      type: 'SAVE',
+      index: websocketStore.roomData.index,
+      videos: uploadData.value,
+    }))
+    loading.value = true
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const cancelRecording = async function () {
+  loading.value = true
+  try {
+    for (let i = 0; i < uploadData.value.length; i++){
+      await fileServer.cancelUpload(uploadData.value[i].filename)
+    }
+    dialog.value = false
+  } catch (error) {
+    console.log(error)
+  }
+}
 // 순서 재배치
 const reArrangeById = (arr, idOrder) => {
   // 주어진 ID 배열의 순서대로 배열을 재배치하는 함수
@@ -199,7 +246,14 @@ const receive = async function (message) {
       }, 3000)
       break;
 
+    case 'SAVED':
+      console.log('saved!', result)
+      loading.value = false
+      dialog.value = false
+      break;
+
     case 'END':
+      dialog.value = true
       websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
       break;
 
@@ -236,16 +290,16 @@ watch(interviewStore.mediaToggle ,
   }
 )
 
-// watch(() => websocketStore.flag.record,
-//   (newVal, oldVal) => {
-//     if (newVal) {
-//       startRecording()
-//     }
-//     else {
-//       stopRecording()
-//     }
-//   }
-// )
+watch(() => websocketStore.flag.record,
+  (newVal, oldVal) => {
+    if (newVal) {
+      startRecording()
+    }
+    else {
+      stopRecording()
+    }
+  }
+)
 </script>
 
 <template>
@@ -257,7 +311,7 @@ watch(interviewStore.mediaToggle ,
         <ov-video
           :id="item.sub.stream.streamId"
           :stream-manager="item.sub"
-          :muted="!interviewStore.mediaToggle.volume | (item.sub.id===websocketStore.roomData.index)"
+          :muted="!interviewStore.mediaToggle.volume || (item.sub.id===websocketStore.roomData.index)"
         />
         <div class="d-flex align-center">
           <v-card v-if="idx === websocketStore.now.turn" class="pa-1" color="red-darken-1">답변 중</v-card>
@@ -272,18 +326,19 @@ watch(interviewStore.mediaToggle ,
   </div>
 
   <v-dialog v-model="dialog" width="auto">
-    <v-card class="text-center px-5 py-3">
+    <v-card class="text-center px-10 py-3">
       <v-card-title><v-img :src="logo"></v-img></v-card-title>
-      <v-divider></v-divider>
+      <v-divider class="border-opacity-100"></v-divider>
       <v-card-text>
         면접이 종료 되었습니다.<br>면접 영상을 저장 하시겠습니까?
       </v-card-text>
       <div class="d-flex justify-center">
         <v-card-actions>
-          <v-btn color="primary" block @click="saveRecording">저장 하기</v-btn>
+          <v-btn color="purple-lighten-1" variant="flat" block @click="saveRecording" width="100" v-if="!loading">저장하기</v-btn>
+          <v-btn color="purple-lighten-1" variant="flat" block @click="saveRecording" width="100" disabled v-else>저장중...</v-btn>
         </v-card-actions>
         <v-card-actions>
-          <v-btn color="warning" block @click="cancelRecording">나가기</v-btn>
+          <v-btn color="grey-lighten-1" variant="flat" block @click="cancelRecording" width="100">나가기</v-btn>
         </v-card-actions>
       </div>
     </v-card>
