@@ -30,6 +30,10 @@ public class Room {
         this.isLeave = new AtomicReferenceArray<>(users.size());
         this.questionIdx = 0;
         this.questions = questions;
+        for (int i = 0; i < users.size(); i++) {
+            checked.set(i, false);
+            isLeave.set(i, false);
+        }
     }
 
     public boolean count(int idx) {
