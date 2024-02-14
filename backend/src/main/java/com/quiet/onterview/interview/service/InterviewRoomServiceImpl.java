@@ -41,11 +41,11 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
             RoomType roomType,
             Pageable pageable) {
         switch (roomType) {
-            case SELF -> {
+            case SINGLE -> {
                 return interviewRoomRepository.findSingleInterviewRoom(memberId, pageable)
                         .map(interviewRoomMapper::interviewRoomTointerviewRoomResponse);
             }
-            case MULTI, SINGLE -> {
+            case MULTI -> {
                 return interviewRoomRepository.findMultiInterviewRoom(memberId, pageable)
                         .map(interviewRoomMapper::interviewRoomTointerviewRoomResponse);
             }
