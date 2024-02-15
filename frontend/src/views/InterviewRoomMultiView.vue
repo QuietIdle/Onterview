@@ -55,10 +55,10 @@ watch(() => websocketStore.flag.room,
       style="border-bottom: 1px solid white;"
     >
       <div class="d-flex align-center justify-center" style="border: 0px">
-        <div>{{ interviewStore.choice.type }}</div>
+        <div style="font-size: 12px;">{{ interviewStore.choice.type }}</div>
       </div>
 
-      <div class="d-flex align-center">
+      <div class="d-flex align-center" style="font-size: 12px;">
         <v-icon icon="mdi-radiobox-marked" class="mx-1" color="red"></v-icon>
         {{ formatTime(timeDifference) }}
       </div>
@@ -67,7 +67,7 @@ watch(() => websocketStore.flag.room,
         Q. {{ websocketStore.now.question.commonQuestion }}
       </div>
 
-      <button @click="goInterviewMain" class="d-flex justify-center align-center">
+      <button @click="goInterviewMain" class="d-flex justify-center align-center mx-1">
         <v-icon icon="mdi-close"></v-icon>
         <div>나가기</div>
       </button>
