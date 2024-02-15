@@ -32,7 +32,7 @@ public class CheckStep implements MatchStep {
         messageAnnounce.announceToUser(
                 SUB_HEADER + matchingContext.getRoomId(),
                 matchingContext.getMatchUser().getPrincipal(),
-                MatchCheckResponse.builder().status(CHECK)
+                MatchCheckResponse.builder().status(CHECK).build()
         );
     }
 }
