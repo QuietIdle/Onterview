@@ -22,6 +22,7 @@ const backToRecording = function() {
 
 const urlRef = ref(null)
 const mediaPlay = ref(false)
+const isCompleted = ref(false)
 
 const markVideo = async function (id, bool) {
   try {
@@ -35,7 +36,16 @@ const markVideo = async function (id, bool) {
   selfSpeechStore.questionData.videoInformationResponseList[selfSpeechStore.selectedVideo].bookmark=!selfSpeechStore.questionData.videoInformationResponseList[selfSpeechStore.selectedVideo].bookmark
 }
 
-const isCompleted = ref(false)
+const refreshVideo = async function () {
+  try {
+    const result = await apiMethods.getVideoAll(
+      selfSpeechStore.selectedQuestion
+    )
+    selfSpeechStore.questionData = result.data
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 const getAllChunks = async function (filename) {
   isCompleted.value = false
@@ -81,10 +91,14 @@ const playRecorded = function () {
 
 const deleteVideo = async function (v_id) {
   try {
-    await apiMethods.deleteVideos([v_id])
+    await apiMethods.deleteVideos({
+      videos : [v_id],
+    })
   } catch (error) {
     console.log(error)
   }
+
+  refreshVideo()
   backToRecording()
 }
 
