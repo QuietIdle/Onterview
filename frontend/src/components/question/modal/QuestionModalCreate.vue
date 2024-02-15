@@ -78,6 +78,9 @@ const valueTextField = ref('')
           :placeholder="`추가할 ${content}명을 작성해주세요`"
           class="pb-6"
           v-model="valueTextField"
+          @keyup.enter="
+              content === '폴더' ? requestCreateMyQuestionFolder() : requestCreateMyQuestion()
+            "
         ></v-text-field>
         <v-card-actions>
           <v-spacer></v-spacer>
