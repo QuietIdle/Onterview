@@ -2,6 +2,7 @@ package com.quiet.onterview.interview.service;
 
 import com.quiet.onterview.common.BaseException;
 import com.quiet.onterview.common.ErrorCode;
+import com.quiet.onterview.interview.dto.request.InterviewRoomDeleteRequest;
 import com.quiet.onterview.interview.dto.request.InterviewRoomRequest;
 import com.quiet.onterview.interview.dto.response.*;
 import com.quiet.onterview.interview.entity.*;
@@ -14,6 +15,8 @@ import com.quiet.onterview.member.repository.MemberRepository;
 import com.quiet.onterview.question.entity.CommonQuestion;
 import com.quiet.onterview.question.mapper.CommonQuestionMapper;
 import com.quiet.onterview.question.service.CommonQuestionFolderService;
+import com.quiet.onterview.video.dto.request.VideoDeleteRequest;
+import com.quiet.onterview.video.service.VideoService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +38,7 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
     private final MemberRepository memberRepository;
     private final InterviewRoomMapper interviewRoomMapper;
     private final CommonQuestionMapper commonQuestionMapper;
+    private final VideoService videoService;
 
     @Override
     public Page<InterviewRoomResponse> getInterviewRoomList(Long memberId,
@@ -114,20 +118,30 @@ public class InterviewRoomServiceImpl implements InterviewRoomService {
     }
 
     @Override
-    public void deleteInterviewRoom(Long memberId, Long interviewRoomId) {
-        InterviewRoom interviewRoom = interviewRoomRepository.findById(interviewRoomId)
-                .orElseThrow(InterviewRoomNotFoundException::new);
-        List<Interviewee> intervieweeList = interviewRoom.getIntervieweeList();
+    public void deleteInterviewRoom(Long memberId,
+            String token,
+            InterviewRoomDeleteRequest interviewRoomDeleteRequest) {
+        for (Long interviewRoomId : interviewRoomDeleteRequest.interviewRoomIdList) {
+            InterviewRoom interviewRoom = interviewRoomRepository.findById(interviewRoomId)
+                    .orElseThrow(InterviewRoomNotFoundException::new);
 
-        Interviewee user = intervieweeList.stream()
-                .filter(interviewee -> interviewee.getMember().getMemberId().equals(memberId))
-                .findAny()
-                .orElseThrow(() -> new BaseException(ErrorCode.INTERVIEWEE_NOT_FOUND));
+            List<Interviewee> interviewees = interviewRoom.getIntervieweeList();
+            Interviewee user = interviewees.stream()
+                    .filter(interviewee -> interviewee.getMember().getMemberId().equals(memberId))
+                    .findAny()
+                    .orElseThrow(() -> new BaseException(ErrorCode.INTERVIEWEE_NOT_FOUND));
+            interviewees.remove(user);
 
-        intervieweeList.remove(user);
-        if (intervieweeList.isEmpty()) {
-            interviewRoomRepository.delete(interviewRoom);
+            List<Long> videoIds = user.getInterviewQuestionList().stream()
+                    .filter(interviewQuestion -> interviewQuestion.getVideo() != null)
+                    .map(interviewQuestion -> interviewQuestion.getVideo().getVideoId())
+                    .toList();
+
+            videoService.deleteVideo(new VideoDeleteRequest(videoIds), token);
+
+            if (interviewees.isEmpty()) {
+                interviewRoomRepository.delete(interviewRoom);
+            }
         }
     }
-
 }

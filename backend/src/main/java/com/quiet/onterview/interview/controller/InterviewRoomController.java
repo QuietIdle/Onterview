@@ -1,5 +1,6 @@
 package com.quiet.onterview.interview.controller;
 
+import com.quiet.onterview.interview.dto.request.InterviewRoomDeleteRequest;
 import com.quiet.onterview.interview.dto.request.InterviewRoomRequest;
 import com.quiet.onterview.interview.dto.response.*;
 import com.quiet.onterview.interview.entity.RoomType;
@@ -61,11 +62,13 @@ public class InterviewRoomController {
     }
 
     @Operation(summary = "DELETE 방식으로 모의 면접장 삭제")
-    @DeleteMapping("/{interview_room_id}")
-    public ResponseEntity<Long> deleteInterviewRoom(
+    @DeleteMapping("/delete")
+    public ResponseEntity<List<Long>> deleteInterviewRoom(
             @AuthenticationPrincipal SecurityUser user,
-            @PathVariable("interview_room_id") Long interviewRoomId) {
-        interviewRoomService.deleteInterviewRoom(user.getMemberId(), interviewRoomId);
-        return ResponseEntity.ok(interviewRoomId);
+            @RequestHeader("Authorization") String token,
+            @RequestBody InterviewRoomDeleteRequest interviewRoomDeleteRequest) {
+        interviewRoomService.deleteInterviewRoom(user.getMemberId(), token,
+                interviewRoomDeleteRequest);
+        return ResponseEntity.ok(interviewRoomDeleteRequest.interviewRoomIdList);
     }
 }
