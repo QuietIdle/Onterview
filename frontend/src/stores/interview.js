@@ -56,6 +56,7 @@ export const useWebsocketStore = defineStore('websocket', () => {
     token: undefined,
     sessoinId: undefined,
     index: undefined,
+    roomId: undefined,
   })
   const stomp = ref(undefined)
 

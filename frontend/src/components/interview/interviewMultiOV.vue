@@ -1,9 +1,11 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import { OpenVidu } from 'openvidu-browser';
+import { useRouter } from "vue-router";
 import { useInterviewStore, useWebsocketStore } from "@/stores/interview";
 import { useUserStore } from "@/stores/user"
 import { fileServer } from "@/api/video";
+import { deleteInterviewRoom } from "@/api/interview";
 import OvVideo from "@/components/interview/OvVideo.vue";
 import { v4 as uuidv4 } from 'uuid'
 import logo from '@/assets/logo.png'
@@ -11,6 +13,7 @@ import logo from '@/assets/logo.png'
 const userStore = useUserStore()
 const websocketStore = useWebsocketStore()
 const interviewStore = useInterviewStore()
+const router = useRouter()
 
 const OV = new OpenVidu();
 const session = OV.initSession()
@@ -177,6 +180,8 @@ const saveRecording = async function () {
   } catch (error) {
     console.log(error)
   }
+  leaveSession()
+  router.push({name: 'interview'})
 }
 
 const cancelRecording = async function () {
@@ -190,6 +195,12 @@ const cancelRecording = async function () {
     console.log(error)
   }
   websocketStore.stomp.disconnect()
+
+  deleteInterviewRoom({
+    interviewRoomIdList: [websocketStore.roomData.roomId]
+  })
+  leaveSession()
+  router.push({name: 'interview'})
 }
 // 순서 재배치
 const reArrangeById = (arr, idOrder) => {

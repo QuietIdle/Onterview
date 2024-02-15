@@ -25,6 +25,9 @@ const addLog = function (text) {
   logMessages.value.push({
     message: text,
   })
+  setTimeout(() => {
+    logMessages.value.shift()
+  }, 3000)
 }
 
 const closeLog = function (idx) {
