@@ -292,7 +292,7 @@ onBeforeUnmount(() => {
   leaveSession()
 })
 
-watch(interviewStore.mediaToggle ,
+watch(() => interviewStore.mediaToggle ,
   () => {
     if (publisher.value) {
       publisher.value.publishVideo(interviewStore.mediaToggle.video)
