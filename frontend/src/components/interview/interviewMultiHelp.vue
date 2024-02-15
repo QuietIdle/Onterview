@@ -2,6 +2,7 @@
 import helpImg1 from "@/assets/interview/interviewMultiHelp1.png"
 import helpImg2 from "@/assets/interview/interviewMultiHelp2.png"
 import helpImg3 from "@/assets/interview/interviewMultiHelp3.png"
+import helpImg4 from "@/assets/interview/interviewMultiHelp4.png"
 import helpImg5 from "@/assets/interview/interviewMultiHelp5.png"
 import { ref } from "vue";
 
@@ -24,7 +25,7 @@ const helpText = ref([
   {
     id: 4,
     text: "60초 이내에 답변을 완료하지 못한 경우 자동으로 다음 차례로 넘어갑니다.",
-    img: "https://picsum.photos/300",
+    img: helpImg4,
   },
   {
     id: 5,
