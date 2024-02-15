@@ -5,7 +5,7 @@ import { useStorageStore } from '@/stores/storage'
 import { storeToRefs } from 'pinia'
 
 const storageStore = useStorageStore()
-const { keyword } = storeToRefs(storageStore)
+const { keyword, bookmark } = storeToRefs(storageStore)
 
 const selectedId = ref([])
 const isSelectedAll = ref(false)
@@ -33,8 +33,8 @@ const markVideo = async function (id, bool) {
       bookmark: !bool
     }
     const result = await apiMethods.patchVideo(id, req_body)
-
     console.log(result.data)
+    storageStore.requestUserVideoAll('self')
   } catch (error) {
     console.log(error)
   }
@@ -61,6 +61,10 @@ const selectVideo = async function (v_id) {
     console.log(error)
   }
 }
+
+// const toggleBookmark = function () {
+//   bookmark.value = 1
+// }
 </script>
 
 <template>
@@ -81,19 +85,35 @@ const selectVideo = async function (v_id) {
             density="compact"
             hide-details
             class="mr-3"
-            style="width:300px"
+            style="width: 300px"
             @keyup.enter="storageStore.requestUserVideoAll('self')"
             @blur="storageStore.requestUserVideoAll('self')"
           ></v-text-field>
-  
+
           <v-btn
-            variant="outlined"
+            v-if="bookmark == 1"
+            @click="(bookmark = 0), storageStore.requestUserVideoAll('self')"
+            variant="elevated"
+            color="purple"
+            ><v-icon size="x-large">mdi-bookmark-check</v-icon></v-btn
+          >
+          <v-btn
+            v-else
+            @click="(bookmark = 1), storageStore.requestUserVideoAll('self')"
+            variant="elevated"
+            color="purple"
+            ><v-icon size="x-large">mdi-bookmark-outline</v-icon></v-btn
+          >
+
+          <v-btn
+            class="ml-3"
+            variant="elevated"
+            color="purple"
             @click="storageStore.goStorageVideoGrid()"
           >
             그리드 보기
           </v-btn>
         </div>
-
       </div>
 
       <div class="pa-2">

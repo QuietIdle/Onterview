@@ -28,9 +28,9 @@ export const apiMethods = {
         api.defaults.headers.common['Authorization'] = `${authToken}`
         return api.get(`/api/video?category=${category.toUpperCase()}`)
     },
-    getSelfVideoList: function (category, keyword) {
+    getSelfVideoList: function (category, keyword, bookmark) {
         api.defaults.headers.common['Authorization'] = `${authToken}`
-        return api.get(`/api/video?category=${category.toUpperCase()}&keyword=${keyword}`)
+        return api.get(`/api/video?category=${category.toUpperCase()}&keyword=${keyword}&bookmark=${bookmark}`)
     },
     deleteVideos: function (v_ids) {
         api.defaults.headers.common['Authorization'] = `${authToken}`
