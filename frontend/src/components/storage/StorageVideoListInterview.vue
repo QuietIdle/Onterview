@@ -21,6 +21,20 @@ watch(
   }
 )
 
+watch(
+  () => route.params.roomType,
+  async (newValue, oldValue) => {
+    await storageStore.requestInterviewList(newValue)
+  }
+)
+
+watch(
+  () => storageStore.page,
+  async (newValue, oldValue) => {
+    await storageStore.requestInterviewList(route.params.roomType)
+  }
+)
+
 const deleteInterview = async function () {
   try {
     const result = await apiMethods.deleteInterview({
@@ -72,21 +86,19 @@ const selectVideo = async function (v_id) {
 
 <template>
   <!-- list (추후에 vuetify data tables 컴포넌트 변경?)-->
-  <div class="pa-10 d-flex justify-center w-screen h-screen">
-    <div class="w-75 bg-white overflow-auto">
-      <div class="tool-bar d-flex align-center">
-        <v-btn variant="tonal" @click="selectAll"> 전체 선택 </v-btn>
-        <v-btn variant="tonal" @click="deleteInterview"> 삭제 </v-btn>
-      </div>
-
-      <div class="pa-2">
-        <v-table fixed-header height="">
+  <div class="d-flex flex-column justify-start w-screen h-screen">
+    <v-container class="tool-bar d-flex align-center">
+      <v-btn variant="tonal" class="mr-3" @click="selectAll"> 전체 선택 </v-btn>
+      <v-btn variant="tonal" @click="deleteInterview"> 삭제 </v-btn>
+    </v-container>
+    <v-container class="bg-white overflow-auto">
+      <div>
+        <v-table fixed-header style="height: 76vh">
           <thead>
             <tr>
               <th class="text-left">선택</th>
               <th class="text-left">번호</th>
               <th class="text-left">유형</th>
-
               <th class="text-left">일시</th>
             </tr>
           </thead>
@@ -111,7 +123,7 @@ const selectVideo = async function (v_id) {
                   :value="dt.interviewRoomId"
                 ></v-checkbox>
               </td>
-              <td>{{ n + 1 }}</td>
+              <td>{{ n + 1 + (storageStore.page - 1) * 8 }}</td>
               <td>
                 {{ dt.questionType }}
               </td>
@@ -119,16 +131,29 @@ const selectVideo = async function (v_id) {
               <td>{{ dt.createAt }}</td>
             </tr>
           </tbody>
+          <template v-slot:bottom>
+            <div class="text-center pt-2">
+              <v-pagination
+                v-model="storageStore.page"
+                :length="storageStore.interviewData.totalPages - 1"
+                rounded="circle"
+                prev-icon="mdi-menu-left"
+                next-icon="mdi-menu-right"
+                active-color="#BB66FF"
+                density="comfortable"
+              ></v-pagination>
+            </div>
+          </template>
         </v-table>
       </div>
-    </div>
+    </v-container>
   </div>
 </template>
 
 <style scoped>
-.tool-bar > * {
+/* .tool-bar > * {
   margin: 8px;
-}
+} */
 .list-item {
   cursor: pointer;
 }

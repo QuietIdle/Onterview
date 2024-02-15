@@ -11,6 +11,9 @@ export const useStorageStore = defineStore('storage', () => {
   const keyword = ref('')
   const bookmark = ref(0)
 
+  const page = ref(1)
+  const size = ref(8)
+
   const requestUserVideoAll = async function (roomType) {
     try {
       const result = await apiMethods.getSelfVideoList(roomType, keyword.value, bookmark.value)
@@ -23,7 +26,7 @@ export const useStorageStore = defineStore('storage', () => {
 
   const requestInterviewList = async function (roomType) {
     try {
-      const result = await apiMethods.getInterviewList(roomType)
+      const result = await apiMethods.getInterviewList(roomType, page.value, size.value)
       interviewData.value = result.data
       console.log(roomType, result.data)
     } catch (error) {
@@ -54,6 +57,7 @@ export const useStorageStore = defineStore('storage', () => {
   return {
     keyword,
     bookmark,
+    page,
     storageData,
     interviewData,
     videoData,

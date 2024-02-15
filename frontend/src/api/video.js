@@ -44,10 +44,10 @@ export const apiMethods = {
         api.defaults.headers.common['Authorization'] = `${authToken}`
         return api.post(`/api/video`, req_body)
     },
-    getInterviewList: function (roomType, keyword) {
+    getInterviewList: function (roomType, page, size) {
         api.defaults.headers.common['Authorization'] = `${authToken}`
         console.log(`/api/interview-room?roomType=${roomType.toUpperCase()}`)
-        return api.get(`/api/interview-room?roomType=${roomType.toUpperCase()}`)
+        return api.get(`/api/interview-room?roomType=${roomType.toUpperCase()}&page=${page}&size=${size}`)
     },
     getInterviewDetail: function (interviewRoomId) {
         api.defaults.headers.common['Authorization'] = `${authToken}`
