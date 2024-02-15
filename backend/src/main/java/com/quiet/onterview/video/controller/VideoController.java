@@ -60,7 +60,7 @@ public class VideoController {
 
     @PostMapping("/delete")
     public ResponseEntity<Void> deleteVideo(@RequestBody VideoDeleteRequest videos,
-            @RequestHeader(name = "Authroziation") String token) {
+            @RequestHeader(name = "Authorization") String token) {
         videoService.deleteVideo(videos, token);
         return ResponseEntity.ok().build();
     }
