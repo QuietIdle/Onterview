@@ -7,7 +7,7 @@ import introduceImage3 from '@/assets/main/introduceImage3.png'
 const images = [introduceImage1, introduceImage2, introduceImage3]
 const titles = ['ONTERVIEW', '셀프 스피치', '모의 면접']
 const contents = [
-  '면접의 모든 순간을 내 것으로 만들다.',
+  '당신의 든든한 면접 파트너, 온터뷰',
   '나를 찾아가는 여정. 나만의 스토리를 완성하다.',
   '실전 대비의 기적. 여러 목소리와 시선 속에서 함께 성장하다.'
 ]
