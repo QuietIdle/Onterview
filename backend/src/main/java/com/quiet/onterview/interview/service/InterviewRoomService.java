@@ -1,5 +1,6 @@
 package com.quiet.onterview.interview.service;
 
+import com.quiet.onterview.interview.dto.request.InterviewRoomDeleteRequest;
 import com.quiet.onterview.interview.dto.request.InterviewRoomRequest;
 import com.quiet.onterview.interview.dto.response.*;
 import com.quiet.onterview.interview.entity.RoomType;
@@ -17,5 +18,6 @@ public interface InterviewRoomService {
     List<List<InterviewQuestionCreateResponse>> createInterviewRoom(
             InterviewRoomRequest interviewRoomRequest);
 
-    void deleteInterviewRoom(Long memberId, Long interviewRoomId);
+    void deleteInterviewRoom(Long memberId, String token,
+            InterviewRoomDeleteRequest interviewRoomDeleteRequest);
 }
