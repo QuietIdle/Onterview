@@ -28,6 +28,10 @@ export const apiMethods = {
         api.defaults.headers.common['Authorization'] = `${authToken}`
         return api.get(`/api/video?category=${category.toUpperCase()}`)
     },
+    getSelfVideoList: function (category, keyword, bookmark) {
+        api.defaults.headers.common['Authorization'] = `${authToken}`
+        return api.get(`/api/video?category=${category.toUpperCase()}&keyword=${keyword}&bookmark=${bookmark}`)
+    },
     deleteVideos: function (v_ids) {
         api.defaults.headers.common['Authorization'] = `${authToken}`
         return api.post('/api/video/delete', v_ids)
@@ -40,7 +44,7 @@ export const apiMethods = {
         api.defaults.headers.common['Authorization'] = `${authToken}`
         return api.post(`/api/video`, req_body)
     },
-    getInterviewList: function (roomType) {
+    getInterviewList: function (roomType, keyword) {
         api.defaults.headers.common['Authorization'] = `${authToken}`
         console.log(`/api/interview-room?roomType=${roomType.toUpperCase()}`)
         return api.get(`/api/interview-room?roomType=${roomType.toUpperCase()}`)
