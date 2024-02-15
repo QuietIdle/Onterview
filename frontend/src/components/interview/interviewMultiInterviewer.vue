@@ -19,19 +19,23 @@ const headers = {
 }
 
 const addLog = function (text) {
-  if (logMessages.value.length > 2) {
-    logMessages.value.shift()
-  }
+  // if (logMessages.value.length > 2) {
+  //   logMessages.value.shift()
+  // }
   logMessages.value.push({
     message: text,
+    isClosed: false,
   })
   setTimeout(() => {
-    logMessages.value.shift()
-  }, 3000)
+    logMessages.value[0].isClosed = true
+  }, 5000)
 }
 
 const closeLog = function (idx) {
-  logMessages.value.splice(idx, 1)
+  logMessages.value[idx].isClosed = true
+  setTimeout(() => {
+    logMessages.value.splice(idx, 1)
+  }, 1000)
 }
 
 const controlMedia = function (com) {
@@ -161,7 +165,11 @@ watch(() => websocketStore.flag.interviewer, async () => {
     
     <div class="h-100" style="width: 30%;">
       
-      <div class="w-100 d-flex justify-space-between pa-2 ma-2" style="border: 1px solid white; border-radius: 12px;" v-for="(log, idx) in logMessages" :key="idx">
+      <div class="log w-100 d-flex justify-space-between pa-2 ma-2" 
+        style="border: 1px solid white; border-radius: 12px;" 
+        v-for="(log, idx) in logMessages" :key="idx"
+        :class="{'closedLog': log.isClosed}"
+      >
         <v-icon icon="mdi-alert-outline" color="#FF8911"></v-icon>
         <div class="w-100 mx-1">
           <div>{{ log.message }}</div>
@@ -222,4 +230,10 @@ watch(() => websocketStore.flag.interviewer, async () => {
 </template>
 
 <style scoped>
+.log{
+  transition: opacity 1s;
+}
+.closedLog{
+  opacity: 0;
+}
 </style>
