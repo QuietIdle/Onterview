@@ -61,60 +61,59 @@ const selectVideo = async function (v_id) {
 </script>
 
 <template>
-  <div class="pa-10 d-flex justify-center w-screen h-screen">
-    <div class="w-75 bg-white overflow-auto">
-      <div class="tool-bar d-flex align-center">
-        <v-btn variant="tonal" @click="selectAll"> 전체 선택 </v-btn>
-        <v-btn variant="tonal" @click="deleteVideo"> 삭제 </v-btn>
+  <div class="d-flex flex-column justify-start w-screen h-screen">
+    <v-container class="tool-bar d-flex align-center">
+      <v-btn variant="tonal" class="mr-3" @click="selectAll"> 전체 선택 </v-btn>
+      <v-btn variant="tonal" @click="deleteVideo"> 삭제 </v-btn>
 
-        <div class="ml-auto d-flex align-center">
-          <v-text-field
-            v-model="keyword"
-            label="검색어를 입력해주세요"
-            append-inner-icon="mdi-magnify"
-            single-line
-            variant="solo"
-            density="compact"
-            hide-details
-            class="mr-3"
-            style="width: 300px"
-            @keyup.enter="storageStore.requestUserVideoAll('self')"
-            @blur="storageStore.requestUserVideoAll('self')"
-          ></v-text-field>
+      <div class="ml-auto d-flex align-center">
+        <v-text-field
+          v-model="keyword"
+          label="검색어를 입력해주세요"
+          append-inner-icon="mdi-magnify"
+          single-line
+          variant="solo"
+          density="compact"
+          hide-details
+          class="mr-3"
+          style="width: 300px"
+          @keyup.enter="storageStore.requestUserVideoAll('self')"
+          @blur="storageStore.requestUserVideoAll('self')"
+        ></v-text-field>
 
-          <v-btn
-            v-if="bookmark == 1"
-            @click="(bookmark = 0), storageStore.requestUserVideoAll('self')"
-            variant="elevated"
-            color="purple"
-            ><v-icon size="x-large">mdi-bookmark-check</v-icon></v-btn
-          >
-          <v-btn
-            v-else
-            @click="(bookmark = 1), storageStore.requestUserVideoAll('self')"
-            variant="elevated"
-            color="purple"
-            ><v-icon size="x-large">mdi-bookmark-outline</v-icon></v-btn
-          >
+        <v-btn
+          v-if="bookmark == 1"
+          @click="(bookmark = 0), storageStore.requestUserVideoAll('self')"
+          variant="elevated"
+          color="purple"
+          ><v-icon size="x-large">mdi-bookmark-check</v-icon></v-btn
+        >
+        <v-btn
+          v-else
+          @click="(bookmark = 1), storageStore.requestUserVideoAll('self')"
+          variant="elevated"
+          color="purple"
+          ><v-icon size="x-large">mdi-bookmark-outline</v-icon></v-btn
+        >
 
-          <v-btn
-            class="ml-3"
-            variant="elevated"
-            color="purple"
-            @click="storageStore.goStorageVideoList()"
-          >
-            리스트 보기
-          </v-btn>
-        </div>
+        <v-btn
+          class="ml-3"
+          variant="elevated"
+          color="purple"
+          @click="storageStore.goStorageVideoList()"
+        >
+          리스트 보기
+        </v-btn>
       </div>
-
+    </v-container>
+    <v-container class="bg-white overflow-auto" style="height: 77vh">
       <div class="px-3 py-2 d-flex flex-wrap">
         <div
           cols="auto"
           v-for="video in storageStore.storageData"
           :key="video.videoId"
         >
-          <v-card class="mx-3 my-2" width="230" @click="selectVideo(video)">
+          <v-card class="mx-3 my-2" width="250" @click="selectVideo(video)">
             <v-img
               class="thumbnail"
               :src="`${video.thumbnailUrl.saveFilename}`"
@@ -166,14 +165,14 @@ const selectVideo = async function (v_id) {
           </v-card>
         </div>
       </div>
-    </div>
+    </v-container>
   </div>
 </template>
 
 <style scoped>
-.tool-bar > * {
+/* .tool-bar > * {
   margin: 8px;
-}
+} */
 .image-container {
   position: relative;
 }
