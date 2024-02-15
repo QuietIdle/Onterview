@@ -35,6 +35,7 @@ const file = ref({
   time: null,
   title: null,
 })
+let checkId = -1;
 const uploadData = ref([])
 
 const name = userStore.nickname
@@ -316,13 +317,14 @@ onMounted(() => {
     })
   )
 
-  setInterval(() => {
+  checkId = setInterval(() => {
     sendMessage('CHECK')
   }, 30000)
 })
 
 onBeforeUnmount(() => {
   leaveSession()
+  clearInterval(checkId)
 })
 
 watch(interviewStore.mediaToggle ,
