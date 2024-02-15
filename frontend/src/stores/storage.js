@@ -5,6 +5,7 @@ import { apiMethods } from '@/api/video'
 
 export const useStorageStore = defineStore('storage', () => {
   const storageData = ref([]);
+  const interviewData = ref([]);
   const videoData = ref({});
 
   const requestUserVideoAll = async function (roomType) {
@@ -20,7 +21,7 @@ export const useStorageStore = defineStore('storage', () => {
   const requestInterviewList = async function (roomType) {
     try {
       const result = await apiMethods.getInterviewList(roomType)
-      storageData.value = result.data
+      interviewData.value = result.data
       console.log(roomType, result.data)
     } catch (error) {
       console.log(error)
@@ -49,6 +50,7 @@ export const useStorageStore = defineStore('storage', () => {
 
   return {
     storageData,
+    interviewData,
     videoData,
     requestUserVideoAll,
     goStorageVideoList,

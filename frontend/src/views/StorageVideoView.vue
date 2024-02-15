@@ -43,6 +43,7 @@ watch(
   <v-container>
     <v-row justify="end" align="center">
       <div
+        class="test"
         :class="{
           active: roomType === 'self',
           inactive: roomType !== 'self'
@@ -53,6 +54,7 @@ watch(
       </div>
       <div style="color: rgb(190, 190, 190)">|</div>
       <div
+        class="test"
         :class="{
           active: roomType === 'single',
           inactive: roomType !== 'single'
@@ -63,6 +65,7 @@ watch(
       </div>
       <div style="color: rgb(190, 190, 190)">|</div>
       <div
+        class="test"
         :class="{
           active: roomType === 'multi',
           inactive: roomType !== 'multi'
@@ -93,5 +96,9 @@ watch(
 
 .inactive:hover {
   color: black;
+}
+
+.test{
+  cursor: pointer;
 }
 </style>

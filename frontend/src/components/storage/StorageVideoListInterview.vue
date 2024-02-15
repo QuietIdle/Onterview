@@ -48,10 +48,10 @@ const markVideo = async function (id, bool) {
 }
 
 const selectAll = function () {
-  if (selectedId.value.length === storageStore.storageData.content.length) {
+  if (selectedId.value.length === storageStore.interviewData.content.length) {
     selectedId.value = []
   } else {
-    for (const item of storageStore.storageData.content) {
+    for (const item of storageStore.interviewData.content) {
       if (!selectedId.value.includes(item.interviewRoomId)) {
         selectedId.value.push(item.interviewRoomId)
         isSelectedAll.value = true
@@ -91,7 +91,7 @@ const selectVideo = async function (v_id) {
             </tr>
           </thead>
           <tbody
-            v-for="(dt, n) in storageStore.storageData.content"
+            v-for="(dt, n) in storageStore.interviewData.content"
             :key="n"
             hover
           >
