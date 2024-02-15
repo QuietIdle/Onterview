@@ -10,12 +10,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @Tag(name = "interview-room-controller", description = "모의 면접장 컨트롤러")
 @RestController
 @RequestMapping("/api/interview-room")
@@ -31,8 +33,10 @@ public class InterviewRoomController {
             @RequestParam(name = "roomType", required = true) RoomType roomType,
             @PageableDefault(size = 10, sort = "createAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
+        log.info("interview-room request : {}, {}", user.toString(), roomType);
         Page<InterviewRoomResponse> interviewRoomList = interviewRoomService.getInterviewRoomList(
                 user.getMemberId(), roomType, pageable);
+        log.info("result size : {}", interviewRoomList.getSize());
         return ResponseEntity.ok(interviewRoomList);
     }
 
