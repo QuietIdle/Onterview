@@ -227,6 +227,7 @@ const receive = async function (message) {
 
     case 'START':
       websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
+      await interviewStore.TTS(websocketStore.now.question.commonQuestion)
       break;
 
     case 'PROCEEDING':
