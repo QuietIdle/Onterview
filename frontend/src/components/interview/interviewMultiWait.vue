@@ -79,6 +79,7 @@ const startMatch = function () {
       setInterval(() => {
         stomp.send('/pub/enter', headers, JSON.stringify({
           status: 'CHECK',
+          roomId: interviewStore.stompType,
         }))
       }, 30000)
     },
