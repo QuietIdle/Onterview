@@ -11,7 +11,7 @@ export const useStorageStore = defineStore('storage', () => {
   const keyword = ref('')
   const bookmark = ref(0)
 
-  const page = ref(1)
+  const page = ref(0)
   const size = ref(8)
 
   const requestUserVideoAll = async function (roomType) {

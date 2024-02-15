@@ -10,8 +10,11 @@ const selectedId = ref([])
 const isSelectedAll = ref(false)
 const route = useRoute()
 
+const page = ref(1)
+
 onMounted(async () => {
   await storageStore.requestInterviewList(route.params.roomType)
+  page.value = storageStore.page + 1
 })
 
 watch(
@@ -22,15 +25,10 @@ watch(
 )
 
 watch(
-  () => route.params.roomType,
+  () => page.value,
   async (newValue, oldValue) => {
-    await storageStore.requestInterviewList(newValue)
-  }
-)
-
-watch(
-  () => storageStore.page,
-  async (newValue, oldValue) => {
+    // store의 page를 변경
+    storageStore.page = newValue - 1
     await storageStore.requestInterviewList(route.params.roomType)
   }
 )
@@ -123,7 +121,7 @@ const selectVideo = async function (v_id) {
                   :value="dt.interviewRoomId"
                 ></v-checkbox>
               </td>
-              <td>{{ n + 1 + (storageStore.page - 1) * 8 }}</td>
+              <td>{{ n + 1 + storageStore.page * 8 }}</td>
               <td>
                 {{ dt.questionType }}
               </td>
@@ -134,8 +132,8 @@ const selectVideo = async function (v_id) {
           <template v-slot:bottom>
             <div class="text-center pt-2">
               <v-pagination
-                v-model="storageStore.page"
-                :length="storageStore.interviewData.totalPages - 1"
+                v-model="page"
+                :length="storageStore.interviewData.totalPages"
                 rounded="circle"
                 prev-icon="mdi-menu-left"
                 next-icon="mdi-menu-right"
