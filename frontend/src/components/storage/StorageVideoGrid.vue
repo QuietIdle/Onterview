@@ -13,6 +13,8 @@ const deleteVideo = async function () {
       videos: selectedId.value
     })
     console.log(result.data)
+
+    storageStore.requestUserVideoAll('self')
   } catch (error) {
     console.log(error)
   }

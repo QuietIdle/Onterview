@@ -8,6 +8,10 @@ const storageStore = useStorageStore()
 const selectedId = ref([])
 const isSelectedAll = ref(false)
 
+onMounted(() => {
+  storageStore.requestUserVideoAll('self')
+})
+
 const deleteVideo = async function () {
   try {
     const result = await apiMethods.deleteVideos({

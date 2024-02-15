@@ -5,8 +5,6 @@ import { onBeforeUnmount, ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { fileServer } from '@/api/video'
 import { apiMethods } from '@/api/video'
-import editImage from '@/assets/question/editImage.png'
-import introduceImage1 from '@/assets/main/introduceImage1.png'
 
 const storageStore = useStorageStore()
 const userStore = useUserStore()
@@ -204,7 +202,9 @@ const requestUpdateVideoTitle = async function () {
       <v-col cols="4">
         <div class="d-flex justify-end mb-2">
           <v-btn
-            @click="storageStore.goStorageVideoList()"
+            @click="
+              storageStore.goStorageVideoListInterview(route.params.roomType)
+            "
             density="comfortable"
             >목록 보기</v-btn
           >

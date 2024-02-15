@@ -1,5 +1,6 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { apiMethods } from '@/api/video'
 import { useStorageStore } from '@/stores/storage'
 
@@ -7,11 +8,18 @@ const storageStore = useStorageStore()
 
 const selectedId = ref([])
 const isSelectedAll = ref(false)
+const route = useRoute()
 
 onMounted(async () => {
-  await storageStore.requestInterviewList()
-  console.log(storageStore.storageData)
+  await storageStore.requestInterviewList(route.params.roomType)
 })
+
+watch(
+  () => route.params.roomType,
+  async (newValue, oldValue) => {
+    await storageStore.requestInterviewList(newValue)
+  }
+)
 
 const deleteVideo = async function () {
   try {
@@ -89,7 +97,10 @@ const selectVideo = async function (v_id) {
             <tr
               class="list-item"
               @click="
-                storageStore.goStorageVideoPlayInterview(dt.interviewRoomId)
+                storageStore.goStorageVideoPlayInterview(
+                  route.params.roomType,
+                  dt.interviewRoomId
+                )
               "
             >
               <td>
