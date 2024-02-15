@@ -1,12 +1,9 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useSelfSpeechStore } from '@/stores/selfSpeech';
 import { apiMethods } from '@/api/video';
 
 const selfSpeechStore = useSelfSpeechStore();
-const model = ref(null); // 썸네일
-
-const videos = selfSpeechStore.questionData.videoInformationResponseList;
 
 const markVideo = async function (id, bool) {
   try {
@@ -30,14 +27,16 @@ const selectVideo = async function (v_id) {
   }
   selfSpeechStore.display = false;
 }
+
 </script>
 
 <template>
 <div class="h-100">
-  <v-sheet class="h-100" elevation="1" min-width="200">
-    <v-slide-group class="h-100" v-model="model" show-arrows center-active>
-      <v-slide-group-item v-for="video in videos" :key="video.videoId" v-slot="{ isSelected, toggle }">
-        <v-card :color="isSelected ? 'primary' : 'grey-lighten-1'" class="ma-3" width="150">
+  <v-sheet class="h-100" elevation="1" min-width="200" max-width="900">
+    <v-slide-group class="h-100" v-model="selfSpeechStore.selectedVideo" show-arrows center-active>
+      <v-slide-group-item v-for="video in selfSpeechStore.questionData.videoInformationResponseList" :key="video.videoId" v-slot="{ isSelected, toggle, selectedClass }">
+        <v-card :color="isSelected ? 'primary' : 'grey-lighten-1'" :class="['ma-3', selectedClass]" width="150">
+        <!-- <v-card :color="isSelected ? 'primary' : 'grey-lighten-1'" :class="['ma-3', selectedClass]" width="150" @click="toggle(), selectVideo(video.videoId)"> -->
           <div class="d-flex flex-column align-center justify-center pa-1">
             <div class="thumbnail-container d-flex flex-column align-center">
               <v-img :src="video.thumbnailUrl.saveFilename" width="120" height="80" class="img-container" @click="toggle(), selectVideo(video.videoId)"></v-img>
@@ -48,7 +47,7 @@ const selectVideo = async function (v_id) {
                 color="purple" 
                 size="32" 
                 icon="mdi-bookmark-outline"
-                @click="markVideo(video.videoId, video.bookmark), video.bookmark=!video.bookmark"
+                @click="markVideo(video.videoId, video.bookmark), video.bookmark=!video.bookmark, selfSpeechStore.videoData.bookmark=!selfSpeechStore.videoData.bookmark"
               >
               </v-icon>
               <v-icon 
@@ -57,7 +56,7 @@ const selectVideo = async function (v_id) {
                 color="purple" 
                 size="32" 
                 icon="mdi-bookmark-check"
-                @click="markVideo(video.videoId, video.bookmark), video.bookmark=!video.bookmark"
+                @click="markVideo(video.videoId, video.bookmark), video.bookmark=!video.bookmark, selfSpeechStore.videoData.bookmark=!selfSpeechStore.videoData.bookmark"
               >
               </v-icon>
             </div>

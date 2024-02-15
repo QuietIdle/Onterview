@@ -6,6 +6,7 @@ export const useSelfSpeechStore = defineStore('selfSpeech', () => {
   const display = ref(true);
   const listIdx = ref(1);
   const selectedQuestion = ref(-1);
+  const seletedVideo = ref(null)
   const questionData = ref({
     answser: "",
     myQuestionId: undefined,
@@ -20,5 +21,5 @@ export const useSelfSpeechStore = defineStore('selfSpeech', () => {
     }
   });
 
-  return { display,listIdx,selectedQuestion,questionData,videoData }
+  return { display,listIdx,selectedQuestion,seletedVideo,questionData,videoData }
 })
