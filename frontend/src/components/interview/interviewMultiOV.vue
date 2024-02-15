@@ -230,10 +230,13 @@ const receive = async function (message) {
       websocketStore.now.question.commonQuestion = result.question.commonQuestion;
       websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
       await interviewStore.TTS(interviewStore.script.enter)
+      
       setTimeout(() => {
         changePosition(result.orders)
-        sendMessage('START')
-      }, 5000)
+        setTimeout(() => {
+          sendMessage('START')
+        }, 3000)
+      }, 3000)
       break;
 
     case 'START':
@@ -258,10 +261,13 @@ const receive = async function (message) {
 
       websocketStore.now.orders = result.orders;
       await interviewStore.TTS(interviewStore.script.finish)
+      
       setTimeout(() => {
         changePosition(result.orders);
-        sendMessage('START')
         websocketStore.now.turn = -1
+        setTimeout(() => {
+          sendMessage('START')
+        }, 3000)
       }, 3000)
       break;
 
@@ -311,7 +317,7 @@ onBeforeUnmount(() => {
   leaveSession()
 })
 
-watch(() => interviewStore.mediaToggle ,
+watch(interviewStore.mediaToggle ,
   () => {
     if (publisher.value) {
       publisher.value.publishVideo(interviewStore.mediaToggle.video)
