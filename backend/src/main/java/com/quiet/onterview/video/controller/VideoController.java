@@ -37,8 +37,10 @@ public class VideoController {
             @RequestParam(name = "keyword", required = false) String keyword,
             @RequestParam(name = "bookmark", required = false) Integer bookmark,
             @AuthenticationPrincipal SecurityUser user) {
+        log.info("Video Request : {}, {}, {}, {}", user.toString(), roomType, keyword, bookmark);
         List<VideoInformationResponse> videoInformationResponses = videoService.loadAllMyVideo(user,
                 roomType, keyword, bookmark);
+        log.info("result - size : {}", videoInformationResponses.size());
         return ResponseEntity.ok(videoInformationResponses);
     }
 
