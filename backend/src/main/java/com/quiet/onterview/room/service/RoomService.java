@@ -3,6 +3,7 @@ package com.quiet.onterview.room.service;
 import static com.quiet.onterview.room.RoomStatus.CHECK;
 import static com.quiet.onterview.room.RoomStatus.ENTER;
 import static com.quiet.onterview.room.RoomStatus.FINISH;
+import static com.quiet.onterview.room.RoomStatus.LEAVE;
 import static com.quiet.onterview.room.RoomStatus.SAVED;
 
 import com.quiet.onterview.interview.dto.response.InterviewQuestionCreateResponse;
@@ -49,7 +50,7 @@ public class RoomService {
             roomRepository.remove(sessionId);
         }
         messageService.announceAll(ROOM_PREFIX + sessionId,
-                RoomLeaveResponse.builder().idx(idx).build());
+                RoomLeaveResponse.builder().type(LEAVE).idx(idx).build());
     }
 
     public void process(String sessionId, UserRequestMessage userRequestMessage) {
