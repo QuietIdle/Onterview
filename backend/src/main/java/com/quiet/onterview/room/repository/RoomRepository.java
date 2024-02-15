@@ -22,7 +22,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class RoomRepository {
 
-    private Map<String, Room> rooms = new ConcurrentHashMap<>();
+    private final Map<String, Room> rooms = new ConcurrentHashMap<>();
 
     public void generate(
             String sessionId,
@@ -35,9 +35,7 @@ public class RoomRepository {
 
     public Integer calc(String sessionId) {
         Room room = rooms.get(sessionId);
-        Integer proceedingCount = calc(room.getChecked());
-        Integer leaveCount = calc(room.getIsLeave());
-        return proceedingCount - leaveCount;
+        return calc(room.getChecked());
     }
 
     private Integer calc(AtomicReferenceArray<Boolean> src) {
