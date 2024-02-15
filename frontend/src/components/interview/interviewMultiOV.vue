@@ -268,6 +268,9 @@ const receive = async function (message) {
       websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
       break;
 
+    case 'CHECK':
+      break;
+
     default:
       break;
   }
@@ -287,6 +290,10 @@ onMounted(() => {
       index: websocketStore.roomData.index,
     })
   )
+
+  setInterval(() => {
+    sendMessage('CHECK')
+  }, 30000)
 })
 
 onBeforeUnmount(() => {
@@ -324,6 +331,7 @@ watch(() => websocketStore.flag.record,
           :id="item.sub.stream.streamId"
           :stream-manager="item.sub"
           :muted="item.sub.id===websocketStore.roomData.index"
+          :class="{'redbox' : idx === websocketStore.now.turn}"
         />
         <div class="d-flex align-center">
           <v-card v-if="idx === websocketStore.now.turn" class="pa-1" color="red-darken-1">답변 중</v-card>
@@ -364,5 +372,8 @@ video {
   /* Safari and Chrome */
   -moz-transform: rotateY(180deg);
   /* Firefox */
+}
+.redbox{
+  border: 1px solid red;
 }
 </style>
