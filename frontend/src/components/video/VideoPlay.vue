@@ -28,11 +28,11 @@ const markVideo = async function (id, bool) {
     const req_body = {
       bookmark: !bool
     }
-    const result = await apiMethods.patchVideo(id, req_body)
-    console.log(result.data);
+    await apiMethods.patchVideo(id, req_body)
   } catch (error) {
     console.log(error);
   }
+  selfSpeechStore.questionData.videoInformationResponseList[selfSpeechStore.selectedVideo].bookmark=!selfSpeechStore.questionData.videoInformationResponseList[selfSpeechStore.selectedVideo].bookmark
 }
 
 const isCompleted = ref(false)
@@ -134,13 +134,19 @@ watch(() => selfSpeechStore.videoData,
     </div>
 
     <div class="btn-container w-100 d-flex align-center">
-      <v-btn class="mx-3 my-5" @click="markVideo(selfSpeechStore.videoData.videoId,selfSpeechStore.videoData.bookmark), selfSpeechStore.videoData.bookmark=!selfSpeechStore.videoData.bookmark">
-        <v-icon color="purple" size="32" icon="mdi-bookmark-outline" v-if="!selfSpeechStore.videoData.bookmark"></v-icon>
-        <v-icon color="purple" size="32" icon="mdi-bookmark-check" v-else></v-icon>
-        <div v-if="!selfSpeechStore.videoData.bookmark">북마크 추가</div>
-        <div v-else>북마크 해제</div>
+      <v-btn class="mx-3 my-5" 
+        @click="markVideo(selfSpeechStore.videoData.videoId,selfSpeechStore.videoData.bookmark), selfSpeechStore.videoData.bookmark=!selfSpeechStore.videoData.bookmark"
+        :disabled="!selfSpeechStore.selectedVideo^selfSpeechStore.selectedVideo===0"
+      >
+        <v-icon color="purple" size="32" icon="mdi-bookmark-outline" v-show="!selfSpeechStore.videoData.bookmark"></v-icon>
+        <v-icon color="purple" size="32" icon="mdi-bookmark-check" v-show="selfSpeechStore.videoData.bookmark"></v-icon>
+        <div v-show="!selfSpeechStore.videoData.bookmark">북마크 추가</div>
+        <div v-show="selfSpeechStore.videoData.bookmark">북마크 해제</div>
       </v-btn>
-      <v-btn class="mx-3 my-5" @click="deleteVideo(selfSpeechStore.videoData.videoId)">
+      <v-btn class="mx-3 my-5" 
+        @click="deleteVideo(selfSpeechStore.videoData.videoId)" 
+        :disabled="!selfSpeechStore.selectedVideo^selfSpeechStore.selectedVideo===0"
+      >
         <v-icon color="black" size="32" icon="mdi-trash-can-outline"></v-icon>
         <div>삭제</div>
       </v-btn>

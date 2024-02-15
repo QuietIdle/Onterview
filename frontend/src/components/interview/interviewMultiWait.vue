@@ -50,17 +50,19 @@ const startMatch = function () {
       stomp.subscribe(
         `/user/sub/${interviewStore.stompType}`,
         function (message) {
-          websocketStore.roomData = JSON.parse(message.body)
-          //console.log('token accepted successfully!', websocketStore.roomData)
+          if (JSON.parse(message.body).token) {
+            websocketStore.roomData = JSON.parse(message.body)
+            //console.log('token accepted successfully!', websocketStore.roomData)
 
-          interviewStore.dialog.wait = false
-          stopTimer()
-          time.value.match = false
-          time.value.second = 0
+            interviewStore.dialog.wait = false
+            stopTimer()
+            time.value.match = false
+            time.value.second = 0
 
-          websocketStore.stomp = stomp
+            websocketStore.stomp = stomp
 
-          router.push({ name: 'interview-multi' })
+            router.push({ name: 'interview-multi' })
+          }
         },
         headers
       )
@@ -73,6 +75,12 @@ const startMatch = function () {
           matchCount: 4,
         })
       )
+
+      setInterval(() => {
+        stomp.send('/pub/enter', headers, JSON.stringify({
+          status: 'CHECK',
+        }))
+      }, 30000)
     },
     (error) => {
       console.error(error)
