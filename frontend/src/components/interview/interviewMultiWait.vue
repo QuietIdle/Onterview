@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onBeforeUnmount } from 'vue'
 import interviewMultiConfig from './interviewMultiConfig.vue'
 import interviewMultiHelp from '@/components/interview/interviewMultiHelp.vue'
 import { useInterviewStore, useWebsocketStore } from '@/stores/interview'
@@ -16,6 +16,7 @@ const websocketStore = useWebsocketStore()
 const selectedTab = ref(0)
 
 let stomp
+let checkId
 
 const time = ref({
   second: 0,
@@ -76,7 +77,7 @@ const startMatch = function () {
         })
       )
 
-      setInterval(() => {
+      checkId = setInterval(() => {
         stomp.send('/pub/enter', headers, JSON.stringify({
           status: 'CHECK',
           roomId: interviewStore.stompType,
@@ -100,6 +101,10 @@ const stopMatch = function () {
     stomp.disconnect()
   }
 }
+
+onBeforeUnmount(() => {
+  clearInterval(checkId)
+})
 </script>
 
 <template>
