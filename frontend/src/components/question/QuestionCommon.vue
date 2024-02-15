@@ -33,7 +33,9 @@ const search = ref('')
   <div class="question-title pa-3">빈출 면접 문항 목록</div>
   <div class="intro pa-3 d-flex mb-1">
     <v-icon class="mr-2">mdi-gesture-tap</v-icon>
-    <span>Drag & Drop해서 My 질문에 추가해보세요!</span>
+    <span style="font-size: 0.9rem"
+      >Drag & Drop해서 My 질문에 추가해보세요!</span
+    >
   </div>
   <v-text-field
     v-model="search"
@@ -44,7 +46,7 @@ const search = ref('')
     density="compact"
     hide-details
   ></v-text-field>
-  <div style="max-height: 80%; overflow-y: auto">
+  <div class="mt-1" style="max-height: 76%; overflow-y: auto">
     <v-expansion-panels
       variant="accordion"
       v-for="folder in commonQuestionList"
@@ -66,7 +68,9 @@ const search = ref('')
           @change="log"
         >
           <template #item="{ element }">
-            <v-expansion-panel-text>{{ element.commonQuestion }}</v-expansion-panel-text>
+            <v-expansion-panel-text>{{
+              element.commonQuestion
+            }}</v-expansion-panel-text>
           </template>
         </draggable>
       </v-expansion-panel>

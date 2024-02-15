@@ -21,7 +21,13 @@ const userStore = useUserStore()
     <template #logo>
       <TheDropDownNavbarLogo>
         <RouterLink to="/">
-          <v-img class="logo" :width="150" aspect-ratio="16/9" cover :src="logo"></v-img>
+          <v-img
+            class="logo"
+            :width="150"
+            aspect-ratio="16/9"
+            cover
+            :src="logo"
+          ></v-img>
         </RouterLink>
       </TheDropDownNavbarLogo>
     </template>
@@ -32,7 +38,7 @@ const userStore = useUserStore()
       <TheDropDownItem link="/storage/question">
         면접 문항 목록
       </TheDropDownItem>
-      <TheDropDownItem link="/storage/video"> 녹화 문항 목록 </TheDropDownItem>
+      <TheDropDownItem link="/storage"> 녹화 문항 목록 </TheDropDownItem>
     </TheDropDownMenu>
 
     <RouterLink v-if="userStore.accessToken === null" to="/login">
@@ -40,7 +46,11 @@ const userStore = useUserStore()
     </RouterLink>
     <TheDropDownMenu v-else text="마이페이지" ref="dropdownMenu">
       <v-list>
-        <v-list-item :prepend-avatar="profile" :title="userStore.nickname + ' 님'" subtitle="환영합니다!">
+        <v-list-item
+          :prepend-avatar="profile"
+          :title="userStore.nickname + ' 님'"
+          subtitle="환영합니다!"
+        >
         </v-list-item>
       </v-list>
       <TheDropDownItem link="/mypage">나의 정보 수정</TheDropDownItem>

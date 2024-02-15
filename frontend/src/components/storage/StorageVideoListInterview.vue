@@ -1,5 +1,6 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { apiMethods } from '@/api/video'
 import { useStorageStore } from '@/stores/storage'
 
@@ -7,19 +8,27 @@ const storageStore = useStorageStore()
 
 const selectedId = ref([])
 const isSelectedAll = ref(false)
+const route = useRoute()
 
-onMounted(() => {
-  storageStore.requestUserVideoAll('self')
+onMounted(async () => {
+  await storageStore.requestInterviewList(route.params.roomType)
 })
 
-const deleteVideo = async function () {
+watch(
+  () => route.params.roomType,
+  async (newValue, oldValue) => {
+    await storageStore.requestInterviewList(newValue)
+  }
+)
+
+const deleteInterview = async function () {
   try {
-    const result = await apiMethods.deleteVideos({
-      videos: selectedId.value
+    const result = await apiMethods.deleteInterview({
+      interviewRoomIdList: selectedId.value
     })
     console.log(result.data)
     selectedId.value = []
-    storageStore.requestUserVideoAll('self')
+    await storageStore.requestInterviewList(route.params.roomType)
   } catch (error) {
     console.log(error)
   }
@@ -39,12 +48,12 @@ const markVideo = async function (id, bool) {
 }
 
 const selectAll = function () {
-  if (selectedId.value.length === storageStore.storageData.length) {
+  if (selectedId.value.length === storageStore.interviewData.content.length) {
     selectedId.value = []
   } else {
-    for (const item of storageStore.storageData) {
-      if (!selectedId.value.includes(item.videoId)) {
-        selectedId.value.push(item.videoId)
+    for (const item of storageStore.interviewData.content) {
+      if (!selectedId.value.includes(item.interviewRoomId)) {
+        selectedId.value.push(item.interviewRoomId)
         isSelectedAll.value = true
       }
     }
@@ -67,15 +76,7 @@ const selectVideo = async function (v_id) {
     <div class="w-75 bg-white overflow-auto">
       <div class="tool-bar d-flex align-center">
         <v-btn variant="tonal" @click="selectAll"> 전체 선택 </v-btn>
-        <v-btn variant="tonal" @click="deleteVideo"> 삭제 </v-btn>
-
-        <v-btn
-          class="ml-auto"
-          variant="outlined"
-          @click="storageStore.goStorageVideoGrid()"
-        >
-          그리드 보기
-        </v-btn>
+        <v-btn variant="tonal" @click="deleteInterview"> 삭제 </v-btn>
       </div>
 
       <div class="pa-2">
@@ -84,52 +85,38 @@ const selectVideo = async function (v_id) {
             <tr>
               <th class="text-left">선택</th>
               <th class="text-left">번호</th>
-              <th class="text-left">영상 제목</th>
-              <th class="text-left">면접 질문</th>
-              <th class="text-left">북마크</th>
+              <th class="text-left">유형</th>
+
+              <th class="text-left">일시</th>
             </tr>
           </thead>
-          <tbody v-for="(dt, n) in storageStore.storageData" :key="n" hover>
+          <tbody
+            v-for="(dt, n) in storageStore.interviewData.content"
+            :key="n"
+            hover
+          >
             <tr
               class="list-item"
-              @click="storageStore.goStorageVideoPlay(dt.videoId)"
+              @click="
+                storageStore.goStorageVideoPlayInterview(
+                  route.params.roomType,
+                  dt.interviewRoomId
+                )
+              "
             >
               <td>
                 <v-checkbox
                   @click.stop
                   v-model="selectedId"
-                  :value="dt.videoId"
+                  :value="dt.interviewRoomId"
                 ></v-checkbox>
               </td>
               <td>{{ n + 1 }}</td>
               <td>
-                {{ dt.title }}
+                {{ dt.questionType }}
               </td>
-              <td>{{ dt.question }}</td>
-              <td>
-                <v-icon
-                  v-show="!dt.bookmark"
-                  color="purple"
-                  size="32"
-                  icon="mdi-bookmark-outline"
-                  @click.stop="
-                    markVideo(dt.videoId, dt.bookmark),
-                      (dt.bookmark = !dt.bookmark)
-                  "
-                >
-                </v-icon>
-                <v-icon
-                  v-show="dt.bookmark"
-                  color="purple"
-                  size="32"
-                  icon="mdi-bookmark-check"
-                  @click.stop="
-                    markVideo(dt.videoId, dt.bookmark),
-                      (dt.bookmark = !dt.bookmark)
-                  "
-                >
-                </v-icon>
-              </td>
+
+              <td>{{ dt.createAt }}</td>
             </tr>
           </tbody>
         </v-table>

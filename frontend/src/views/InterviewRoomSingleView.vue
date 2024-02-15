@@ -396,9 +396,7 @@ const toInterviewMain = function () {
 }
 
 const toStorageInterviewSolo = function () {
-  const storageStore = useStorageStore()
-  storageStore.roomType = 'single'
-  router.push({ name: "video-list" })
+  router.push({ name: "video-list-interview", params:{roomType:'single'} })
 }
 
 onMounted(() => {

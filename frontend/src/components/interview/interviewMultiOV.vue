@@ -227,6 +227,7 @@ const receive = async function (message) {
 
     case 'START':
       websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
+      await interviewStore.TTS(websocketStore.now.question.commonQuestion)
       break;
 
     case 'PROCEEDING':
@@ -253,9 +254,21 @@ const receive = async function (message) {
       }, 3000)
       break;
 
+    case 'SAVED':
+      if (result.index === websocketStore.roomData.index) {
+        console.log('saved!', message.body)
+        loading.value = false
+        dialog.value = false
+        websocketStore.stomp.disconnect()
+      }
+      break;
+
     case 'END':
       dialog.value = true
       websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
+      break;
+
+    case 'CHECK':
       break;
 
     default:
@@ -268,13 +281,6 @@ onMounted(() => {
 
   websocketStore.stomp.unsubscribe()
 
-  websocketStore.stomp.subscribe(`/user/client/answer/${websocketStore.roomData.sessionId}`, function (message) {
-    console.log('saved!', message.body)
-    loading.value = false
-    dialog.value = false
-    websocketStore.stomp.disconnect()
-  }, headers) // 개인용
-
   websocketStore.stomp.subscribe(`/client/answer/${websocketStore.roomData.sessionId}`, function (message) {
     receive(message)
   }, headers) // 면접장 용
@@ -284,13 +290,17 @@ onMounted(() => {
       index: websocketStore.roomData.index,
     })
   )
+
+  setInterval(() => {
+    sendMessage('CHECK')
+  }, 30000)
 })
 
 onBeforeUnmount(() => {
   leaveSession()
 })
 
-watch(interviewStore.mediaToggle ,
+watch(() => interviewStore.mediaToggle ,
   () => {
     if (publisher.value) {
       publisher.value.publishVideo(interviewStore.mediaToggle.video)
@@ -321,6 +331,7 @@ watch(() => websocketStore.flag.record,
           :id="item.sub.stream.streamId"
           :stream-manager="item.sub"
           :muted="item.sub.id===websocketStore.roomData.index"
+          :class="{'redbox' : idx === websocketStore.now.turn}"
         />
         <div class="d-flex align-center">
           <v-card v-if="idx === websocketStore.now.turn" class="pa-1" color="red-darken-1">답변 중</v-card>
@@ -361,5 +372,8 @@ video {
   /* Safari and Chrome */
   -moz-transform: rotateY(180deg);
   /* Firefox */
+}
+.redbox{
+  border: 1px solid red;
 }
 </style>

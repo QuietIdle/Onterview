@@ -4,17 +4,25 @@ import { defineStore } from 'pinia'
 import { apiMethods } from '@/api/video'
 
 export const useStorageStore = defineStore('storage', () => {
-  const roomType = ref('self')
-
   const storageData = ref([]);
-      
+  const interviewData = ref([]);
   const videoData = ref({});
 
-  const requestUserVideoAll = async function () {
+  const requestUserVideoAll = async function (roomType) {
     try {
-      const result = await apiMethods.getUserVideoAll(roomType.value)
+      const result = await apiMethods.getUserVideoAll(roomType)
       storageData.value = result.data
-      console.log(roomType.value, storageData.value)
+      console.log('request user video all', roomType, storageData.value)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const requestInterviewList = async function (roomType) {
+    try {
+      const result = await apiMethods.getInterviewList(roomType)
+      interviewData.value = result.data
+      console.log(roomType, result.data)
     } catch (error) {
       console.log(error)
     }
@@ -33,14 +41,23 @@ export const useStorageStore = defineStore('storage', () => {
   const goStorageVideoPlay = function (videoId) {
     router.push({ name: 'video-play', params: {videoId: videoId} })
   }
+  const goStorageVideoPlayInterview = function (roomType, interviewRoomId) {
+    router.push({ name: 'video-play-interview', params: {roomType:roomType, interviewRoomId: interviewRoomId} })
+  }
+  const goStorageVideoListInterview = function (roomType) {
+    router.push({ name: 'video-list-interview', params: {roomType:roomType} })
+  }
 
   return {
-    roomType,
     storageData,
+    interviewData,
     videoData,
     requestUserVideoAll,
     goStorageVideoList,
     goStorageVideoGrid,
     goStorageVideoPlay,
+    goStorageVideoPlayInterview,
+    goStorageVideoListInterview,
+    requestInterviewList,
   }
 })

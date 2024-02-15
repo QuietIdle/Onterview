@@ -33,7 +33,6 @@ export const useInterviewStore = defineStore('interview', () => {
 
   const TTS = function (script) {
     return new Promise((resolve, reject) => {
-      mediaToggle.value.audio = false
       const synth = window.speechSynthesis
       const utterance = new SpeechSynthesisUtterance(script)
   
@@ -46,7 +45,6 @@ export const useInterviewStore = defineStore('interview', () => {
       };
   
       synth.speak(utterance)
-      mediaToggle.value.audio = true
     })
   }
 

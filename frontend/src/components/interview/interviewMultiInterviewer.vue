@@ -19,7 +19,7 @@ const headers = {
 }
 
 const addLog = function (text) {
-  if (logMessages.value.length > 5) {
+  if (logMessages.value.length > 2) {
     logMessages.value.shift()
   }
   logMessages.value.push({
@@ -46,11 +46,14 @@ const openHelp = function () {
 
 const finishAnswer = async function () {
   websocketStore.flag.record = false
+  interviewStore.mediaToggle.audio = false
   await sendMessage('PROCEEDING')
 }
 const timeOut = async function () {
+
   if (websocketStore.myTurn) {
     websocketStore.flag.record = false
+    interviewStore.mediaToggle.audio = false
     await sendMessage('TIMEOUT')
   }
 }
@@ -83,8 +86,12 @@ watch(() => websocketStore.flag.interviewer, async () => {
       }
       websocketStore.now.turn = 0
       if (websocketStore.myTurn) {
+        interviewStore.mediaToggle.audio = true
         addLog("당신의 차례입니다.")
         websocketStore.flag.record = true
+      }
+      else {
+        interviewStore.mediaToggle.audio = false
       }
       await interviewStore.TTS(interviewStore.script.start)
       setTimeout(goTimer, 2000)
@@ -95,8 +102,12 @@ watch(() => websocketStore.flag.interviewer, async () => {
       btnActive.value = false
       addLog(`${websocketStore.now.turn}번 째 참가자 답변 완료`)
       if (websocketStore.myTurn) {
+        interviewStore.mediaToggle.audio = true
         addLog("당신의 차례입니다.")
         websocketStore.flag.record = true
+      }
+      else {
+        interviewStore.mediaToggle.audio = false
       }
       //await interviewStore.TTS(interviewStore.script.proceeding)
       setTimeout(goTimer, 2000)
@@ -107,8 +118,12 @@ watch(() => websocketStore.flag.interviewer, async () => {
       btnActive.value = false
       addLog(`${websocketStore.now.turn}번 째 참가자 시간 초과!`)
       if (websocketStore.myTurn) {
+        interviewStore.mediaToggle.audio = true
         addLog("당신의 차례입니다.")
         websocketStore.flag.record = true
+      }
+      else {
+        interviewStore.mediaToggle.audio = false
       }
       //await interviewStore.TTS(interviewStore.script.proceeding)
       setTimeout(goTimer, 2000)
