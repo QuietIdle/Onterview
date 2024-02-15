@@ -22,13 +22,18 @@ const addLog = function (text) {
   // if (logMessages.value.length > 2) {
   //   logMessages.value.shift()
   // }
-  logMessages.value.push({
+  logMessages.value.unshift({
     message: text,
     isClosed: false,
   })
   setTimeout(() => {
-    logMessages.value[0].isClosed = true
-  }, 5000)
+    // 변경하고자 하는 로그의 인덱스를 찾습니다.
+    const index = logMessages.value.findIndex(log => log.message === text);
+    if (index !== -1) {
+      // 해당 로그의 isClosed 값을 변경합니다.
+      closeLog(index)
+    }
+  }, 5000);
 }
 
 const closeLog = function (idx) {
