@@ -62,7 +62,7 @@ public class InterviewRoomController {
     }
 
     @Operation(summary = "DELETE 방식으로 모의 면접장 삭제")
-    @DeleteMapping("/delete")
+    @PostMapping("/delete")
     public ResponseEntity<List<Long>> deleteInterviewRoom(
             @AuthenticationPrincipal SecurityUser user,
             @RequestHeader("Authorization") String token,

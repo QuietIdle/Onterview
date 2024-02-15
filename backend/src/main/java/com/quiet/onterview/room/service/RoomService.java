@@ -1,5 +1,6 @@
 package com.quiet.onterview.room.service;
 
+import static com.quiet.onterview.room.RoomStatus.CHECK;
 import static com.quiet.onterview.room.RoomStatus.ENTER;
 import static com.quiet.onterview.room.RoomStatus.FINISH;
 import static com.quiet.onterview.room.RoomStatus.SAVED;
@@ -63,6 +64,7 @@ public class RoomService {
             case START -> roomRepository.start(sessionId, idx);
             case PROCEEDING, TIMEOUT -> roomRepository.proceeding(sessionId, roomStatus, idx);
             case SAVE -> save(sessionId, userRequestMessage);
+            case CHECK -> CHECK;
             default -> throw new TypeMismatchException();
         };
 
