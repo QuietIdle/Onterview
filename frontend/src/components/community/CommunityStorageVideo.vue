@@ -26,7 +26,7 @@ const videoList = ref([])
 const emit = defineEmits(['selectVideo'])
 
 const selectVideo = function (video) {
-  emit('selectVideo', video)
+  emit('selectVideo', video, props.roomType)
 }
 </script>
 
@@ -49,7 +49,7 @@ const selectVideo = function (video) {
           {{ video.title }}
         </v-card-subtitle>
         <v-tooltip activator="parent" location="top" open-delay="1000">{{
-          video.title
+          video.question
         }}</v-tooltip>
       </v-card>
     </div>

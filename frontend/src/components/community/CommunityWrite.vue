@@ -10,10 +10,13 @@ const tab = ref(1)
 const title = ref(null)
 const content = ref('')
 const selectVideoId = ref(null)
+const selectRoomType = ref('')
 
-const selectVideo = function (video) {
-  title.value = video.title
+const selectVideo = function (video, roomType) {
+  console.log(video)
+  title.value = video.question
   selectVideoId.value = video.videoId
+  selectRoomType.value = roomType
 }
 
 const requestCreateMyPost = async function () {
@@ -21,7 +24,8 @@ const requestCreateMyPost = async function () {
     const payload = {
       videoId: selectVideoId.value,
       title: title.value,
-      content: content.value
+      content: content.value,
+      roomType: selectRoomType.value.toUpperCase()
     }
     const response = await postCreateMyPost(payload)
     goCommunityDetail(response.data.articleId)
@@ -63,21 +67,21 @@ const goCommunityDetail = function (articleId) {
         <CommunityStorageVideo
           room-type="self"
           :select-video-id="selectVideoId"
-          @select-video="(video) => selectVideo(video)"
+          @select-video="(video, roomType) => selectVideo(video, roomType)"
         />
       </v-window-item>
       <v-window-item :value="2">
         <CommunityStorageVideo
           room-type="single"
           :select-video-id="selectVideoId"
-          @select-video="(video) => selectVideo(video)"
+          @select-video="(video, roomType) => selectVideo(video, roomType)"
         />
       </v-window-item>
       <v-window-item :value="3">
         <CommunityStorageVideo
           room-type="multi"
           :select-video-id="selectVideoId"
-          @select-video="(video) => selectVideo(video)"
+          @select-video="(video, roomType) => selectVideo(video, roomType)"
         />
       </v-window-item>
     </v-window>

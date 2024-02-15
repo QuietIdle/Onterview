@@ -53,11 +53,7 @@ const getAllChunks = async function (filename) {
 
   while (!isCompleted.value) {
     try {
-      const response = await fileServer.playVideo(
-        filename,
-        start,
-        end
-      )
+      const response = await fileServer.playVideo(filename, start, end)
 
       console.log(response)
 
@@ -129,6 +125,7 @@ const requestUpdateVideoTitle = async function () {
     })
     console.log(result.data)
     requestVideo(videoId)
+    storageStore.requestUserVideoAll('self')
   } catch (error) {
     console.log(error)
   }

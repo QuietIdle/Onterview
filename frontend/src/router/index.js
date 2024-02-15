@@ -62,27 +62,39 @@ const router = createRouter({
       meta: {layout: 'main'},
     },
     {
-      path: '/storage/video',
+      path: '/storage',
       name: 'storage-video',
       component: () => import('@/views/StorageVideoView.vue'),
       meta: { layout: 'main' },
       redirect: { name: "video-list"},
       children: [
         {
-          path: "list",
+          path: "video/list",
           name: "video-list",
           component: () => import('@/components/storage/StorageVideoList.vue')
         },
         {
-          path: "grid",
+          path: "video/grid",
           name: "video-grid",
           component: () => import('@/components/storage/StorageVideoGrid.vue')
         },
         {
-          path: "play/:videoId",
+          path: "video/play/:videoId",
           name: "video-play",
           component: () => import('@/components/storage/StorageVideoPlay.vue')
+        },
+        {
+          path: "interview/:roomType",
+          name: "video-list-interview",
+          component: () => import('@/components/storage/StorageVideoListInterview.vue'),
+        },
+        {
+          path: "interview/:roomType/play/:interviewRoomId",
+          name: "video-play-interview",
+          component: () => import('@/components/storage/StorageVideoPlayInterview.vue')
+          
         }
+        
       ]
     },
     {

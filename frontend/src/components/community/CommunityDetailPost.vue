@@ -81,12 +81,7 @@ const getAllChunks = async function (filename) {
 
   while (!isCompleted.value) {
     try {
-      const response = await fileServer.playVideo(
-        filename,
-        userStore.email,
-        start,
-        end
-      )
+      const response = await fileServer.playVideo(filename, start, end)
 
       console.log(response)
 

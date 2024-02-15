@@ -13,28 +13,45 @@ const api2 = axios.create({
     }
 });
 
-api.defaults.headers.common['Authorization'] = `${authToken}`
+
 
 export const apiMethods = {
     getVideo: function (v_id) {
-        //console.log('request get video')
+        api.defaults.headers.common['Authorization'] = `${authToken}`
         return api.get(`/api/video/${v_id}`)
     },
     getVideoAll: function (q_id) {
-        //console.log('request get all videos')
+        api.defaults.headers.common['Authorization'] = `${authToken}`
         return api.get(`/api/my-question/${q_id}`)
     },
     getUserVideoAll: function (category) {
+        api.defaults.headers.common['Authorization'] = `${authToken}`
         return api.get(`/api/video?category=${category.toUpperCase()}`)
     },
     deleteVideos: function (v_ids) {
+        api.defaults.headers.common['Authorization'] = `${authToken}`
         return api.post('/api/video/delete', v_ids)
     },
     patchVideo: function (v_id, req_body) {
+        api.defaults.headers.common['Authorization'] = `${authToken}`
         return api.patch(`/api/video/${v_id}`, req_body)
     },
     saveVideo: function (req_body) {
+        api.defaults.headers.common['Authorization'] = `${authToken}`
         return api.post(`/api/video`, req_body)
+    },
+    getInterviewList: function (roomType) {
+        api.defaults.headers.common['Authorization'] = `${authToken}`
+        console.log(`/api/interview-room?roomType=${roomType.toUpperCase()}`)
+        return api.get(`/api/interview-room?roomType=${roomType.toUpperCase()}`)
+    },
+    getInterviewDetail: function (interviewRoomId) {
+        api.defaults.headers.common['Authorization'] = `${authToken}`
+        return api.get(`/api/interview-room/${interviewRoomId}`)
+    },
+    deleteInterview: function (payload) {
+        api.defaults.headers.common['Authorization'] = `${authToken}`
+        return api.post(`/api/interview-room/delete`, payload)
     }
 }
 

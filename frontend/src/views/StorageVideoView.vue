@@ -1,12 +1,41 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useStorageStore } from '@/stores/storage'
 
 const storageStore = useStorageStore()
+const router = useRouter()
+const route = useRoute()
+
+const roomType = ref('')
+
+const goInterviewList = async function (rf) {
+  roomType.value = rf
+
+  router.push({
+    name: 'video-list-interview',
+    params: { roomType: rf }
+  })
+}
 
 onMounted(() => {
-  storageStore.requestUserVideoAll()
+  if (route.params.roomType == undefined) {
+    roomType.value = 'self'
+  } else {
+    roomType.value = route.params.roomType
+  }
 })
+
+watch(
+  () => route.params.roomType,
+  (newValue, oldValue) => {
+    if (newValue == undefined) {
+      roomType.value = 'self'
+    } else {
+      roomType.value = newValue
+    }
+  }
+)
 </script>
 
 <template>
@@ -14,37 +43,34 @@ onMounted(() => {
   <v-container>
     <v-row justify="end" align="center">
       <div
+        class="test"
         :class="{
-          active: storageStore.roomType === 'self',
-          inactive: storageStore.roomType !== 'self'
+          active: roomType === 'self',
+          inactive: roomType !== 'self'
         }"
-        @click="
-          (storageStore.roomType = 'self'), storageStore.requestUserVideoAll()
-        "
+        @click="(roomType = 'self'), router.push({ name: 'video-list' })"
       >
         셀프 스피치
       </div>
       <div style="color: rgb(190, 190, 190)">|</div>
       <div
+        class="test"
         :class="{
-          active: storageStore.roomType === 'single',
-          inactive: storageStore.roomType !== 'single'
+          active: roomType === 'single',
+          inactive: roomType !== 'single'
         }"
-        @click="
-          (storageStore.roomType = 'single'), storageStore.requestUserVideoAll()
-        "
+        @click="goInterviewList('single')"
       >
         1인 모의 면접
       </div>
       <div style="color: rgb(190, 190, 190)">|</div>
       <div
+        class="test"
         :class="{
-          active: storageStore.roomType === 'multi',
-          inactive: storageStore.roomType !== 'multi'
+          active: roomType === 'multi',
+          inactive: roomType !== 'multi'
         }"
-        @click="
-          (storageStore.roomType = 'multi'), storageStore.requestUserVideoAll()
-        "
+        @click="goInterviewList('multi')"
       >
         다인 모의 면접
       </div>
@@ -70,5 +96,9 @@ onMounted(() => {
 
 .inactive:hover {
   color: black;
+}
+
+.test{
+  cursor: pointer;
 }
 </style>
