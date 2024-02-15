@@ -4,12 +4,10 @@ import com.quiet.onterview.interview.dto.response.InterviewQuestionCreateRespons
 import com.quiet.onterview.interview.exception.InterviewQuestionNotFoundException;
 import com.quiet.onterview.matching.MatchUser;
 import com.quiet.onterview.question.dto.response.CommonQuestionResponse;
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +16,7 @@ import lombok.NoArgsConstructor;
 public class Room {
 
     private List<MatchUser> users;
+    private AtomicInteger ping;
     private AtomicReferenceArray<Boolean> isLeave;
     private AtomicReferenceArray<Boolean> checked;
     private Integer questionIdx;
@@ -26,6 +25,7 @@ public class Room {
 
     public Room(List<MatchUser> users, List<List<InterviewQuestionCreateResponse>> questions) {
         this.users = users;
+        this.ping = new AtomicInteger(0);
         this.checked = new AtomicReferenceArray<>(users.size());
         this.isLeave = new AtomicReferenceArray<>(users.size());
         this.questionIdx = 0;
@@ -34,6 +34,10 @@ public class Room {
             checked.set(i, false);
             isLeave.set(i, false);
         }
+    }
+
+    public int ping() {
+        return ping.updateAndGet(operand -> (operand + 1) % users.size());
     }
 
     public boolean count(int idx) {

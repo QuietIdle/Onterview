@@ -1,5 +1,7 @@
 package com.quiet.onterview.room.repository;
 
+import static com.quiet.onterview.room.RoomStatus.*;
+
 import com.quiet.onterview.interview.dto.response.InterviewQuestionCreateResponse;
 import com.quiet.onterview.interview.exception.InterviewQuestionNotFoundException;
 import com.quiet.onterview.matching.MatchUser;
@@ -48,20 +50,24 @@ public class RoomRepository {
         return count;
     }
 
+    public RoomStatus ping(String sessionId) {
+        return rooms.get(sessionId).ping() == 0 ? CHECK : null;
+    }
+
     public RoomStatus start(String sessionId, Integer idx) {
-        return rooms.get(sessionId).count(idx) ? RoomStatus.START : null;
+        return rooms.get(sessionId).count(idx) ? START : null;
     }
 
     public RoomStatus enter(String sessionId, Integer idx) {
-        return rooms.get(sessionId).count(idx) ? RoomStatus.ENTER : null;
+        return rooms.get(sessionId).count(idx) ? ENTER : null;
     }
 
     public RoomStatus proceeding(String sessionId, RoomStatus roomStatus, Integer idx) {
         boolean count = rooms.get(sessionId).count(idx);
         if (allFinish(sessionId) && count) {
-            return RoomStatus.END;
+            return END;
         }
-        return count ? RoomStatus.FINISH : roomStatus;
+        return count ? FINISH : roomStatus;
     }
 
     private boolean allFinish(String sessionId) {
