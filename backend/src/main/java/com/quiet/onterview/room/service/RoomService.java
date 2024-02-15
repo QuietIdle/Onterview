@@ -64,7 +64,7 @@ public class RoomService {
             case START -> roomRepository.start(sessionId, idx);
             case PROCEEDING, TIMEOUT -> roomRepository.proceeding(sessionId, roomStatus, idx);
             case SAVE -> save(sessionId, userRequestMessage);
-            case CHECK -> CHECK;
+            case CHECK -> roomRepository.ping(sessionId);
             default -> throw new TypeMismatchException();
         };
 
