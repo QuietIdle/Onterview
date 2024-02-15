@@ -268,6 +268,9 @@ const receive = async function (message) {
       websocketStore.flag.interviewer = !websocketStore.flag.interviewer;
       break;
 
+    case 'CHECK':
+      break;
+
     default:
       break;
   }
@@ -287,6 +290,10 @@ onMounted(() => {
       index: websocketStore.roomData.index,
     })
   )
+
+  setInterval(() => {
+    sendMessage('CHECK')
+  }, 30000)
 })
 
 onBeforeUnmount(() => {
