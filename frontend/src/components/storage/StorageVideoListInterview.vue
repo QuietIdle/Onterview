@@ -21,6 +21,20 @@ watch(
   }
 )
 
+watch(
+  () => route.params.roomType,
+  async (newValue, oldValue) => {
+    await storageStore.requestInterviewList(newValue)
+  }
+)
+
+watch(
+  () => storageStore.page,
+  async (newValue, oldValue) => {
+    await storageStore.requestInterviewList(route.params.roomType)
+  }
+)
+
 const deleteInterview = async function () {
   try {
     const result = await apiMethods.deleteInterview({
@@ -80,7 +94,7 @@ const selectVideo = async function (v_id) {
       </div>
 
       <div class="pa-2">
-        <v-table fixed-header height="">
+        <v-table fixed-header style="height: 76vh">
           <thead>
             <tr>
               <th class="text-left">선택</th>
@@ -119,6 +133,19 @@ const selectVideo = async function (v_id) {
               <td>{{ dt.createAt }}</td>
             </tr>
           </tbody>
+          <template v-slot:bottom>
+            <div class="text-center pt-2">
+              <v-pagination
+                v-model="storageStore.page"
+                :length="storageStore.interviewData.totalPages"
+                rounded="circle"
+                prev-icon="mdi-menu-left"
+                next-icon="mdi-menu-right"
+                active-color="#BB66FF"
+                density="comfortable"
+              ></v-pagination>
+            </div>
+          </template>
         </v-table>
       </div>
     </div>
