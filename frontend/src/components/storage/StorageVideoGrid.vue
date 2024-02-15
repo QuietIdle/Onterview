@@ -2,8 +2,11 @@
 import { ref, onMounted } from 'vue'
 import { apiMethods } from '@/api/video'
 import { useStorageStore } from '@/stores/storage'
+import { storeToRefs } from 'pinia'
 
 const storageStore = useStorageStore()
+const { keyword } = storeToRefs(storageStore)
+
 const selectedId = ref([])
 const isSelectedAll = ref(false)
 
@@ -63,13 +66,29 @@ const selectVideo = async function (v_id) {
         <v-btn variant="tonal" @click="selectAll"> 전체 선택 </v-btn>
         <v-btn variant="tonal" @click="deleteVideo"> 삭제 </v-btn>
 
-        <v-btn
-          class="ml-auto"
-          variant="outlined"
-          @click="storageStore.goStorageVideoList()"
-        >
-          리스트 보기
-        </v-btn>
+        <div class="ml-auto d-flex align-center">
+          <v-text-field
+            v-model="keyword"
+            label="검색어를 입력해주세요"
+            append-inner-icon="mdi-magnify"
+            single-line
+            variant="solo"
+            density="compact"
+            hide-details
+            class="mr-3"
+            style="width:300px"
+            @keyup.enter="storageStore.requestUserVideoAll('self')"
+            @blur="storageStore.requestUserVideoAll('self')"
+          ></v-text-field>
+
+          <v-btn
+            class="ml-auto"
+            variant="outlined"
+            @click="storageStore.goStorageVideoList()"
+          >
+            리스트 보기
+          </v-btn>
+        </div>
       </div>
 
       <div class="px-3 py-2 d-flex flex-wrap">
