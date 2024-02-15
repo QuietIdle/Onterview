@@ -46,7 +46,7 @@ export const apiMethods = {
     },
     getInterviewList: function (roomType, page, size) {
         api.defaults.headers.common['Authorization'] = `${userStore.accessToken}`
-        console.log(`/api/interview-room?roomType=${roomType.toUpperCase()}`)
+        console.log(`/api/interview-room?roomType=${roomType.toUpperCase()}&page=${page}&size=${size}`)
         return api.get(`/api/interview-room?roomType=${roomType.toUpperCase()}&page=${page}&size=${size}`)
     },
     getInterviewDetail: function (interviewRoomId) {
