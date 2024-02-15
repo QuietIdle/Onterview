@@ -30,6 +30,7 @@ public class CommentMapper {
                 .nickname(comment.getMember().getNickname())
                 .writtenDate(comment.getCreateAt().format(formatter))
                 .isMyComment((memberId == comment.getMember().getMemberId()))
+                .isWriterComment(comment.getArticle().getMember().getMemberId() == comment.getMember().getMemberId())
                 .build();
     }
 
@@ -41,6 +42,7 @@ public class CommentMapper {
                 .content(comment.getContent())
                 .writtenDate(comment.getCreateAt().format(formatter))
                 .isMyComment((comment.getMember().getMemberId()).equals(memberId))
+                .isWriterComment(comment.getArticle().getMember().getMemberId()==comment.getMember().getMemberId())
                 .build();
     }
 }
