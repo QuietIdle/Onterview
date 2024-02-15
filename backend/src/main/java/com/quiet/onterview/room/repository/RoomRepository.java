@@ -37,7 +37,7 @@ public class RoomRepository {
         Room room = rooms.get(sessionId);
         Integer proceedingCount = calc(room.getChecked());
         Integer leaveCount = calc(room.getIsLeave());
-        return proceedingCount - leaveCount;
+        return Math.max(0, proceedingCount - leaveCount);
     }
 
     private Integer calc(AtomicReferenceArray<Boolean> src) {
