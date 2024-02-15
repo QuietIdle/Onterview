@@ -182,7 +182,7 @@ const saveRecording = async function () {
     console.log(error)
   }
   leaveSession()
-  router.push({name: 'interview'})
+  router.push({ name: "video-list-interview", params:{roomType:'multi'} })
 }
 
 const cancelRecording = async function () {
