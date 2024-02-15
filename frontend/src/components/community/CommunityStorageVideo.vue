@@ -46,10 +46,10 @@ const selectVideo = function (video) {
           ></v-img>
         </v-img>
         <v-card-subtitle class="pa-1">
-          {{ video.title }}
+          {{ video.question }}
         </v-card-subtitle>
-        <v-tooltip activator="parent" location="top" open-delay="1000">{{
-          video.question
+        <v-tooltip activator="parent" location="top" open-delay="300">{{
+          video.title
         }}</v-tooltip>
       </v-card>
     </div>
