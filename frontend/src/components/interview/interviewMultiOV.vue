@@ -221,6 +221,7 @@ const sendMessage = async function (type) {
 }
 
 const receive = async function (message) {
+  let trollIdx = -1
   const result = JSON.parse(message.body);
   websocketStore.message = result;
 
@@ -286,6 +287,13 @@ const receive = async function (message) {
       break;
 
     case 'CHECK':
+      break;
+
+    case 'LEAVE':
+      trollIdx = subscribers.value.findIndex(item => item.id === result.idx)
+      if (trollIdx !== -1) {
+        subscribers.value.splice(trollIdx , 1) 
+      }
       break;
 
     default:
