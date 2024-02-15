@@ -18,6 +18,8 @@ const deleteVideo = async function () {
       videos: selectedId.value
     })
     console.log(result.data)
+    selectedId.value = []
+    storageStore.requestUserVideoAll('self')
   } catch (error) {
     console.log(error)
   }
@@ -37,9 +39,8 @@ const markVideo = async function (id, bool) {
 }
 
 const selectAll = function () {
-  if (isSelectedAll.value == true) {
+  if (selectedId.value.length === storageStore.storageData.length) {
     selectedId.value = []
-    isSelectedAll.value = false
   } else {
     for (const item of storageStore.storageData) {
       if (!selectedId.value.includes(item.videoId)) {

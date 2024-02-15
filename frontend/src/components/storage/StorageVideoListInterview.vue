@@ -21,12 +21,14 @@ watch(
   }
 )
 
-const deleteVideo = async function () {
+const deleteInterview = async function () {
   try {
-    const result = await apiMethods.deleteVideos({
-      videos: selectedId.value
+    const result = await apiMethods.deleteInterview({
+      interviewRoomIdList: selectedId.value
     })
     console.log(result.data)
+    selectedId.value = []
+    await storageStore.requestInterviewList(route.params.roomType)
   } catch (error) {
     console.log(error)
   }
@@ -46,11 +48,10 @@ const markVideo = async function (id, bool) {
 }
 
 const selectAll = function () {
-  if (isSelectedAll.value == true) {
+  if (selectedId.value.length === storageStore.storageData.content.length) {
     selectedId.value = []
-    isSelectedAll.value = false
   } else {
-    for (const item of storageStore.storageData) {
+    for (const item of storageStore.storageData.content) {
       if (!selectedId.value.includes(item.interviewRoomId)) {
         selectedId.value.push(item.interviewRoomId)
         isSelectedAll.value = true
@@ -75,7 +76,7 @@ const selectVideo = async function (v_id) {
     <div class="w-75 bg-white overflow-auto">
       <div class="tool-bar d-flex align-center">
         <v-btn variant="tonal" @click="selectAll"> 전체 선택 </v-btn>
-        <v-btn variant="tonal" @click="deleteVideo"> 삭제 </v-btn>
+        <v-btn variant="tonal" @click="deleteInterview"> 삭제 </v-btn>
       </div>
 
       <div class="pa-2">

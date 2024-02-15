@@ -48,6 +48,10 @@ export const apiMethods = {
     getInterviewDetail: function (interviewRoomId) {
         api.defaults.headers.common['Authorization'] = `${authToken}`
         return api.get(`/api/interview-room/${interviewRoomId}`)
+    },
+    deleteInterview: function (payload) {
+        api.defaults.headers.common['Authorization'] = `${authToken}`
+        return api.post(`/api/interview-room/delete`, payload)
     }
 }
 
