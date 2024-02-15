@@ -8,6 +8,7 @@
 1. [BackEnd Structure](#5-backend-structure)
 1. [FrontEnd Structure](#6-frontend-structure)
 1. [ERD](#7-erd)
+1. [API 명세서](#8-API명세서)
 
 
 ## 1. 서비스 개요
@@ -195,3 +196,7 @@ FrontEnd
 
 ## 7. ERD
 ![ERD](/uploads/828e26eaca1f27e3392bc8f0186efe56/ERD.png)
+
+## 8. API 명세서
+![image_143](/uploads/6e3b3b3126b0b99213f2e957b2249025/image_143.png)
+[API 명세서 확인하러 가기](https://meenyweeny.notion.site/API-cce33e1f591d46e79f0f6c2bd2db7d80?pvs=4)
