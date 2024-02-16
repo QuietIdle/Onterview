@@ -230,10 +230,9 @@ const requestIsDuplicatedNickname = function () {
 <template>
   <div class="offset-4 v-col-4 mt-10">
     <div class="rounded-0">
-      <div class="text-center mb-10">
+      <div class="text-center mb-5">
         <img class="mb-5" src="@/assets/logo.png" width="200px">
         <h2 class="mb-2">회원가입</h2>
-        <h4>면접 경험을 쌓고 싶을 때, 온터뷰</h4>
       </div>
       <v-sheet width="90%" class="mx-auto">
         <v-form ref="formRef" fast-fail @submit.prevent="requestSignUp">
@@ -269,7 +268,7 @@ const requestIsDuplicatedNickname = function () {
             id="confirm"></v-text-field>
 
 
-          <v-btn type="submit" block class="mt-10">가입하기</v-btn>
+          <v-btn type="submit" block class="mt-5">가입하기</v-btn>
         </v-form>
       </v-sheet>
     </div>
