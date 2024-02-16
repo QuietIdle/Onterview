@@ -37,7 +37,7 @@ const search = ref('')
       >Drag & Drop해서 My 질문에 추가해보세요!</span
     >
   </div>
-  <v-text-field
+  <!-- <v-text-field
     v-model="search"
     label="검색어를 입력해주세요"
     append-inner-icon="mdi-magnify"
@@ -45,8 +45,8 @@ const search = ref('')
     variant="solo"
     density="compact"
     hide-details
-  ></v-text-field>
-  <div class="mt-1" style="max-height: 76%; overflow-y: auto">
+  ></v-text-field> -->
+  <div class="mt-1" style="max-height: 82%; overflow-y: auto">
     <v-expansion-panels
       variant="accordion"
       v-for="folder in commonQuestionList"

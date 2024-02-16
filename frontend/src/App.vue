@@ -10,7 +10,7 @@ const route = useRoute()
   <div>
     <MainNav v-if="route.meta.layout == 'main'" />
     <RouterView />
-    <MainFooter v-if="route.meta.layout == 'main'" />
+    <!-- <MainFooter v-if="route.meta.layout == 'main'" /> -->
   </div>
 </template>
 

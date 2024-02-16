@@ -153,7 +153,7 @@ const search = ref('')
   <div class="question-title pa-3">나의 면접 문항 목록</div>
   <div class="bg-white pa-3 d-flex align-center">
     <div class="me-auto d-flex align-center"></div>
-    <v-text-field
+    <!-- <v-text-field
       v-model="search"
       label="검색어를 입력해주세요"
       append-inner-icon="mdi-magnify"
@@ -161,7 +161,7 @@ const search = ref('')
       variant="solo"
       density="compact"
       hide-details
-    ></v-text-field>
+    ></v-text-field> -->
     <QuestionModalCreate content="폴더" />
   </div>
   <div style="max-height: 80%; overflow-y: auto; overflow-x: hidden">
