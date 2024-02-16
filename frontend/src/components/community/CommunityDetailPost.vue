@@ -157,7 +157,7 @@ const getAllChunks = async function (filename) {
             id="my-video"
             :src="urlRef"
             controls="true"
-            style="max-width: 80%; min-width: 100px"
+            style="width: 40vw"
             class="rounded-lg"
           ></video>
         </div>
