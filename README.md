@@ -9,7 +9,7 @@
 1. [FrontEnd Structure](#6-frontend-structure)
 1. [ERD](#7-erd)
 1. [API 명세서](#8-API명세서)
-1. [API 명세서](#9-온터뷰 사용설명서)
+1. [온터뷰 사용설명서](#9-온터뷰 사용설명서)
 
 
 ## 1. 서비스 개요
