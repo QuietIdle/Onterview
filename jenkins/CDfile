@@ -6,6 +6,17 @@ pipeline {
     }
 
     stages {
+        stage('Build npm') {
+            steps {
+                echo 'Build Gradle'
+                dir('frontend') {
+                    script {
+                        docker.build("${FRONTEND_DOCKER_IMAGE}")
+                    }
+                }
+            }
+        }
+        
         stage('Docker push') {
             steps {
                 echo 'Docker push'
@@ -37,11 +48,6 @@ pipeline {
                     sh 'cat docker-compose.yml'
                     sh 'docker volume prune -f' // 안쓰는 이미지 볼륨 제거
                     sh 'docker-compose down' // 구성된 compose에 있는 이미지 중단 및 삭제
-                    
-                    sh 'docker volume rm html'
-                    sh 'docker volume create html'
-                    sh 'docker run --rm -v html:/app/dist --name app ${FRONTEND_DOCKER_IMAGE}'
-                    
                     sh 'docker-compose pull' // 구성된 compose에 있는 이미지 pull
                     sh 'docker-compose build' // 구성된 compose에 있는 이미지 build
                     sh 'docker-compose up -d' // 구성된 compose에 있는 이미지 run
