@@ -59,6 +59,7 @@ const userStore = useUserStore()
 
     <div class="mr-4"></div>
   </TheDropDownNavbar>
+  <span></span>
 </template>
 
 <style>
