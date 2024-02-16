@@ -207,7 +207,7 @@ FrontEnd
 ![3](/uploads/fc90a6581940acb4bb5e7ecc07125337/3.png)
 ![4](/uploads/1982b220f9c96500e12a2899d64864da/4.png)
 ![5](/uploads/7eca5b53212c10e0194975dbc382b775/5.png)
-![6](/uploads/9e9f941043ae885702b8810eca0367c6/6.png)
+![6](/uploads/8dad776925d1680e4b26db4b13135b36/6.png)
 ![7](/uploads/ea6cf22831b53690c6f486e653203b07/7.png)
 ![8](/uploads/8f99b12a6ab203dc1179f4af23a52cff/8.png)
 ![9](/uploads/da064832015fdea2106c64a729d6f63b/9.png)
