@@ -328,7 +328,7 @@ onBeforeUnmount(() => {
 }
 
 .video-container video {
-  width: 100%;
+  width: 90%;
   height: auto;
   position: relative;
   overflow: hidden;
