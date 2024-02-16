@@ -1,7 +1,7 @@
 <script setup>
 // lib
 import { ref, onMounted, computed, onUpdated } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 // api
 import { getPostDetail, patchLikePost } from '@/api/community'
@@ -32,6 +32,7 @@ onMounted(async () => {
 })
 
 const route = useRoute()
+const router = useRouter()
 const articleId = route.params.articleId
 
 const requestPostDetail = async function () {
@@ -113,8 +114,14 @@ const getAllChunks = async function (filename) {
   <v-container class="detail pt-16">
     <!-- 영상 제목 -->
     <v-row>
-      <v-col cols="12" class="text-left">
+      <v-col
+        cols="12"
+        class="text-left d-flex justify-space-between align-center"
+      >
         <h2 class="title">{{ postDetail.title }}</h2>
+        <v-btn @click="router.push({ name: 'community-list' })"
+          >목록 보기</v-btn
+        >
       </v-col>
     </v-row>
     <v-divider :thickness="2"></v-divider>
