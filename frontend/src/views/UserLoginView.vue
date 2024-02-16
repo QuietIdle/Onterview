@@ -73,8 +73,8 @@ const requestLogin = function () {
   <div class="container d-flex">
     <div class="left v-col-5 bg-indigo">
     </div>
-    <div class="offset-1 v-col-4 mt-15">
-      <div class="text-center my-15">
+    <div class="offset-1 v-col-4 mt-5">
+      <div class="text-center my-5">
         <img class="my-10" src="@/assets/logo.png" width="200px">
         <h2 class="mb-2">로그인</h2>
         <h4 class="text-grey">이메일과 비밀번호를 입력해주세요.</h4>
@@ -87,9 +87,9 @@ const requestLogin = function () {
           <v-text-field v-model="email" label="example@onterview.com" id="email"></v-text-field>
 
           <label for="password">비밀번호</label>
-          <v-text-field v-model="password" label="비밀번호" type="password" id="password" class="mb-10"></v-text-field>
+          <v-text-field v-model="password" label="비밀번호" type="password" id="password" class="mb-5"></v-text-field>
 
-          <v-btn type="submit" block class="mt-2 py-5">
+          <v-btn type="submit" block class="py-5">
             <h3>로그인</h3>
           </v-btn>
         </v-form>
@@ -126,7 +126,7 @@ a {
 }
 
 .container {
-  min-height: 100vh;
+  min-height: 93vh;
 }
 
 .left {
