@@ -14,4 +14,5 @@ public class CommentPostResponse {
     String nickname;
     String writtenDate;
     Boolean isMyComment;
+    Boolean isWriterComment;
 }
