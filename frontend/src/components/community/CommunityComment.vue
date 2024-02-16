@@ -25,6 +25,9 @@ const child = ref({
       <v-col cols="1" v-if="!isParent" class="text-right">ㄴ</v-col>
       <v-col cols="5">
         <span>{{ comment.writerNickname }}</span>
+        <span v-show="comment.isWriterComment" class="ml-1 text-purple"
+          >(글쓴이)</span
+        >
       </v-col>
       <v-col cols="1" v-if="isParent"></v-col>
       <v-col cols="6" class="text-right">
