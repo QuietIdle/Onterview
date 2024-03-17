@@ -8,7 +8,10 @@
 1. [FrontEnd Structure](#5-frontend-structure)
 1. [ERD](#6-erd)
 1. [API 명세서](#7-API명세서)
-1. [온터뷰 사용설명서](#8-온터뷰 사용설명서)
+1. [온터뷰 사용설명서](#8-온터뷰-사용설명서)
+
+### UCC
+https://github.com/QuietIdle/Onterview/assets/83208807/8b7df401-84ce-4888-9352-8da0328fd93c
 
 
 ## 1. 서비스 개요
